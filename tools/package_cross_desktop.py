@@ -8,8 +8,11 @@ import re
 import shutil
 import subprocess
 import tempfile
+import zipfile
 
+from macos_bundle import macos_frameworks
 from package_desktop import source_provenance
+from portable_zip import write_tree
 from runtime_notices import copy_qt_notices
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -92,7 +95,7 @@ def mach_dependencies(path):
 
 def stage_macos(build, sdk, stage):
     bundle = stage/'Eidolon.app'
-    shutil.copytree(build/'src/desktop/Eidolon.app', bundle)
+    shutil.copytree(build/'src/desktop/Eidolon.app', bundle, symlinks=True)
     contents = bundle/'Contents'
     plugins(sdk, contents, '.dylib', 'libqcocoa.dylib')
     # Qt uses Contents/PlugIns for app bundles; match qt.conf explicitly.
@@ -116,16 +119,19 @@ def stage_macos(build, sdk, stage):
                 raise ValueError('Unexpected macOS dependency: '+dependency)
             suffix = dependency.removeprefix('@rpath/')
             target = contents/'Frameworks'/suffix
-            if not target.is_file():
-                framework = suffix.split('/')[0]
-                shutil.copytree(sdk/'lib'/framework, contents/'Frameworks'/framework,
-                                symlinks=False, ignore=shutil.ignore_patterns('Headers', 'Modules', '*.prl'))
-            if target != path:
-                queue.append(target)
+            framework = Path(suffix).parts[0]
+            destination = contents/'Frameworks'/framework
+            if not destination.exists():
+                shutil.copytree(sdk/'lib'/framework, destination, symlinks=True,
+                                ignore=shutil.ignore_patterns('Headers', 'Modules', '*.prl'))
+            resolved = target.resolve(strict=True)
+            if resolved != path:
+                queue.append(resolved)
     # Verify the executable finds the bundled frameworks, never the local SDK.
     loads = output('llvm-objdump-18', '--macho', '--private-headers', contents/'MacOS/Eidolon')
     if '@executable_path/../Frameworks' not in loads:
         raise ValueError('App-relative Frameworks rpath missing')
+    list(macos_frameworks(bundle))
     return report
 
 
@@ -156,10 +162,17 @@ def main():
                         build_validation='Linux cross-build; dependency/architecture checks only here. See delivery evidence for Wine tests. No native Windows/macOS execution.',
                         minimum_os='Windows 10 1809 x64' if args.platform=='windows' else 'macOS 13.3',
                         dependencies=dependencies,
-                        files={p.relative_to(stage).as_posix():digest(p) for p in sorted(stage.rglob('*')) if p.is_file()})
+                        files={p.relative_to(stage).as_posix():digest(p) for p in sorted(stage.rglob('*'))
+                               if p.is_file() and not p.is_symlink()})
+        if args.platform == 'macos':
+            metadata['signing'] = 'Cross-build only. App signing and notarization have not been verified on macOS.'
+            metadata['symlinks'] = {p.relative_to(stage).as_posix():p.readlink().as_posix()
+                                    for p in sorted(stage.rglob('*')) if p.is_symlink()}
         (stage/'package-manifest.json').write_text(json.dumps(metadata, indent=2)+'\n')
         label = 'windows-x86_64' if args.platform == 'windows' else 'macos-universal'
-        archive = Path(shutil.make_archive(str(destination/('Eidolon-0.1.0-'+label)), 'zip', root_dir=stage))
+        archive = destination/('Eidolon-0.1.0-'+label+'.zip')
+        with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as package:
+            write_tree(package, stage)
         archive.with_suffix('.zip.manifest.json').write_text(json.dumps(metadata, indent=2)+'\n')
         archive.with_suffix('.zip.sha256').write_text(digest(archive)+'  '+archive.name+'\n')
         print('Cross-built payload:', archive)
