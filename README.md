@@ -7,7 +7,7 @@ reimplements TORA's familiar workflows with independent C++/Qt internals.
 Repository: [Nitir4/Eidolon](https://github.com/Nitir4/Eidolon).
 The main screen has a discreet **GitHub ↗** link in its lower-right corner.
 It opens this repository in the default browser and is hidden on module screens.
-Latest [Windows, macOS and Linux test packages](https://github.com/Nitir4/Eidolon/releases/tag/v0.1.0-test.20261113).
+Latest [Windows, macOS and Linux test packages](https://github.com/Nitir4/Eidolon/releases/tag/v0.1.0-test.20261124).
 On this laptop, launch `eidolon` or choose **Eidolon** in wofi. The former
 `tora-clone` command and old installed releases have been removed. Saved-file
 identifiers and window preferences are preserved. Earlier delivery notes below
