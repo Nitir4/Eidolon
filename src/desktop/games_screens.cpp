@@ -53,7 +53,73 @@ class Graph final:public QWidget{public:GamesController& c;double zoom=1;explici
 void failure(GamesController& c,const QString& e){if(!e.isEmpty())c.dialogs().showError("Games",e);}
 void solve(ApplicationShell& shell,bool graphical){auto& c=gamesController(shell);QString e;if(c.solve(e,graphical))shell.navigate(graphical?"games/graphical":"games/result");else failure(c,e);}
 QWidget* input(ApplicationShell& shell){auto& c=gamesController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* form=new QFormLayout;auto* title=new QLineEdit;title->setObjectName("games-title");auto* rows=new QSpinBox;rows->setRange(1,100);rows->setValue(2);rows->setObjectName("games-rows");auto* cols=new QSpinBox;cols->setRange(1,100);cols->setValue(2);cols->setObjectName("games-columns");form->addRow("Title",title);form->addRow("Player A strategies",rows);form->addRow("Player B strategies",cols);auto* notation=new QComboBox;notation->addItems({"Decimal","Scientific"});notation->setObjectName("games-notation");auto* digits=new QSpinBox;digits->setRange(0,core::NumberFormatter::MaximumDigits);digits->setValue(5);digits->setObjectName("games-format-n");auto* decimals=new QSpinBox;decimals->setRange(0,core::NumberFormatter::MaximumDigits);decimals->setValue(2);decimals->setObjectName("games-format-d");form->addRow("Notation",notation);form->addRow("N",digits);form->addRow("D",decimals);layout->addLayout(form);auto* init=new QPushButton("Initialize");init->setObjectName("games-initialize");layout->addWidget(init);auto* grid=new QTableWidget;grid->setObjectName("games-input-grid");grid->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);layout->addWidget(grid,1);auto updating=std::make_shared<bool>(false);auto render=[&c,title,rows,cols,grid,updating,notation,digits,decimals]{*updating=true;if(const auto* d=c.document()){title->setText(QString::fromStdString(d->title()));notation->setCurrentIndex(d->format().notation==core::Notation::Decimal?0:1);digits->setValue(d->format().n);decimals->setValue(d->format().d);rows->setValue(static_cast<int>(d->payoff().rows()));cols->setValue(static_cast<int>(d->payoff().columns()));grid->setRowCount(rows->value());grid->setColumnCount(cols->value());for(int r=0;r<rows->value();++r){grid->setVerticalHeaderItem(r,new QTableWidgetItem(QString::fromStdString(d->rowNames()[static_cast<std::size_t>(r)])));for(int col=0;col<cols->value();++col)grid->setItem(r,col,new QTableWidgetItem(QString::fromStdString(d->cell(r,col))));}for(int col=0;col<cols->value();++col)grid->setHorizontalHeaderItem(col,new QTableWidgetItem(QString::fromStdString(d->columnNames()[static_cast<std::size_t>(col)])));}else{grid->setRowCount(0);grid->setColumnCount(0);title->clear();}grid->setEditTriggers(c.readOnly()?QAbstractItemView::NoEditTriggers:(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed));title->setReadOnly(c.readOnly());notation->setEnabled(!c.readOnly());digits->setEnabled(!c.readOnly());decimals->setEnabled(!c.readOnly());*updating=false;};QObject::connect(&c,&GamesController::inputReset,page,render);QObject::connect(init,&QPushButton::clicked,page,[&c,title,rows,cols,notation,digits,decimals]{QString e;core::NumberFormat f;f.n=digits->value();f.d=decimals->value();f.notation=notation->currentIndex()==0?core::Notation::Decimal:core::Notation::Scientific;if(!c.setFormat(f,e)){failure(c,e);return;}if(!c.initialize(title->text(),rows->value(),cols->value(),e))failure(c,e);});QObject::connect(grid,&QTableWidget::cellChanged,page,[&c,grid,updating](int r,int col){if(*updating)return;QString e;if(!c.editCell(r,col,grid->item(r,col)->text(),e))failure(c,e);});QObject::connect(grid->verticalHeader(),&QHeaderView::sectionClicked,page,[&c](int at){c.selectLine(true,at);});QObject::connect(grid->horizontalHeader(),&QHeaderView::sectionClicked,page,[&c](int at){c.selectLine(false,at);});QObject::connect(grid->verticalHeader(),&QHeaderView::sectionDoubleClicked,page,[&c](int at){c.selectLine(true,at,true);});QObject::connect(grid->horizontalHeader(),&QHeaderView::sectionDoubleClicked,page,[&c](int at){c.selectLine(false,at,true);});auto commit=[&c,title,grid,notation,digits,decimals]{if(auto* focus=QApplication::focusWidget();focus&&grid->isAncestorOf(focus))grid->setFocus();QString e;for(int r=0;r<grid->rowCount();++r)for(int col=0;col<grid->columnCount();++col)if(!c.editCell(r,col,grid->item(r,col)->text(),e))return;if(!c.setTitle(title->text(),e))return;core::NumberFormat f;f.n=digits->value();f.d=decimals->value();f.notation=notation->currentIndex()==0?core::Notation::Decimal:core::Notation::Scientific;c.setFormat(f,e);};QObject::connect(&c,&GamesController::commitRequested,page,commit);auto* bar=new QHBoxLayout;auto* lp=new QPushButton("LP-based");lp->setObjectName("games-lp-based");auto* graphical=new QPushButton("Graphical");graphical->setObjectName("games-graphical");bar->addWidget(lp);bar->addWidget(graphical);layout->addLayout(bar);QObject::connect(lp,&QPushButton::clicked,page,[&shell]{solve(shell,false);});QObject::connect(graphical,&QPushButton::clicked,page,[&shell]{solve(shell,true);});auto eligibility=[&c,lp,graphical,init]{lp->setEnabled(c.document());graphical->setEnabled(c.document()&&c.document()->payoff().rows()==2);init->setEnabled(!c.readOnly());};QObject::connect(&c,&GamesController::changed,page,eligibility);eligibility();render();polishUsableFonts(*page);return page;}
-QWidget* output(ApplicationShell& shell){auto& c=gamesController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* split=new QSplitter;auto* text=new QPlainTextEdit;text->setReadOnly(true);text->setObjectName("games-result");split->addWidget(text);auto* graph=new Graph(c);split->addWidget(graph);auto* tabs=new QTabWidget;tabs->addTab(split,"Solution / Graph");auto* steps=new HistoryView("games");steps->setObjectName("games-history");tabs->addTab(steps,"Steps / Iterations");layout->addWidget(tabs,1);auto* buttons=new QHBoxLayout;auto* in=new QPushButton("Zoom In");auto* out=new QPushButton("Zoom Out");auto* print=new QPushButton("Print");in->setObjectName("games-zoom-in");out->setObjectName("games-zoom-out");print->setObjectName("games-print");buttons->addWidget(in);buttons->addWidget(out);buttons->addWidget(print);layout->addLayout(buttons);auto render=[&c,text,graph,in,out,steps]{QStringList titles;if(c.result())for(std::size_t i=0;i<c.result()->history.size();++i)titles<<QString::number(i+1)+". "+QString::fromStdString(c.result()->history[i].event);steps->setHistory(titles,[&c](int i){return gameStepText(*c.document(),*c.result(),i);});text->setPlainText(c.outputText());graph->setVisible(c.graph());in->setVisible(c.graph());out->setVisible(c.graph());graph->update();};QObject::connect(&c,&GamesController::changed,page,render);QObject::connect(in,&QPushButton::clicked,page,[graph]{graph->zoom=std::min(16.,graph->zoom*1.25);graph->update();});QObject::connect(out,&QPushButton::clicked,page,[graph]{graph->zoom=std::max(0.25,graph->zoom/1.25);graph->update();});QObject::connect(print,&QPushButton::clicked,page,[&c,&shell]{auto outcome=requestLpPrint(&shell,[&c](QPrinter& p){return printGames(p,c);});if(outcome==PrintOutcome::Failed)failure(c,"The Games print job could not be completed.");});auto* back=new QPushButton("Input Data");layout->addWidget(back);QObject::connect(back,&QPushButton::clicked,page,[&shell]{shell.navigate("games/input");});render();polishUsableFonts(*page);return page;}
+QWidget* output(ApplicationShell& shell) {
+    auto& controller = gamesController(shell);
+    auto* page = new QWidget;
+    auto* layout = new QVBoxLayout(page);
+    auto* tabs = new QTabWidget;
+    auto* split = new QSplitter;
+    auto* text = new QPlainTextEdit;
+    text->setReadOnly(true);
+    text->setObjectName("games-result");
+    split->addWidget(text);
+    auto* graph = new Graph(controller);
+    split->addWidget(graph);
+    tabs->addTab(split, "Solution / Graph");
+    auto* steps = new HistoryView("games");
+    steps->setObjectName("games-history");
+    tabs->addTab(steps, "Steps / Iterations");
+    layout->addWidget(tabs, 1);
+
+    auto* buttons = new QHBoxLayout;
+    auto* in = new QPushButton("Zoom In");
+    auto* out = new QPushButton("Zoom Out");
+    auto* print = new QPushButton("Print");
+    in->setObjectName("games-zoom-in");
+    out->setObjectName("games-zoom-out");
+    print->setObjectName("games-print");
+    buttons->addWidget(in);
+    buttons->addWidget(out);
+    buttons->addWidget(print);
+    layout->addLayout(buttons);
+
+    const auto render = [&controller, text, graph, in, out, steps] {
+        QStringList titles;
+        if (const auto* result = controller.result()) {
+            for (std::size_t i = 0; i < result->history.size(); ++i)
+                titles << QString::number(i + 1) + ". " + QString::fromStdString(result->history[i].event);
+        }
+        steps->setHistory(titles, [&controller](int index) {
+            return gameStepText(*controller.document(), *controller.result(), index);
+        });
+        const bool graphical = controller.graph() != nullptr;
+        text->setPlainText(controller.outputText());
+        graph->setVisible(graphical);
+        in->setVisible(graphical);
+        out->setVisible(graphical);
+        graph->update();
+    };
+    QObject::connect(&controller, &GamesController::changed, page, render);
+    QObject::connect(in, &QPushButton::clicked, page, [graph] {
+        graph->zoom = std::min(16., graph->zoom * 1.25);
+        graph->update();
+    });
+    QObject::connect(out, &QPushButton::clicked, page, [graph] {
+        graph->zoom = std::max(0.25, graph->zoom / 1.25);
+        graph->update();
+    });
+    QObject::connect(print, &QPushButton::clicked, page, [&controller, &shell] {
+        const auto outcome = requestLpPrint(&shell, [&controller](QPrinter& p) { return printGames(p, controller); });
+        if (outcome == PrintOutcome::Failed)
+            failure(controller, "The Games print job could not be completed.");
+    });
+    auto* back = new QPushButton("Input Data");
+    layout->addWidget(back);
+    QObject::connect(back, &QPushButton::clicked, page, [&shell] { shell.navigate("games/input"); });
+    render();
+    polishUsableFonts(*page);
+    return page;
+}
 void menus(ApplicationShell& shell,QMenuBar& bar){auto& c=gamesController(shell);auto* file=bar.addMenu("File");auto* create=file->addAction("New",&shell,[&shell,&c]{if(c.leaveInput()){c.beginNew();shell.navigate("games/input");}});auto* open=file->addAction("Open…",&shell,[&shell,&c]{if(c.requestOpen())shell.navigate("games/input");});auto* save=file->addAction("Save",&c,[&c]{c.requestSave();});auto* saveAs=file->addAction("Save As…",&c,[&c]{c.requestSave();});create->setShortcut(QKeySequence::New);open->setShortcut(QKeySequence::Open);save->setShortcut(QKeySequence::Save);saveAs->setShortcut(QKeySequence::SaveAs);auto* edit=bar.addMenu("EditGrid");auto* undo=edit->addAction("Undo Last Insert, Paste, Or Delete");auto* copy=edit->addAction("Copy Column or Row");auto* paste=edit->addAction("Paste on Column or Row");auto* erase=edit->addAction("Delete Column or Row");auto* insert=edit->addAction("Insert Column or Row");undo->setShortcut(QKeySequence("Ctrl+U"));copy->setShortcut(QKeySequence("Ctrl+C"));paste->setShortcut(QKeySequence("Ctrl+P"));erase->setShortcut(QKeySequence("Ctrl+D"));insert->setShortcut(QKeySequence("Ctrl+I"));QObject::connect(copy,&QAction::triggered,&c,[&c]{c.copySelection();});const auto operation=[&c](int op){QString e;if(!c.editSelection(op,e))failure(c,e);};QObject::connect(undo,&QAction::triggered,&c,[operation]{operation(0);});QObject::connect(paste,&QAction::triggered,&c,[operation]{operation(1);});QObject::connect(erase,&QAction::triggered,&c,[operation]{operation(2);});QObject::connect(insert,&QAction::triggered,&c,[operation]{operation(3);});auto updateEdit=[&c,undo,copy,paste,erase,insert]{undo->setEnabled(c.canUndo());copy->setEnabled(c.hasSelection());paste->setEnabled(c.canPaste());erase->setEnabled(c.hasSelection()&&!c.readOnly());insert->setEnabled(c.hasSelection()&&!c.readOnly());};QObject::connect(&c,&GamesController::changed,edit,updateEdit);updateEdit();auto* menu=bar.addMenu("Solve Problem");auto* lp=menu->addAction("LP-based",&shell,[&shell]{solve(shell,false);});auto* graph=menu->addAction("Graphical",&shell,[&shell]{solve(shell,true);});auto update=[&c,lp,graph]{lp->setEnabled(c.document());graph->setEnabled(c.document()&&c.document()->payoff().rows()==2);};QObject::connect(&c,&GamesController::changed,menu,update);update();bar.addAction("MAIN Menu",&shell,[&shell]{shell.navigate("main");});}
 }
 ModuleDescriptor gamesModule(){ModuleDescriptor m{"games","Zero-Sum Games","games/input",{}, {}};m.screens.append({"games/input","ZERO-SUM GAMES",input,menus});m.screens.append({"games/result","ZERO-SUM GAMES",output,menus});m.screens.append({"games/graphical","ZERO-SUM GAMES",output,menus});m.beforeLeave=[](ApplicationShell& shell,const QString&,const QString& to){return to.startsWith("games/")?gamesController(shell).commitInput():gamesController(shell).leaveInput();};return m;}
