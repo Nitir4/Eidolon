@@ -5,7 +5,6 @@
 #include <QPrinter>
 #include <QTableWidget>
 #include <QPushButton>
-#include <QPlainTextEdit>
 #include <QTabWidget>
 #include <QComboBox>
 #include <QProcess>
@@ -36,7 +35,15 @@ private slots:
   QCOMPARE(*c.solutionInverse()->determinant,-3.);QVERIFY(std::abs(c.solutionInverse()->inverse(0,0)-1./3)<1e-12);QVERIFY(std::abs(c.solutionInverse()->inverse(1,1)+2./3)<1e-12);
   QVERIFY(c.solutionInverse()->trace.empty());QVERIFY(!c.result()->trace.empty());QCOMPARE(c.result()->trace.front().augmented.columns(),std::size_t(3));
   auto text=c.outputText();QVERIFY(text.contains("ASSOCIATED MATRIX INVERSE"));QVERIFY(text.contains("Determinant = -3.00"));QVERIFY(text.contains("0.33  0.33"));QVERIFY(text.contains("0.33  -0.67"));QVERIFY(text.contains("x1 = 2.00"));QVERIFY(text.contains("x2 = 1.00"));
-  QVERIFY(shell.navigate("equations/result"));auto* result=shell.currentContent()->findChild<QPlainTextEdit*>("equations-result");QVERIFY(result);QVERIFY(result->toPlainText().contains("ASSOCIATED MATRIX INVERSE"));
+  QVERIFY(shell.navigate("equations/result"));
+  auto* page = shell.currentContent();
+  auto* result = page->findChild<QTableWidget*>("equations-result");
+  auto* original = page->findChild<QTableWidget*>("equations-original-grid");
+  auto* associated = page->findChild<QTableWidget*>("equations-associated-inverse");
+  QVERIFY(result && original && associated);
+  QCOMPARE(result->item(0,1)->text(),QStringLiteral("2.00"));
+  QCOMPARE(original->horizontalHeaderItem(2)->text(),QStringLiteral("RHS"));
+  QCOMPARE(associated->item(1,1)->text(),QStringLiteral("-0.67"));
   QTemporaryDir temporary;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);const auto pdf=temporary.filePath("square-summary.pdf");printer.setOutputFileName(pdf);QVERIFY(printEquations(printer,c,equationsTraceText(c,0)));
   const auto extractor=QStandardPaths::findExecutable("pdftotext");if(!extractor.isEmpty()){
    QProcess process;process.start(extractor,{pdf,"-"});QVERIFY(process.waitForFinished());QCOMPARE(process.exitCode(),0);text=QString::fromUtf8(process.readAllStandardOutput());QVERIFY(text.contains("ASSOCIATED MATRIX INVERSE"));QVERIFY(text.contains("Determinant = -3.00"));QVERIFY(text.contains("UNIQUE SOLUTION"));QVERIFY(text.contains("SELECTED ITERATIONS"));

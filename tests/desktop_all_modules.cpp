@@ -17,6 +17,7 @@
 #include <QTest>
 #include <QPlainTextEdit>
 #include <QTabWidget>
+#include <QTableWidget>
 #include <QTreeWidget>
 #include <QComboBox>
 
@@ -78,6 +79,10 @@ private slots:
         const char* matrix[2][2]={{"4","7"},{"2","6"}};
         for(int i=0;i<2;++i)for(int j=0;j<2;++j)QVERIFY(equations.editCell(i,j,matrix[i][j],error));
         QVERIFY(equations.solve(error,true));QVERIFY(shell.navigate("equations/result"));
+        auto* original = shell.currentContent()->findChild<QTableWidget*>("equations-original-grid");
+        QVERIFY(original);
+        QCOMPARE(original->columnCount(),2);
+        capture(shell,"inverse-summary");
         auto* equationTabs = shell.currentContent()->findChild<QTabWidget*>("equations-result-tabs");
         QVERIFY(equationTabs);
         equationTabs->setCurrentIndex(equationTabs->count() - 1);

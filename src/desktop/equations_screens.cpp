@@ -16,7 +16,6 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <QHeaderView>
-#include <QPlainTextEdit>
 #include <QMenuBar>
 #include <QMenu>
 #include <QLabel>
@@ -200,13 +199,34 @@ QWidget* output(ApplicationShell& shell)
     auto& controller = equationsController(shell);
     auto* page = new QWidget;
     auto* layout = new QVBoxLayout(page);
+    auto* title = resultLabel(*layout, "equations-result-title", true);
+    auto* status = resultLabel(*layout, "equations-status", true);
+    auto* details = resultLabel(*layout, "equations-details");
     auto* tabs = new QTabWidget;
     tabs->setObjectName("equations-result-tabs");
     layout->addWidget(tabs, 1);
-    auto* text = new QPlainTextEdit;
-    text->setObjectName("equations-result");
-    text->setReadOnly(true);
-    tabs->addTab(text, "Summary");
+
+    auto* summary = new QWidget;
+    auto* summaryLayout = new QHBoxLayout(summary);
+    auto* inputGroup = new QGroupBox("Original equations");
+    auto* inputLayout = new QVBoxLayout(inputGroup);
+    auto* input = resultTable("equations-original-grid");
+    inputLayout->addWidget(input);
+    summaryLayout->addWidget(inputGroup, 1);
+    auto* resultGroup = new QGroupBox("Solution");
+    auto* resultLayout = new QVBoxLayout(resultGroup);
+    auto* result = resultTable("equations-result");
+    resultLayout->addWidget(result);
+    summaryLayout->addWidget(resultGroup, 1);
+    tabs->addTab(summary, "Summary");
+
+    auto* inverseTab = new QWidget;
+    auto* inverseLayout = new QVBoxLayout(inverseTab);
+    auto* determinant = resultLabel(*inverseLayout, "equations-associated-determinant", true);
+    auto* identity = resultLabel(*inverseLayout, "equations-associated-residual");
+    auto* associated = resultTable("equations-associated-inverse");
+    inverseLayout->addWidget(associated, 1);
+    const int inverseIndex = tabs->addTab(inverseTab, "Associated Inverse");
 
     auto* steps = new QWidget;
     auto* stepsLayout = new QVBoxLayout(steps);
@@ -244,6 +264,11 @@ QWidget* output(ApplicationShell& shell)
     footer->addWidget(back);
     layout->addLayout(footer);
 
+    const auto showSummaryLabels = [&controller,tabs,stepsIndex,status,details] {
+        const bool showingSteps = tabs->currentIndex() == stepsIndex;
+        status->setVisible(!showingSteps);
+        details->setVisible(!showingSteps && (controller.result() || controller.inverse()));
+    };
     const auto showTrace = [&controller,selector,traceModel,traceNote,previous,next,all] {
         const int selected = selector->currentIndex();
         const int allIndex = selector->count() - 1;
@@ -256,12 +281,23 @@ QWidget* output(ApplicationShell& shell)
             ? QStringLiteral("The trace reached its storage limit. The solve is complete.") : QString{});
         traceNote->setVisible(!traceNote->text().isEmpty());
     };
-    const auto refresh = [&controller,text,tabs,stepsIndex,selector,print,showTrace] {
-        const bool solved = controller.result() || controller.inverse();
-        text->setPlainText(controller.outputText());
+    const auto refresh = [&controller,title,status,details,tabs,inputGroup,input,resultGroup,result,
+                          inverseIndex,determinant,identity,associated,stepsIndex,selector,print,showTrace,showSummaryLabels] {
+        const auto* document = controller.document();
+        const auto* solution = controller.result();
+        const auto* inverse = controller.inverse();
+        const auto* associatedInverse = controller.solutionInverse();
+        const bool solved = document && (solution || inverse);
+        title->setText(document ? QString::fromStdString(document->title()) : QString{});
+        title->setVisible(!title->text().isEmpty());
+        status->setText("No current solution. Solve the problem first.");
+        details->clear();
+        tabs->setVisible(solved);
         print->setEnabled(solved);
+        tabs->setTabVisible(inverseIndex, associatedInverse != nullptr);
         const auto& iterations = equationSteps(controller);
         tabs->setTabVisible(stepsIndex, !iterations.empty());
+        showSummaryLabels();
         {
             const QSignalBlocker blocker(selector);
             selector->clear();
@@ -270,8 +306,65 @@ QWidget* output(ApplicationShell& shell)
             if (!iterations.empty()) selector->addItem("All iterations");
         }
         showTrace();
+        if (!solved) return;
+        const core::NumberFormatter format(document->format());
+        inputGroup->setTitle(document->matrixOnly() ? "Original matrix" : "Original equations");
+        const auto original = document->matrixOnly() ? document->coefficients() : document->augmented();
+        showEquationMatrix(*input, original, equationColumns(static_cast<int>(original.columns()), document->matrixOnly()), format);
+        if (inverse) {
+            status->setText(inverse->invertible ? "Matrix inverse" : "No inverse. The matrix is numerically singular.");
+            const auto residual = inverse->invertible
+                ? QStringLiteral("   |   Maximum identity residual = %1").arg(QString::number(inverse->maximumIdentityResidual, 'g', 6))
+                : QString{};
+            details->setText(determinantText(*inverse, format) + residual);
+            resultGroup->setTitle("Inverse matrix");
+            resultGroup->setVisible(inverse->invertible);
+            if (inverse->invertible)
+                showEquationMatrix(*result, inverse->inverse, equationColumns(static_cast<int>(inverse->inverse.columns()), true), format);
+            return;
+        }
+        const bool consistent = solution->status != equations::Status::Inconsistent;
+        const bool unique = solution->status == equations::Status::Unique;
+        status->setText(unique ? "Unique solution" : consistent ? "Infinitely many solutions" : "Inconsistent system. No solution.");
+        auto description = QStringLiteral("Coefficient rank = %1   |   Augmented rank = %2").arg(solution->rank).arg(solution->augmentedRank);
+        if (consistent) {
+            description += QStringLiteral("   |   Relative residual = %1").arg(QString::number(solution->relativeResidual, 'g', 6));
+            if (!unique) description += QStringLiteral("\nAdd any linear combination of the nullspace vectors to the particular solution.");
+            if (!controller.solutionInverseError().isEmpty())
+                description += QStringLiteral("\nAssociated inverse unavailable: ") + controller.solutionInverseError();
+        } else {
+            description += QStringLiteral("   |   yᵀb = %1   |   Maximum |yᵀA| = %2")
+                .arg(QString::number(solution->witnessRhs, 'g', 8), QString::number(solution->witnessCoefficientResidual, 'g', 8));
+        }
+        details->setText(description);
+        resultGroup->setVisible(true);
+        resultGroup->setTitle(consistent ? "Solution" : "Inconsistency witness");
+        const auto& values = consistent ? solution->solution : solution->inconsistencyWitness;
+        QStringList columns{consistent ? QStringLiteral("Variable") : QStringLiteral("Equation"),
+                            unique ? QStringLiteral("Value") : consistent ? QStringLiteral("Particular solution") : QStringLiteral("Witness coefficient")};
+        for (std::size_t index = 0; index < solution->nullspace.size(); ++index)
+            columns << QStringLiteral("Nullspace %1").arg(index + 1);
+        result->clearContents();
+        result->verticalHeader()->hide();
+        result->setColumnCount(static_cast<int>(columns.size()));
+        result->setHorizontalHeaderLabels(columns);
+        result->setRowCount(static_cast<int>(values.size()));
+        for (int row = 0; row < result->rowCount(); ++row) {
+            putResultCell(*result,row,0,(consistent ? QStringLiteral("x%1") : QStringLiteral("%1")).arg(row + 1),Qt::AlignLeft);
+            putResultCell(*result,row,1,QString::fromStdString(format.format(values[row])));
+            for (int vector = 0; vector < result->columnCount() - 2; ++vector)
+                putResultCell(*result,row,vector + 2,QString::fromStdString(format.format(solution->nullspace[vector][row])));
+        }
+        if (associatedInverse) {
+            determinant->setText(determinantText(*associatedInverse, format));
+            identity->setText(QStringLiteral("Maximum identity residual = %1")
+                              .arg(QString::number(associatedInverse->maximumIdentityResidual, 'g', 6)));
+            showEquationMatrix(*associated, associatedInverse->inverse,
+                equationColumns(static_cast<int>(associatedInverse->inverse.columns()), true), format);
+        }
     };
     QObject::connect(&controller, &EquationsController::changed, page, refresh);
+    QObject::connect(tabs, &QTabWidget::currentChanged, page, showSummaryLabels);
     QObject::connect(selector, &QComboBox::currentIndexChanged, page, showTrace);
     QObject::connect(previous, &QPushButton::clicked, page, [selector]{ selector->setCurrentIndex(selector->currentIndex() - 1); });
     QObject::connect(next, &QPushButton::clicked, page, [selector]{ selector->setCurrentIndex(selector->currentIndex() + 1); });
