@@ -1,6 +1,8 @@
 #include "planning_screens.hpp"
 #include "ui_font.hpp"
 #include "lp_printing.hpp"
+#include "screen_widgets.hpp"
+#include "ui_colors.hpp"
 #include <QFile>
 #include <QFileInfo>
 #include <QSaveFile>
@@ -100,25 +102,31 @@ void scheduleScene(QGraphicsScene& scene,const PlanningController& c,std::size_t
  scene.clear();if(!c.result()||!c.schedule())return;
  const auto& result=*c.result();const auto& scheduled=*c.schedule();
  const core::NumberFormatter formatter(c.format());auto fmt=[&](double value){return QString::fromStdString(formatter.format(value));};
- auto* heading=scene.addText(QString("CPM schedule: %1").arg(c.title()).left(180));heading->setTextWidth(1080);heading->setPos(5,0);
+ scene.setBackgroundBrush(QColor(colors::surface));
+ const auto chartText = [&scene](const QString& text) {
+    auto* item = scene.addText(text);
+    item->setDefaultTextColor(QColor(colors::text));
+    return item;
+ };
+ auto* heading=chartText(QString("CPM schedule: %1").arg(c.title()).left(180));heading->setTextWidth(1080);heading->setPos(5,0);
  const qreal top=std::max(65.,heading->boundingRect().height()+15),left=270,width=800,rowHeight=32;
  const auto end=std::min(first+count,result.activities.size());const qreal bottom=top+rowHeight*static_cast<qreal>(end-first);
  const auto duration=result.duration>0?result.duration:1.;
- for(int tick=0;tick<=10;++tick){const auto x=left+width*tick/10.;scene.addLine(x,top-10,x,bottom,QPen(QColor(220,220,220)));auto* label=scene.addText(fmt(result.duration*tick/10.));label->setPos(x-label->boundingRect().width()/2,top-35);}
+ for(int tick=0;tick<=10;++tick){const auto x=left+width*tick/10.;scene.addLine(x,top-10,x,bottom,QPen(QColor(220,220,220)));auto* label=chartText(fmt(result.duration*tick/10.));label->setPos(x-label->boundingRect().width()/2,top-35);}
  for(std::size_t i=first;i<end;++i){const auto& activity=c.problem().activities[i];const auto& timing=result.activities[i];const auto y=top+rowHeight*static_cast<qreal>(i-first)+8;
   const auto full=QString("%1. %2 (%3→%4)").arg(i+1).arg(QString::fromStdString(activity.symbol)).arg(activity.from).arg(activity.to);
-  auto* label=scene.addText(QFontMetricsF(scene.font()).elidedText(full,Qt::ElideRight,left-15));label->setPos(0,y-7);label->setToolTip(full);
+  auto* label=chartText(QFontMetricsF(scene.font()).elidedText(full,Qt::ElideRight,left-15));label->setPos(0,y-7);label->setToolTip(full);
   scene.addLine(left+width*timing.earliestStart/duration,y,left+width*timing.latestFinish/duration,y,QPen(QColor(185,185,185),8));
   const auto color=timing.critical?QColor(Qt::darkRed):QColor(Qt::darkBlue);
   const auto start=left+width*scheduled.starts[i]/duration,finish=left+width*scheduled.finishes[i]/duration;
   auto* bar=scene.addRect(start,y-4,std::max(1.,finish-start),8,QPen(color),QBrush(color));
   bar->setToolTip(full+QString("\nStart %1; finish %2; delay %3; total float %4").arg(fmt(scheduled.starts[i]),fmt(scheduled.finishes[i]),fmt(scheduled.starts[i]-timing.earliestStart),fmt(timing.totalFloat)));
  }
- auto* legend=scene.addText("Red: critical   Blue: scheduled activity   Gray: earliest start through latest finish   Time →");legend->setPos(0,bottom+8);
+ auto* legend=chartText("Red: critical   Blue: scheduled activity   Gray: earliest start through latest finish   Time →");legend->setPos(0,bottom+8);
  scene.setSceneRect(scene.itemsBoundingRect().adjusted(-10,-5,10,10));
 }
 QWidget* schedulePage(PlanningController& c,QWidget* parent){
- auto* page=new QWidget(parent);auto* layout=new QVBoxLayout(page);
+ auto* page=new QWidget(parent);blueCanvas(*page);auto* layout=new QVBoxLayout(page);
  auto* toolbar=new QGridLayout;auto* zoomIn=new QPushButton("Zoom In");zoomIn->setObjectName("planning-schedule-zoom-in");auto* zoomOut=new QPushButton("Zoom Out");zoomOut->setObjectName("planning-schedule-zoom-out");auto* print=new QPushButton("Print Graph");print->setObjectName("planning-schedule-print");auto* pageNumber=new QSpinBox;pageNumber->setObjectName("planning-schedule-page");toolbar->addWidget(zoomIn,0,0);toolbar->addWidget(zoomOut,0,1);toolbar->addWidget(print,1,0);auto* pageControls=new QHBoxLayout;pageControls->addWidget(new QLabel("Page"));pageControls->addWidget(pageNumber);toolbar->addLayout(pageControls,1,1);layout->addLayout(toolbar);
  auto* graph=new ScheduleView;graph->setObjectName("planning-schedule");graph->setMinimumSize(200,140);auto* scene=new QGraphicsScene(graph);graph->setScene(scene);graph->setRenderHint(QPainter::Antialiasing);graph->setAlignment(Qt::AlignLeft|Qt::AlignTop);layout->addWidget(graph,1);
  auto* controls=new QFormLayout;auto* activity=new QComboBox;activity->setObjectName("planning-schedule-activity");activity->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);activity->setMinimumContentsLength(10);activity->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Fixed);auto* shift=new QDoubleSpinBox;shift->setObjectName("planning-schedule-shift");shift->setDecimals(8);auto* apply=new QPushButton("Change Start");apply->setObjectName("planning-schedule-apply");auto* reset=new QPushButton("Reset Schedule");reset->setObjectName("planning-schedule-reset");controls->addRow("Activity",activity);controls->addRow("Shift by",shift);layout->addLayout(controls);auto* changes=new QGridLayout;changes->addWidget(apply,0,0);changes->addWidget(reset,0,1);layout->addLayout(changes);
@@ -154,7 +162,7 @@ QWidget* input(ApplicationShell& shell){auto& c=planningController(shell);auto* 
  QObject::connect(&c,&PlanningController::gridEditRequested,page,[&c,grid,before,undo,clipboard,snapshot,restore](int op){if(c.readOnly()||grid->rowCount()==0)return;const int row=grid->currentRow();if(op==4){if(*undo){restore(**undo);undo->reset();}return;}if(row<0)return;auto rows=snapshot();if(op==0){*clipboard=rows[row];return;}if(op==1){if(!*clipboard)return;*undo=rows;rows[row]=**clipboard;}else if(op==2){if(rows.size()>=10000)return;*undo=rows;rows.insert(row+(*before?0:1),QStringList{"","","","","","",""});}else if(op==3){*undo=rows;rows.removeAt(row);}restore(rows);});
  QObject::connect(grid,&QTableWidget::cellChanged,page,[grid,method,changing](int row,int column){if(*changing||row!=grid->rowCount()-1||grid->rowCount()>=10000||column!=(method->currentIndex()==0?3:6))return;auto present=[grid,row](int j){return grid->item(row,j)&&!grid->item(row,j)->text().trimmed().isEmpty();};if(!present(0)||!present(1)||!present(2)||!present(column))return;if(method->currentIndex()==1&&(!present(4)||!present(5)))return;*changing=true;grid->insertRow(row+1);for(int j=0;j<7;++j)grid->setItem(row+1,j,new QTableWidgetItem);*changing=false;});
 auto lock=[&c,add,remove]{add->setEnabled(!c.readOnly());remove->setEnabled(!c.readOnly());};QObject::connect(&c,&PlanningController::changed,page,lock);lock();render();polishUsableFonts(*page);return page;}
-QWidget* output(ApplicationShell& shell){auto& c=planningController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* text=new QPlainTextEdit;text->setObjectName("planning-result");text->setReadOnly(true);auto* tabs=new QTabWidget;tabs->setObjectName("planning-output-tabs");tabs->addTab(text,"Calculations");auto* graph=new PlanningGraphView;graph->setObjectName("planning-network");auto* scene=new QGraphicsScene(graph);graph->setScene(scene);graph->setRenderHint(QPainter::Antialiasing);tabs->addTab(graph,"Activity Network");tabs->addTab(schedulePage(c,page),"CPM Bar Chart");layout->addWidget(tabs,1);auto* deadline=new QDoubleSpinBox;deadline->setObjectName("planning-deadline");deadline->setRange(-1e100,1e100);deadline->setDecimals(6);auto* probability=new QLabel;probability->setObjectName("planning-probability");auto* form=new QFormLayout;auto* deadlineLabel=new QLabel("Completion deadline");auto* probabilityLabel=new QLabel("Approximate probability");form->addRow(deadlineLabel,deadline);form->addRow(probabilityLabel,probability);layout->addLayout(form);auto updateProbability = [&c,deadline,probability] {
+QWidget* output(ApplicationShell& shell){auto& c=planningController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* text=new QPlainTextEdit;text->setObjectName("planning-result");text->setReadOnly(true);auto* tabs=new QTabWidget;tabs->setObjectName("planning-output-tabs");tabs->addTab(text,"Results");auto* graph=new PlanningGraphView;graph->setObjectName("planning-network");auto* scene=new QGraphicsScene(graph);graph->setScene(scene);graph->setRenderHint(QPainter::Antialiasing);tabs->addTab(graph,"Network");tabs->addTab(schedulePage(c,page),"CPM Chart");layout->addWidget(tabs,1);auto* deadline=new QDoubleSpinBox;deadline->setObjectName("planning-deadline");deadline->setRange(-1e100,1e100);deadline->setDecimals(6);auto* probability=new QLabel;probability->setObjectName("planning-probability");auto* form=new QFormLayout;auto* deadlineLabel=new QLabel("Completion deadline");auto* probabilityLabel=new QLabel("Approximate probability");form->addRow(deadlineLabel,deadline);form->addRow(probabilityLabel,probability);layout->addLayout(form);auto updateProbability = [&c,deadline,probability] {
     probability->setText(c.result()
         ? QString::number(planning::approximateDeadlineProbability(*c.result(), deadline->value()), 'g', 8)
         : QString{});
@@ -168,7 +176,7 @@ auto update=[&c,text,deadline,scene,graph,tabs,deadlineLabel,probabilityLabel,pr
     updateProbability();
 };
 QObject::connect(deadline, qOverload<double>(&QDoubleSpinBox::valueChanged), page, updateProbability);
-auto* row=new QHBoxLayout;auto* print=new QPushButton("Write to Printer");print->setObjectName("planning-print");auto* back=new QPushButton("View/Modify Input Data");row->addWidget(print);row->addWidget(back);layout->addLayout(row);QObject::connect(print,&QPushButton::clicked,page,[&c,&shell]{if(requestLpPrint(&shell,[&c](QPrinter& p){return printPlanning(p,c);})==PrintOutcome::Failed)failure(c,"Printing failed.");});QObject::connect(back,&QPushButton::clicked,page,[&shell]{shell.navigate("planning/input");});update();
+auto* row=new QHBoxLayout;auto* print=new QPushButton("Print Results");print->setObjectName("planning-print");auto* back=new QPushButton("Edit Input");row->addWidget(print);row->addWidget(back);layout->addLayout(row);QObject::connect(print,&QPushButton::clicked,page,[&c,&shell]{if(requestLpPrint(&shell,[&c](QPrinter& p){return printPlanning(p,c);})==PrintOutcome::Failed)failure(c,"Printing failed.");});QObject::connect(back,&QPushButton::clicked,page,[&shell]{shell.navigate("planning/input");});update();
 QObject::connect(&c, &PlanningController::changed, page, std::move(update));
 polishUsableFonts(*page);return page;}
 void menus(ApplicationShell& shell,QMenuBar& bar,bool editing){auto& c=planningController(shell);auto* file=bar.addMenu("File");file->addAction("New",&shell,[&shell,&c]{if(c.leaveInput()){c.beginNew();shell.navigate("planning/input");}});file->addAction("Open…",&shell,[&shell,&c]{if(c.requestOpen())shell.navigate("planning/input");});file->addAction("Save As…",&c,[&c]{c.requestSave();});auto* edit=bar.addMenu("EditGrid");const QStringList labels{"Copy Row","Paste Row","Insert Row","Delete Row","Undo"};for(int op=0;op<labels.size();++op){auto* action=edit->addAction(labels[op],&c,[&c,op]{emit c.gridEditRequested(op);});action->setEnabled(editing&&!c.readOnly());}bar.addAction("Solve Problem",&shell,[&shell]{run(shell);});bar.addAction("MAIN Menu",&shell,[&shell]{shell.navigate("main");});}

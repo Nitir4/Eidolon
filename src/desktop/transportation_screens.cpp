@@ -421,8 +421,8 @@ QWidget* iterations(ApplicationShell& shell)
     auto* balance = new QLabel(text(controller.balancing()));
     balance->setObjectName(QStringLiteral("transport-balancing"));balance->setWordWrap(true);layout->addWidget(balance);
     auto* tabs=new QTabWidget;tabs->setObjectName(QStringLiteral("transport-phases"));layout->addWidget(tabs,1);
-    auto* modi=new QWidget;auto* modiLayout=new QVBoxLayout(modi);tabs->addTab(modi,QStringLiteral("MODI iterations"));
-    auto* construction=new QWidget;auto* constructionLayout=new QVBoxLayout(construction);
+    auto* modi=new QWidget;blueCanvas(*modi);auto* modiLayout=new QVBoxLayout(modi);tabs->addTab(modi,QStringLiteral("MODI iterations"));
+    auto* construction=new QWidget;blueCanvas(*construction);auto* constructionLayout=new QVBoxLayout(construction);
     tabs->addTab(construction,QStringLiteral("Initial allocation steps"));
     auto* allocationControls=new QHBoxLayout;
     auto* previousAllocation=new QPushButton(QStringLiteral("Previous allocation"));previousAllocation->setObjectName(QStringLiteral("transport-allocation-previous"));

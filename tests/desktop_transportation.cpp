@@ -21,6 +21,7 @@
 #include <QTabWidget>
 #include <QPrinter>
 #include "transportation_printing.hpp"
+#include "ui_colors.hpp"
 
 using namespace tora::desktop;
 class DesktopTransportation: public QObject {
@@ -35,6 +36,11 @@ private slots:
             QCOMPARE(c.solutionProblem().dummyDestinations,std::vector<std::size_t>{3});
             QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.resize(1366,768);shell.show();QTest::qWait(20);
             auto* page=shell.currentContent();auto* tabs=page->findChild<QTabWidget*>("transport-phases");QVERIFY(tabs);
+            for (int i = 0; i < tabs->count(); ++i) {
+                const auto* panel = tabs->widget(i);
+                QVERIFY(panel->autoFillBackground());
+                QCOMPARE(panel->palette().color(QPalette::Window),QColor(colors::canvas));
+            }
             auto* balancing=page->findChild<QLabel*>("transport-balancing");QVERIFY(balancing->text().contains("unused supply"));
             auto* modi=page->findChild<QTableWidget*>("transport-tableau");QCOMPARE(modi->columnCount(),8);
             tabs->setCurrentIndex(1);

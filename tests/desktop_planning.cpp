@@ -16,6 +16,8 @@
 #include <QDir>
 #include <QLineEdit>
 #include <QApplication>
+#include <QScrollArea>
+#include <QScrollBar>
 using namespace tora::desktop;
 class DesktopPlanning:public QObject {
 Q_OBJECT
@@ -50,6 +52,35 @@ private slots:
   const auto artifactDir=QCoreApplication::applicationDirPath()+"/planning-native-scale-"+qEnvironmentVariable("QT_SCALE_FACTOR","1");QVERIFY(QDir().mkpath(artifactDir));QVERIFY(shell.grab().save(artifactDir+"/schedule.png"));
   QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);const auto path=artifactDir+"/schedule.pdf";printer.setOutputFileName(path);QVERIFY(printPlanningSchedule(printer,c));QString text,pdfError;QVERIFY2(tora::test::extractPdfText(path,text,pdfError),qPrintable(pdfError));QVERIFY(text.contains("Schedule oracle"));QVERIFY(text.contains("critical"));
   QTest::mouseClick(reset,Qt::LeftButton);QCOMPARE(c.schedule()->starts[2],0.);QCOMPARE(c.schedule()->starts[3],2.);QCOMPARE(c.result()->duration,8.);QCOMPARE(c.problem().activities[2].duration,2.);
+ }
+
+ void chartFitsCompactTileWithLargeText(){
+  struct RestoreFont {
+   QFont old = QApplication::font();
+   ~RestoreFont(){QApplication::setFont(old);}
+  } restore;
+  auto font = restore.old;
+  font.setPixelSize(30);
+  QApplication::setFont(font);
+  ApplicationShell shell;
+  QVERIFY(shell.registerModule(planningModule()));
+  auto& controller = planningController(shell);
+  tora::planning::Problem project;
+  project.activities = {{1,2,"A",3},{2,4,"B",5},{1,3,"C",2},{3,4,"D",2}};
+  QString error;
+  QVERIFY(controller.setProblem("Compact CPM chart",project,error));
+  QVERIFY(controller.solve(error));
+  QVERIFY(shell.navigate("planning/result"));
+  shell.resize(683,384);
+  shell.show();
+  auto* content = shell.currentContent();
+  auto* tabs = content->findChild<QTabWidget*>("planning-output-tabs");
+  QVERIFY(tabs);
+  tabs->setCurrentIndex(2);
+  auto* scroll = qobject_cast<QScrollArea*>(content->parentWidget()->parentWidget());
+  QVERIFY(scroll);
+  QTRY_COMPARE(scroll->horizontalScrollBar()->maximum(),0);
+  QCOMPARE(shell.width(),683);
  }
 
  void cachedOutputSwitchesPlanningMethod(){

@@ -93,7 +93,15 @@ private slots:
     ApplicationShell shell;QVERIFY(shell.registerModule(assignmentModule()));QVERIFY(shell.registerModule(gamesModule()));shell.resize(1200,850);shell.show();QTemporaryDir dir;
     auto& ac=assignmentController(shell);ac.dialogs().askSave=[] {return SaveChoice::No;};QVERIFY(ac.openFile(example("26-Q2.assignment.txt")));QVERIFY(ac.solve());const auto aBefore=encodeAssignment(*ac.data());const auto aObjective=ac.result()->objective;const auto aSteps=ac.result()->history.size();
     const auto exercise=[&](const QString& prefix){auto* view=shell.currentContent()->findChild<HistoryView*>(prefix+"-history");QVERIFY(view);auto* tabs=shell.currentContent()->findChild<QTabWidget*>();QVERIFY(tabs);tabs->setCurrentWidget(view);auto* selector=view->findChild<QComboBox*>(prefix+"-step-selector");QVERIFY(selector&&selector->count()>2);auto* text=view->findChild<QPlainTextEdit*>(prefix+"-step-text");QVERIFY(text);const auto first=text->toPlainText();QTest::mouseClick(view->findChild<QPushButton*>(prefix+"-step-next"),Qt::LeftButton);QCOMPARE(selector->currentIndex(),1);QVERIFY(text->toPlainText()!=first);QTest::mouseClick(view->findChild<QPushButton*>(prefix+"-step-previous"),Qt::LeftButton);QCOMPARE(text->toPlainText(),first);selector->setCurrentIndex(selector->count()-1);QVERIFY(!view->findChild<QPushButton*>(prefix+"-step-next")->isEnabled());QTest::mouseClick(view->findChild<QPushButton*>(prefix+"-step-all"),Qt::LeftButton);QCOMPARE(text->toPlainText(),view->completeText());const auto path=dir.filePath(prefix+".txt");QVERIFY(view->exportTo(path));QCOMPARE(QString::fromUtf8(read(path)),view->completeText());QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);const auto pdf=dir.filePath(prefix+".pdf");printer.setOutputFileName(pdf);QVERIFY(view->printTo(printer));QVERIFY(read(pdf).startsWith("%PDF-"));
-        const auto root=qEnvironmentVariable("TORA_UI_CAPTURES");if(!root.isEmpty()){QVERIFY(QDir().mkpath(root));selector->setCurrentIndex(prefix=="assignment"?5:3);QApplication::processEvents();QVERIFY(shell.grab().save(root+"/"+prefix+"-steps.png"));QVERIFY(QFile::copy(pdf,root+"/"+prefix+"-history.pdf"));}
+        const auto root=qEnvironmentVariable("TORA_UI_CAPTURES");
+        if(!root.isEmpty()){
+            const auto scale=qEnvironmentVariable("QT_SCALE_FACTOR","1");
+            QVERIFY(QDir().mkpath(root));
+            selector->setCurrentIndex(prefix=="assignment"?5:3);
+            QApplication::processEvents();
+            QVERIFY(shell.grab().save(root+"/"+prefix+"-steps-"+scale+".png"));
+            QVERIFY(QFile::copy(pdf,root+"/"+prefix+"-history-"+scale+".pdf"));
+        }
     };
     exercise("assignment");QCOMPARE(encodeAssignment(*ac.data()),aBefore);QCOMPARE(ac.result()->objective,aObjective);QCOMPARE(ac.result()->history.size(),aSteps);
     auto& gc=gamesController(shell);QString error;QVERIFY(gc.openFile(example("game.json"),error));QVERIFY(gc.solve(error));QVERIFY(shell.navigate("games/result"));const auto gBefore=encodeGameJson(*gc.document());const auto gSteps=gc.result()->history.size();exercise("games");QCOMPARE(encodeGameJson(*gc.document()),gBefore);QCOMPARE(gc.result()->value,0.);QCOMPARE(gc.result()->history.size(),gSteps);
