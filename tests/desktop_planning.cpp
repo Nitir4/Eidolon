@@ -9,6 +9,7 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
+#include <QLabel>
 #include <QTabWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -56,7 +57,17 @@ private slots:
   tora::planning::Problem pert;pert.method=tora::planning::Method::Pert;pert.activities={{1,2,"PERT A",0,1,3,5}};QVERIFY(c.setProblem("PERT",pert,error));QVERIFY(c.solve(error));QVERIFY(shell.navigate("planning/result"));shell.show();QTest::qWait(20);
   auto* page=shell.currentContent();auto* tabs=page->findChild<QTabWidget*>("planning-output-tabs");QVERIFY(tabs);QVERIFY(!tabs->isTabVisible(2));QVERIFY(page->findChild<QDoubleSpinBox*>("planning-deadline")->isVisible());
   tora::planning::Problem cpm;cpm.activities={{1,2,"CPM B",4}};QVERIFY(c.setProblem("CPM",cpm,error));QVERIFY(c.solve(error));QVERIFY(shell.navigate("planning/result"));QCOMPARE(shell.currentContent(),page);QVERIFY(tabs->isTabVisible(2));QVERIFY(!page->findChild<QDoubleSpinBox*>("planning-deadline")->isVisible());QVERIFY(tabs->findChild<QComboBox*>("planning-schedule-activity")->itemText(0).contains("CPM B"));
-  QVERIFY(c.setProblem("PERT",pert,error));QVERIFY(c.solve(error));QVERIFY(!tabs->isTabVisible(2));QVERIFY(page->findChild<QDoubleSpinBox*>("planning-deadline")->isVisible());
+  pert.activities = {{1,2,"New PERT project",0,19,20,21}};
+  QVERIFY(c.setProblem("Different PERT project",pert,error));QVERIFY(c.solve(error));
+  QVERIFY(!tabs->isTabVisible(2));
+  auto* deadline = page->findChild<QDoubleSpinBox*>("planning-deadline");
+  auto* probability = page->findChild<QLabel*>("planning-probability");
+  QVERIFY(deadline && deadline->isVisible() && probability);
+  QCOMPARE(deadline->value(),20.);
+  QCOMPARE(probability->text(),QStringLiteral("0.5"));
+  deadline->setValue(21.);
+  QVERIFY(c.setFormat({tora::core::Notation::Decimal,5,3},error));
+  QCOMPARE(deadline->value(),21.);
  }
 
 };
