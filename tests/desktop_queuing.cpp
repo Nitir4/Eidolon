@@ -9,6 +9,7 @@
 #include <QSpinBox>
 #include <QPushButton>
 #include <QPlainTextEdit>
+#include <QTabWidget>
 #include <QAction>
 #include <QHeaderView>
 #include <QApplication>
@@ -82,13 +83,14 @@ private slots:
   QVERIFY(c.outputText().contains("Capped-profile true mean = 497.00000"));
   QVERIFY(c.outputText().contains("Partial mean excluding capped terminal state = 472.10647"));
   QVERIFY(shell.navigate("queuing/result"));shell.resize(1000,800);shell.show();QTest::qWait(20);
-  auto* visible=shell.currentContent()->findChild<QPlainTextEdit*>("queuing-result");QVERIFY(visible);
-  QVERIFY(visible->toPlainText().contains("REQUESTED MODEL STATE PROBABILITIES"));
-  QVERIFY(visible->toPlainText().contains("stops summing after the first probability below 0.00001"));
-  // Controls must fit a compact logical-width tile at 200% without forcing
-  // the shell to scroll horizontally and hiding state/print controls.
+  auto* notes = shell.currentContent()->findChild<QPlainTextEdit*>("queuing-model-notes");
+  auto* states = shell.currentContent()->findChild<QTableWidget*>("queuing-state-probabilities");
+  auto* tabs = shell.currentContent()->findChild<QTabWidget*>("queuing-result-tabs");
+  QVERIFY(notes && states && tabs);
+  QVERIFY(notes->toPlainText().contains("stops summing after the first probability below 0.00001"));
+  QCOMPARE(states->item(0,0)->text(),QStringLiteral("0"));
   QVERIFY2(shell.currentContent()->minimumSizeHint().width()<=600,"Queue result controls force horizontal scrolling");
-  QCOMPARE(visible->lineWrapMode(),QPlainTextEdit::WidgetWidth);
+  tabs->setCurrentIndex(1);
   shell.resize(683,600);QApplication::processEvents();
   auto* first=shell.currentContent()->findChild<QSpinBox*>("queuing-first-state");
   auto* count=shell.currentContent()->findChild<QSpinBox*>("queuing-state-count");
@@ -126,7 +128,12 @@ private slots:
   QVERIFY(!c.originalComparisons()[0]);
   c.beginNew();QVERIFY(c.originalComparisons().empty());
  }
- void nativeStatesAndPdf(){ApplicationShell shell;QVERIFY(shell.registerModule(queuingModule()));auto& c=queuingController(shell);c.dialogs().showError=[](const QString&,const QString&){};QString e;QVERIFY(c.initialize("Native",e));QVERIFY(shell.navigate("queuing/input"));shell.resize(800,600);shell.show();QTest::qWait(20);auto* grid=shell.currentContent()->findChild<QTableWidget*>("queuing-input-grid");QVERIFY(grid);QCOMPARE(grid->columnCount(),5);grid->item(0,0)->setText("2");grid->item(0,1)->setText("bad");QVERIFY(!c.solve(e));grid->item(0,1)->setText("3");QVERIFY(c.solve(e));QVERIFY(shell.navigate("queuing/result"));auto* text=shell.currentContent()->findChild<QPlainTextEdit*>("queuing-result");QVERIFY(text->toPlainText().contains("Cumulative Pn"));auto* first=shell.currentContent()->findChild<QSpinBox*>("queuing-first-state");first->setValue(20);QVERIFY(text->toPlainText().contains("20     "));auto* choices=shell.currentContent()->findChild<QComboBox*>("queuing-scenario");choices->setCurrentIndex(choices->count()-1);QVERIFY(text->toPlainText().contains("COMPARATIVE ANALYSIS"));QTemporaryDir dir;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);auto path=dir.filePath("queue.pdf");printer.setOutputFileName(path);QVERIFY(printQueuing(printer,c,-1));QFile pdf(path);QVERIFY(pdf.open(QIODevice::ReadOnly));QVERIFY(pdf.readAll().startsWith("%PDF"));}
+ void nativeStatesAndPdf(){ApplicationShell shell;QVERIFY(shell.registerModule(queuingModule()));auto& c=queuingController(shell);c.dialogs().showError=[](const QString&,const QString&){};QString e;QVERIFY(c.initialize("Native",e));QVERIFY(shell.navigate("queuing/input"));shell.resize(800,600);shell.show();QTest::qWait(20);auto* grid=shell.currentContent()->findChild<QTableWidget*>("queuing-input-grid");QVERIFY(grid);QCOMPARE(grid->columnCount(),5);grid->item(0,0)->setText("2");grid->item(0,1)->setText("bad");QVERIFY(!c.solve(e));grid->item(0,1)->setText("3");QVERIFY(c.solve(e));QVERIFY(shell.navigate("queuing/result"));auto* page = shell.currentContent();
+  auto* states = page->findChild<QTableWidget*>("queuing-state-probabilities");
+  auto* metrics = page->findChild<QTableWidget*>("queuing-result");
+  auto* tabs = page->findChild<QTabWidget*>("queuing-result-tabs");
+  QVERIFY(states && metrics && tabs);
+  QTemporaryDir dir;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);auto path=dir.filePath("queue.pdf");printer.setOutputFileName(path);QVERIFY(printQueuing(printer,c,-1));QFile pdf(path);QVERIFY(pdf.open(QIODevice::ReadOnly));QVERIFY(pdf.readAll().startsWith("%PDF"));}
 };
 QTEST_MAIN(DesktopQueuing)
 #include "desktop_queuing.moc"
