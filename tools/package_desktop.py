@@ -215,7 +215,7 @@ def macos_package(build, stage, qt_root, config, output, version):
     plugins = bundle / 'Contents/PlugIns/platforms'
     plugins.mkdir(parents=True, exist_ok=True)
     shutil.copy2(qt_root / 'plugins/platforms/libqoffscreen.dylib', plugins)
-    run([sdk_tool(qt_root, 'macdeployqt'), bundle, '-always-overwrite', '-no-codesign'])
+    run([sdk_tool(qt_root, 'macdeployqt'), bundle, '-always-overwrite'])
     frameworks = list(macos_frameworks(bundle))
     libraries = sorted(path for path in bundle.rglob('*.dylib') if not path.is_symlink())
     for binary in [executable, *libraries, *(binary for _, binary in frameworks)]:
