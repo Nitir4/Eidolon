@@ -20,6 +20,9 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QLabel>
+#include <QGroupBox>
+#include <QScrollBar>
+#include <QStackedWidget>
 #include <QComboBox>
 #include <QApplication>
 #include <QFontMetricsF>
@@ -53,11 +56,151 @@ class Graph final:public QWidget{public:GamesController& c;double zoom=1;explici
 void failure(GamesController& c,const QString& e){if(!e.isEmpty())c.dialogs().showError("Games",e);}
 void solve(ApplicationShell& shell,bool graphical){auto& c=gamesController(shell);QString e;if(c.solve(e,graphical))shell.navigate(graphical?"games/graphical":"games/result");else failure(c,e);}
 QWidget* input(ApplicationShell& shell){auto& c=gamesController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* form=new QFormLayout;auto* title=new QLineEdit;title->setObjectName("games-title");auto* rows=new QSpinBox;rows->setRange(1,100);rows->setValue(2);rows->setObjectName("games-rows");auto* cols=new QSpinBox;cols->setRange(1,100);cols->setValue(2);cols->setObjectName("games-columns");form->addRow("Title",title);form->addRow("Player A strategies",rows);form->addRow("Player B strategies",cols);auto* notation=new QComboBox;notation->addItems({"Decimal","Scientific"});notation->setObjectName("games-notation");auto* digits=new QSpinBox;digits->setRange(0,core::NumberFormatter::MaximumDigits);digits->setValue(5);digits->setObjectName("games-format-n");auto* decimals=new QSpinBox;decimals->setRange(0,core::NumberFormatter::MaximumDigits);decimals->setValue(2);decimals->setObjectName("games-format-d");form->addRow("Notation",notation);form->addRow("N",digits);form->addRow("D",decimals);layout->addLayout(form);auto* init=new QPushButton("Initialize");init->setObjectName("games-initialize");layout->addWidget(init);auto* grid=new QTableWidget;grid->setObjectName("games-input-grid");grid->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);layout->addWidget(grid,1);auto updating=std::make_shared<bool>(false);auto render=[&c,title,rows,cols,grid,updating,notation,digits,decimals]{*updating=true;if(const auto* d=c.document()){title->setText(QString::fromStdString(d->title()));notation->setCurrentIndex(d->format().notation==core::Notation::Decimal?0:1);digits->setValue(d->format().n);decimals->setValue(d->format().d);rows->setValue(static_cast<int>(d->payoff().rows()));cols->setValue(static_cast<int>(d->payoff().columns()));grid->setRowCount(rows->value());grid->setColumnCount(cols->value());for(int r=0;r<rows->value();++r){grid->setVerticalHeaderItem(r,new QTableWidgetItem(QString::fromStdString(d->rowNames()[static_cast<std::size_t>(r)])));for(int col=0;col<cols->value();++col)grid->setItem(r,col,new QTableWidgetItem(QString::fromStdString(d->cell(r,col))));}for(int col=0;col<cols->value();++col)grid->setHorizontalHeaderItem(col,new QTableWidgetItem(QString::fromStdString(d->columnNames()[static_cast<std::size_t>(col)])));}else{grid->setRowCount(0);grid->setColumnCount(0);title->clear();}grid->setEditTriggers(c.readOnly()?QAbstractItemView::NoEditTriggers:(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed));title->setReadOnly(c.readOnly());notation->setEnabled(!c.readOnly());digits->setEnabled(!c.readOnly());decimals->setEnabled(!c.readOnly());*updating=false;};QObject::connect(&c,&GamesController::inputReset,page,render);QObject::connect(init,&QPushButton::clicked,page,[&c,title,rows,cols,notation,digits,decimals]{QString e;core::NumberFormat f;f.n=digits->value();f.d=decimals->value();f.notation=notation->currentIndex()==0?core::Notation::Decimal:core::Notation::Scientific;if(!c.setFormat(f,e)){failure(c,e);return;}if(!c.initialize(title->text(),rows->value(),cols->value(),e))failure(c,e);});QObject::connect(grid,&QTableWidget::cellChanged,page,[&c,grid,updating](int r,int col){if(*updating)return;QString e;if(!c.editCell(r,col,grid->item(r,col)->text(),e))failure(c,e);});QObject::connect(grid->verticalHeader(),&QHeaderView::sectionClicked,page,[&c](int at){c.selectLine(true,at);});QObject::connect(grid->horizontalHeader(),&QHeaderView::sectionClicked,page,[&c](int at){c.selectLine(false,at);});QObject::connect(grid->verticalHeader(),&QHeaderView::sectionDoubleClicked,page,[&c](int at){c.selectLine(true,at,true);});QObject::connect(grid->horizontalHeader(),&QHeaderView::sectionDoubleClicked,page,[&c](int at){c.selectLine(false,at,true);});auto commit=[&c,title,grid,notation,digits,decimals]{if(auto* focus=QApplication::focusWidget();focus&&grid->isAncestorOf(focus))grid->setFocus();QString e;for(int r=0;r<grid->rowCount();++r)for(int col=0;col<grid->columnCount();++col)if(!c.editCell(r,col,grid->item(r,col)->text(),e))return;if(!c.setTitle(title->text(),e))return;core::NumberFormat f;f.n=digits->value();f.d=decimals->value();f.notation=notation->currentIndex()==0?core::Notation::Decimal:core::Notation::Scientific;c.setFormat(f,e);};QObject::connect(&c,&GamesController::commitRequested,page,commit);auto* bar=new QHBoxLayout;auto* lp=new QPushButton("LP-based");lp->setObjectName("games-lp-based");auto* graphical=new QPushButton("Graphical");graphical->setObjectName("games-graphical");bar->addWidget(lp);bar->addWidget(graphical);layout->addLayout(bar);QObject::connect(lp,&QPushButton::clicked,page,[&shell]{solve(shell,false);});QObject::connect(graphical,&QPushButton::clicked,page,[&shell]{solve(shell,true);});auto eligibility=[&c,lp,graphical,init]{lp->setEnabled(c.document());graphical->setEnabled(c.document()&&c.document()->payoff().rows()==2);init->setEnabled(!c.readOnly());};QObject::connect(&c,&GamesController::changed,page,eligibility);eligibility();render();polishUsableFonts(*page);return page;}
+class AlgebraicSolution final : public QWidget {
+public:
+    AlgebraicSolution() {
+        setObjectName("games-algebraic-solution");
+        auto* layout = new QVBoxLayout(this);
+        title_ = new QLabel;
+        title_->setTextFormat(Qt::PlainText);
+        title_->setWordWrap(true);
+        title_->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        layout->addWidget(title_);
+        value_ = new QLabel;
+        value_->setObjectName("games-value");
+        value_->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        auto valueFont = value_->font();
+        valueFont.setBold(true);
+        value_->setFont(valueFont);
+        layout->addWidget(value_);
+
+        auto* strategies = new QHBoxLayout;
+        rowStrategy_ = addStrategyTable(*strategies, "Player A strategies", "games-strategies-a");
+        columnStrategy_ = addStrategyTable(*strategies, "Player B strategies", "games-strategies-b");
+        layout->addLayout(strategies);
+
+        formulation_ = new QGroupBox("Player A’s linear program");
+        auto* formulationLayout = new QVBoxLayout(formulation_);
+        formulationLayout->setContentsMargins(8, 6, 8, 6);
+        lpTable_ = new QTableWidget;
+        prepareTable(*lpTable_, "games-lp-formulation");
+        formulationLayout->addWidget(lpTable_);
+        auto* bounds = new QLabel("v is unrestricted. The strategy probabilities x₁, x₂, … are nonnegative.");
+        bounds->setWordWrap(true);
+        formulationLayout->addWidget(bounds);
+        layout->addWidget(formulation_, 1);
+    }
+
+    void showResult(const GamesController& controller) {
+        const auto* document = controller.document();
+        const auto* result = controller.result();
+        title_->setText(document ? QString::fromStdString(document->title()) : QString{});
+        title_->setVisible(!title_->text().isEmpty());
+        const bool hasSolution = document && result;
+        rowStrategy_->parentWidget()->setVisible(hasSolution);
+        columnStrategy_->parentWidget()->setVisible(hasSolution);
+        formulation_->setVisible(hasSolution);
+        if (!hasSolution) {
+            value_->setText("No current solution. Solve the game first.");
+            return;
+        }
+
+        const core::NumberFormatter formatter(document->format());
+        const auto format = [&formatter](double value) {
+            return QString::fromStdString(formatter.formatBound(value));
+        };
+        value_->setText(QStringLiteral("Value of the game to Player A = %1").arg(format(result->value)));
+        const auto populate = [&format](QTableWidget& table, const auto& names, const auto& values) {
+            table.setRowCount(static_cast<int>(values.size()));
+            for (int row = 0; row < table.rowCount(); ++row) {
+                setCell(table, row, 0, QString::fromStdString(names[row]), Qt::AlignLeft);
+                setCell(table, row, 1, format(values[row]));
+            }
+            table.verticalHeader()->setDefaultSectionSize(table.fontMetrics().height() + 6);
+            const int visibleRows = std::min(4, table.rowCount());
+            table.setMinimumHeight(table.horizontalHeader()->sizeHint().height()
+                                   + visibleRows * table.verticalHeader()->defaultSectionSize()
+                                   + 2 * table.frameWidth());
+            table.setMaximumHeight(table.minimumHeight() + table.horizontalScrollBar()->sizeHint().height());
+        };
+        populate(*rowStrategy_, document->rowNames(), result->rowStrategy);
+        populate(*columnStrategy_, document->columnNames(), result->columnStrategy);
+
+        lpTable_->verticalHeader()->setDefaultSectionSize(lpTable_->fontMetrics().height() + 6);
+        const auto problem = games::rowPlayerLp(document->payoff());
+        const int variables = static_cast<int>(problem.variables.size());
+        lpTable_->clearContents();
+        lpTable_->setColumnCount(variables + 3);
+        lpTable_->setRowCount(static_cast<int>(problem.constraints.size()) + 1);
+        QStringList headers{"Row"};
+        for (const auto& variable : problem.variables)
+            headers << QString::fromStdString(variable.name);
+        headers << "Relation" << "RHS";
+        lpTable_->setHorizontalHeaderLabels(headers);
+        setCell(*lpTable_, 0, 0, "Maximize", Qt::AlignLeft);
+        for (int col = 0; col < variables; ++col)
+            setCell(*lpTable_, 0, col + 1, format(problem.objective[col]));
+        for (int row = 1; row < lpTable_->rowCount(); ++row) {
+            const auto& constraint = problem.constraints[row - 1];
+            const bool normalization = constraint.relation == lp::Relation::Equal;
+            const auto label = normalization
+                ? QStringLiteral("Probabilities sum to 1")
+                : QString::fromStdString(document->columnNames()[row - 1]);
+            setCell(*lpTable_, row, 0, label, Qt::AlignLeft);
+            for (int col = 0; col < variables; ++col)
+                setCell(*lpTable_, row, col + 1, format(constraint.coefficients[col]));
+            setCell(*lpTable_, row, variables + 1, normalization ? "=" : "≤", Qt::AlignHCenter);
+            setCell(*lpTable_, row, variables + 2, format(constraint.rhs));
+        }
+    }
+
+private:
+    static void prepareTable(QTableWidget& table, const QString& name) {
+        table.setObjectName(name);
+        table.setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table.setAlternatingRowColors(true);
+        table.verticalHeader()->hide();
+        table.horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        table.horizontalHeader()->setStretchLastSection(true);
+    }
+
+    static QTableWidget* addStrategyTable(QHBoxLayout& layout, const QString& label, const QString& name) {
+        auto* group = new QGroupBox(label);
+        auto* groupLayout = new QVBoxLayout(group);
+        groupLayout->setContentsMargins(8, 6, 8, 6);
+        auto* table = new QTableWidget(0, 2);
+        prepareTable(*table, name);
+        table->setHorizontalHeaderLabels({"Strategy", "Probability"});
+        table->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+        groupLayout->addWidget(table);
+        layout.addWidget(group, 1);
+        return table;
+    }
+
+    static void setCell(QTableWidget& table, int row, int col, const QString& text,
+                        Qt::Alignment horizontal = Qt::AlignRight) {
+        auto* item = new QTableWidgetItem(text);
+        item->setTextAlignment(horizontal | Qt::AlignVCenter);
+        item->setToolTip(text);
+        table.setItem(row, col, item);
+    }
+
+    QLabel* title_;
+    QLabel* value_;
+    QTableWidget* rowStrategy_;
+    QTableWidget* columnStrategy_;
+    QGroupBox* formulation_;
+    QTableWidget* lpTable_;
+};
+
 QWidget* output(ApplicationShell& shell) {
     auto& controller = gamesController(shell);
     auto* page = new QWidget;
     auto* layout = new QVBoxLayout(page);
     auto* tabs = new QTabWidget;
+    auto* summary = new QStackedWidget;
+    auto* algebraic = new AlgebraicSolution;
+    summary->addWidget(algebraic);
     auto* split = new QSplitter;
     auto* text = new QPlainTextEdit;
     text->setReadOnly(true);
@@ -65,7 +208,8 @@ QWidget* output(ApplicationShell& shell) {
     split->addWidget(text);
     auto* graph = new Graph(controller);
     split->addWidget(graph);
-    tabs->addTab(split, "Solution / Graph");
+    summary->addWidget(split);
+    const int summaryTab = tabs->addTab(summary, "Solution");
     auto* steps = new HistoryView("games");
     steps->setObjectName("games-history");
     tabs->addTab(steps, "Steps / Iterations");
@@ -81,9 +225,11 @@ QWidget* output(ApplicationShell& shell) {
     buttons->addWidget(in);
     buttons->addWidget(out);
     buttons->addWidget(print);
+    auto* back = new QPushButton("Input Data");
+    buttons->addWidget(back);
     layout->addLayout(buttons);
 
-    const auto render = [&controller, text, graph, in, out, steps] {
+    const auto render = [&controller, tabs, summary, summaryTab, algebraic, split, text, graph, in, out, print, steps] {
         QStringList titles;
         if (const auto* result = controller.result()) {
             for (std::size_t i = 0; i < result->history.size(); ++i)
@@ -93,11 +239,17 @@ QWidget* output(ApplicationShell& shell) {
             return gameStepText(*controller.document(), *controller.result(), index);
         });
         const bool graphical = controller.graph() != nullptr;
-        text->setPlainText(controller.outputText());
-        graph->setVisible(graphical);
+        summary->setCurrentWidget(graphical ? static_cast<QWidget*>(split) : algebraic);
+        tabs->setTabText(summaryTab, graphical ? "Solution / Graph" : "Solution");
         in->setVisible(graphical);
         out->setVisible(graphical);
-        graph->update();
+        print->setEnabled(controller.result() != nullptr);
+        if (graphical) {
+            text->setPlainText(controller.outputText());
+            graph->update();
+        } else {
+            algebraic->showResult(controller);
+        }
     };
     QObject::connect(&controller, &GamesController::changed, page, render);
     QObject::connect(in, &QPushButton::clicked, page, [graph] {
@@ -113,11 +265,9 @@ QWidget* output(ApplicationShell& shell) {
         if (outcome == PrintOutcome::Failed)
             failure(controller, "The Games print job could not be completed.");
     });
-    auto* back = new QPushButton("Input Data");
-    layout->addWidget(back);
     QObject::connect(back, &QPushButton::clicked, page, [&shell] { shell.navigate("games/input"); });
-    render();
     polishUsableFonts(*page);
+    render();
     return page;
 }
 void menus(ApplicationShell& shell,QMenuBar& bar){auto& c=gamesController(shell);auto* file=bar.addMenu("File");auto* create=file->addAction("New",&shell,[&shell,&c]{if(c.leaveInput()){c.beginNew();shell.navigate("games/input");}});auto* open=file->addAction("Open…",&shell,[&shell,&c]{if(c.requestOpen())shell.navigate("games/input");});auto* save=file->addAction("Save",&c,[&c]{c.requestSave();});auto* saveAs=file->addAction("Save As…",&c,[&c]{c.requestSave();});create->setShortcut(QKeySequence::New);open->setShortcut(QKeySequence::Open);save->setShortcut(QKeySequence::Save);saveAs->setShortcut(QKeySequence::SaveAs);auto* edit=bar.addMenu("EditGrid");auto* undo=edit->addAction("Undo Last Insert, Paste, Or Delete");auto* copy=edit->addAction("Copy Column or Row");auto* paste=edit->addAction("Paste on Column or Row");auto* erase=edit->addAction("Delete Column or Row");auto* insert=edit->addAction("Insert Column or Row");undo->setShortcut(QKeySequence("Ctrl+U"));copy->setShortcut(QKeySequence("Ctrl+C"));paste->setShortcut(QKeySequence("Ctrl+P"));erase->setShortcut(QKeySequence("Ctrl+D"));insert->setShortcut(QKeySequence("Ctrl+I"));QObject::connect(copy,&QAction::triggered,&c,[&c]{c.copySelection();});const auto operation=[&c](int op){QString e;if(!c.editSelection(op,e))failure(c,e);};QObject::connect(undo,&QAction::triggered,&c,[operation]{operation(0);});QObject::connect(paste,&QAction::triggered,&c,[operation]{operation(1);});QObject::connect(erase,&QAction::triggered,&c,[operation]{operation(2);});QObject::connect(insert,&QAction::triggered,&c,[operation]{operation(3);});auto updateEdit=[&c,undo,copy,paste,erase,insert]{undo->setEnabled(c.canUndo());copy->setEnabled(c.hasSelection());paste->setEnabled(c.canPaste());erase->setEnabled(c.hasSelection()&&!c.readOnly());insert->setEnabled(c.hasSelection()&&!c.readOnly());};QObject::connect(&c,&GamesController::changed,edit,updateEdit);updateEdit();auto* menu=bar.addMenu("Solve Problem");auto* lp=menu->addAction("LP-based",&shell,[&shell]{solve(shell,false);});auto* graph=menu->addAction("Graphical",&shell,[&shell]{solve(shell,true);});auto update=[&c,lp,graph]{lp->setEnabled(c.document());graph->setEnabled(c.document()&&c.document()->payoff().rows()==2);};QObject::connect(&c,&GamesController::changed,menu,update);update();bar.addAction("MAIN Menu",&shell,[&shell]{shell.navigate("main");});}
