@@ -78,7 +78,9 @@ private slots:
         const char* matrix[2][2]={{"4","7"},{"2","6"}};
         for(int i=0;i<2;++i)for(int j=0;j<2;++j)QVERIFY(equations.editCell(i,j,matrix[i][j],error));
         QVERIFY(equations.solve(error,true));QVERIFY(shell.navigate("equations/result"));
-        auto* trace=shell.currentContent()->findChild<QPlainTextEdit*>("equations-trace");QVERIFY(trace&&trace->isVisible());
+        auto* equationTabs = shell.currentContent()->findChild<QTabWidget*>("equations-result-tabs");
+        QVERIFY(equationTabs);
+        equationTabs->setCurrentIndex(equationTabs->count() - 1);
         capture(shell,"inverse-trace");
         QVERIFY(queue.initialize("Pure death, N=3, mu=1 at t=1",error));
         for(const auto& field:QList<QPair<int,QString>>{{0,"0"},{1,"1"},{3,"3"},{4,"3"}})QVERIFY(queue.editCell(0,field.first,field.second,error));
@@ -102,7 +104,7 @@ private slots:
         const auto root=qEnvironmentVariable("TORA_UI_CAPTURES");
         if(!root.isEmpty()){
             const auto pdf=[&](const QString& name,const auto& print){QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);printer.setOutputFileName(root+"/"+name+"-"+qEnvironmentVariable("QT_SCALE_FACTOR","1")+".pdf");QVERIFY(print(printer));};
-            pdf("inverse-trace",[&](QPrinter& p){return printEquations(p,equations,trace->toPlainText());});
+            pdf("inverse-trace",[&](QPrinter& p){return printEquations(p,equations,equationsTraceText(equations,0));});
             pdf("queue-pure-birth",[&](QPrinter& p){return printQueuing(p,queue);});
             pdf("network-floyd",[&](QPrinter& p){return printNetworks(p,network);});
             pdf("integer-guided",[&](QPrinter& p){return printInteger(p,integer,shell.font());});

@@ -195,15 +195,101 @@ QString determinantText(const equations::InverseResult& result, const core::Numb
         .arg(result.determinantSign).arg(static_cast<double>(result.logAbsDeterminant), 0, 'g', 12);
 }
 
-QWidget* output(ApplicationShell& shell){
- auto& c=equationsController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* text=new QPlainTextEdit;text->setReadOnly(true);text->setObjectName("equations-result");layout->addWidget(text,1);
- auto* trace=new QPlainTextEdit;trace->setReadOnly(true);trace->setObjectName("equations-trace");layout->addWidget(trace,1);auto index=std::make_shared<std::size_t>(0);
- auto* row=new QHBoxLayout;auto* previous=new QPushButton("Previous Iteration");previous->setObjectName("equations-previous");auto* next=new QPushButton("Next Iteration");next->setObjectName("equations-next");auto* all=new QPushButton("All Iterations");all->setObjectName("equations-all");auto* print=new QPushButton("Print");print->setObjectName("equations-print");row->addWidget(previous);row->addWidget(next);row->addWidget(all);row->addWidget(print);layout->addLayout(row);
- auto matrix=[&c](const equations::Step& step,std::size_t i){QString s=QString("Step %1: ").arg(i+1);if(step.operation==equations::Operation::Swap)s+=QString("swap rows %1 and %2").arg(step.row+1).arg(step.otherRow+1);else if(step.operation==equations::Operation::Scale)s+=QString("row %1 *= %2").arg(step.row+1).arg(QString::number(step.factor,'g',12));else s+=QString("row %1 += %2 * row %3").arg(step.row+1).arg(QString::number(step.factor,'g',12)).arg(step.otherRow+1);s+="\n";core::NumberFormatter format(c.document()->format());for(std::size_t r=0;r<step.augmented.rows();++r){for(std::size_t col=0;col<step.augmented.columns();++col)s+=QString::fromStdString(format.format(step.augmented(r,col)))+"  ";s+="\n";}return s;};
- auto render=[&c,text,trace,index,previous,next,all,matrix]{text->setPlainText(c.outputText());const auto* steps=c.result()?&c.result()->trace:c.inverse()?&c.inverse()->trace:nullptr;const bool truncated=c.result()?c.result()->traceTruncated:c.inverse()?c.inverse()->traceTruncated:false;const bool available=steps&&!steps->empty();trace->setVisible(available);if(available){*index=std::min(*index,steps->size()-1);trace->setPlainText(matrix((*steps)[*index],*index)+(truncated?"\nTrace storage limit reached; solve completed.\n":""));}previous->setEnabled(available&&*index>0);next->setEnabled(available&&*index+1<steps->size());all->setEnabled(available);};
- QObject::connect(&c,&EquationsController::changed,page,[index,render]{*index=0;render();});QObject::connect(previous,&QPushButton::clicked,page,[index,render]{if(*index>0)--*index;render();});QObject::connect(next,&QPushButton::clicked,page,[index,render]{++*index;render();});QObject::connect(all,&QPushButton::clicked,page,[&c,trace,matrix]{const auto* steps=c.result()?&c.result()->trace:c.inverse()?&c.inverse()->trace:nullptr;if(!steps)return;QString s;for(std::size_t i=0;i<steps->size();++i)s+=matrix((*steps)[i],i)+"\n";if(c.result()?c.result()->traceTruncated:c.inverse()->traceTruncated)s+="Trace storage limit reached; solve completed.\n";trace->setPlainText(s);});
- QObject::connect(print,&QPushButton::clicked,page,[&c,&shell,trace]{auto outcome=requestLpPrint(&shell,[&c,trace](QPrinter& p){return printEquations(p,c,trace->isVisible()?trace->toPlainText():QString());});if(outcome==PrintOutcome::Failed)failure(c,"The print job could not be completed.");});
- auto* back=new QPushButton("View/Modify Input Data");layout->addWidget(back);QObject::connect(back,&QPushButton::clicked,page,[&shell]{shell.navigate("equations/input");});render();polishUsableFonts(*page);return page;
+QWidget* output(ApplicationShell& shell)
+{
+    auto& controller = equationsController(shell);
+    auto* page = new QWidget;
+    auto* layout = new QVBoxLayout(page);
+    auto* tabs = new QTabWidget;
+    tabs->setObjectName("equations-result-tabs");
+    layout->addWidget(tabs, 1);
+    auto* text = new QPlainTextEdit;
+    text->setObjectName("equations-result");
+    text->setReadOnly(true);
+    tabs->addTab(text, "Summary");
+
+    auto* steps = new QWidget;
+    auto* stepsLayout = new QVBoxLayout(steps);
+    stepsLayout->setContentsMargins(8,6,8,6);
+    auto* selector = new QComboBox;
+    selector->setObjectName("equations-step-selector");
+    selector->setAccessibleName("Row operation");
+    selector->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    selector->setMinimumContentsLength(18);
+    auto* trace = new QTableView;
+    configureResultTable(*trace, "equations-trace");
+    auto* traceModel = new EquationTraceModel(controller, trace);
+    trace->setModel(traceModel);
+    stepsLayout->addWidget(trace, 1);
+    auto* traceNote = resultLabel(*stepsLayout, "equations-trace-note");
+    auto* navigation = new QHBoxLayout;
+    auto* previous = new QPushButton("Previous");
+    previous->setObjectName("equations-previous");
+    auto* next = new QPushButton("Next");
+    next->setObjectName("equations-next");
+    auto* all = new QPushButton("All iterations");
+    all->setObjectName("equations-all");
+    navigation->addWidget(selector,1);
+    navigation->addWidget(previous);
+    navigation->addWidget(next);
+    navigation->addWidget(all);
+    stepsLayout->insertLayout(0,navigation);
+    const int stepsIndex = tabs->addTab(steps, "Steps / Iterations");
+
+    auto* footer = new QHBoxLayout;
+    auto* print = new QPushButton("Print");
+    print->setObjectName("equations-print");
+    auto* back = new QPushButton("View/Modify Input Data");
+    footer->addWidget(print);
+    footer->addWidget(back);
+    layout->addLayout(footer);
+
+    const auto showTrace = [&controller,selector,traceModel,traceNote,previous,next,all] {
+        const int selected = selector->currentIndex();
+        const int allIndex = selector->count() - 1;
+        if (selected < 0 || selected == allIndex) traceModel->show(std::nullopt);
+        else traceModel->show(static_cast<std::size_t>(selected));
+        previous->setEnabled(selected > 0 && selected != allIndex);
+        next->setEnabled(selected >= 0 && selected < allIndex - 1);
+        all->setEnabled(allIndex > 0 && selected != allIndex);
+        traceNote->setText(equationTraceTruncated(controller)
+            ? QStringLiteral("The trace reached its storage limit. The solve is complete.") : QString{});
+        traceNote->setVisible(!traceNote->text().isEmpty());
+    };
+    const auto refresh = [&controller,text,tabs,stepsIndex,selector,print,showTrace] {
+        const bool solved = controller.result() || controller.inverse();
+        text->setPlainText(controller.outputText());
+        print->setEnabled(solved);
+        const auto& iterations = equationSteps(controller);
+        tabs->setTabVisible(stepsIndex, !iterations.empty());
+        {
+            const QSignalBlocker blocker(selector);
+            selector->clear();
+            for (std::size_t index = 0; index < iterations.size(); ++index)
+                selector->addItem(equationStepLabel(iterations[index], index));
+            if (!iterations.empty()) selector->addItem("All iterations");
+        }
+        showTrace();
+    };
+    QObject::connect(&controller, &EquationsController::changed, page, refresh);
+    QObject::connect(selector, &QComboBox::currentIndexChanged, page, showTrace);
+    QObject::connect(previous, &QPushButton::clicked, page, [selector]{ selector->setCurrentIndex(selector->currentIndex() - 1); });
+    QObject::connect(next, &QPushButton::clicked, page, [selector]{ selector->setCurrentIndex(selector->currentIndex() + 1); });
+    QObject::connect(all, &QPushButton::clicked, page, [selector]{ selector->setCurrentIndex(selector->count() - 1); });
+    QObject::connect(print, &QPushButton::clicked, page, [&controller,&shell,tabs,stepsIndex,selector] {
+        QString selected;
+        if (tabs->currentIndex() == stepsIndex && selector->currentIndex() >= 0) {
+            const int index = selector->currentIndex();
+            selected = equationsTraceText(controller, index == selector->count() - 1
+                ? std::nullopt : std::optional<std::size_t>(index));
+        }
+        if (requestLpPrint(&shell,[&](QPrinter& p){ return printEquations(p,controller,selected); }) == PrintOutcome::Failed)
+            failure(controller,"The print job could not be completed.");
+    });
+    QObject::connect(back, &QPushButton::clicked, page, [&shell]{ shell.navigate("equations/input"); });
+    refresh();
+    polishUsableFonts(*page);
+    return page;
 }
 void numberFormat(ApplicationShell& shell){
  auto& c=equationsController(shell);QDialog dialog(&shell);dialog.setWindowTitle("Numeric Format");auto* layout=new QFormLayout(&dialog);auto* notation=new QComboBox;notation->addItems({"Decimal","Scientific"});auto* n=new QSpinBox;n->setRange(0,core::NumberFormatter::MaximumDigits);auto* d=new QSpinBox;d->setRange(0,core::NumberFormatter::MaximumDigits);const auto old=c.document()?c.document()->format():core::NumberFormat{};notation->setCurrentIndex(old.notation==core::Notation::Decimal?0:1);n->setValue(old.n);d->setValue(old.d);layout->addRow("Notation",notation);layout->addRow("N",n);layout->addRow("D",d);auto* buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);layout->addRow(buttons);QObject::connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept);QObject::connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);if(dialog.exec()!=QDialog::Accepted)return;QString e;if(!c.setFormat({notation->currentIndex()==0?core::Notation::Decimal:core::Notation::Scientific,n->value(),d->value()},e))failure(c,e);
@@ -211,6 +297,26 @@ void numberFormat(ApplicationShell& shell){
 void menus(ApplicationShell& shell,QMenuBar& bar){auto& c=equationsController(shell);auto* file=bar.addMenu("File");file->addAction("New",&shell,[&shell,&c]{if(c.leaveInput()){c.beginNew();shell.navigate("equations/input");}});file->addAction("Open…",&shell,[&shell,&c]{if(c.requestOpen())shell.navigate("equations/input");});file->addAction("Save As…",&c,[&c]{c.requestSave();});file->addAction("Numeric Format…",&shell,[&shell]{numberFormat(shell);});auto* menu=bar.addMenu("Solve Problem");auto* equations=menu->addAction("Linear Equations Solution",&shell,[&shell]{solve(shell,false);});auto* inverse=menu->addAction("Matrix Inversion",&shell,[&shell]{solve(shell,true);});auto update=[&c,equations,inverse]{equations->setEnabled(c.document()&&!c.document()->matrixOnly());inverse->setEnabled(c.document());};QObject::connect(&c,&EquationsController::changed,menu,update);update();bar.addAction("MAIN Menu",&shell,[&shell]{shell.navigate("main");});}
 }
 ModuleDescriptor equationsModule(){ModuleDescriptor m{"equations","Linear Equations","equations/input",{}, {}};m.screens.append({"equations/input","LINEAR EQUATIONS",input,menus});m.screens.append({"equations/result","LINEAR EQUATIONS",output,menus});m.beforeLeave=[](ApplicationShell& shell,const QString&,const QString& to){return to.startsWith("equations/")?equationsController(shell).commitInput():equationsController(shell).leaveInput();};return m;}
+QString equationsTraceText(const EquationsController& controller, std::optional<std::size_t> selected)
+{
+    const auto& steps = equationSteps(controller);
+    if (steps.empty() || (selected && *selected >= steps.size())) return {};
+    const core::NumberFormatter format(controller.document()->format());
+    QString output;
+    for (std::size_t index = selected.value_or(0); index < (selected ? *selected + 1 : steps.size()); ++index) {
+        const auto& step = steps[index];
+        if (!output.isEmpty()) output += '\n';
+        output += equationStepLabel(step, index) + '\n';
+        for (std::size_t row = 0; row < step.augmented.rows(); ++row) {
+            QStringList values;
+            for (std::size_t column = 0; column < step.augmented.columns(); ++column)
+                values << QString::fromStdString(format.format(step.augmented(row,column)));
+            output += values.join("  ") + '\n';
+        }
+    }
+    if (equationTraceTruncated(controller)) output += "\nTrace storage limit reached; solve completed.\n";
+    return output;
+}
 bool printEquations(QPrinter& printer,const EquationsController& c,const QString& selectedTrace){
  if(!c.result()&&!c.inverse())return false;
  QPainter p;if(!p.begin(&printer))return false;

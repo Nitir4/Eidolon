@@ -26,6 +26,7 @@ public:
  const equations::InverseResult* inverse()const{return inverse_?&*inverse_:nullptr;}
  // Cached summary for unique equation systems; selected trace remains [A | b].
  const equations::InverseResult* solutionInverse()const{return solutionInverse_?&*solutionInverse_:nullptr;}
+ const QString& solutionInverseError() const {return solutionInverseError_;}
  bool dirty()const{return dirty_;}bool readOnly()const{return readOnly_;}
  const QString& sourcePath()const{return path_;}
  QString outputText()const;
@@ -38,5 +39,6 @@ private:
 };
 EquationsController& equationsController(ApplicationShell& shell);
 ModuleDescriptor equationsModule();
+QString equationsTraceText(const EquationsController& controller,std::optional<std::size_t> selected);
 bool printEquations(QPrinter& printer,const EquationsController& controller,const QString& selectedTrace={});
 }

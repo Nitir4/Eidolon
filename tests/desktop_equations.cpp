@@ -6,6 +6,8 @@
 #include <QTableWidget>
 #include <QPushButton>
 #include <QPlainTextEdit>
+#include <QTabWidget>
+#include <QComboBox>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QDir>
@@ -34,8 +36,8 @@ private slots:
   QCOMPARE(*c.solutionInverse()->determinant,-3.);QVERIFY(std::abs(c.solutionInverse()->inverse(0,0)-1./3)<1e-12);QVERIFY(std::abs(c.solutionInverse()->inverse(1,1)+2./3)<1e-12);
   QVERIFY(c.solutionInverse()->trace.empty());QVERIFY(!c.result()->trace.empty());QCOMPARE(c.result()->trace.front().augmented.columns(),std::size_t(3));
   auto text=c.outputText();QVERIFY(text.contains("ASSOCIATED MATRIX INVERSE"));QVERIFY(text.contains("Determinant = -3.00"));QVERIFY(text.contains("0.33  0.33"));QVERIFY(text.contains("0.33  -0.67"));QVERIFY(text.contains("x1 = 2.00"));QVERIFY(text.contains("x2 = 1.00"));
-  QVERIFY(shell.navigate("equations/result"));auto* result=shell.currentContent()->findChild<QPlainTextEdit*>("equations-result");auto* trace=shell.currentContent()->findChild<QPlainTextEdit*>("equations-trace");QVERIFY(result);QVERIFY(trace);QVERIFY(result->toPlainText().contains("ASSOCIATED MATRIX INVERSE"));
-  QTemporaryDir temporary;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);const auto pdf=temporary.filePath("square-summary.pdf");printer.setOutputFileName(pdf);QVERIFY(printEquations(printer,c,trace->toPlainText()));
+  QVERIFY(shell.navigate("equations/result"));auto* result=shell.currentContent()->findChild<QPlainTextEdit*>("equations-result");QVERIFY(result);QVERIFY(result->toPlainText().contains("ASSOCIATED MATRIX INVERSE"));
+  QTemporaryDir temporary;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);const auto pdf=temporary.filePath("square-summary.pdf");printer.setOutputFileName(pdf);QVERIFY(printEquations(printer,c,equationsTraceText(c,0)));
   const auto extractor=QStandardPaths::findExecutable("pdftotext");if(!extractor.isEmpty()){
    QProcess process;process.start(extractor,{pdf,"-"});QVERIFY(process.waitForFinished());QCOMPARE(process.exitCode(),0);text=QString::fromUtf8(process.readAllStandardOutput());QVERIFY(text.contains("ASSOCIATED MATRIX INVERSE"));QVERIFY(text.contains("Determinant = -3.00"));QVERIFY(text.contains("UNIQUE SOLUTION"));QVERIFY(text.contains("SELECTED ITERATIONS"));
   }
@@ -63,7 +65,29 @@ private slots:
   ApplicationShell shell;auto& c=equationsController(shell);QString e;QVERIFY(c.initialize("Singular",2,e));QVERIFY(c.solve(e));QCOMPARE(c.result()->status,tora::equations::Status::Infinite);QVERIFY(c.outputText().contains("INFINITELY MANY"));QVERIFY(c.solve(e,true));QVERIFY(!c.inverse()->invertible);QVERIFY(c.outputText().contains("NO INVERSE"));QVERIFY(c.editCell(0,2,"1",e));QVERIFY(c.solve(e));QCOMPARE(c.result()->status,tora::equations::Status::Inconsistent);QVERIFY(c.outputText().contains("no solution"));QVERIFY(c.setTitle(QString(3000,'W'),e));QVERIFY(c.solve(e));QTemporaryDir dir;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);auto path=dir.filePath("equations.pdf");printer.setOutputFileName(path);QVERIFY(printEquations(printer,c));QFile pdf(path);QVERIFY(pdf.open(QIODevice::ReadOnly));QVERIFY(pdf.readAll().startsWith("%PDF"));
  }
  void nativeGridTraceAndInvalidText(){
-  ApplicationShell shell;QVERIFY(shell.registerModule(equationsModule()));auto& c=equationsController(shell);c.dialogs().showError=[](const QString&,const QString&){};QString e;QVERIFY(c.initialize("Native",2,e));QVERIFY(shell.navigate("equations/input"));shell.resize(800,600);shell.show();QTest::qWait(20);auto* grid=shell.currentContent()->findChild<QTableWidget*>("equations-input-grid");QVERIFY(grid);QCOMPARE(grid->columnCount(),3);grid->item(0,0)->setText("2");grid->item(0,1)->setText("1");grid->item(0,2)->setText("5");grid->item(1,0)->setText("1");grid->item(1,1)->setText("-1");grid->item(1,2)->setText("1");grid->item(0,0)->setText("bad");QVERIFY(!c.solve(e));QVERIFY(!c.result());grid->item(0,0)->setText("2");QVERIFY(c.solve(e));QVERIFY(shell.navigate("equations/result"));auto* trace=shell.currentContent()->findChild<QPlainTextEdit*>("equations-trace");QVERIFY(trace);QVERIFY(trace->toPlainText().contains("Step 1"));auto* next=shell.currentContent()->findChild<QPushButton*>("equations-next");QVERIFY(next->isEnabled());QTest::mouseClick(next,Qt::LeftButton);QVERIFY(trace->toPlainText().contains("Step 2"));auto* all=shell.currentContent()->findChild<QPushButton*>("equations-all");QTest::mouseClick(all,Qt::LeftButton);QVERIFY(trace->toPlainText().contains("Step 1"));QVERIFY(trace->toPlainText().contains("Step 2"));QVERIFY(c.solve(e,true));QVERIFY(trace->isVisible());QVERIFY(trace->toPlainText().contains("Step 1"));QVERIFY(next->isEnabled());QTest::mouseClick(next,Qt::LeftButton);QVERIFY(trace->toPlainText().contains("Step 2"));
+  ApplicationShell shell;QVERIFY(shell.registerModule(equationsModule()));auto& c=equationsController(shell);c.dialogs().showError=[](const QString&,const QString&){};QString e;QVERIFY(c.initialize("Native",2,e));QVERIFY(shell.navigate("equations/input"));shell.resize(800,600);shell.show();QTest::qWait(20);auto* grid=shell.currentContent()->findChild<QTableWidget*>("equations-input-grid");QVERIFY(grid);QCOMPARE(grid->columnCount(),3);grid->item(0,0)->setText("2");grid->item(0,1)->setText("1");grid->item(0,2)->setText("5");grid->item(1,0)->setText("1");grid->item(1,1)->setText("-1");grid->item(1,2)->setText("1");grid->item(0,0)->setText("bad");QVERIFY(!c.solve(e));QVERIFY(!c.result());grid->item(0,0)->setText("2");QVERIFY(c.solve(e));QVERIFY(shell.navigate("equations/result"));auto* page = shell.currentContent();
+  auto* trace = page->findChild<QTableView*>("equations-trace");
+  auto* selector = page->findChild<QComboBox*>("equations-step-selector");
+  auto* tabs = page->findChild<QTabWidget*>("equations-result-tabs");
+  QVERIFY(trace && selector && tabs);
+  tabs->setCurrentIndex(tabs->count()-1);
+  QVERIFY(selector->currentText().startsWith("Step 1:"));
+  QCOMPARE(trace->model()->columnCount(),3);
+  auto* next = page->findChild<QPushButton*>("equations-next");
+  QVERIFY(next->isEnabled());
+  QTest::mouseClick(next,Qt::LeftButton);
+  QVERIFY(selector->currentText().startsWith("Step 2:"));
+  QTest::mouseClick(page->findChild<QPushButton*>("equations-all"),Qt::LeftButton);
+  QCOMPARE(trace->model()->rowCount(),static_cast<int>(2*c.result()->trace.size()));
+  QVERIFY(trace->model()->index(2,0).data().toString().startsWith("Step 2:"));
+  QVERIFY(c.solve(e,true));
+  QVERIFY(trace->isVisible());
+  QVERIFY(selector->currentText().startsWith("Step 1:"));
+  QCOMPARE(trace->model()->columnCount(),4);
+  QCOMPARE(trace->model()->headerData(2,Qt::Horizontal).toString(),QStringLiteral("Augmented 1"));
+  QVERIFY(next->isEnabled());
+  QTest::mouseClick(next,Qt::LeftButton);
+  QVERIFY(selector->currentText().startsWith("Step 2:"));
  }
 };
 QTEST_MAIN(DesktopEquations)
