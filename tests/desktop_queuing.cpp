@@ -133,6 +133,24 @@ private slots:
   auto* metrics = page->findChild<QTableWidget*>("queuing-result");
   auto* tabs = page->findChild<QTabWidget*>("queuing-result-tabs");
   QVERIFY(states && metrics && tabs);
+  QCOMPARE(states->horizontalHeaderItem(2)->text(),QStringLiteral("Cumulative probability (Pn)"));
+  QCOMPARE(states->item(0,2)->text(),QStringLiteral("0.33"));
+  auto* first = page->findChild<QSpinBox*>("queuing-first-state");
+  QVERIFY(first);
+  first->setValue(20);
+  QCOMPARE(states->item(0,0)->text(),QStringLiteral("20"));
+  QVERIFY(c.addScenario(e));
+  grid->item(1,0)->setText("1");
+  grid->item(1,1)->setText("3");
+  QVERIFY2(c.solve(e),qPrintable(e));
+  auto* choices = page->findChild<QComboBox*>("queuing-scenario");
+  QVERIFY(choices);
+  choices->setCurrentIndex(choices->count()-1);
+  QCOMPARE(metrics->columnCount(),3);
+  QCOMPARE(metrics->horizontalHeaderItem(1)->text(),QStringLiteral("Scenario 1"));
+  QCOMPARE(metrics->horizontalHeaderItem(2)->text(),QStringLiteral("Scenario 2"));
+  QCOMPARE(metrics->item(1,2)->text(),QStringLiteral("1"));
+  QVERIFY(!tabs->isTabVisible(1));
   QTemporaryDir dir;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);auto path=dir.filePath("queue.pdf");printer.setOutputFileName(path);QVERIFY(printQueuing(printer,c,-1));QFile pdf(path);QVERIFY(pdf.open(QIODevice::ReadOnly));QVERIFY(pdf.readAll().startsWith("%PDF"));}
 };
 QTEST_MAIN(DesktopQueuing)

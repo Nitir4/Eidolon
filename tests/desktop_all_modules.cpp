@@ -179,6 +179,13 @@ private slots:
                 QApplication::processEvents();
                 auto name=route;name.replace('/','-');
                 capture(shell,name+"-"+QString::number(size.width()));
+                if (route == "queuing/result" && size.width() == 1366) {
+                    auto* queueTabs = shell.currentContent()->findChild<QTabWidget*>("queuing-result-tabs");
+                    QVERIFY(queueTabs);
+                    queueTabs->setCurrentIndex(1);
+                    capture(shell,"queuing-probabilities-1366");
+                    queueTabs->setCurrentIndex(0);
+                }
             }
         }
         const auto root=qEnvironmentVariable("TORA_UI_CAPTURES");
