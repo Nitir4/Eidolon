@@ -1,6 +1,11 @@
 #include "equations_screens.hpp"
 #include "ui_font.hpp"
 #include "lp_printing.hpp"
+#include "result_tables.hpp"
+#include <QAbstractTableModel>
+#include <QGroupBox>
+#include <QSignalBlocker>
+#include <QTabWidget>
 #include <QPainter>
 #include <QPrinter>
 #include <QVBoxLayout>
@@ -41,6 +46,155 @@ QWidget* input(ApplicationShell& shell){
  QObject::connect(equations,&QPushButton::clicked,page,[&shell]{solve(shell,false);});QObject::connect(inverse,&QPushButton::clicked,page,[&shell]{solve(shell,true);});
  auto eligible=[&c,equations,inverse,init]{equations->setEnabled(c.document()&&!c.document()->matrixOnly());inverse->setEnabled(c.document());init->setEnabled(!c.readOnly());};QObject::connect(&c,&EquationsController::changed,page,eligible);eligible();render();polishUsableFonts(*page);return page;
 }
+const std::vector<equations::Step>& equationSteps(const EquationsController& controller)
+{
+    static const std::vector<equations::Step> empty;
+    if (const auto* result = controller.result()) return result->trace;
+    if (const auto* inverse = controller.inverse()) return inverse->trace;
+    return empty;
+}
+
+bool equationTraceTruncated(const EquationsController& controller)
+{
+    if (const auto* result = controller.result()) return result->traceTruncated;
+    return controller.inverse() && controller.inverse()->traceTruncated;
+}
+
+QString equationOperation(const equations::Step& step)
+{
+    const auto factor = QString::number(step.factor, 'g', 12);
+    switch (step.operation) {
+    case equations::Operation::Swap:
+        return QStringLiteral("Swap rows %1 and %2").arg(step.row + 1).arg(step.otherRow + 1);
+    case equations::Operation::Scale:
+        return QStringLiteral("Multiply row %1 by %2").arg(step.row + 1).arg(factor);
+    case equations::Operation::Eliminate:
+        return QStringLiteral("Add (%1 × row %2) to row %3").arg(factor).arg(step.otherRow + 1).arg(step.row + 1);
+    }
+    return {};
+}
+
+QString equationStepLabel(const equations::Step& step, std::size_t index)
+{
+    return QStringLiteral("Step %1: %2").arg(index + 1).arg(equationOperation(step));
+}
+
+QStringList equationColumns(int width, bool matrixOnly, bool inverseTrace = false)
+{
+    QStringList headers;
+    const int variables = inverseTrace ? width / 2 : width - (matrixOnly ? 0 : 1);
+    for (int column = 0; column < variables; ++column)
+        headers << (matrixOnly ? QStringLiteral("Column %1") : QStringLiteral("x%1")).arg(column + 1);
+    if (inverseTrace) {
+        for (int column = 0; column < variables; ++column)
+            headers << QStringLiteral("Augmented %1").arg(column + 1);
+    } else if (!matrixOnly) headers << QStringLiteral("RHS");
+    return headers;
+}
+
+void showEquationMatrix(QTableWidget& table, const core::Matrix& matrix, const QStringList& headers,
+                        const core::NumberFormatter& format)
+{
+    table.clearContents();
+    table.verticalHeader()->show();
+    table.setRowCount(static_cast<int>(matrix.rows()));
+    table.setColumnCount(static_cast<int>(matrix.columns()));
+    table.setHorizontalHeaderLabels(headers);
+    for (int row = 0; row < table.rowCount(); ++row)
+        for (int column = 0; column < table.columnCount(); ++column)
+            putResultCell(table, row, column, QString::fromStdString(format.format(matrix(row,column))));
+}
+
+class EquationTraceModel final : public QAbstractTableModel {
+public:
+    EquationTraceModel(const EquationsController& controller, QObject* parent)
+        : QAbstractTableModel(parent), controller_(controller) {}
+
+    void show(std::optional<std::size_t> step)
+    {
+        beginResetModel();
+        step_ = step;
+        const auto& steps = equationSteps(controller_);
+        if (steps.empty()) {
+            rowsPerStep_ = stepCount_ = 0;
+            headers_.clear();
+        } else {
+            rowsPerStep_ = static_cast<int>(steps.front().augmented.rows());
+            stepCount_ = static_cast<int>(steps.size());
+            const bool inverse = controller_.inverse() != nullptr;
+            headers_ = equationColumns(static_cast<int>(steps.front().augmented.columns()), inverse, inverse);
+            if (!step_) headers_.prepend(QStringLiteral("Row operation"));
+            format_ = core::NumberFormatter(controller_.document()->format());
+        }
+        endResetModel();
+    }
+
+    int rowCount(const QModelIndex& parent = {}) const override
+    {
+        return parent.isValid() ? 0 : rowsPerStep_ * (step_ ? std::min(1,stepCount_) : stepCount_);
+    }
+    int columnCount(const QModelIndex& parent = {}) const override
+    {
+        return parent.isValid() ? 0 : static_cast<int>(headers_.size());
+    }
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override
+    {
+        if (role != Qt::DisplayRole) return {};
+        if (orientation == Qt::Horizontal) return headers_.value(section);
+        return rowsPerStep_ ? QVariant(section % rowsPerStep_ + 1) : QVariant{};
+    }
+    QVariant data(const QModelIndex& index, int role) const override
+    {
+        if (!index.isValid() || !rowsPerStep_) return {};
+        const bool operation = !step_ && index.column() == 0;
+        if (role == Qt::TextAlignmentRole)
+            return static_cast<int>((operation ? Qt::AlignLeft : Qt::AlignRight) | Qt::AlignVCenter);
+        if (role != Qt::DisplayRole && role != Qt::ToolTipRole) return {};
+        const auto& steps = equationSteps(controller_);
+        const auto number = step_.value_or(static_cast<std::size_t>(index.row() / rowsPerStep_));
+        if (number >= steps.size()) return {};
+        const auto& step = steps[number];
+        const int row = index.row() % rowsPerStep_;
+        if (operation) return row == 0 ? equationStepLabel(step, number) : QString{};
+        const int column = index.column() - (step_ ? 0 : 1);
+        if (static_cast<std::size_t>(row) >= step.augmented.rows() || static_cast<std::size_t>(column) >= step.augmented.columns())
+            return {};
+        return QString::fromStdString(format_.format(step.augmented(row,column)));
+    }
+
+private:
+    const EquationsController& controller_;
+    std::optional<std::size_t> step_;
+    QStringList headers_;
+    core::NumberFormatter format_;
+    int rowsPerStep_ = 0;
+    int stepCount_ = 0;
+};
+
+QLabel* resultLabel(QBoxLayout& layout, const QString& name, bool bold = false)
+{
+    auto* label = new QLabel;
+    label->setObjectName(name);
+    label->setTextFormat(Qt::PlainText);
+    label->setWordWrap(true);
+    label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    if (bold) {
+        auto font = label->font();
+        font.setBold(true);
+        label->setFont(font);
+    }
+    layout.addWidget(label);
+    return label;
+}
+
+QString determinantText(const equations::InverseResult& result, const core::NumberFormatter& format)
+{
+    if (result.determinant)
+        return QStringLiteral("Determinant = %1").arg(QString::fromStdString(format.format(*result.determinant)));
+    return QStringLiteral("Determinant outside the numeric range. Sign = %1. Log magnitude = %2.")
+        .arg(result.determinantSign).arg(static_cast<double>(result.logAbsDeterminant), 0, 'g', 12);
+}
+
 QWidget* output(ApplicationShell& shell){
  auto& c=equationsController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* text=new QPlainTextEdit;text->setReadOnly(true);text->setObjectName("equations-result");layout->addWidget(text,1);
  auto* trace=new QPlainTextEdit;trace->setReadOnly(true);trace->setObjectName("equations-trace");layout->addWidget(trace,1);auto index=std::make_shared<std::size_t>(0);
