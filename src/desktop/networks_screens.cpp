@@ -32,7 +32,8 @@ namespace {
 void failure(NetworksController& c,const QString& e){if(!e.isEmpty())c.dialogs().showError("Network models",e);}
 void solve(ApplicationShell& shell,int source,int sink,NetworkRouteMethod method){auto& c=networksController(shell);QString e;if(c.solve(source,sink,e,method))shell.navigate("networks/result");else failure(c,e);}
 QWidget* input(ApplicationShell& shell){auto& c=networksController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* form=new QFormLayout;auto* mode=new QComboBox;mode->addItems({"Minimal Spanning Tree","Shortest Route","Maximal Flow"});mode->setObjectName("networks-mode");auto* title=new QLineEdit;title->setObjectName("networks-title");auto* count=new QSpinBox;count->setRange(1,100);count->setValue(3);count->setObjectName("networks-nodes");form->addRow("Network model",mode);form->addRow("Title",title);form->addRow("No. of Nodes",count);auto* notation=new QComboBox;notation->addItems({"Decimal","Scientific"});auto* n=new QSpinBox;n->setRange(0,99);n->setValue(5);auto* d=new QSpinBox;d->setRange(0,99);d->setValue(2);auto* format=new QHBoxLayout;format->addWidget(notation);format->addWidget(n);format->addWidget(d);form->addRow("Output format (N / D)",format);layout->addLayout(form);auto* init=new QPushButton("Initialize");init->setObjectName("networks-initialize");layout->addWidget(init);auto* symmetry=new QCheckBox("Check here if network is symmetrical");symmetry->setObjectName("networks-symmetry");layout->addWidget(symmetry);auto* grid=new QTableWidget;grid->setObjectName("networks-input-grid");grid->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);layout->addWidget(grid,1);auto* sources=new QHBoxLayout;auto* source=new QComboBox;source->setObjectName("networks-source");auto* sink=new QComboBox;sink->setObjectName("networks-sink");sources->addWidget(new QLabel("Starting / source node"));sources->addWidget(source);sources->addWidget(new QLabel("Sink node"));sources->addWidget(sink);layout->addLayout(sources);auto* method=new QComboBox;method->setObjectName("networks-route-method");method->addItems({"Shortest routes (all pairs)","Dijkstra iterations","Floyd iterations","Bellman-Ford iterations (negative-edge extension)"});layout->addWidget(method);auto* run=new QPushButton("Solve Problem");run->setObjectName("networks-solve");layout->addWidget(run);auto updating=std::make_shared<bool>(false);auto render=[&c,mode,title,count,notation,n,d,symmetry,grid,source,sink,run,init,updating,method]{*updating=true;const auto* doc=c.document();mode->setCurrentIndex(static_cast<int>(c.mode()));if(doc){title->setText(QString::fromStdString(doc->title()));count->setValue(doc->nodes());notation->setCurrentIndex(doc->format().notation==core::Notation::Decimal?0:1);n->setValue(doc->format().n);d->setValue(doc->format().d);symmetry->setChecked(doc->symmetrical());grid->setRowCount(doc->nodes()+1);grid->setColumnCount(doc->nodes()+1);const int oldSource=source->currentIndex(),oldSink=sink->currentIndex();source->clear();sink->clear();for(int i=0;i<doc->nodes();++i){auto name=QString::fromStdString(doc->nodeName(i));source->addItem(name);sink->addItem(name);}source->setCurrentIndex(oldSource<0?0:std::min(oldSource,doc->nodes()-1));sink->setCurrentIndex(oldSink<0?doc->nodes()-1:std::min(oldSink,doc->nodes()-1));for(int r=0;r<=doc->nodes();++r)for(int col=0;col<=doc->nodes();++col){auto* item=new QTableWidgetItem(QString::fromStdString(doc->cell(r,col)));if(r==col)item->setFlags(item->flags()&~Qt::ItemIsEditable);grid->setItem(r,col,item);}}else{grid->setRowCount(0);grid->setColumnCount(0);source->clear();sink->clear();title->clear();}title->setReadOnly(c.readOnly());grid->setEditTriggers(c.readOnly()?QAbstractItemView::NoEditTriggers:(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed));for(auto* w:QList<QWidget*>{init,mode,count,notation,n,d,symmetry})w->setEnabled(!c.readOnly());run->setEnabled(doc);sink->setEnabled(c.mode()==NetworkMode::MaximalFlow);method->setVisible(c.mode()==NetworkMode::ShortestRoute);*updating=false;};QObject::connect(&c,&NetworksController::inputReset,page,render);QObject::connect(init,&QPushButton::clicked,page,[&c,mode,title,count,notation,n,d]{core::NumberFormat f;f.n=n->value();f.d=d->value();f.notation=notation->currentIndex()==0?core::Notation::Decimal:core::Notation::Scientific;QString e;if(!c.setFormat(f,e)||!c.initialize(static_cast<NetworkMode>(mode->currentIndex()),title->text(),count->value(),e))failure(c,e);});QObject::connect(mode,qOverload<int>(&QComboBox::activated),page,[&c,updating,mode](int index){if(*updating)return;if(c.leaveInput())c.beginNew(static_cast<NetworkMode>(index));else { *updating=true;mode->setCurrentIndex(static_cast<int>(c.mode()));*updating=false; }});QObject::connect(symmetry,&QCheckBox::clicked,page,[&c](bool value){QString e;if(!c.setSymmetrical(value,e))failure(c,e);});QObject::connect(grid,&QTableWidget::cellClicked,page,[&c](int r,int col){if(r==0&&col>0)c.selectLine(false,col-1);else if(col==0&&r>0)c.selectLine(true,r-1);});QObject::connect(grid,&QTableWidget::cellDoubleClicked,page,[&c](int r,int col){if(r==0&&col>0)c.selectLine(false,col-1,true);else if(col==0&&r>0)c.selectLine(true,r-1,true);});QObject::connect(grid->horizontalHeader(),&QHeaderView::sectionClicked,page,[&c](int i){if(i>0)c.selectLine(false,i-1);});QObject::connect(grid->verticalHeader(),&QHeaderView::sectionClicked,page,[&c](int i){if(i>0)c.selectLine(true,i-1);});QObject::connect(grid,&QTableWidget::cellChanged,page,[&c,grid,updating,source,sink](int r,int col){if(*updating)return;QString e;if(!c.editCell(r,col,grid->item(r,col)->text(),e)){failure(c,e);return;}*updating=true;if(c.document()&&(r==0||col==0||c.document()->symmetrical()))grid->item(col,r)->setText(QString::fromStdString(c.document()->cell(col,r)));if(r==0||col==0){const int node=std::max(r,col)-1;if(node>=0&&c.document()){const auto label=QString::fromStdString(c.document()->nodeName(node));source->setItemText(node,label);sink->setItemText(node,label);}}*updating=false;});QObject::connect(&c,&NetworksController::commitRequested,page,[&c,title,notation,n,d,grid]{if(auto* focus=QApplication::focusWidget();focus&&grid->isAncestorOf(focus))grid->setFocus();QString e;for(int r=0;r<grid->rowCount();++r)for(int col=0;col<grid->columnCount();++col)if(!c.editCell(r,col,grid->item(r,col)->text(),e))return;if(!c.setTitle(title->text(),e))return;core::NumberFormat f;f.n=n->value();f.d=d->value();f.notation=notation->currentIndex()==0?core::Notation::Decimal:core::Notation::Scientific;c.setFormat(f,e);});QObject::connect(run,&QPushButton::clicked,page,[&shell,source,sink,method]{solve(shell,source->currentIndex(),sink->currentIndex(),static_cast<NetworkRouteMethod>(method->currentIndex()));});render();polishUsableFonts(*page);return page;}
-QWidget* output(ApplicationShell& shell){auto& c=networksController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* text=new QPlainTextEdit;text->setObjectName("networks-result");text->setReadOnly(true);layout->addWidget(text,1);auto* trace=new QTableWidget;trace->setObjectName("networks-iterations");trace->setColumnCount(2);trace->setHorizontalHeaderLabels({"Iteration","Calculation"});trace->horizontalHeader()->setStretchLastSection(true);trace->setEditTriggers(QAbstractItemView::NoEditTriggers);layout->addWidget(trace,1);auto* bar=new QHBoxLayout;auto* next=new QPushButton("Next Iteration");next->setObjectName("networks-next");auto* all=new QPushButton("All Iterations");all->setObjectName("networks-all");auto* print=new QPushButton("Write to Printer");auto* back=new QPushButton("View/Modify Input Data");bar->addWidget(next);bar->addWidget(all);bar->addWidget(print);bar->addWidget(back);layout->addLayout(bar);auto steps=std::make_shared<QStringList>();auto shown=std::make_shared<int>(0);auto render=[&c,text,trace,steps,shown,next,all]{text->setPlainText(c.outputText());*steps=c.iterationText();*shown=0;trace->setRowCount(0);trace->setVisible(!steps->empty());next->setVisible(!steps->empty());all->setVisible(!steps->empty());next->setEnabled(!steps->empty());all->setEnabled(!steps->empty());};auto advance=[trace,steps,shown,next,all](bool complete){int stop=complete?steps->size():std::min(static_cast<int>(steps->size()),*shown+1);for(;*shown<stop;++*shown){trace->insertRow(*shown);trace->setItem(*shown,0,new QTableWidgetItem(QString::number(*shown+1)));trace->setItem(*shown,1,new QTableWidgetItem(steps->at(*shown)));trace->resizeRowToContents(*shown);}next->setEnabled(*shown<steps->size());all->setEnabled(*shown<steps->size());};QObject::connect(&c,&NetworksController::changed,page,render);QObject::connect(next,&QPushButton::clicked,page,[advance]{advance(false);});QObject::connect(all,&QPushButton::clicked,page,[advance]{advance(true);});QObject::connect(back,&QPushButton::clicked,page,[&shell]{shell.navigate("networks/input");});QObject::connect(print,&QPushButton::clicked,page,[&c,&shell]{auto outcome=requestLpPrint(&shell,[&c](QPrinter& p){return printNetworks(p,c);});if(outcome==PrintOutcome::Failed)failure(c,"The Network print job could not be completed.");});render();polishUsableFonts(*page);return page;}
+const networks::AllPairsRoutes* floydResult(const NetworksController& controller);
+QWidget* standardOutput(ApplicationShell& shell){auto& c=networksController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);auto* text=new QPlainTextEdit;text->setObjectName("networks-result");text->setReadOnly(true);layout->addWidget(text,1);auto* trace=new QTableWidget;trace->setObjectName("networks-iterations");trace->setColumnCount(2);trace->setHorizontalHeaderLabels({"Iteration","Calculation"});trace->horizontalHeader()->setStretchLastSection(true);trace->setEditTriggers(QAbstractItemView::NoEditTriggers);layout->addWidget(trace,1);auto* bar=new QHBoxLayout;auto* next=new QPushButton("Next Iteration");next->setObjectName("networks-next");auto* all=new QPushButton("All Iterations");all->setObjectName("networks-all");auto* print=new QPushButton("Write to Printer");auto* back=new QPushButton("View/Modify Input Data");bar->addWidget(next);bar->addWidget(all);bar->addWidget(print);bar->addWidget(back);layout->addLayout(bar);auto steps=std::make_shared<QStringList>();auto shown=std::make_shared<int>(0);auto render=[&c,text,trace,steps,shown,next,all]{if(floydResult(c))return;text->setPlainText(c.outputText());*steps=c.iterationText();*shown=0;trace->setRowCount(0);trace->setVisible(!steps->empty());next->setVisible(!steps->empty());all->setVisible(!steps->empty());next->setEnabled(!steps->empty());all->setEnabled(!steps->empty());};auto advance=[trace,steps,shown,next,all](bool complete){int stop=complete?steps->size():std::min(static_cast<int>(steps->size()),*shown+1);for(;*shown<stop;++*shown){trace->insertRow(*shown);trace->setItem(*shown,0,new QTableWidgetItem(QString::number(*shown+1)));trace->setItem(*shown,1,new QTableWidgetItem(steps->at(*shown)));trace->resizeRowToContents(*shown);}next->setEnabled(*shown<steps->size());all->setEnabled(*shown<steps->size());};QObject::connect(&c,&NetworksController::changed,page,render);QObject::connect(next,&QPushButton::clicked,page,[advance]{advance(false);});QObject::connect(all,&QPushButton::clicked,page,[advance]{advance(true);});QObject::connect(back,&QPushButton::clicked,page,[&shell]{shell.navigate("networks/input");});QObject::connect(print,&QPushButton::clicked,page,[&c,&shell]{auto outcome=requestLpPrint(&shell,[&c](QPrinter& p){return printNetworks(p,c);});if(outcome==PrintOutcome::Failed)failure(c,"The Network print job could not be completed.");});render();polishUsableFonts(*page);return page;}
 const networks::AllPairsRoutes* floydResult(const NetworksController& controller)
 {
     return controller.result() && controller.routeMethod() == NetworkRouteMethod::Floyd
@@ -116,6 +117,169 @@ private:
     bool all_ = false;
 };
 
+QWidget* floydOutput(ApplicationShell& shell)
+{
+    auto& controller = networksController(shell);
+    auto* page = new QWidget;
+    auto* layout = new QVBoxLayout(page);
+    auto* title = new QLabel;
+    title->setTextFormat(Qt::PlainText);
+    title->setWordWrap(true);
+    layout->addWidget(title);
+    auto* tabs = new QTabWidget;
+    tabs->setObjectName("floyd-result-tabs");
+    layout->addWidget(tabs,1);
+
+    auto* routePage = new QWidget;
+    auto* routeLayout = new QVBoxLayout(routePage);
+    auto* routeForm = new QFormLayout;
+    auto* origin = new QComboBox;
+    origin->setObjectName("floyd-origin");
+    origin->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    origin->setMinimumContentsLength(12);
+    routeForm->addRow("From node",origin);
+    routeLayout->addLayout(routeForm);
+    auto* routes = resultTable("floyd-routes");
+    routes->verticalHeader()->hide();
+    routes->setColumnCount(3);
+    routes->setHorizontalHeaderLabels({"Destination","Distance","Route"});
+    routeLayout->addWidget(routes,1);
+    tabs->addTab(routePage,"Routes");
+
+    auto* stepPage = new QWidget;
+    auto* stepLayout = new QVBoxLayout(stepPage);
+    stepLayout->setContentsMargins(8,6,8,6);
+    auto* selector = new QComboBox;
+    selector->setObjectName("floyd-step-selector");
+    selector->setAccessibleName("Floyd iteration");
+    selector->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    selector->setMinimumContentsLength(18);
+    auto* matrices = new QHBoxLayout;
+    auto* distanceGroup = new QGroupBox("Distance matrix");
+    auto* distanceLayout = new QVBoxLayout(distanceGroup);
+    auto* distances = new QTableView;
+    configureResultTable(*distances,"floyd-distances");
+    auto* distanceModel = new FloydMatrixModel(controller,false,distances);
+    distances->setModel(distanceModel);
+    distanceLayout->addWidget(distances);
+    matrices->addWidget(distanceGroup,1);
+    auto* nextGroup = new QGroupBox("Next-node matrix");
+    auto* nextLayout = new QVBoxLayout(nextGroup);
+    auto* nextNodes = new QTableView;
+    configureResultTable(*nextNodes,"floyd-next-nodes");
+    auto* nextNodeModel = new FloydMatrixModel(controller,true,nextNodes);
+    nextNodes->setModel(nextNodeModel);
+    nextLayout->addWidget(nextNodes);
+    matrices->addWidget(nextGroup,1);
+    stepLayout->addLayout(matrices,1);
+    auto* nav = new QHBoxLayout;
+    auto* previous = new QPushButton("Previous");
+    previous->setObjectName("floyd-previous");
+    auto* next = new QPushButton("Next");
+    next->setObjectName("floyd-next");
+    auto* all = new QPushButton("All iterations");
+    all->setObjectName("floyd-all");
+    nav->addWidget(selector,1);
+    nav->addWidget(previous);
+    nav->addWidget(next);
+    nav->addWidget(all);
+    stepLayout->insertLayout(0,nav);
+    const int stepTab = tabs->addTab(stepPage,"Steps / Iterations");
+    auto* note = new QLabel;
+    note->setWordWrap(true);
+    layout->addWidget(note);
+
+    auto* footer = new QHBoxLayout;
+    auto* print = new QPushButton("Write to Printer");
+    auto* back = new QPushButton("View/Modify Input Data");
+    footer->addWidget(print);
+    footer->addWidget(back);
+    layout->addLayout(footer);
+
+    const auto renderRoutes = [&controller,origin,routes] {
+        const auto* result = floydResult(controller);
+        const int selected = origin->currentIndex();
+        routes->setRowCount(0);
+        if (!result || selected < 0 || selected >= static_cast<int>(result->sources.size())) return;
+        const core::NumberFormatter format(controller.document()->format());
+        const auto& destinations = result->sources[selected].routes;
+        routes->setRowCount(static_cast<int>(destinations.size()));
+        for (int row = 0; row < routes->rowCount(); ++row) {
+            const auto& route = destinations[row];
+            putResultCell(*routes,row,0,nodeName(controller,row),Qt::AlignLeft);
+            QStringList path;
+            for (const auto node : route.nodes) path << nodeName(controller,node);
+            QString distance = "Unreachable";
+            if (route.status == networks::RouteStatus::NegativeCycle) distance = "Unbounded (negative cycle)";
+            else if (route.distance) distance = QString::fromStdString(format.format(*route.distance));
+            putResultCell(*routes,row,1,distance);
+            putResultCell(*routes,row,2,path.join(" → "),Qt::AlignLeft);
+        }
+    };
+    const auto renderStep = [selector,distanceModel,nextNodeModel,previous,next,all] {
+        const int selected = selector->currentIndex();
+        const int allIndex = selector->count() - 1;
+        distanceModel->show(selected);
+        nextNodeModel->show(selected);
+        previous->setEnabled(selected > 0 && selected != allIndex);
+        next->setEnabled(selected >= 0 && selected < allIndex - 1);
+        all->setEnabled(allIndex > 0 && selected != allIndex);
+    };
+    const auto refresh = [&controller,title,note,tabs,stepTab,selector,origin,renderRoutes,renderStep] {
+        const auto* result = floydResult(controller);
+        const QSignalBlocker blockOrigin(origin), blockStep(selector);
+        origin->clear();
+        selector->clear();
+        if (result) {
+            title->setText(QString::fromStdString(controller.document()->title()));
+            for (std::size_t node = 0; node < result->sources.size(); ++node) origin->addItem(nodeName(controller,node));
+            for (int step = 0; step < static_cast<int>(result->trace.size()); ++step)
+                selector->addItem(floydStepLabel(controller,result->trace[step],step));
+            if (!result->trace.empty()) selector->addItem("All iterations");
+        }
+        tabs->setTabVisible(stepTab,selector->count() > 0);
+        note->setText(result && result->traceTruncated ? "A matrix exceeded the display range. Route calculation completed." : "");
+        note->setVisible(!note->text().isEmpty());
+        renderRoutes();
+        renderStep();
+    };
+    QObject::connect(&controller,&NetworksController::changed,page,refresh);
+    QObject::connect(selector,&QComboBox::currentIndexChanged,page,renderStep);
+    QObject::connect(origin,&QComboBox::currentIndexChanged,page,renderRoutes);
+    QObject::connect(previous,&QPushButton::clicked,page,[selector]{ selector->setCurrentIndex(selector->currentIndex()-1); });
+    QObject::connect(next,&QPushButton::clicked,page,[selector]{ selector->setCurrentIndex(selector->currentIndex()+1); });
+    QObject::connect(all,&QPushButton::clicked,page,[selector]{ selector->setCurrentIndex(selector->count()-1); });
+    QObject::connect(distances->verticalScrollBar(),&QScrollBar::valueChanged,nextNodes->verticalScrollBar(),&QScrollBar::setValue);
+    QObject::connect(nextNodes->verticalScrollBar(),&QScrollBar::valueChanged,distances->verticalScrollBar(),&QScrollBar::setValue);
+    QObject::connect(back,&QPushButton::clicked,page,[&shell]{ shell.navigate("networks/input"); });
+    QObject::connect(print,&QPushButton::clicked,page,[&controller,&shell] {
+        const auto outcome = requestLpPrint(&shell,[&controller](QPrinter& printer){ return printNetworks(printer,controller); });
+        if (outcome == PrintOutcome::Failed) failure(controller,"The Network print job could not be completed.");
+    });
+    refresh();
+    polishUsableFonts(*page);
+    return page;
+}
+
+QWidget* output(ApplicationShell& shell)
+{
+    auto& controller = networksController(shell);
+    auto* page = new QWidget;
+    auto* layout = new QVBoxLayout(page);
+    layout->setContentsMargins(0,0,0,0);
+    auto* standard = standardOutput(shell);
+    auto* floyd = floydOutput(shell);
+    layout->addWidget(standard,1);
+    layout->addWidget(floyd,1);
+    const auto refresh = [&controller,standard,floyd] {
+        const bool showFloyd = floydResult(controller) != nullptr;
+        standard->setVisible(!showFloyd);
+        floyd->setVisible(showFloyd);
+    };
+    QObject::connect(&controller,&NetworksController::changed,page,refresh);
+    refresh();
+    return page;
+}
 void menus(ApplicationShell& shell,QMenuBar& bar){auto& c=networksController(shell);auto* file=bar.addMenu("File");file->addAction("New",&shell,[&shell,&c]{if(c.leaveInput()){c.beginNew(c.mode());shell.navigate("networks/input");}})->setShortcut(QKeySequence::New);file->addAction("Open…",&shell,[&shell,&c]{if(c.requestOpen())shell.navigate("networks/input");})->setShortcut(QKeySequence::Open);file->addAction("Save As…",&c,[&c]{c.requestSave();})->setShortcut(QKeySequence::SaveAs);auto* edit=bar.addMenu("EditGrid");edit->addAction("Copy",&c,[&c]{if(!c.copySelection())failure(c,"Select a node row or column heading first.");})->setShortcut(QKeySequence::Copy);edit->addAction("Paste",&c,[&c]{QString e;if(!c.pasteSelection(e))failure(c,e);})->setShortcut(QKeySequence::Paste);edit->addAction("Insert Node (single click after; double click before)",&c,[&c]{QString e;if(!c.editSelection(true,e))failure(c,e);});edit->addAction("Delete Node",&c,[&c]{QString e;if(!c.editSelection(false,e))failure(c,e);});edit->addAction("Undo Last Insert Or Delete",&c,[&c]{QString e;if(!c.undo(e))failure(c,e);})->setShortcut(QKeySequence::Undo);bar.addAction("MAIN Menu",&shell,[&shell]{shell.navigate("main");});}
 }
 ModuleDescriptor networksModule(){ModuleDescriptor m{"networks","Network models","networks/input",{}, {}};m.screens.append({"networks/input","NETWORK MODELS",input,menus});m.screens.append({"networks/result","NETWORK MODELS",output,menus});m.beforeLeave=[](ApplicationShell& shell,const QString&,const QString& to){return to.startsWith("networks/")?networksController(shell).commitInput():networksController(shell).leaveInput();};return m;}
