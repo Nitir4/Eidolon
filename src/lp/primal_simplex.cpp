@@ -349,6 +349,17 @@ SimplexDisplay PrimalSimplexSession::display(std::size_t index,core::NumberForma
     if(step.leaving)result.leaving=t.basicLabel(*step.leaving);
     return result;
 }
+bool PrimalSimplexSession::mPenaltyLeavesArtificialVariables() const noexcept {
+    if (method_ != PrimalMethod::MMethod ||
+        (status_ != SimplexStatus::Optimal && status_ != SimplexStatus::Alternative)) return false;
+    const auto& table = history_.back().tableau;
+    const auto& original = history_.front().tableau;
+    for (std::size_t row = 0; row < table.basis().size(); ++row) {
+        if (original.columns()[table.basis()[row]].rfind("Rx", 0) == 0 && table.rhs(row + 1) > 0)
+            return true;
+    }
+    return false;
+}
 std::string PrimalSimplexSession::terminalMessage() const {
     if(status_==SimplexStatus::Infeasible && method_==PrimalMethod::Dual)return "Problem has no feasible solution--Iterations stopped";
     if(status_==SimplexStatus::Infeasible)return "Phase 2 nixed. Phase1 shows the problem has no feasible solution";

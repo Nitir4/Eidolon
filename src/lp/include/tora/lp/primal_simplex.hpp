@@ -41,6 +41,7 @@ public:
     const std::vector<SimplexStep>& history() const noexcept {return history_;}
     const LpProblem& problem() const noexcept {return problem_;}
     SimplexStatus status() const noexcept {return status_;}
+    bool mPenaltyLeavesArtificialVariables() const noexcept;
     bool phaseOneComplete() const noexcept {return phaseReady_;}
     std::optional<SimplexChoice> recommendation() const;
     void selectEntering(std::size_t column);

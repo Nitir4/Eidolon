@@ -47,7 +47,11 @@ private slots:
         c.selectCell(1,1);c.selectCell(4,0);QCOMPARE(c.session()->history().back().leaving,std::optional<std::size_t>(2));c.next();
         QCOMPARE(c.session()->history().size(),std::size_t(2));c.all();QTRY_VERIFY(!c.busy());QCOMPARE(notice,QStringLiteral("Iteration 4 is optimal"));
         QVERIFY(in.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/03_infeasible.txt")));QVERIFY(!c.session());
-        c.redirect=[](const QString&){return false;};QVERIFY(!c.requestAllSlack());QCOMPARE(shell.currentScreen(),QStringLiteral("lp/m-value"));QVERIFY(c.setPenalty(QStringLiteral("100")));QVERIFY(c.start({}));c.all();QTRY_VERIFY(!c.busy());QCOMPARE(notice,QStringLiteral("Iteration 3 is optimal"));
+        c.redirect=[](const QString&){return false;};QVERIFY(!c.requestAllSlack());QCOMPARE(shell.currentScreen(),QStringLiteral("lp/m-value"));QVERIFY(c.setPenalty(QStringLiteral("100")));QVERIFY(c.start({}));c.all();QTRY_VERIFY(!c.busy());QVERIFY(notice.contains("A positive artificial variable remains"));
+        QVERIFY(c.session()->mPenaltyLeavesArtificialVariables());
+        QVERIFY(!c.canNext());
+        auto* penaltyWarning = shell.currentContent()->findChild<QLabel*>("simplex-penalty-warning");
+        QVERIFY(penaltyWarning && penaltyWarning->text() == notice);
     }
     void allSlackFallbackCancelAlsoContinues() {
         ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));auto& in=inputController(shell);in.dialogs().askSave=[] {return SaveChoice::No;};QVERIFY(in.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/01_normal.txt")));
@@ -75,7 +79,12 @@ private slots:
         ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));auto& in=inputController(shell);in.dialogs().showError=[](const QString&,const QString&){};in.dialogs().askSave=[] {return SaveChoice::No;};QVERIFY(in.openFile(file));
         auto& c=simplexController(shell);QString message;c.notice=[&](const QString&,const QString& body){message=body;};c.redirect=[](const QString&){return true;};QVERIFY(c.requestMMethod());if(r[QStringLiteral("requires_artificial")].toBool()){QCOMPARE(shell.currentScreen(),QStringLiteral("lp/m-value"));QVERIFY(c.setPenalty(r.contains(QStringLiteral("m_input"))?r[QStringLiteral("m_input")].toString():r[QStringLiteral("m")].toString()));}QVERIFY(c.start({}));c.all();QTRY_VERIFY(!c.busy());
         if(r[QStringLiteral("operation")].toString()==QStringLiteral("alternative 1")){const int block=constraints.size()+7;c.selectCell((static_cast<int>(c.session()->history().size())-1)*block+1,2);c.next();}
-        QCOMPARE(message,r[QStringLiteral("message")].toString());auto* grid=shell.currentContent()->findChild<QTableView*>(QStringLiteral("simplex-grid"));QVERIFY(grid);auto* model=grid->model();const auto tables=r[QStringLiteral("tables")].toArray();const int block=constraints.size()+7;QCOMPARE(model->rowCount(),tables.size()*block);
+        const QStringList unresolvedCases{"03_infeasible","m-fraction","m-nonnumeric","m-zero"};
+        const bool unresolved = unresolvedCases.contains(QString::fromLatin1(QTest::currentDataTag()));
+        QCOMPARE(c.session()->mPenaltyLeavesArtificialVariables(), unresolved);
+        if (unresolved) QVERIFY(message.contains("Use Two-phase to check feasibility."));
+        else QCOMPARE(message,r[QStringLiteral("message")].toString());
+        auto* grid=shell.currentContent()->findChild<QTableView*>(QStringLiteral("simplex-grid"));QVERIFY(grid);auto* model=grid->model();const auto tables=r[QStringLiteral("tables")].toArray();const int block=constraints.size()+7;QCOMPARE(model->rowCount(),tables.size()*block);
         for(int k=0;k<tables.size();++k){const auto t=tables[k].toObject();const auto columns=t[QStringLiteral("columns")].toArray(),rows=t[QStringLiteral("rows")].toArray();QCOMPARE(model->data(model->index(k*block,0)).toString(),t[QStringLiteral("heading")].toString());QCOMPARE(model->data(model->index(k*block+1,0)).toString(),QStringLiteral("Basic"));for(int j=0;j<columns.size();++j)QCOMPARE(model->data(model->index(k*block+1,j+1)).toString(),columns[j].toString());for(int i=0;i<rows.size();++i){const auto row=rows[i].toObject();QCOMPARE(model->data(model->index(k*block+i+2,0)).toString(),row[QStringLiteral("label")].toString());const auto values=row[QStringLiteral("values")].toArray();for(int j=0;j<values.size();++j)QCOMPARE(model->data(model->index(k*block+i+2,j+1)).toString(),values[j].toString());}}
     }
     void nativeLayoutsAndSessionReset() {

@@ -25,6 +25,9 @@
 
 namespace tora::desktop {
 using tora::lp::SimplexStatus;
+namespace {
+constexpr auto penaltyMessage = "A positive artificial variable remains. This tableau does not certify a feasible solution of the original model. Use Two-phase to check feasibility.";
+}
 LpSimplexController::LpSimplexController(ApplicationShell& shell):QObject(&shell),shell_(shell) {
     setObjectName(QStringLiteral("lp-simplex-controller"));
     notice=[&shell](const QString& title,const QString& body){
@@ -128,11 +131,11 @@ bool LpSimplexController::start(tora::core::NumberFormat format) {
     }catch(const std::exception& e){notice(QStringLiteral("Simplex"),QString::fromUtf8(e.what()));return false;}
 }
 bool LpSimplexController::canNext() const {
-    return session_ && !busy_ && (session_->status()==SimplexStatus::Running ||
+    return session_ && !busy_ && !session_->mPenaltyLeavesArtificialVariables() && (session_->status()==SimplexStatus::Running ||
         (session_->status()==SimplexStatus::Alternative && session_->history().back().entering.has_value()));
 }
 void LpSimplexController::selectCell(int row,int col) {
-    if(!session_ || busy_)return;
+    if(!session_ || busy_ || session_->mPenaltyLeavesArtificialVariables())return;
     const int block=static_cast<int>(session_->problem().constraints.size())+7;
     const int first=static_cast<int>(session_->history().size()-1)*block;
     if(row<first)return;
@@ -145,7 +148,10 @@ void LpSimplexController::selectCell(int row,int col) {
     }catch(const std::invalid_argument& e){notice(relative==1?QStringLiteral("Entering Variable"):QStringLiteral("Leaving Variable"),QString::fromUtf8(e.what()));}
 }
 void LpSimplexController::terminal() {
-    if(session_ && session_->status()!=SimplexStatus::Running)notice(QString::fromStdString(session_->terminalTitle()),QString::fromStdString(session_->terminalMessage()));
+    if (session_ && session_->mPenaltyLeavesArtificialVariables())
+        notice(QStringLiteral("M-Method: Feasibility Unresolved"),QString::fromLatin1(penaltyMessage));
+    else if(session_ && session_->status()!=SimplexStatus::Running)
+        notice(QString::fromStdString(session_->terminalTitle()),QString::fromStdString(session_->terminalMessage()));
 }
 void LpSimplexController::next() {
     if(!canNext())return;
@@ -276,6 +282,10 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     auto& c=simplexController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);
     auto* heading=new QLabel(QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));heading->setObjectName(QStringLiteral("simplex-method"));heading->setAlignment(Qt::AlignCenter);auto bold=heading->font();bold.setBold(true);heading->setFont(bold);layout->addWidget(heading);
     auto* title=new QLabel;title->setObjectName(QStringLiteral("simplex-title"));layout->addWidget(title);
+    auto* penaltyWarning = new QLabel;
+    penaltyWarning->setObjectName(QStringLiteral("simplex-penalty-warning"));
+    penaltyWarning->setWordWrap(true);
+    layout->addWidget(penaltyWarning);
     auto* help=new QToolButton;help->setObjectName(QStringLiteral("simplex-instructions-toggle"));help->setText(QStringLiteral("Show iteration instructions"));help->setCheckable(true);help->setArrowType(Qt::RightArrow);help->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);layout->addWidget(help,0,Qt::AlignLeft);
     auto* instructions=new QLabel(QStringLiteral("Steps for generating NEXT tableau from CURRENT one:\n"
         "1. ENTERING variable: Click a NONBASIC variable (if correct, column turns green)\n"
@@ -293,10 +303,13 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     gridLayout->addWidget(view->labelHost());gridLayout->addWidget(view,1);layout->addWidget(gridArea,1);
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("simplex-view-input"),footer);
     auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("simplex-main"),footer);auto* exit=button(QStringLiteral("Exit Eidolon"),QStringLiteral("simplex-exit"),footer);footer->addStretch();layout->addLayout(footer);
-    const auto update=[&c,heading,title,next,all,print,view] {
+    const auto update=[&c,heading,title,penaltyWarning,next,all,print,view] {
         const auto method=c.session()?c.session()->method():tora::lp::PrimalMethod::AllSlack;
         heading->setText(method==tora::lp::PrimalMethod::Dual?QStringLiteral("SIMPLEX TABLEAU - (Dual Simplex Method)"):method==tora::lp::PrimalMethod::MMethod?QStringLiteral("SIMPLEX TABLEAU - (M-Method)"):method==tora::lp::PrimalMethod::TwoPhase?QStringLiteral("SIMPLEX TABLEAU - (Two-Phase Method)"):QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));
         title->setText(c.session()?QStringLiteral("Title: ")+legacyText(c.session()->problem().title)+(c.session()->problem().sense==tora::lp::ObjectiveSense::Maximize?QStringLiteral(" (Maximize)"):QStringLiteral(" (Minimize)")):QString());
+        const bool unresolved = c.session() && c.session()->mPenaltyLeavesArtificialVariables();
+        penaltyWarning->setText(unresolved ? QString::fromLatin1(penaltyMessage) : QString{});
+        penaltyWarning->setVisible(unresolved);
         next->setEnabled(c.canNext());all->setEnabled(c.session() && !c.busy() && c.session()->status()==SimplexStatus::Running);print->setEnabled(c.session() && !c.busy());
         const QFontMetrics fm(view->font());view->verticalHeader()->setDefaultSectionSize(fm.height()+fm.height()/2);
         const int rows=view->model()->rowCount(),previous=view->property("simplex-measured-rows").toInt();

@@ -233,6 +233,11 @@ both continue to the All-slack output-format route, as directly captured.
 All-slack's artificial-warning Cancel opens functional M setup; OK selects
 Two-phase and enables its output Go.
 
+When the finite-M tableau stops with a positive artificial variable, the
+screen and printed trace flag that feasibility of the original model remains
+unresolved. The screen directs the reader to Two-phase and disables
+alternative-optimum navigation for that tableau.
+
 The white/blue inverse block covers initial identity columns sx/Rx in constraint
 rows, including still-basic columns; the earlier nonbasic-only description is
 corrected by direct initial-table review. Native font/layout/scroll/printing

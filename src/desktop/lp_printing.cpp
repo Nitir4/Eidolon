@@ -63,7 +63,7 @@ public:
         y_+=line_;
     }
     void original(const tora::lp::LpProblem& model,tora::core::NumberFormat format,int extraFieldDigits=0) {
-        text(QStringLiteral("Eidolon — Linear Programming"));
+        text(QStringLiteral("Eidolon (Linear Programming)"));
         text(QDateTime::currentDateTime().toString(QStringLiteral("dddd, MMMM dd, yyyy HH:mm")));
         space(4);text(QStringLiteral("LINEAR PROGRAM -- ORIGINAL DATA"),Qt::AlignHCenter);
         space(1);text(QStringLiteral("Title: ")+legacyText(model.title));rule();space(3);
@@ -188,6 +188,11 @@ bool printLpTrace(QPrinter& printer,const tora::lp::PrimalSimplexSession& sessio
                   method==Method::Dual?QStringLiteral("SIMPLEX TABLEAUS -- (Dual Simplex Method)"):
                   QStringLiteral("SIMPLEX TABLEAUS -- (Starting All-Slack Method)"),Qt::AlignHCenter);
         page.space();page.text(QStringLiteral("Title: ")+legacyText(session.problem().title));page.space(2);
+        if (session.mPenaltyLeavesArtificialVariables()) {
+            page.text(QStringLiteral("M-Method: Feasibility Unresolved"));
+            page.text(QStringLiteral("A positive artificial variable remains. Use Two-phase to check feasibility."));
+            page.space();
+        }
         // Phase labels require a wider printed field than Iteration labels.
         const auto field=page.digit()*(format.n+format.d+5+(method==Method::TwoPhase?3:0));
         const auto bandSize=std::max<std::size_t>(1,static_cast<std::size_t>(std::max(qreal(1),std::floor(page.width()/field)-1)));
