@@ -86,15 +86,39 @@ The single [workflow](../.github/workflows/build.yml) uses `windows-latest`,
 | --- | --- | --- |
 | Windows x86_64 | Portable ZIP and per-user setup EXE | windeployqt, app-local CRT, installed startup, safe removal |
 | Linux x86_64 | AppImage | linuxdeploy Qt plugin, extract-and-run startup without FUSE |
-| macOS | DMG containing universal APP | macdeployqt, lipo verifies both architectures, deployed startup |
+| macOS | Universal app in DMG and ditto ZIP | Framework links, both architectures, nested signatures and startup from the extracted ZIP |
 
 Each artifact has accompanying SHA-256 and dependency-manifest files.
 Qt notices are included; SDK license files are copied when supplied. These are
 development LP packages. Windows packaging also builds an NSIS per-user setup
 EXE and verifies installation/reinstallation, deployed startup, uninstall and
-preservation of unrelated files. macOS signing/notarization and a production
-release license review remain later release work. The portable folder remains
+preservation of unrelated files. A production release license review remains
+later release work. The portable Windows folder remains
 available; a single-file portable application is not supplied.
+
+### macOS signing and notarization
+
+Use the native macOS packager for GitHub Releases. It signs the deployed Qt
+libraries and frameworks before signing the app, verifies both architectures
+and checks the ZIP after extraction with Apple's `ditto`. The DMG includes
+an Applications shortcut. By default both contain an ad hoc signed app.
+Gatekeeper can still block a browser download of an ad hoc build.
+
+For public distribution, install your Developer ID Application certificate
+and configure a notarization profile with `xcrun notarytool store-credentials`.
+Select them when running the normal packaging command on the Mac:
+
+```sh
+SIGNING_IDENTITY='Developer ID Application: Your Name (TEAMID)' \
+  NOTARY_PROFILE='Eidolon' python3 tools/package_desktop.py --build-dir build/ci \
+  --qt-root /path/to/universal/Qt
+```
+
+With a profile set, the packager notarizes and staples the app for ZIP
+distribution and the signed DMG for disk-image distribution. Test the
+published download on a Mac with Gatekeeper enabled. See Apple's
+[packaging guide](https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution)
+and [Gatekeeper guidance](https://support.apple.com/en-us/102445).
 
 The application's supported floors are Windows 10 1809, macOS 13.3 and Linux with
 glibc 2.39. The AppImage does not bundle glibc; older Linux distributions need
@@ -235,8 +259,9 @@ and owner production-release decisions documented in `RELEASE_READINESS.md`.
 ## Local Windows/macOS cross builds
 
 A Linux cross build does not execute macOS or establish native GUI acceptance.
-The portable packager records this limit in its manifest. It builds no installer
-or DMG; friends receive the Windows portable folder or a universal Mac APP.
+The portable packager records this limit in its manifest. It prepares the
+Windows portable folder or a universal Mac app ZIP with its framework symlinks.
+Use a native Mac to sign, notarize, and verify a public macOS release.
 The repository stays private and no GitHub Actions run is needed.
 
 The supplied toolchains use Ubuntu24.04 MinGW GCC13 or LLVM/Clang/LLD18.

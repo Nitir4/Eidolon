@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import plistlib
 import re
 import shutil
 import subprocess
@@ -20,6 +21,7 @@ import tempfile
 import urllib.request
 from windows_installer import build_installer, verify_installer
 from linux_runtime import stage_wayland_plugins
+from macos_bundle import macos_frameworks
 from runtime_notices import copy_qt_notices, copy_distribution_qt_notices
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -186,28 +188,90 @@ def windows_package(build, stage, qt_root, config, output, version):
     return archive, data
 
 
+def verify_macos_bundle(bundle):
+    list(macos_frameworks(bundle))
+    run(['codesign', '--verify', '--deep', '--strict', '--all-architectures', bundle])
+
+
+def notarize(path, profile):
+    try:
+        result = run(['xcrun', 'notarytool', 'submit', path, '--keychain-profile', profile,
+                      '--wait', '--output-format', 'json'], capture_output=True, text=True)
+    except subprocess.CalledProcessError as error:
+        raise RuntimeError(f'Apple notarization failed for {path.name}: {error.stderr or error.stdout}') from error
+    submission = json.loads(result.stdout)
+    if submission['status'] != 'Accepted':
+        raise RuntimeError(f"Apple notarization returned {submission['status']} for {submission['id']}")
+
+
 def macos_package(build, stage, qt_root, config, output, version):
+    identity = os.environ.get('SIGNING_IDENTITY') or '-'
+    notary_profile = os.environ.get('NOTARY_PROFILE')
+    if notary_profile and identity == '-':
+        raise RuntimeError('Notarization requires a Developer ID Application signing identity')
     run(['cmake', '--install', build, '--config', config, '--prefix', stage])
     bundle = stage / 'Eidolon.app'
     executable = bundle / 'Contents/MacOS/Eidolon'
     plugins = bundle / 'Contents/PlugIns/platforms'
     plugins.mkdir(parents=True, exist_ok=True)
     shutil.copy2(qt_root / 'plugins/platforms/libqoffscreen.dylib', plugins)
-    run([sdk_tool(qt_root, 'macdeployqt'), bundle, '-always-overwrite'])
-    run(['lipo', executable, '-verify_arch', 'arm64', 'x86_64'])
-    frameworks = bundle / 'Contents/Frameworks'
-    for framework in frameworks.glob('*.framework'):
-        binary = framework / 'Versions/A' / framework.stem
-        if binary.is_file():
-            run(['lipo', binary, '-verify_arch', 'arm64', 'x86_64'])
+    run([sdk_tool(qt_root, 'macdeployqt'), bundle, '-always-overwrite', '-no-codesign'])
+    frameworks = list(macos_frameworks(bundle))
+    libraries = sorted(path for path in bundle.rglob('*.dylib') if not path.is_symlink())
+    for binary in [executable, *libraries, *(binary for _, binary in frameworks)]:
+        run(['lipo', binary, '-verify_arch', 'arm64', 'x86_64'])
+    sign = ['codesign', '--force', '--sign', identity]
+    sign += ['--timestamp=none'] if identity == '-' else ['--options', 'runtime', '--timestamp']
+    for item in [*libraries, *(framework for framework, _ in frameworks), bundle]:
+        run([*sign, item])
+    if notary_profile:
+        with tempfile.TemporaryDirectory(prefix='eidolon-notary-') as temporary:
+            submission = Path(temporary) / 'Eidolon.zip'
+            run(['ditto', '-c', '-k', '--sequesterRsrc', '--keepParent', bundle, submission])
+            notarize(submission, notary_profile)
+        run(['xcrun', 'stapler', 'staple', bundle])
+        run(['xcrun', 'stapler', 'validate', bundle])
+    verify_macos_bundle(bundle)
     notices(stage, qt_root)
     data = manifest(stage, qt_root, version, 'macos-universal')
-    smoke_application(executable, smoke_env(), stage)
+    data['signing'] = 'Ad hoc' if identity == '-' else 'Signed with a distribution identity'
+    data['notarization'] = 'Apple notarized and stapled' if notary_profile else 'Not notarized'
+    data['symlinks'] = {path.relative_to(stage).as_posix(): path.readlink().as_posix()
+                        for path in sorted(bundle.rglob('*')) if path.is_symlink()}
+    for name in data['symlinks']:
+        data['files'].pop(name, None)
+    (stage / 'package-manifest.json').write_text(json.dumps(data, indent=2) + '\n')
+
+    archive = output / f'Eidolon-{version}-macos-universal.zip'
+    run(['ditto', '-c', '-k', '--sequesterRsrc', stage, archive])
+    with tempfile.TemporaryDirectory(prefix='eidolon-zip-check-') as temporary:
+        extracted = Path(temporary)
+        run(['ditto', '-x', '-k', archive, extracted])
+        verify_macos_bundle(extracted / bundle.name)
+        smoke_application(extracted / executable.relative_to(stage), smoke_env(), extracted)
     (stage / 'Applications').symlink_to('/Applications', target_is_directory=True)
     artifact = output / f'Eidolon-{version}-macos-universal.dmg'
     run(['hdiutil', 'create', '-volname', 'Eidolon', '-srcfolder', stage,
          '-ov', '-format', 'UDZO', artifact])
-    return artifact, data
+    if identity != '-':
+        with (bundle / 'Contents/Info.plist').open('rb') as info:
+            identifier = plistlib.load(info)['CFBundleIdentifier']
+        run(['codesign', '--sign', identity, '--timestamp', '--identifier', identifier + '.dmg', artifact])
+    if notary_profile:
+        notarize(artifact, notary_profile)
+        run(['xcrun', 'stapler', 'staple', artifact])
+        run(['xcrun', 'stapler', 'validate', artifact])
+    run(['hdiutil', 'verify', artifact])
+    with tempfile.TemporaryDirectory(prefix='eidolon-dmg-check-') as temporary:
+        mount = Path(temporary)
+        run(['hdiutil', 'attach', '-readonly', '-nobrowse', '-mountpoint', mount, artifact])
+        try:
+            verify_macos_bundle(mount / bundle.name)
+            if (mount / 'Applications').readlink() != Path('/Applications'):
+                raise RuntimeError('The disk image is missing its Applications shortcut')
+        finally:
+            run(['hdiutil', 'detach', mount])
+    return (artifact, archive), data
 
 
 def linux_package(build, stage, qt_root, config, output, version, tool_dir):
@@ -279,14 +343,19 @@ def main():
         if sys.platform == 'win32':
             artifact, data = windows_package(build, stage, qt_root, args.config, output, version)
         elif sys.platform == 'darwin':
-            artifact, data = macos_package(build, stage, qt_root, args.config, output, version)
+            with tempfile.TemporaryDirectory(prefix='eidolon-macos-', dir=output) as temporary_output:
+                packaged, data = macos_package(build, stage, qt_root, args.config, Path(temporary_output), version)
+                artifacts = tuple(path.replace(output / path.name) for path in packaged)
         elif sys.platform.startswith('linux'):
             artifact, data = linux_package(build, stage, qt_root, args.config, output, version, args.tool_dir.resolve())
         else:
             raise RuntimeError(f'Unsupported packaging OS: {sys.platform}')
-    output.joinpath(artifact.name + '.sha256').write_text(f'{digest(artifact)}  {artifact.name}\n')
-    output.joinpath(artifact.name + '.manifest.json').write_text(json.dumps(data, indent=2) + '\n')
-    print(f'Packaged and startup-checked: {artifact}')
+    if sys.platform != 'darwin':
+        artifacts = (artifact,)
+    for artifact in artifacts:
+        output.joinpath(artifact.name + '.sha256').write_text(f'{digest(artifact)}  {artifact.name}\n')
+        output.joinpath(artifact.name + '.manifest.json').write_text(json.dumps(data, indent=2) + '\n')
+        print(f'Packaged and startup-checked: {artifact}')
 
 
 if __name__ == '__main__':
