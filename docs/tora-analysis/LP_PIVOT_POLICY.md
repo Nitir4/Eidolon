@@ -73,9 +73,12 @@ RHS, with the usual screen topmost tie validation. Eligible entering entries
 are negative in that row. Select the smallest z-coefficient/row-coefficient
 ratio, using leftmost tied order. Case 10 starts with RHS -4/-6/-5, selects
 Sx4 then x2 (ratio 1.50 rather than x1's 2.00), and finishes at Iteration 4.
-All five observed negative-RHS pivots match this rule. Equality is rejected
-with `Equations must be converted into inequalities before applying Dual
-Simplex`. Other models redirect after a warning; the selected menu choice
+All five observed negative-RHS pivots match this rule. Setup tests bounds or
+unrestricted variables first, then objective dual feasibility, and equations
+last. Only a dual-feasible model with an equation is rejected, with
+`Equations must be converted to inequalities before applying Dual Simplex`
+(observed 23 Nov 2026; an equation model with a non-dual-feasible objective
+redirects to Two-phase/M like any other). Other models redirect after a warning; the selected menu choice
 must not be confused with the actual algorithm named in the output heading.
 
 ## Alternative optima and degeneracy

@@ -112,7 +112,7 @@ bool LpSimplexController::requestDual() {
             if(!redirect(warning)){requestedMethod_=tora::lp::PrimalMethod::MMethod;penalty_=100;mPending_=true;emit changed();shell_.navigate(QStringLiteral("lp/m-value"));return true;}
         }
         requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
-    }catch(const std::exception& e){notice(QStringLiteral("Dual Simplex Error"),QString::fromUtf8(e.what()));emit changed();return false;}
+    }catch(const std::exception& e){notice(QStringLiteral("Dual SImplex Error"),/* original title, capital I included */QString::fromUtf8(e.what()));emit changed();return false;}
 }
 bool LpSimplexController::start(tora::core::NumberFormat format) {
     if(!requested_ || !inputController(shell_).document())return false;
