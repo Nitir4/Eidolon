@@ -27,7 +27,7 @@ namespace {
 QString name(const tora::lp::LpProblem& p,std::size_t j){return QString::fromStdString(p.variableLabel(j));}
 QString number(double x,tora::core::NumberFormat f){return QString::fromStdString(tora::core::NumberFormatter(f).format(x));}
 QString precise(double x){return QString::number(x,'g',17);}
-QString methodName(const LpChangesController& c){return c.method()==LpChangeMethod::Fresh?QStringLiteral("Change Cj / RHS"):QStringLiteral("Dual Revised — RHS changes");}
+QString methodName(const LpChangesController& c){return c.method()==LpChangeMethod::Fresh?QStringLiteral("Change Cj / RHS"):QStringLiteral("Dual Revised (RHS changes)");}
 QLabel* label(QVBoxLayout* layout,const QString& id){auto* text=new QLabel;text->setObjectName(id);text->setWordWrap(true);layout->addWidget(text);return text;}
 QTableWidget* table(const QString& id,const QStringList& headers,QWidget* parent=nullptr) {
     auto* t=new QTableWidget(0,headers.size(),parent);t->setObjectName(id);t->setHorizontalHeaderLabels(headers);t->verticalHeader()->hide();
@@ -43,7 +43,7 @@ QPushButton* command(QGridLayout* grid,const QString& text,const QString& id,int
 QString status(const LpChangesController& c) {
     if(c.fresh())switch(c.fresh()->after.status) {
         case tora::lp::SimplexStatus::Optimal:return QStringLiteral("Optimal");
-        case tora::lp::SimplexStatus::Alternative:return QStringLiteral("Optimal — alternative solutions exist");
+        case tora::lp::SimplexStatus::Alternative:return QStringLiteral("Optimal. Alternative solutions exist.");
         case tora::lp::SimplexStatus::Infeasible:return QStringLiteral("Changed model is infeasible");
         case tora::lp::SimplexStatus::Unbounded:return QStringLiteral("Changed model is unbounded");
         case tora::lp::SimplexStatus::Running:return QStringLiteral("Iteration limit reached");
@@ -83,7 +83,7 @@ TraceDisplay trace(const LpChangesController& c,std::size_t selected,bool baseli
         out.headers<<QStringLiteral("RHS");
         for(std::size_t i=0;i<t.values().rows();++i){QStringList row{i?QString::fromStdString(t.basicLabel(i)):QStringLiteral("z")};for(std::size_t j=0;j<t.values().columns();++j)row<<number(t.values()(i,j),c.format());out.rows<<row;}
         out.pivot=(baseline?QStringLiteral("Baseline solve"):QStringLiteral("Changed-model solve"))
-            +QStringLiteral(" — canonical tableau; phase %1").arg(step.phase);
+            +QStringLiteral(" (canonical tableau, phase %1)").arg(step.phase);
     }else {
         if(selected>=traceCount(c))return out;
         const auto model=tora::lp::makeDualRevisedModel(*c.changedProblem());const auto& step=c.revised()->canonical.trace[selected];
@@ -93,21 +93,21 @@ TraceDisplay trace(const LpChangesController& c,std::size_t selected,bool baseli
         for(std::size_t j=0;j<step.reducedCosts.size();++j)if(std::find(step.basis.begin(),step.basis.end(),j)==step.basis.end())out.rows<<QStringList{QStringLiteral("Nonbasic"),canonicalLabel(model,j),number(0,c.format()),number(step.reducedCosts[j],c.format())};
         if(selected+1==traceCount(c) && c.revised()->canonical.status==tora::lp::RevisedDualStatus::Infeasible)
             for(std::size_t i=0;i<c.revised()->canonical.infeasibilityWitness.size();++i)out.rows<<QStringList{QStringLiteral("Infeasibility witness"),QStringLiteral("row %1").arg(i+1),number(c.revised()->canonical.infeasibilityWitness[i],c.format()),QString()};
-        out.pivot=step.leavingRow && step.enteringColumn?QStringLiteral("Leaving: %1. Entering: %2.").arg(canonicalLabel(model,step.basis[*step.leavingRow]),canonicalLabel(model,*step.enteringColumn)):QStringLiteral("No pivot — ")+status(c);
+        out.pivot=step.leavingRow && step.enteringColumn?QStringLiteral("Leaving: %1. Entering: %2.").arg(canonicalLabel(model,step.basis[*step.leavingRow]),canonicalLabel(model,*step.enteringColumn)):QStringLiteral("No pivot. ")+status(c);
     }
     return out;
 }
 QList<QStringList> solutionRows(const LpChangesController& c) {
     QList<QStringList> rows;if(!c.baseline())return rows;
     const auto after=values(c);const auto z=objective(c);const auto before=c.baselineObjective();
-    rows<<QStringList{QStringLiteral("Objective"),before?number(*before,c.format()):QStringLiteral("—"),z?number(*z,c.format()):QStringLiteral("—")};
+    rows<<QStringList{QStringLiteral("Objective"),before?number(*before,c.format()):QStringLiteral("Not available"),z?number(*z,c.format()):QStringLiteral("Not available")};
     const auto& p=c.baseline()->problem;
-    for(std::size_t j=0;j<p.variables.size();++j)rows<<QStringList{name(p,j),j<c.baselineValues().size()?number(c.baselineValues()[j],c.format()):QStringLiteral("—"),j<after.size()?number(after[j],c.format()):QStringLiteral("—")};
+    for(std::size_t j=0;j<p.variables.size();++j)rows<<QStringList{name(p,j),j<c.baselineValues().size()?number(c.baselineValues()[j],c.format()):QStringLiteral("Not available"),j<after.size()?number(after[j],c.format()):QStringLiteral("Not available")};
     if(c.changedProblem()) {
         const auto& changed=*c.changedProblem();
-        for(std::size_t j=0;j<p.variables.size();++j)rows<<QStringList{QStringLiteral("Objective contribution ")+name(p,j),j<c.baselineValues().size()?number(p.objective[j]*c.baselineValues()[j],c.format()):QStringLiteral("—"),j<after.size()?number(changed.objective[j]*after[j],c.format()):QStringLiteral("—")};
+        for(std::size_t j=0;j<p.variables.size();++j)rows<<QStringList{QStringLiteral("Objective contribution ")+name(p,j),j<c.baselineValues().size()?number(p.objective[j]*c.baselineValues()[j],c.format()):QStringLiteral("Not available"),j<after.size()?number(changed.objective[j]*after[j],c.format()):QStringLiteral("Not available")};
         for(std::size_t i=0;i<p.constraints.size();++i) {
-            const auto gap=[&](const tora::lp::LpProblem& model,const std::vector<double>& x){if(x.size()!=model.variables.size())return QStringLiteral("—");const auto& r=model.constraints[i];double lhs=0;for(std::size_t j=0;j<x.size();++j)lhs+=r.coefficients[j]*x[j];return number(r.relation==tora::lp::Relation::GreaterEqual?lhs-r.rhs:r.rhs-lhs,c.format());};
+            const auto gap=[&](const tora::lp::LpProblem& model,const std::vector<double>& x){if(x.size()!=model.variables.size())return QStringLiteral("Not available");const auto& r=model.constraints[i];double lhs=0;for(std::size_t j=0;j<x.size();++j)lhs+=r.coefficients[j]*x[j];return number(r.relation==tora::lp::Relation::GreaterEqual?lhs-r.rhs:r.rhs-lhs,c.format());};
             rows<<QStringList{QStringLiteral("Constraint %1 slack / surplus").arg(i+1),gap(p,c.baselineValues()),gap(changed,after)};
         }
     }
@@ -178,7 +178,7 @@ namespace {
 QString changesReport(const LpChangesController& c,std::optional<std::size_t> selected) {
     if(!c.hasResult() || !c.baseline() || !c.changedProblem() || traceCount(c)==0 ||
        (selected && *selected>=traceCount(c)))return {};
-        QString html=QStringLiteral("<h1>Linear Programming — Class extensions</h1>");
+        QString html=QStringLiteral("<h1>Linear Programming (Class extensions)</h1>");
         const auto line=[&html](const QString& text){html+=QStringLiteral("<p>")+text.toHtmlEscaped()+QStringLiteral("</p>");};
         line(methodName(c));line(QStringLiteral("Title: ")+legacyText(c.baseline()->problem.title));line(status(c));line(diagnosis(c));
         const auto dataset=[&](const tora::lp::LpProblem& p,const QString& heading){html+=QStringLiteral("<h2>")+heading+QStringLiteral("</h2>");QStringList costs;for(std::size_t j=0;j<p.objective.size();++j)costs<<precise(p.objective[j])+QStringLiteral(" ")+name(p,j);line((p.sense==tora::lp::ObjectiveSense::Maximize?QStringLiteral("Maximize: "):QStringLiteral("Minimize: "))+costs.join(QStringLiteral(" + ")));

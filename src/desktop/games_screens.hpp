@@ -41,6 +41,6 @@ private:
 };
 GamesController& gamesController(ApplicationShell& shell);
 ModuleDescriptor gamesModule();
-void drawGamesGraph(QPainter& painter,const QRectF& rect,const games::GraphicalResult& graph,double zoom=1);
+void drawGamesGraph(QPainter& painter,const QRectF& rect,const games::GraphicalResult& graph,double zoom=1,const QString& strategy=QStringLiteral("A1"));
 bool printGames(QPrinter& printer,const GamesController& controller);
 }

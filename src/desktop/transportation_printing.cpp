@@ -40,7 +40,7 @@ public:
             const auto available=printer_.pageLayout().paintRectPixels(printer_.resolution()).width();
             width_=available*.95;left_=(available-width_)/2;
         }
-        line(QStringLiteral("Eidolon — Transportation"));
+        line(QStringLiteral("Eidolon (Transportation)"));
         line(QDateTime::currentDateTime().toString(QStringLiteral("dddd, MMMM dd, yyyy HH:mm")));
         space(4);line(finalStyle?QStringLiteral("TRANSPORTATION MODEL -- ORIGINAL DATA"):
             QStringLiteral("TRANSPORTATION MODEL-- ORIGINAL DATA"),Qt::AlignHCenter);

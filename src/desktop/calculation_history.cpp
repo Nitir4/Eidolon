@@ -12,7 +12,7 @@ QString matrix(const core::Matrix& a) {
 }
 QString assignmentStepText(const AssignmentData& d,const assignment::Result& r,int index) {
     const auto& s=r.history.at(static_cast<std::size_t>(index));
-    QString text=QString("%1 — Step %2: %3\n").arg(d.title).arg(index+1).arg(QString::fromStdString(s.event));
+    QString text=QString("%1\nStep %2: %3\n").arg(d.title).arg(index+1).arg(QString::fromStdString(s.event));
     text+=QString("Original objective: %1; workers=%2, jobs=%3.\n").arg(d.model.sense==assignment::Sense::Minimize?"minimize":"maximize").arg(d.workers.size()).arg(d.jobs.size());
     text+="Workers: "+d.workers.join(" | ")+"\nJobs: "+d.jobs.join(" | ")+"\n";
     text+="Forbidden pairs (never candidate edges): ";for(const auto& p:d.model.forbidden)text+=QString("(%1,%2) ").arg(p.first+1).arg(p.second+1);text+='\n';
@@ -33,7 +33,7 @@ QString assignmentStepText(const AssignmentData& d,const assignment::Result& r,i
 }
 QString gameStepText(const GamesDocument& d,const games::Result& r,int index) {
     const auto& s=r.history.at(static_cast<std::size_t>(index));
-    QString text=QString::fromStdString(d.title())+QString(" — Step %1: ").arg(index+1)+QString::fromStdString(s.event)+"\n"+QString::fromStdString(s.detail)+"\n";
+    QString text=QString::fromStdString(d.title())+QString("\nStep %1: ").arg(index+1)+QString::fromStdString(s.event)+"\n"+QString::fromStdString(s.detail)+"\n";
     text+="Row strategy labels: ";for(const auto& name:d.rowNames())text+=QString::fromStdString(name)+" | ";text+="\nColumn strategy labels: ";for(const auto& name:d.columnNames())text+=QString::fromStdString(name)+" | ";text+='\n';
     if(index==0)text+="Original payoff to maximizing row player A:\n"+matrix(d.payoff())+"\n";
     if(r.scale)text+="scale = "+number(r.scale)+"; shift = "+number(r.shift)+"\n";

@@ -66,6 +66,19 @@ private slots:
     QCOMPARE(tora::transportation::solveLeastCost(maxTxt.problem()).back().objective,34.);
     auto edited=maxTxt;edited.insert(tora::compat::TransportationDocument::Axis::Destination,0);QCOMPARE(edited.problem().dummyDestinations,std::vector<std::size_t>{2});edited.erase(tora::compat::TransportationDocument::Axis::Destination,0);QCOMPARE(encodeTransportationJson(edited),encodeTransportationJson(maxDoc));
     auto& gc=gamesController(shell);QVERIFY(gc.openFile(example("game.json"),error));QVERIFY(gc.solve(error));QCOMPARE(gc.result()->value,0.);QCOMPARE(gc.result()->rowStrategy[0],.5);
+    QVERIFY(gc.solve(error,true));
+    QVERIFY(gc.outputText().contains("Heads A = 0.50"));
+    QVERIFY(gc.outputText().contains("Tails B: 1.00 - 2.00 p"));
+    gc.beginNew({tora::core::Notation::Scientific,4,2});
+    QVERIFY(gc.initialize("Extreme finite game",2,2,error));
+    QVERIFY(gc.editCell(0,0,"1e308",error));
+    QVERIFY(gc.editCell(0,1,"-1e308",error));
+    QVERIFY(gc.editCell(1,0,"-1e308",error));
+    QVERIFY(gc.editCell(1,1,"1e308",error));
+    QVERIFY(gc.solve(error,true));
+    QCOMPARE(gc.result()->value,0.);
+    QVERIFY(gc.outputText().contains("(1 - p) × (-1.0000e+308) + p × (1.0000e+308)"));
+    QVERIFY(!gc.outputText().contains("infinity"));
  }
  void malformedIsTransactional(){
     QTemporaryDir dir;const auto bad=dir.filePath("bad.json");ApplicationShell shell;QString error;

@@ -517,7 +517,7 @@ QWidget* iterations(ApplicationShell& shell)
         grid->clearSpans(); grid->clear();
         const auto& history=controller.trace();
         const auto& p=controller.solutionProblem();
-        title->setText(QStringLiteral("Title: %1 — (%2)").arg(text(p.title),p.maximize?QStringLiteral("maximum profit"):QStringLiteral("minimum cost")));
+        title->setText(QStringLiteral("Title: %1 (%2)").arg(text(p.title),p.maximize?QStringLiteral("maximum profit"):QStringLiteral("minimum cost")));
         const int m=static_cast<int>(p.supply.size()), n=static_cast<int>(p.demand.size()), height=3*m+4;
         {
             const QSignalBlocker blocker(anchor);anchor->clear();
@@ -666,11 +666,11 @@ void moduleMenus(ApplicationShell& shell, QMenuBar& bar, bool inputPage)
         QObject::connect(&controller, &TransportationController::selectionChanged, edit, updateEdit); updateEdit();
     }
     auto* solve=bar.addMenu(QStringLiteral("Solve Problem"));
-    auto* northwest=solve->addAction(QStringLiteral("Iterations — North-west corner start"),&shell,[&shell]{solveProblem(shell);});
+    auto* northwest=solve->addAction(QStringLiteral("Iterations (North-west corner start)"),&shell,[&shell]{solveProblem(shell);});
     northwest->setEnabled(transportationController(shell).loaded());
-    auto* leastcost=solve->addAction(QStringLiteral("Iterations — Least-cost start"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::LeastCost);});
+    auto* leastcost=solve->addAction(QStringLiteral("Iterations (Least-cost start)"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::LeastCost);});
     leastcost->setEnabled(transportationController(shell).loaded());
-    auto* vogel=solve->addAction(QStringLiteral("Iterations — Vogel start"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::Vogel);});
+    auto* vogel=solve->addAction(QStringLiteral("Iterations (Vogel start)"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::Vogel);});
     vogel->setEnabled(transportationController(shell).loaded());
     auto* final=solve->addAction(QStringLiteral("Final solution"),&shell,[&shell]{finalProblem(shell);});final->setObjectName(QStringLiteral("transport-final-action"));
     const auto update=[&controller,save,saveAs,northwest,leastcost,vogel,final] {

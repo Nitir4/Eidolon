@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QCheckBox>
 #include <QGridLayout>
+#include <cmath>
 namespace tora::desktop {
 GamesController::GamesController(QObject* parent):QObject(parent){setObjectName("games-controller");auto* owner=qobject_cast<QWidget*>(parent);dialogs_.showError=[owner](const QString& a,const QString& b){QMessageBox::warning(owner,a,b);};dialogs_.askSave=[owner]{auto a=QMessageBox::question(owner,"Save?","Do you wish to save data?",QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);return a==QMessageBox::Yes?SaveChoice::Yes:a==QMessageBox::No?SaveChoice::No:SaveChoice::Cancel;};dialogs_.chooseSave=[owner](const QString& current)->std::optional<QString>{auto p=QFileDialog::getSaveFileName(owner,"Save As",current,"Game TXT (*.txt);;Game JSON (*.json);;All Files (*)");return p.isEmpty()?std::nullopt:std::optional<QString>(p);};dialogs_.chooseOpen=[owner]()->std::optional<OpenSelection>{QFileDialog d(owner,"Open Game Problem");d.setFileMode(QFileDialog::ExistingFile);d.setNameFilter("Games JSON / TXT (*.json *.txt);;All Files (*)");d.setOption(QFileDialog::DontUseNativeDialog);auto* ro=new QCheckBox("Open as read-only",&d);if(auto* l=qobject_cast<QGridLayout*>(d.layout()))l->addWidget(ro,l->rowCount(),0,1,l->columnCount());if(d.exec()!=QDialog::Accepted||d.selectedFiles().isEmpty())return {};return OpenSelection{d.selectedFiles().first(),ro->isChecked()};};}
 bool GamesController::reject(QString& e,const QString& m){e=m;pendingValid_=false;return false;}
@@ -22,7 +23,43 @@ bool GamesController::solve(QString& e,bool graphical){e.clear();if(!commitInput
 bool GamesController::requestSave(){if(!commitInput()||!document_)return false;auto p=dialogs_.chooseSave(path_);if(!p)return false;QString e;if(saveTo(*p,e))return true;dialogs_.showError("Cannot Save Problem",e);return false;}
 bool GamesController::leaveInput(){if(!commitInput())return false;if(!dirty_)return true;auto a=dialogs_.askSave();return a==SaveChoice::No||(a==SaveChoice::Yes&&requestSave());}
 bool GamesController::requestOpen(){auto p=dialogs_.chooseOpen();if(!p||!leaveInput())return false;QString e;if(openFile(p->path,e,p->readOnly))return true;dialogs_.showError("Cannot Open Problem",e);return false;}
-QString GamesController::outputText()const{if(!document_||!result_)return {};core::NumberFormatter f(document_->format());auto n=[&](double v){return QString::fromStdString(f.formatBound(v));};QString text=QString::fromStdString(document_->title())+"\nValue of game = "+n(result_->value)+"\nPlayer A strategies\n";for(std::size_t i=0;i<result_->rowStrategy.size();++i)text+=QString("A%1 = %2\n").arg(i+1).arg(n(result_->rowStrategy[i]));text+="Player B strategies\n";for(std::size_t i=0;i<result_->columnStrategy.size();++i)text+=QString("B%1 = %2\n").arg(i+1).arg(n(result_->columnStrategy[i]));if(graph_){for(const auto& l:graph_->lines)text+=QString("B%1: %2 + %3 p\n").arg(l.strategy+1).arg(n(l.atZero),n(l.atOne-l.atZero));}else{const auto lp=games::rowPlayerLp(document_->payoff());text+="\nMaximize v\n";for(const auto& row:lp.constraints){for(std::size_t j=0;j<row.coefficients.size();++j)text+=n(row.coefficients[j])+QString(" %1 ").arg(j==0?"v":QString("x%1").arg(j));text+=(row.relation==lp::Relation::Equal?"= ":"<= ")+n(row.rhs)+"\n";}text+="v unrestricted; x >= 0\n";}return text;}
+QString GamesController::outputText() const
+{
+    if (!document_ || !result_) return {};
+    const core::NumberFormatter formatter(document_->format());
+    const auto number = [&formatter](double value) { return QString::fromStdString(formatter.formatBound(value)); };
+    QString text = QString::fromStdString(document_->title()) + "\nValue of game = " + number(result_->value) + '\n';
+    const auto appendStrategies = [&text,&number](const auto& names, const auto& probabilities) {
+        for (std::size_t i = 0; i < probabilities.size(); ++i)
+            text += QString::fromStdString(names[i]) + " = " + number(probabilities[i]) + '\n';
+    };
+    text += "Player A strategies\n";
+    appendStrategies(document_->rowNames(),result_->rowStrategy);
+    text += "Player B strategies\n";
+    appendStrategies(document_->columnNames(),result_->columnStrategy);
+    if (graph_) {
+        for (const auto& line : graph_->lines) {
+            text += QString::fromStdString(document_->columnNames()[line.strategy]) + ": ";
+            const double slope = line.atOne - line.atZero;
+            if (std::isfinite(slope)) {
+                text += number(line.atZero) + (slope < 0 ? " - " : " + ") + number(std::abs(slope)) + " p\n";
+            } else {
+                // Finite endpoints still describe the line when their difference exceeds binary64.
+                text += QStringLiteral("(1 - p) × (%1) + p × (%2)\n").arg(number(line.atZero),number(line.atOne));
+            }
+        }
+    } else {
+        const auto lp = games::rowPlayerLp(document_->payoff());
+        text += "\nMaximize v\n";
+        for (const auto& row : lp.constraints) {
+            for (std::size_t column = 0; column < row.coefficients.size(); ++column)
+                text += number(row.coefficients[column]) + QString(" %1 ").arg(column == 0 ? "v" : QString("x%1").arg(column));
+            text += (row.relation == lp::Relation::Equal ? "= " : "<= ") + number(row.rhs) + '\n';
+        }
+        text += "v unrestricted; x >= 0\n";
+    }
+    return text;
+}
 GamesController& gamesController(ApplicationShell& shell){if(auto* c=shell.findChild<GamesController*>("games-controller"))return *c;return *new GamesController(&shell);}
 bool GamesController::setFormat(core::NumberFormat f,QString& e){e.clear();try{(void)core::NumberFormatter(f);if(f.n==format_.n&&f.d==format_.d&&f.notation==format_.notation)return true;if(readOnly_)return reject(e,"Save a copy before editing this read-only game.");format_=f;undo_.reset();if(document_){document_->setFormat(f);modified();}return true;}catch(const std::exception& x){return reject(e,x.what());}}
 bool GamesController::selectLine(bool row,int at,bool before){if(!commitInput()||!document_||at<0||static_cast<std::size_t>(at)>=(row?document_->payoff().rows():document_->payoff().columns()))return false;selection_=at;selectionRow_=row;insertBefore_=before;emit changed();return true;}

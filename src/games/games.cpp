@@ -94,7 +94,7 @@ Result solve(const core::Matrix& a,const core::Tolerance& tolerance,std::size_t 
     core::Tableau table(std::move(values),std::move(labels),std::move(basis));
     result.scale=scale;result.shift=2;
     result.history.push_back({"Game-to-LP formulation","H=A/scale+2; maximize sum(y), H*y<=1, y>=0. Dual: minimize sum(x), H^T*x>=1, x>=0. Recover p=x/sum(x), q=y/sum(y), v=scale*(1/sum(y)-2).",{},{},{},{}});
-    result.history.push_back({"Initial tableau — primal optimization","Slack basis is feasible because H lies in [1,3] and RHS=1. No artificial-variable phase is used.",table,{},{},{}});
+    result.history.push_back({"Initial tableau (primal optimization)","Slack basis is feasible because H lies in [1,3] and RHS=1. No artificial-variable phase is used.",table,{},{},{}});
     // This mathematical extension uses incremental pivots. Legacy LP trace
     // reconstruction is deliberately left unchanged in its separate module.
     const core::Tolerance pivotTolerance(tolerance.absolute()*.001,tolerance.relative()*.001);
