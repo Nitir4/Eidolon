@@ -49,7 +49,7 @@ def copy_distribution_qt_notices(stage, qt_root, qt_version, prefix=Path('/usr')
         target = destination / source.name
         shutil.copytree(source, target, dirs_exist_ok=True)
         records.append({'installed_path': str(source), 'resolved_path': str(source.resolve())})
-    files = {str(path.relative_to(destination)): hashlib.sha256(path.read_bytes()).hexdigest()
+    files = {path.relative_to(destination).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
              for path in sorted(destination.rglob('*')) if path.is_file()}
     data = {'qt_version': qt_version, 'source': 'installed distribution license directories',
             'complete_upstream_attribution_bundle': False, 'directories': records, 'files': files}

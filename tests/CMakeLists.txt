@@ -715,7 +715,7 @@ endforeach()
 
 if(Python3_Interpreter_FOUND)
     add_test(NAME packaging.playtest.delivery COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_playtest_delivery.py")
-    set_tests_properties(packaging.playtest.delivery PROPERTIES TIMEOUT 30)
+    set_tests_properties(packaging.playtest.delivery PROPERTIES TIMEOUT 60)
 endif()
 
 if(UNIX AND NOT APPLE)

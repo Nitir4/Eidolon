@@ -3,6 +3,7 @@ import csv
 import importlib.util
 import json
 from pathlib import Path
+import stat
 import sys
 import tempfile
 import unittest
@@ -10,7 +11,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools'))
-from package_playtest import build, extract_windows
+from package_playtest import build, copy_macos_payload, extract_windows
 from playtest_material import make_material, original_death_mean
 
 spec = importlib.util.spec_from_file_location('compare_results', ROOT/'playtest/scripts/compare-results.py')
@@ -74,15 +75,47 @@ class PlaytestDelivery(unittest.TestCase):
                 executable.create_system = 3
                 executable.external_attr = 0o100755 << 16
                 handle.writestr(executable, b'temporary unit fixture')
+                framework = 'Eidolon.app/Contents/Frameworks/QtCore.framework'
+                current = zipfile.ZipInfo(framework + '/Versions/Current')
+                current.create_system = 3
+                current.external_attr = (stat.S_IFLNK | 0o777) << 16
+                handle.writestr(current, b'A')
+                handle.writestr(framework + '/Versions/A/QtCore', b'unit framework file')
+                handle.writestr('__MACOSX/Eidolon.app/Contents/MacOS/._Eidolon', b'unit metadata')
             artifact.with_suffix('.zip.manifest.json').write_text(json.dumps({
                 'application':'Eidolon', 'version':'test',
                 'build_validation':'cross-built; no native execution'}))
             archive = build(native, root/'output', 'macos')
             with zipfile.ZipFile(archive) as handle:
                 member = handle.getinfo('app/Eidolon.app/Contents/MacOS/Eidolon')
+                self.assertEqual(member.create_system, 3)
                 self.assertTrue(member.external_attr >> 16 & 0o111)
+                link = handle.getinfo('app/' + current.filename)
+                self.assertTrue(stat.S_ISLNK(link.external_attr >> 16))
+                self.assertEqual(handle.read(link), b'A')
+                files = json.loads(handle.read('bundle-manifest.json'))['files']
+                self.assertNotIn(link.filename, files)
+                self.assertIn('app/' + framework + '/Versions/A/QtCore', files)
+                metadata = '__MACOSX/app/Eidolon.app/Contents/MacOS/._Eidolon'
+                self.assertEqual(handle.read(metadata), b'unit metadata')
+                self.assertNotIn(metadata, files)
                 release = json.loads(handle.read('release-info.json'))
                 self.assertIn('no native execution', release['build_validation'])
+
+    def test_macos_payload_cannot_redirect_extraction(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            native = root/'native.zip'
+            for target in ('../outside', 'Versions/A'):
+                with zipfile.ZipFile(native, 'w') as handle:
+                    handle.writestr('Eidolon.app/Contents/MacOS/Eidolon', b'unit fixture')
+                    link = zipfile.ZipInfo('Eidolon.app/Contents/Frameworks/Current')
+                    link.external_attr = (stat.S_IFLNK | 0o777) << 16
+                    handle.writestr(link, target)
+                    handle.writestr(link.filename + '/external.txt', b'unit file')
+                with zipfile.ZipFile(root/'playtest.zip', 'w') as output:
+                    with self.assertRaisesRegex(ValueError, 'Unsafe macOS payload link|through a symlink'):
+                        copy_macos_payload(native, output)
 
     def test_archive_contents_and_mac_script_permissions(self):
         # These are tiny fake native payloads used only inside a temporary unit
@@ -110,7 +143,9 @@ class PlaytestDelivery(unittest.TestCase):
                     self.assertIn('comparison-template.csv', names)
                     self.assertFalse(any(n.endswith('tora.exe') for n in names))
                     if target == 'macos':
-                        self.assertTrue(handle.getinfo('Run-Checks.command').external_attr >> 16 & 0o111)
+                        launcher = handle.getinfo('Run-Checks.command')
+                        self.assertEqual(launcher.create_system, 3)
+                        self.assertEqual((launcher.external_attr >> 16) & 0o777, 0o755)
 
 
 if __name__ == '__main__':
