@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QPrinter>
 #include <QTableWidget>
+#include <QTabWidget>
+#include <QComboBox>
 #include <QPushButton>
 #include <QPlainTextEdit>
 #include <QDir>
@@ -40,6 +42,34 @@ private slots:
  void disconnectedAndNegativeCycle(){
   ApplicationShell shell;auto& c=networksController(shell);QString e;QVERIFY(c.initialize(NetworkMode::MinimalTree,"Disconnected",3,e));QVERIFY(c.solve(1,2,e));QCOMPARE(std::get<tora::networks::SpanningForest>(*c.result()).componentCount,std::size_t(3));QVERIFY(c.outputText().contains("Disconnected"));
   c.beginNew(NetworkMode::ShortestRoute);QVERIFY(c.initialize(NetworkMode::ShortestRoute,"Cycles",3,e));QVERIFY(c.editCell(1,2,"1",e));QVERIFY(c.editCell(2,3,"-3",e));QVERIFY(c.editCell(3,2,"1",e));QVERIFY(c.solve(0,2,e,NetworkRouteMethod::Floyd));QVERIFY(c.outputText().contains("Unbounded below"));QVERIFY(c.solve(1,2,e,NetworkRouteMethod::BellmanFord));QCOMPARE(std::get<tora::networks::ShortestRoutes>(*c.result()).routes[0].status,tora::networks::RouteStatus::Unreachable);
+ }
+ void nativeFloydMatrices() {
+  ApplicationShell shell;
+  QVERIFY(shell.registerModule(networksModule()));
+  auto& c = networksController(shell);
+  QTemporaryDir dir;
+  QString error;
+  QVERIFY(load(c,NetworkMode::ShortestRoute,dir,error));
+  QVERIFY(c.solve(0,2,error,NetworkRouteMethod::Floyd));
+  QVERIFY(shell.navigate("networks/result"));
+  auto* page = shell.currentContent();
+  auto* tabs = page->findChild<QTabWidget*>("floyd-result-tabs");
+  auto* routes = page->findChild<QTableWidget*>("floyd-routes");
+  auto* distances = page->findChild<QTableView*>("floyd-distances");
+  auto* nextNodes = page->findChild<QTableView*>("floyd-next-nodes");
+  auto* selector = page->findChild<QComboBox*>("floyd-step-selector");
+  QVERIFY(tabs && routes && distances && nextNodes && selector);
+  QCOMPARE(routes->item(2,1)->text(),QStringLiteral("5.00"));
+  QCOMPARE(distances->model()->index(0,2).data().toString(),QStringLiteral("8.00"));
+  QCOMPARE(nextNodes->model()->index(0,2).data().toString(),QStringLiteral("C"));
+  selector->setCurrentIndex(2);
+  QCOMPARE(distances->model()->index(0,2).data().toString(),QStringLiteral("5.00"));
+  QCOMPARE(nextNodes->model()->index(0,2).data().toString(),QStringLiteral("B"));
+  page->findChild<QPushButton*>("floyd-all")->click();
+  QCOMPARE(distances->model()->rowCount(),12);
+  QCOMPARE(nextNodes->model()->rowCount(),12);
+  QVERIFY(c.solve(0,2,error,NetworkRouteMethod::Dijkstra));
+  QVERIFY(tabs->isHidden() || tabs->parentWidget()->isHidden());
  }
  void nativeKeyboardTraceAndPdf(){
   ApplicationShell shell;QVERIFY(shell.registerModule(networksModule()));auto& c=networksController(shell);c.dialogs().showError=[](const QString&,const QString&){};QString e;QTemporaryDir dir;QVERIFY(load(c,NetworkMode::MinimalTree,dir,e));QVERIFY(shell.navigate("networks/input"));shell.resize(800,600);shell.show();QTest::qWait(20);auto* grid=shell.currentContent()->findChild<QTableWidget*>("networks-input-grid");QVERIFY(grid);QCOMPARE(grid->rowCount(),4);grid->item(1,2)->setText("bad");QVERIFY(!c.solve(0,2,e));QVERIFY(!c.result());QVERIFY(!shell.navigate("main"));grid->item(1,2)->setText("1");grid->setCurrentCell(1,2);grid->editItem(grid->item(1,2));QApplication::processEvents();auto* editor=grid->findChild<QLineEdit*>();QVERIFY(editor);QTest::keyClick(editor,Qt::Key_A,Qt::ControlModifier);QTest::keyClicks(editor,"1.25");QTest::keyClick(editor,Qt::Key_Return);QApplication::processEvents();QCOMPARE(c.document()->cell(1,2),std::string("1.25"));QVERIFY(c.solve(0,2,e));QVERIFY(shell.navigate("networks/result"));auto* trace=shell.currentContent()->findChild<QTableWidget*>("networks-iterations");QVERIFY(trace);QCOMPARE(trace->rowCount(),0);QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>("networks-next"),Qt::LeftButton);QCOMPARE(trace->rowCount(),1);QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>("networks-all"),Qt::LeftButton);QCOMPARE(trace->rowCount(),2);

@@ -94,7 +94,15 @@ private slots:
         QVERIFY(network.initialize(NetworkMode::ShortestRoute,"A-B-C distance5",3,error));
         QVERIFY(network.editCell(1,2,"2",error));QVERIFY(network.editCell(1,3,"8",error));QVERIFY(network.editCell(2,3,"3",error));
         QVERIFY(network.solve(0,2,error,NetworkRouteMethod::Dijkstra));QVERIFY(shell.navigate("networks/result"));capture(shell,"network-dijkstra");
-        QVERIFY(network.solve(0,2,error,NetworkRouteMethod::Floyd));capture(shell,"network-floyd");
+        QVERIFY(network.solve(0,2,error,NetworkRouteMethod::Floyd));
+        capture(shell,"network-floyd");
+        auto* floydTabs = shell.currentContent()->findChild<QTabWidget*>("floyd-result-tabs");
+        QVERIFY(floydTabs);
+        floydTabs->setCurrentIndex(1);
+        auto* floydStep = shell.currentContent()->findChild<QComboBox*>("floyd-step-selector");
+        QVERIFY(floydStep);
+        floydStep->setCurrentIndex(2);
+        capture(shell,"network-floyd-steps");
         QVERIFY(integer.loadExample());QVERIFY(integer.startGuided());QVERIFY(integer.guided()->awaitingBranch());capture(shell,"integer-guided-root");
         QVERIFY(integer.branchGuided(1));QVERIFY(integer.nextGuided());capture(shell,"integer-guided-child");
         QVERIFY(integer.finishGuided());QCOMPARE(*integer.result()->objective,6.);
