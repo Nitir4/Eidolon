@@ -41,49 +41,142 @@ bool QueuingController::solve(QString& e){
 bool QueuingController::requestSave(){if(!commitInput()||!document_)return false;auto p=dialogs_.chooseSave(path_);if(!p)return false;QString e;if(saveTo(*p,e))return true;dialogs_.showError("Cannot Save Problem",e);return false;}
 bool QueuingController::leaveInput(){if(!commitInput())return false;if(!dirty_)return true;auto a=dialogs_.askSave();return a==SaveChoice::No||(a==SaveChoice::Yes&&requestSave());}
 bool QueuingController::requestOpen(){auto p=dialogs_.chooseOpen();if(!p||!leaveInput())return false;QString e;if(openFile(p->path,e,p->readOnly))return true;dialogs_.showError("Cannot Open Problem",e);return false;}
-QString QueuingController::outputText(int scenario,std::size_t first,std::size_t count)const{
- if(!document_||results_.empty())return {};
- core::NumberFormatter formatter(document_->format());auto n=[&](double v){return QString::fromStdString(formatter.format(v));};QString text=QString::fromStdString(document_->title())+"\nQUEUING ANALYSIS\n";
- auto summary=[&](std::size_t i){const auto& r=results_[i];QString s=QString("\nScenario %1\n").arg(i+1);for(int col=0;col<5;++col)s+=QString::fromStdString(document_->cell(i,col))+"  ";s+="(lambda, mu, c, K, N)\n";
- if(i<transients_.size()&&transients_[i]){
-  const auto& t=*transients_[i];
-  s+=t.kind==queuing::TransientKind::PureBirth?"PURE BIRTH TRANSIENT (t = 1)\n":"PURE DEATH TRANSIENT (t = 1)\nREQUESTED MODEL TRANSIENT\n";
-  s+="Mean population = "+n(t.mean)+"\n";
-  if(t.kind==queuing::TransientKind::PureDeath){
-   const auto model=document_->model(i);
-   s+=QString("Initial population N = %1\n").arg(t.initialPopulation);
-   const auto partial=t.mean-t.initialPopulation*queuing::probability(t,t.initialPopulation);
-   s+="Partial mean excluding state N = "+n(std::max(0.,partial))+"\n";
-   if(!model.sourceLimit)s+="For an infinite source, the requested mathematical profile uses clone reference N=9999. Original TORA displays this label but its observed effective population is 500.\n";
-   if(i<originalComparisons_.size()&&originalComparisons_[i]){
-    const auto& legacy=*originalComparisons_[i];
-    const auto legacyPartial=std::max(0.,legacy.mean-legacy.initialPopulation*queuing::probability(legacy,legacy.initialPopulation));
-    s+="\nORIGINAL TORA COMPARISON (independent calculation)\n";
-    s+=QString("Effective initial population = %1\n").arg(legacy.initialPopulation);
-    s+="This independent population comparison uses min(N, 500). The original routine limits its active states to min(K, N, 500).\n";
-    s+="Capped-profile true mean = "+n(legacy.mean)+"\n";
-    s+="Partial mean excluding capped terminal state = "+n(legacyPartial)+" (before the original probability cutoff)\n";
-    s+=QString("Capped terminal state %1: pn = %2, cumulative Pn = %3\n").arg(legacy.initialPopulation).arg(n(queuing::probability(legacy,legacy.initialPopulation)),n(queuing::cumulativeProbability(legacy,legacy.initialPopulation)));
-    s+="Original TORA's Ls omits the initial-state contribution and stops summing after the first probability below 0.00001 following the peak. It is not the full mean population shown above.\n";
-   }
-  }
-  s+="Unit-time original boundary profile uses a constant rate independent of c; pure-birth probabilities ignore K/N.\nStationary throughput and waiting-time metrics do not apply to this transient result.\n";return s;
- }
- if(r.status==queuing::Status::Unstable)return s+"NO STATIONARY DISTRIBUTION: lambda >= c*mu\n";
- const auto& v=*r.metrics;s+="Effective lambda = "+n(v.throughput)+"\nRaw rho/c (lambda/(c*mu)) = "+(v.offeredLoadPerServer?n(*v.offeredLoadPerServer):(v.absorbingNoService?"infinite (zero service)":"exceeds display range"))+"\nActual server utilization = "+n(v.utilization)+"\nLs = "+n(v.meanSystem)+"\nLq = "+n(v.meanQueue)+"\nWs = "+(v.absorbingNoService?QString("undefined (zero throughput)"):n(v.meanSystemTime))+"\nWq = "+(v.absorbingNoService?QString("undefined (zero throughput)"):n(v.meanQueueTime))+"\nProbability empty = "+n(v.probabilityEmpty)+"\nProbability full = "+n(v.probabilityFull)+"\nArrival blocking probability = "+(v.arrivalBlockingUndefined?QString("undefined (no attempted arrivals)"):n(v.blockingProbability))+"\nAdmitted arrival wait probability = "+(v.absorbingNoService?QString("undefined (zero throughput)"):n(v.probabilityWait))+"\nBalance residual = "+QString::number(v.maximumRelativeBalanceResidual,'g',6)+"\n";if(v.absorbingNoService)s+="Absorbing full state: no service completions; stationary waiting times are undefined.\n";if(v.zeroArrivalLimit)s+="Zero arrivals: Ws and Wq are limiting values.\n";return s;};
- if(scenario<0){text+="COMPARATIVE ANALYSIS\n";for(std::size_t i=0;i<results_.size();++i)text+=summary(i);return text;}
- if(static_cast<std::size_t>(scenario)>=results_.size())return {};
- const auto selected=static_cast<std::size_t>(scenario);const auto& r=results_[selected];text+=summary(selected);
- if(selected<transients_.size()&&transients_[selected]){const auto& t=*transients_[selected];count=std::min<std::size_t>(count,1000);first=std::min<std::size_t>(first,1000000);if(t.kind==queuing::TransientKind::PureDeath)text+="\nREQUESTED MODEL STATE PROBABILITIES\n";text+="\nn     Probability pn     Cumulative Pn\n";for(std::size_t offset=0;offset<count;++offset){const auto state=first+offset;if(t.kind==queuing::TransientKind::PureDeath&&state>t.initialPopulation)break;text+=QString::number(state)+"     "+n(queuing::probability(t,state))+"     "+n(queuing::cumulativeProbability(t,state))+"\n";}return text+"Poisson omitted-tail bound = "+QString::number(t.omittedMass,'g',6)+"\n";}
- if(r.status!=queuing::Status::Stationary)return text;
- count=std::min<std::size_t>(count,1000);first=std::min<std::size_t>(first,1000000);text+="\nn     Probability pn     Cumulative Pn\n";
- long double cumulative=0;
- // Sum finite prefix or use analytical infinite geometric tail.
- if(r.capacity){for(std::size_t i=0;i<std::min(first,r.probabilities.size());++i)cumulative+=r.probabilities[i];}
- else if(first<=r.probabilities.size()){for(std::size_t i=0;i<first;++i)cumulative+=r.probabilities[i];}
- else cumulative=1-static_cast<long double>(r.tailMass)*std::exp(r.logTailRatio*static_cast<double>(first-(r.probabilities.size()-1)));
- for(std::size_t offset=0;offset<count;++offset){const auto state=first+offset;if(r.capacity&&state>*r.capacity)break;const auto p=queuing::probability(r,state);cumulative+=p;text+=QString::number(state)+"     "+n(p)+"     "+n(static_cast<double>(std::min(1.0L,cumulative)))+"\n";}
- text+="Displayed state range is bounded; use First state / State count to view more.\n";return text;
+QueuingScenarioSummary QueuingController::scenarioSummary(std::size_t index) const
+{
+    QueuingScenarioSummary summary;
+    if (!document_ || index >= results_.size()) return summary;
+    const core::NumberFormatter formatter(document_->format());
+    const auto n = [&formatter](double value) { return QString::fromStdString(formatter.format(value)); };
+    const auto add = [&summary](const QString& label, const QString& value) { summary.metrics.append({label,value}); };
+    const auto& result = results_[index];
+    if (const auto& transient = transients_[index]) {
+        const bool pureDeath = transient->kind == queuing::TransientKind::PureDeath;
+        summary.profile = pureDeath ? "Pure death transient (t = 1)" : "Pure birth transient (t = 1)";
+        add("Mean population", n(transient->mean));
+        if (pureDeath) {
+            const auto population = transient->initialPopulation;
+            add("Initial population N", QString::number(population));
+            add("Partial mean excluding state N", n(std::max(0., transient->mean - population * queuing::probability(*transient,population))));
+            if (!document_->model(index).sourceLimit)
+                summary.notes << "For an infinite source, the requested mathematical profile uses clone reference N=9999. Original TORA displays this label but its observed effective population is 500.";
+            if (const auto& legacy = originalComparisons_[index]) {
+                const auto cap = legacy->initialPopulation;
+                const double last = queuing::probability(*legacy,cap);
+                add("Effective initial population", QString::number(cap));
+                add("Capped-profile true mean", n(legacy->mean));
+                add("Partial mean excluding capped terminal state", n(std::max(0., legacy->mean - cap * last)) + " (before the original probability cutoff)");
+                add(QStringLiteral("Capped terminal state %1").arg(cap), QStringLiteral("pn = %1, cumulative Pn = %2")
+                    .arg(n(last), n(queuing::cumulativeProbability(*legacy,cap))));
+                summary.notes << "Original TORA comparison (independent calculation). It uses an effective initial population capped at 500. The original routine limits its active states to min(K, N, 500)."
+                    << "Original TORA's Ls omits the initial-state contribution and stops summing after the first probability below 0.00001 following the peak. It is not the full mean population shown above.";
+            }
+        }
+        summary.notes << "The unit-time boundary profile uses a constant rate independent of c. Pure-birth probabilities ignore K and N."
+            << "Stationary throughput and waiting-time metrics do not apply to this transient result.";
+        return summary;
+    }
+    if (!result.metrics) {
+        summary.profile = "No stationary distribution";
+        summary.notes << "The offered arrival rate is at least the total service rate (lambda >= c*mu).";
+        return summary;
+    }
+    summary.profile = "Stationary distribution";
+    const auto& metrics = *result.metrics;
+    const auto waitValue = [&metrics,&n](double value) {
+        return metrics.absorbingNoService ? QStringLiteral("undefined (zero throughput)") : n(value);
+    };
+    add("Effective lambda", n(metrics.throughput));
+    add("Raw rho/c (lambda/(c*mu))", metrics.offeredLoadPerServer ? n(*metrics.offeredLoadPerServer)
+        : metrics.absorbingNoService ? "infinite (zero service)" : "exceeds display range");
+    add("Actual server utilization", n(metrics.utilization));
+    add("Ls", n(metrics.meanSystem));
+    add("Lq", n(metrics.meanQueue));
+    add("Ws", waitValue(metrics.meanSystemTime));
+    add("Wq", waitValue(metrics.meanQueueTime));
+    add("Probability empty", n(metrics.probabilityEmpty));
+    add("Probability full", n(metrics.probabilityFull));
+    add("Arrival blocking probability", metrics.arrivalBlockingUndefined
+        ? QStringLiteral("undefined (no attempted arrivals)") : n(metrics.blockingProbability));
+    add("Admitted arrival wait probability", waitValue(metrics.probabilityWait));
+    add("Balance residual", QString::number(metrics.maximumRelativeBalanceResidual, 'g', 6));
+    if (metrics.absorbingNoService)
+        summary.notes << "Absorbing full state: no service completions; stationary waiting times are undefined.";
+    if (metrics.zeroArrivalLimit) summary.notes << "Zero arrivals: Ws and Wq are limiting values.";
+    return summary;
+}
+
+std::vector<QueuingStateProbability> QueuingController::stateProbabilities(std::size_t scenario, std::size_t first, std::size_t count) const
+{
+    std::vector<QueuingStateProbability> rows;
+    if (scenario >= results_.size()) return rows;
+    count = std::min<std::size_t>(count,1000);
+    first = std::min<std::size_t>(first,1000000);
+    rows.reserve(count);
+    if (const auto& transient = transients_[scenario]) {
+        for (std::size_t state = first; state < first + count; ++state) {
+            if (transient->kind == queuing::TransientKind::PureDeath && state > transient->initialPopulation) break;
+            rows.push_back({state,queuing::probability(*transient,state),queuing::cumulativeProbability(*transient,state)});
+        }
+        return rows;
+    }
+    const auto& result = results_[scenario];
+    if (result.status != queuing::Status::Stationary) return rows;
+    long double cumulative = 0;
+    // The geometric tail includes the last explicit state.
+    if (result.capacity || first <= result.probabilities.size()) {
+        for (std::size_t state = 0; state < std::min(first,result.probabilities.size()); ++state)
+            cumulative += result.probabilities[state];
+    } else {
+        cumulative = 1 - static_cast<long double>(result.tailMass) *
+            std::exp(result.logTailRatio * static_cast<double>(first - (result.probabilities.size() - 1)));
+    }
+    for (std::size_t state = first; state < first + count; ++state) {
+        if (result.capacity && state > *result.capacity) break;
+        const double probability = queuing::probability(result,state);
+        cumulative += probability;
+        rows.push_back({state,probability,static_cast<double>(std::min(1.0L,cumulative))});
+    }
+    return rows;
+}
+
+QString QueuingController::outputText(int scenario, std::size_t first, std::size_t count) const
+{
+    if (!document_ || results_.empty()) return {};
+    const core::NumberFormatter format(document_->format());
+    const auto n = [&format](double value) { return QString::fromStdString(format.format(value)); };
+    QString text = QString::fromStdString(document_->title()) + "\nQUEUING ANALYSIS\n";
+    const auto appendSummary = [this,&text](std::size_t index) {
+        text += QStringLiteral("\nScenario %1\n").arg(index + 1);
+        for (int column = 0; column < 5; ++column) text += QString::fromStdString(document_->cell(index,column)) + "  ";
+        text += "(lambda, mu, c, K, N)\n";
+        const auto report = scenarioSummary(index);
+        if (const auto& transient = transients_[index]) {
+            text += report.profile.toUpper() + '\n';
+            if (transient->kind == queuing::TransientKind::PureDeath) text += "REQUESTED MODEL TRANSIENT\n";
+        } else if (!results_[index].metrics) text += "NO STATIONARY DISTRIBUTION: lambda >= c*mu\n";
+        for (const auto& [label,value] : report.metrics) {
+            if (label == "Effective initial population") text += "\nORIGINAL TORA COMPARISON (independent calculation)\n";
+            text += label + " = " + value + '\n';
+        }
+        for (const auto& note : report.notes) text += note + '\n';
+    };
+    if (scenario < 0) {
+        text += "COMPARATIVE ANALYSIS\n";
+        for (std::size_t index = 0; index < results_.size(); ++index) appendSummary(index);
+        return text;
+    }
+    const auto index = static_cast<std::size_t>(scenario);
+    if (index >= results_.size()) return {};
+    appendSummary(index);
+    const auto& transient = transients_[index];
+    if (!transient && results_[index].status != queuing::Status::Stationary) return text;
+    if (transient && transient->kind == queuing::TransientKind::PureDeath)
+        text += "\nREQUESTED MODEL STATE PROBABILITIES\n";
+    text += "\nn     Probability pn     Cumulative Pn\n";
+    for (const auto& row : stateProbabilities(index,first,count))
+        text += QString::number(row.state) + "     " + n(row.probability) + "     " + n(row.cumulative) + '\n';
+    if (transient) return text + "Poisson omitted-tail bound = " + QString::number(transient->omittedMass,'g',6) + '\n';
+    return text + "Displayed state range is bounded; use First state / State count to view more.\n";
 }
 QueuingController& queuingController(ApplicationShell& shell){if(auto* c=shell.findChild<QueuingController*>("queuing-controller"))return *c;return *new QueuingController(&shell);}
 bool QueuingController::setFormat(core::NumberFormat f,QString& e){e.clear();if(readOnly_)return reject(e,"Save a copy before editing this read-only system.");try{(void)core::NumberFormatter(f);format_=f;undo_.reset();if(document_){document_->setFormat(f);dirty_=true;emit changed();}return true;}catch(const std::exception& x){return reject(e,x.what());}}

@@ -4,9 +4,22 @@
 #include <tora/queuing/transient.hpp>
 #include "lp_input_controller.hpp"
 #include <QObject>
+#include <QStringList>
+#include <QList>
+#include <QPair>
 #include <optional>
 class QPrinter;
 namespace tora::desktop {
+struct QueuingScenarioSummary {
+    QString profile;
+    QList<QPair<QString,QString>> metrics;
+    QStringList notes;
+};
+struct QueuingStateProbability {
+    std::size_t state;
+    double probability;
+    double cumulative;
+};
 class QueuingController final:public QObject {
  Q_OBJECT
 public:
@@ -33,6 +46,8 @@ public:
  const std::vector<std::optional<queuing::TransientResult>>& originalComparisons()const{return originalComparisons_;}
  bool dirty()const{return dirty_;}bool readOnly()const{return readOnly_;}
  const QString& sourcePath()const{return path_;}
+ QueuingScenarioSummary scenarioSummary(std::size_t scenario) const;
+ std::vector<QueuingStateProbability> stateProbabilities(std::size_t scenario,std::size_t first,std::size_t count) const;
  QString outputText(int scenario=0,std::size_t firstState=0,std::size_t stateCount=100)const;
 signals:
  void changed();void inputReset();void commitRequested();
