@@ -7,11 +7,16 @@
   },
   "active_step": "Foundation 1",
   "foundation1": {
-    "status": "in_progress",
-    "gate": "pending CI verification and user review",
+    "status": "ready_for_review",
+    "gate": "implementation and verification complete; awaiting user approval",
     "repository": "https://github.com/Nitir4/TORA-Clone",
     "branch": "main",
-    "workflow": ".github/workflows/build.yml"
+    "workflow": ".github/workflows/build.yml",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37153249021",
+    "source_commit": "ab6bb3f351ef1fcc2ae9050459b4368a8c5317dd",
+    "local_validation": "Debug 2/2; Release 2/2; headless 1/1; AppImage startup passed; workflow lint passed",
+    "ci_validation": "Windows/Linux/macOS builds passed; 2/2 CTest tests on each; all three deployed startup checks passed; three packages and three test reports uploaded",
+    "qt_ci_version": "6.10.3"
   },
   "next_step": "Foundation 2; requires Foundation 1 gate approval"
 }
