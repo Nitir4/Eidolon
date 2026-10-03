@@ -1,0 +1,17 @@
+# Proprietary reference distribution and local oracle evidence.
+# Explicit user approval is required before publishing captures or saved files.
+/TORA_HAMDY A. TAHA.rar
+/reference/tora-captures/
+
+/.oracle-tools/
+/.tora-*/
+/.packaging-tools/
+/build/
+/dist/
+/.agents/
+/.codex/
+/.aws/
+CMakeUserPresets.json
+
+__pycache__/
+*.pyc

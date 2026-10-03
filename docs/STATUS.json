@@ -1,0 +1,17 @@
+{
+  "phase0": {
+    "status": "approved",
+    "approved_on": "2026-10-04",
+    "approval": "User: yes please go ahead",
+    "recorded_limits": "docs/OPEN_QUESTIONS.md"
+  },
+  "active_step": "Foundation 1",
+  "foundation1": {
+    "status": "in_progress",
+    "gate": "pending CI verification and user review",
+    "repository": "https://github.com/Nitir4/TORA-Clone",
+    "branch": "main",
+    "workflow": ".github/workflows/build.yml"
+  },
+  "next_step": "Foundation 2; requires Foundation 1 gate approval"
+}
