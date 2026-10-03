@@ -137,12 +137,12 @@ def macos_package(build, stage, qt_root, config, output, version):
     plugins.mkdir(parents=True, exist_ok=True)
     shutil.copy2(qt_root / 'plugins/platforms/libqoffscreen.dylib', plugins)
     run([sdk_tool(qt_root, 'macdeployqt'), bundle, '-always-overwrite'])
-    run(['lipo', '-verify_arch', 'arm64', 'x86_64', executable])
+    run(['lipo', executable, '-verify_arch', 'arm64', 'x86_64'])
     frameworks = bundle / 'Contents/Frameworks'
     for framework in frameworks.glob('*.framework'):
         binary = framework / 'Versions/A' / framework.stem
         if binary.is_file():
-            run(['lipo', '-verify_arch', 'arm64', 'x86_64', binary])
+            run(['lipo', binary, '-verify_arch', 'arm64', 'x86_64'])
     notices(stage, qt_root)
     data = manifest(stage, qt_root, version, 'macos-universal')
     run([executable, '--smoke-test'], env=smoke_env(), timeout=30)

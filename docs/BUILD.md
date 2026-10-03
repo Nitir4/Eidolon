@@ -40,7 +40,7 @@ Linux packaging needs network access on its first run to download the
 checksum-pinned linuxdeploy tools into `.packaging-tools/`.
 
 The single [workflow](../.github/workflows/build.yml) uses `windows-latest`,
-`ubuntu-latest` and `macos-latest`, Qt 6.11.2, and these artifacts:
+`ubuntu-latest` and `macos-latest`, Qt 6.10.3, and these artifacts:
 
 | OS | Payload | Deployment check |
 | --- | --- | --- |

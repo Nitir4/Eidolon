@@ -1,13 +1,13 @@
 # Runtime dependencies
 
 This application dynamically links Qt 6 Core, Gui and Widgets from The Qt
-Company and contributors. The CI build uses the open-source Qt 6.11.2
+Company and contributors. The CI build uses the open-source Qt 6.10.3
 distribution. Qt component license files supplied by the SDK are copied into
 the development package when available. See the applicable LGPLv3/GPLv3
 licenses and component exceptions at https://doc.qt.io/qt-6.8/licenses-used-in-qt.html.
 
 Qt source for that build is available from
-https://download.qt.io/archive/qt/6.11/6.11.2/single/.
+https://download.qt.io/archive/qt/6.10/6.10.3/single/.
 An application built locally with another Qt version uses that SDK's version
 and corresponding source/licenses instead. The packaging manifest records
 the actual qmake version and dependency-file hashes.
