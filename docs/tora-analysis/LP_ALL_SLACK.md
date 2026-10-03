@@ -75,7 +75,7 @@ coefficient is zero) displays `Leaving Variable`:
 Choosing sx4 instead highlights that row red. Next Iteration then appends
 Iteration 2, whose basis is sx3/x1/sx5 and objective value is 6.00.
 The accepted x1 column is green. These captures are in
-`reference/tora-captures/probes/targeted-20261004/manual-pivot/`: 
+`reference/tora-captures/probes/targeted-20261004/manual-pivot/`:
 `zero-pivot-row.png`, `choose-sx4.png`, and `next-iteration.png`.
 This directly establishes topmost tie validation and acceptance of the
 normal minimum-ratio row. The other captured method selections are compared

@@ -1,7 +1,8 @@
-# Architecture proposed for Gate 0
+# Architecture approved at Gate 0
 
 This document specifies the clone's design; class names do not describe TORA
-internals. Product implementation starts only after Gate 0 approval.
+internals. Gate 0 is approved. Foundation 1 implements the target boundaries
+and native bootstrap; the remaining design is scheduled at later gates.
 
 ## Targets and dependency boundaries
 
