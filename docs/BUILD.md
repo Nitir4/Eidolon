@@ -29,7 +29,7 @@ Release build and packaging:
 ```sh
 cmake --preset ci
 cmake --build --preset ci --parallel
-ctest --preset ci --output-junit build/ci/test-results.xml
+ctest --preset ci
 python3 tools/package_desktop.py --build-dir build/ci --qt-root /path/to/Qt
 ```
 
@@ -54,13 +54,19 @@ development bootstrap packages. Installers, macOS signing/notarization and a
 production release license review are later release work. Windows uses a
 portable folder; a single-file executable is not supplied.
 
+The CI SDK's supported floors are Windows 10 1809, macOS 13 and Linux with
+glibc 2.39. The AppImage does not bundle glibc; older Linux distributions need
+a build against an older baseline. These are SDK/package compatibility limits,
+not proof of testing on every OS version. See Qt's
+[supported platforms](https://doc.qt.io/qt-6.10/supported-platforms.html).
+
 Linux symbol stripping is disabled because linuxdeploy's bundled strip can
 reject modern RELR sections. This increases artifact size and preserves
 startup correctness. See the maintainer's [NO_STRIP documentation](https://github.com/linuxdeploy/linuxdeploy/issues/72).
 Changed upstream tool assets require a reviewed checksum pin update.
 
-Qt's [deployment documentation](https://doc.qt.io/qt-6.8/cmake-deployment.html)
-and [macOS universal build guidance](https://doc.qt.io/qt-6.8/macos.html) support
+Qt's [deployment documentation](https://doc.qt.io/qt-6.10/cmake-deployment.html)
+and [macOS universal build guidance](https://doc.qt.io/qt-6.10/macos.html) support
 the packaging configuration. Mixed-monitor/DPI acceptance belongs to
 Foundation 5; offscreen startup does not establish visual or numerical TORA
 compatibility.

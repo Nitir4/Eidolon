@@ -61,7 +61,7 @@ jobs:
       - name: Build
         run: cmake --build --preset ci --parallel
       - name: Run all tests
-        run: ctest --preset ci --output-junit build/ci/test-results.xml
+        run: ctest --preset ci --output-junit "${{ github.workspace }}/build/ci/test-results.xml"
       - name: Package and verify deployed startup
         run: python tools/package_desktop.py --build-dir build/ci --output-dir dist
       - name: Upload native artifact
