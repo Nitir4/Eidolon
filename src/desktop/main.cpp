@@ -1,4 +1,5 @@
 #include <tora/build_info.hpp>
+#include "ui_font.hpp"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -10,6 +11,7 @@
 int main(int argc, char* argv[])
 {
     QApplication application(argc, argv);
+    QApplication::setFont(tora::desktop::usableUiFont(application.font()));
     QApplication::setApplicationName(QStringLiteral("ToraClone"));
     QApplication::setApplicationDisplayName(QStringLiteral("TORA Clone"));
     QApplication::setApplicationVersion(QString::fromLatin1(
@@ -25,6 +27,7 @@ int main(int argc, char* argv[])
 
     // Bootstrap only; the main window and navigation are Foundation 5.
     QWidget window;
+    window.setFont(tora::desktop::usableUiFont(application.font()));
     window.setWindowTitle(QApplication::applicationDisplayName());
     auto* layout = new QVBoxLayout(&window);
     auto* title = new QLabel(QApplication::applicationDisplayName(), &window);
