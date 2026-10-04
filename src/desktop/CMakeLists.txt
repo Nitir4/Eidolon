@@ -1,7 +1,11 @@
 qt_standard_project_setup(REQUIRES 6.8)
+qt_add_library(desktop_shell STATIC application_shell.cpp application_shell.hpp lp_screens.cpp)
+tora_target_defaults(desktop_shell)
+target_include_directories(desktop_shell PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(desktop_shell PUBLIC Qt6::Widgets)
 qt_add_executable(ToraClone main.cpp)
 tora_target_defaults(ToraClone)
-target_link_libraries(ToraClone PRIVATE tora::core Qt6::Widgets)
+target_link_libraries(ToraClone PRIVATE tora::core desktop_shell)
 set_target_properties(ToraClone PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE

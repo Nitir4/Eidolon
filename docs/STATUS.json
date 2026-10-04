@@ -5,10 +5,10 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Foundation 1",
+  "active_step": "Foundation 5",
   "foundation1": {
-    "status": "ready_for_review",
-    "gate": "implementation and verification complete; awaiting user approval",
+    "status": "approved",
+    "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
     "repository": "https://github.com/Nitir4/TORA-Clone",
     "branch": "main",
     "workflow": ".github/workflows/build.yml",
@@ -19,5 +19,16 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Foundation 2; requires Foundation 1 gate approval"
+  "next_step": "Foundation 2, only after Foundation 5 gate approval",
+  "foundation_order": [
+    1,
+    5,
+    2,
+    3,
+    4
+  ],
+  "foundation5": {
+    "status": "in_progress",
+    "gate": "Stop after Foundation 5 for user review; do not start Foundations 2/3/4 without approval"
+  }
 }

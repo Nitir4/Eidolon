@@ -2,7 +2,9 @@
 
 This document specifies the clone's design; class names do not describe TORA
 internals. Gate 0 is approved. Foundation 1 implements the target boundaries
-and native bootstrap; the remaining design is scheduled at later gates.
+and native bootstrap. Foundation 5 implements the desktop shell before
+Foundations 2, 3 and 4, following the user's approved order change. Domain,
+numerical and codec components below remain scheduled at their own gates.
 
 ## Targets and dependency boundaries
 
@@ -15,6 +17,38 @@ Future modules can register with the same interface; this project implements LP
 only. No HTML, browser runtime, or QtWebEngine dependency is permitted.
 
 ## Responsibilities
+
+### Implemented desktop boundary (Foundation 5)
+
+`desktop_shell` is a static Qt Widgets library containing `ApplicationShell`,
+`ModuleDescriptor`, `ScreenDescriptor` and the LP screen factories. A descriptor
+provides an ID, display name, entry route and factories for content and menus.
+The shell validates registrations, rejects duplicate IDs/routes and builds the
+MAIN choices from registered descriptors. A test-only extension demonstrates
+registration/navigation without changes to the shell or LP implementation.
+No additional OR module is implemented. Controller/codec factories can be
+captured by the screen factories once the later foundations supply them.
+
+Pages are created lazily, retained in `QStackedWidget`, and wrapped in
+`QScrollArea`. Routes do not create documents or solver sessions. Menus are
+replaced on navigation; deletion is deferred until action dispatch finishes.
+`lp_screens.cpp` provides screen frameworks only: no LP model, numerical
+formatter, file codec, artificial tableau or fabricated solution.
+
+`ApplicationShell` accepts optional `QSettings`, stores normal geometry and
+maximized state, and bounds restored frames to individual available screens.
+Screen-removal/available-geometry changes repair stranded windows; screen/DPI
+and font events invalidate native layouts and repaint. All layouts use logical
+coordinates and native/font-derived hints, including the notation count fields.
+No screen-sized bitmap or raster UI cache is used. First interactive launch is
+maximized; the window remains normally resizable/restorable.
+
+Qt's Fusion widget style supplies a consistent classic presentation on all
+OSes. This is the same Qt Widgets toolkit, with original colors/strokes and
+text; no TORA resource is embedded. Malformed theme fonts are repaired at the
+application level and after widget polishing, covering internal popup menus.
+Valid preferences remain intact. Window preferences can be bypassed with
+`--no-settings`; smoke tests never save them.
 
 | Component | Responsibility |
 | --- | --- |

@@ -1,8 +1,10 @@
 # Resumption checkpoint — 2026-10-04
 
 State: Gate 0 approved by the user on 2026-10-04 (yes please go ahead).
-Foundation 1 is active. See STATUS.json and FOUNDATION1_REPORT.md for current
-build/CI status. This checkpoint preserves the completed reference work;
+Foundation 1 is complete. The user changed the sequence to 1 → 5 → 2 → 3 → 4;
+Foundation 5 is active and must stop for review before Foundation 2 begins.
+See STATUS.json and FOUNDATION5_REPORT.md for current build/CI status.
+This checkpoint preserves the completed reference work;
 it is not an instruction to restart Phase 0.
 
 Completed corpus work must not be repeated. The 37-pair and 17-pair plans both

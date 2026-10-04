@@ -61,6 +61,8 @@ jobs:
       - name: Build
         run: cmake --build --preset ci --parallel
       - name: Run all tests
+        env:
+          TORA_UI_CAPTURES: ${{ github.workspace }}/build/ci/ui-captures
         run: ctest --preset ci --output-junit "${{ github.workspace }}/build/ci/test-results.xml"
       - name: Package and verify deployed startup
         run: python tools/package_desktop.py --build-dir build/ci --output-dir dist
@@ -75,5 +77,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Test-results-${{ matrix.os }}
-          path: build/ci/test-results.xml
+          path: |
+            build/ci/test-results.xml
+            build/ci/ui-captures/
           if-no-files-found: warn

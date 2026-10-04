@@ -2,7 +2,8 @@
 
 This maps observed behavior to requirements, proposed code and future tests.
 Gate 0 is approved. LP behavior implementations/tests below remain planned;
-Foundation 1 implements only build boundaries and native bootstrap tests.
+Foundation 1 implements build boundaries and bootstrap tests; Foundation 5
+implements the shell portions listed at the end of this document.
 Paths in the evidence
 column are relative to reference/tora-captures/. Each full-trace test must use
 ordered labels, number strings, phase/iteration headings, selections and
@@ -57,3 +58,25 @@ current Python audits check reference evidence only. BUILD-01 now maps to
 `CMakeLists.txt`, `.github/workflows/build.yml`, `tools/package_desktop.py`,
 `tests/core_smoke.cpp` and the `desktop.smoke` CTest startup check. Actual CI
 results and artifact evidence are recorded in `FOUNDATION1_REPORT.md`.
+
+## Foundation 5 implemented mappings
+
+Only the following UI portions are implemented. Numerical, document, printing,
+grid-editing and solver portions of the original rows remain planned.
+
+| IDs | Implemented code | Verification | Observation source |
+| --- | --- | --- | --- |
+| NAV-01 | `src/desktop/application_shell.cpp`: welcome/MAIN/native menu and module registrations | `tests/desktop_shell.cpp`: navigationAndDefaults, moduleRegistration | smoke/basic-lp-800/04-installed-welcome.png, 05-installed-main-menu.png |
+| NAV-02, NAV-03 | `src/desktop/lp_screens.cpp`: route frameworks and exact SolveModify hierarchy; solver leaves disabled | navigationAndDefaults, methodHierarchy | smoke/basic-lp-800/11-solve-modify-menu.png, 18-solve-submenu.png, 19-algebraic-submenu.png, 20-iterations-submenu.png |
+| IN-01 | Input-mode radios and read-only N=5/D=2 defaults | navigationAndDefaults | smoke/basic-lp-800/15-input-mode-retry.png; LP_INPUT_MODE.md |
+| IN-02 | Empty dimension/title screen framework; fields disabled, no model/grid yet | navigationAndDefaults, scaledLayouts | smoke/basic-lp-800/06-input-dimensions.png; LP_INPUT.md |
+| IN-04, IN-05 | File/EditGrid labels, shortcuts and disabled data commands | navigationAndDefaults | probes/input-menus/01_normal/file-menu.png; LP_INPUT.md |
+| FMT-01, M-01 | Format and M screen frameworks with observed defaults; no numeric acceptance/formatting yet | methodHierarchy, scaledLayouts | smoke/basic-lp-800/21-final-output-format.png; LP_M_VALUE.md |
+| ARCH-01 | Qt-free existing core targets, desktop_shell descriptor/factory contract and duplicate route checks | core.smoke, moduleRegistration; headless preset | ARCHITECTURE.md; extension requirement |
+| DPI-01 | Scroll-wrapped layout-managed stack, Qt DPR policy, font sizing, geometry persistence and screen event handling | scaledLayouts: 84 route/resolution/scale combinations per OS; geometryAndPreferences: negative origins, desktop gaps, unplugging and preferences | User's resolution/DPI requirements; UI_SPEC.md (physical mixed-monitor acceptance still pending) |
+| DPI-02 | Application/widget font repair and classic native Qt styling | desktop.font; malformedThemeOnEveryScreen; live full-window screenshot with readable MAIN | User's missing-glyph screenshot; original clone UI captures under build/foundation5/screens/ (gitignored) |
+
+CI uploads only original clone screenshots alongside its test XML. No raw
+TORA screenshot or saved file is included in source/release artifacts.
+Foundation 5 evidence and explicit preview deviations are in
+`FOUNDATION5_REPORT.md` and `UI_SPEC.md`.

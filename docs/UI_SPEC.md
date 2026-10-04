@@ -98,3 +98,45 @@ error, then exited. Exact print layout, graph eligibility outside the probes,
 Undo enablement, general zoom/dot rules, formatting limits/rounding and all
 keyboard/mnemonic states remain in OPEN_QUESTIONS.md. Product GUI tests and
 visual comparisons begin only after Gate 0 and the relevant module gates.
+
+## Foundation 5 implementation and review boundary
+
+The shell now supplies seven native screen frameworks: welcome, MAIN,
+`lp/input-mode`, `lp/input`, `lp/solve-menu`, `lp/output-format`, `lp/m-value`.
+The first launch maximizes normally, filling the available window with the blue
+canvas. Resizing changes the canvas and placement; centered panels retain
+font-derived readable sizes. On a narrow logical viewport their scroll area
+keeps controls reachable. There is no 800×600 restriction or raster scaling.
+
+MAIN is a persistent native panel with the observed order and a `MainMenu`
+menubar. Non-LP modules are disabled. SOLVE/MODIFY retains its native hierarchy
+and separators. The popup uses click/keyboard activation in this foundation;
+matching the legacy automatic hover behavior of its centered panel is deferred
+to the solving-screen module. Menubar submenus use normal Qt menu behavior.
+No Revised or Parametric entry has been invented.
+
+This is explicitly a navigation preview. New/existing and decimal/scientific
+radio states work; formatting counts show read-only defaults. Existing-file
+loading, title/dimension editing, Save/Save As, EditGrid and solver leaf actions
+are disabled until the domain/codec/module foundations are approved. The empty
+input page's SOLVE Menu navigates to the menu for review; this intentional
+preview exception does not initialize a grid or claim a solution. There is no
+save prompt because no document has been created. Output-format and M pages
+can be reviewed with `--screen`; the solver menu cannot advance to an output.
+Default N=5/D=2 and M=100 are displayed without inventing their numerical limits.
+
+Original clone welcome text replaces proprietary copyright/version artwork.
+The classic Qt Fusion widget style and scoped colors keep the display readable
+under the laptop's dark theme. Labels on blue are white; cyan entries use blue
+text; white menus use black text and dark-blue focus/selection. Border strokes
+are logical pixels and padding uses font units; controls have no fixed pixel
+geometry. This is a familiar scalable recreation, not an 800×600 screenshot.
+
+Automated checks cover 1366×768, 1920×1080 and 3840×2160 at 1/1.25/1.5/2
+scale, seven routes, control/font/palette access and native image DPR. Synthetic
+multi-screen rectangles cover negative origins, mixed-DPI gaps and unplugged
+monitors; display/font events exercise invalidation. Physical mixed-monitor
+handoff and manual Windows/macOS display checks still need those environments.
+Qt documents its [high-DPI scaling and test factors](https://doc.qt.io/qt-6/highdpi.html),
+[screen-change notification](https://doc.qt.io/qt-6/qwindow.html#screenChanged)
+and [available-geometry notification](https://doc.qt.io/qt-6/qscreen.html#availableGeometryChanged).

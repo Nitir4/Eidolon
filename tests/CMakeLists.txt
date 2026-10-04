@@ -5,6 +5,18 @@ add_test(NAME core.smoke COMMAND core_smoke)
 set_tests_properties(core.smoke PROPERTIES TIMEOUT 15)
 
 if(TORA_BUILD_DESKTOP)
+    find_package(Qt6 6.8 REQUIRED COMPONENTS Test)
+    qt_add_executable(desktop_shell_test desktop_shell.cpp)
+    set_target_properties(desktop_shell_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_shell_test)
+    target_link_libraries(desktop_shell_test PRIVATE desktop_shell Qt6::Test)
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.shell.scale-${scale} COMMAND desktop_shell_test)
+        set_tests_properties(desktop.shell.scale-${scale} PROPERTIES
+            TIMEOUT 45
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion"
+        )
+    endforeach()
     add_executable(desktop_font desktop_font.cpp)
     tora_target_defaults(desktop_font)
     target_include_directories(desktop_font PRIVATE "${PROJECT_SOURCE_DIR}/src/desktop")
