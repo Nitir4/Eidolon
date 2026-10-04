@@ -9,6 +9,11 @@
 
 int main(int argc, char** argv)
 {
+#ifdef Q_OS_WIN
+    // Windows offscreen uses FreeType rather than the native Windows font
+    // database, so supply the runner's installed fonts for glyph checks.
+    qputenv("QT_QPA_FONTDIR", qgetenv("SystemRoot") + "/Fonts");
+#endif
     QApplication application(argc, argv);
 
     QFont preferred(QStringLiteral("sans-serif"), 16, QFont::Bold);
@@ -32,7 +37,8 @@ int main(int argc, char** argv)
     }
     for (const QChar character : QStringLiteral("TORA Clone")) {
         if (!metrics.inFont(character)) {
-            std::cerr << "Fallback font cannot render the window label\n";
+            std::cerr << "Fallback font cannot render label character U+"
+                      << std::hex << character.unicode() << '\n';
             return 1;
         }
     }
