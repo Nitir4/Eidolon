@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     for (const QChar character : QStringLiteral("TORA Clone")) {
         if (!metrics.inFont(character)) {
             std::cerr << "Fallback font cannot render label character U+"
-                      << std::hex << character.unicode() << '\n';
+                      << std::hex << static_cast<unsigned int>(character.unicode()) << '\n';
             return 1;
         }
     }
