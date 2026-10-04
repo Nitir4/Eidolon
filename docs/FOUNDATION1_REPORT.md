@@ -18,18 +18,18 @@ reference captures are ignored and excluded from packaging.
 
 | Validation | Result |
 | --- | --- |
-| Local Linux Debug, GCC 16.2.1 / Qt 6.11.2 | 2/2 tests passed |
-| Local Linux Release | 2/2 tests passed |
+| Local Linux Debug, GCC 16.2.1 / Qt 6.11.2 | 3/3 tests passed |
 | Qt-free headless build | 1/1 test passed |
 | Linux AppImage deployed startup | Passed |
 | Workflow lint (actionlint 1.7.12) | Passed |
-| GitHub Windows build, all tests and portable packaging | Passed; 2/2 tests |
-| GitHub Linux build, all tests and AppImage packaging | Passed; 2/2 tests |
-| GitHub macOS build, all tests and universal DMG packaging | Passed; 2/2 tests |
-| Three downloadable CTest XML reports | Uploaded; checked 6/6 passing tests |
+| GitHub Windows build, all tests and portable packaging | Passed; 3/3 tests |
+| GitHub Linux build, all tests and AppImage packaging | Passed; 3/3 tests |
+| GitHub macOS build, all tests and universal DMG packaging | Passed; 3/3 tests |
+| Three downloadable CTest XML reports | Uploaded; 9 passing tests |
+| Live Wayland window with malformed qt6ct theme font | Readable label verified visually |
 
-CI evidence: [passing final run](https://github.com/Nitir4/TORA-Clone/actions/runs/37153249021),
-source commit `ab6bb3f351ef1fcc2ae9050459b4368a8c5317dd` on `main`.
+CI evidence: [passing final run](https://github.com/Nitir4/TORA-Clone/actions/runs/37176999256),
+source commit `86d910c592c068372fbbea5d2bbb3fe8bb327db1` on `main`.
 All three jobs passed build, CTest, deployed startup and artifact upload.
 The workflow supplies these native payloads plus SHA-256/manifests:
 
@@ -46,6 +46,21 @@ CI uses Qt 6.10.3 on all OSes and preserves Python 3.12; this Qt version works
 with the released installer, whereas its Qt 6.11 Windows support is pending a
 new installer release. There are no known Foundation 1 build/test/package
 mismatches. The next numerical and UI gates remain unimplemented.
+
+The first live preview exposed malformed serialized font settings from
+qt6ct: a garbled family name, style hint 255 and pixel size 167828479.
+`src/desktop/ui_font.hpp` now preserves valid preferences and recovers invalid
+settings using a DPI-aware sans-serif font in points. The recovered window
+font resolves every attribute so a theme's later font update cannot merge
+corrupted values back into the label. The new `desktop.font` regression test
+checks preference preservation, glyph coverage and recovery after a theme
+update. A live screenshot confirmed readable text on the user's laptop.
+
+Windows offscreen font tests explicitly use the system Fonts directory:
+Qt's [offscreen backend](https://github.com/qt/qtbase/blob/v6.10.3/src/plugins/platforms/offscreen/qoffscreenintegration.cpp)
+uses FreeType there, and its [font directory selection](https://github.com/qt/qtbase/blob/v6.10.3/src/gui/text/qplatformfontdatabase.cpp)
+otherwise points to fonts that the Qt SDK does not ship. This is test-only
+platform setup; the application uses the normal native platform backend.
 
 The app is a bootstrap window. No TORA numerical, file compatibility or
 screen/DPI acceptance claim is made in this step. Reference evidence remains
