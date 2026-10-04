@@ -8,8 +8,8 @@ begin Foundations 2, 3 or 4. The user changed the approved order to
 ## Result and scope
 
 The blank bootstrap has been replaced by a native Qt 6 Widgets main window,
-the blue/cyan TORA palette, original welcome text, MAIN module menu and six
-additional screen frameworks. The exact LP menu order is Graphical/Algebraic,
+the blue/cyan TORA palette and seven screen frameworks: welcome, MAIN and
+five LP pages. The exact LP menu order is Graphical/Algebraic,
 Final solution/Iterations, then All-slack starting solution, M-method,
 Two-phase method, Bounded simplex, Dual simplex. The File and EditGrid menus
 retain their observed labels and shortcuts. Other OR modules are disabled.
@@ -65,6 +65,8 @@ The clone does not require changing the desktop to 800×600 or running Wine.
 | Windows/Linux/macOS CI | Passed: 7/7 CTest tests each, 21/21 overall |
 | Deployed startup checks and native packages | Passed: portable Windows EXE ZIP, Linux AppImage, universal macOS APP in DMG |
 | Downloaded CI XML and original UI screenshots | Verified: 21 passing test entries, 28 images per OS (84 total) |
+| Downloaded native payloads | All three SHA-256 checks passed; Windows portable ZIP integrity passed |
+| Downloaded Linux AppImage on this laptop | Extract-and-run offscreen startup passed |
 
 Verified source commit: `aeff4bb16fdb92cb01f7df165b51fd8e7fe966f3` on `main`.
 CI evidence: [run 37178902087](https://github.com/Nitir4/TORA-Clone/actions/runs/37178902087).
@@ -82,6 +84,17 @@ Downloaded test evidence is under `build/foundation5/ci/`; the full passing
 log is `build/foundation5/ci-run.log`. These paths are gitignored. Current
 binary downloads use `dist/foundation5/` so earlier bootstrap artifacts cannot
 be confused with the verified shell.
+
+The downloaded payloads are verified. Linux AppImage permissions are executable;
+to start without depending on FUSE:
+
+```sh
+APPIMAGE_EXTRACT_AND_RUN=1 dist/foundation5/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_64.AppImage
+```
+
+The live desktop preview uses the local development executable; the downloaded
+AppImage was additionally startup-checked offscreen on this laptop. Other
+packages were built/startup-checked on their respective CI hosts.
 
 Local test XML: `build/dev/foundation5-tests.xml`. Original clone screen
 images: `build/foundation5/screens/scale-{1,1.25,1.5,2}/`, seven pages each.

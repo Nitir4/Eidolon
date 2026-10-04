@@ -37,6 +37,7 @@
     "ui_validation": "Seven routes at three resolutions and four scales (84 route/layout combinations per OS); malformed font recovery, command states, module registration and geometry checks passed; 84 CI screenshots downloaded",
     "preview": "Native shell/navigation only; editing/model/formatting/files/solvers remain gated",
     "remaining_hardware_validation": "Physical mixed-DPI handoff, hotplug and manual OS/version acceptance",
-    "report": "docs/FOUNDATION5_REPORT.md"
+    "report": "docs/FOUNDATION5_REPORT.md",
+    "downloaded_artifacts": "dist/foundation5/: all three payload SHA-256 checks passed, Windows ZIP integrity passed, Linux AppImage offscreen extract-and-run startup passed locally"
   }
 }
