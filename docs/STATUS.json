@@ -28,7 +28,15 @@
     4
   ],
   "foundation5": {
-    "status": "in_progress",
-    "gate": "Stop after Foundation 5 for user review; do not start Foundations 2/3/4 without approval"
+    "status": "ready_for_review",
+    "gate": "Implementation and verification complete. STOP for user review; Foundations 2/3/4 require approval.",
+    "source_commit": "aeff4bb16fdb92cb01f7df165b51fd8e7fe966f3",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37178902087",
+    "local_validation": "Debug 7/7; Qt-free headless 1/1; native Wayland MAIN text/full-window layout visually verified",
+    "ci_validation": "Windows/Linux/macOS build, 7/7 tests each (21/21 overall), deployed startup and all three native packages passed",
+    "ui_validation": "Seven routes at three resolutions and four scales (84 route/layout combinations per OS); malformed font recovery, command states, module registration and geometry checks passed; 84 CI screenshots downloaded",
+    "preview": "Native shell/navigation only; editing/model/formatting/files/solvers remain gated",
+    "remaining_hardware_validation": "Physical mixed-DPI handoff, hotplug and manual OS/version acceptance",
+    "report": "docs/FOUNDATION5_REPORT.md"
   }
 }

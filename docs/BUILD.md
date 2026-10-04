@@ -1,6 +1,7 @@
 # Build and package
 
-Foundation 1 requires CMake 3.24+, Ninja, a C++17 compiler and Qt 6.8+ Widgets.
+The desktop build requires CMake 3.24+, Ninja, a C++17 compiler and Qt 6.8+
+Widgets (plus Qt Test when BUILD_TESTING is enabled).
 Use MSVC on Windows, Apple Clang on macOS, and GCC or Clang on Linux.
 Qt discovery uses `CMAKE_PREFIX_PATH`; Qt deployment uses `QT_ROOT_DIR`.
 No browser engine or HTML UI is used.
@@ -14,6 +15,10 @@ ctest --preset dev
 The desktop executable is `build/dev/src/desktop/ToraClone` on Linux,
 `ToraClone.exe` on Windows, and a `ToraClone.app` bundle on macOS.
 `--smoke-test` starts the native Widgets event loop and exits.
+The Foundation 5 shell launches maximized on its first interactive run;
+normal window geometry is then remembered. `--no-settings` bypasses preferences
+and `--screen lp/output-format` (or another registered route) previews one
+layout. Editing, files and solving are disabled at this gate.
 
 The numerical/model/compatibility targets are currently interface boundaries.
 This Qt-free configuration proves the core can build independently:
@@ -50,7 +55,7 @@ The single [workflow](../.github/workflows/build.yml) uses `windows-latest`,
 
 Each artifact has accompanying SHA-256 and dependency-manifest files.
 Qt notices are included; SDK license files are copied when supplied. These are
-development bootstrap packages. Installers, macOS signing/notarization and a
+development navigation-preview packages. Installers, macOS signing/notarization and a
 production release license review are later release work. Windows uses a
 portable folder; a single-file executable is not supplied.
 
@@ -67,6 +72,13 @@ Changed upstream tool assets require a reviewed checksum pin update.
 
 Qt's [deployment documentation](https://doc.qt.io/qt-6.10/cmake-deployment.html)
 and [macOS universal build guidance](https://doc.qt.io/qt-6.10/macos.html) support
-the packaging configuration. Mixed-monitor/DPI acceptance belongs to
-Foundation 5; offscreen startup does not establish visual or numerical TORA
-compatibility.
+the packaging configuration. Foundation 5 tests simulate three resolutions
+and four scale factors on each OS; CI uploads original clone screenshots with
+the test XML. To generate the same optional images locally:
+
+```sh
+TORA_UI_CAPTURES="$PWD/build/foundation5/screens" ctest --preset dev
+```
+
+Physical mixed-monitor handoff and OS-version acceptance still need hardware
+review. Offscreen startup does not establish numerical TORA compatibility.

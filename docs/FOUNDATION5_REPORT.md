@@ -1,7 +1,7 @@
 # Foundation 5 — native shell and navigation
 
-Gate: implementation and local verification complete; three-OS verification
-is being run. Stop for the user's review when verification finishes. Do not
+Gate: implementation and local/three-OS verification complete, ready for the
+user's review. Stop here. Do not
 begin Foundations 2, 3 or 4. The user changed the approved order to
 1 → 5 → 2 → 3 → 4 after Foundation 1 passed all three OS builds/tests/packages.
 
@@ -62,7 +62,26 @@ The clone does not require changing the desktop to 800×600 or running Wine.
 | Restored geometry, negative monitor origins, desktop gaps and unplugged monitor rectangles | Passed |
 | Font/DPR change layout invalidation | Passed |
 | Workflow lint and whitespace checks | Passed |
-| Windows/Linux/macOS CI, deployed startup and three native packages | Pending this run |
+| Windows/Linux/macOS CI | Passed: 7/7 CTest tests each, 21/21 overall |
+| Deployed startup checks and native packages | Passed: portable Windows EXE ZIP, Linux AppImage, universal macOS APP in DMG |
+| Downloaded CI XML and original UI screenshots | Verified: 21 passing test entries, 28 images per OS (84 total) |
+
+Verified source commit: `aeff4bb16fdb92cb01f7df165b51fd8e7fe966f3` on `main`.
+CI evidence: [run 37178902087](https://github.com/Nitir4/TORA-Clone/actions/runs/37178902087).
+All three build/test/package/upload jobs passed. The macOS packaging log
+verifies arm64 and x86_64 in the app executable and every bundled Qt framework.
+
+| Artifact | Uploaded payload |
+| --- | --- |
+| TORA-Clone-windows-latest | `TORA-Clone-0.1.0-windows-x86_64.zip`, SHA-256, dependency manifest |
+| TORA-Clone-ubuntu-latest | `TORA-Clone-0.1.0-linux-x86_64.AppImage`, SHA-256, dependency manifest |
+| TORA-Clone-macos-latest | `TORA-Clone-0.1.0-macos-universal.dmg`, SHA-256, dependency manifest |
+
+Test-results artifacts hold each OS's XML and 28 original clone screen images.
+Downloaded test evidence is under `build/foundation5/ci/`; the full passing
+log is `build/foundation5/ci-run.log`. These paths are gitignored. Current
+binary downloads use `dist/foundation5/` so earlier bootstrap artifacts cannot
+be confused with the verified shell.
 
 Local test XML: `build/dev/foundation5-tests.xml`. Original clone screen
 images: `build/foundation5/screens/scale-{1,1.25,1.5,2}/`, seven pages each.
