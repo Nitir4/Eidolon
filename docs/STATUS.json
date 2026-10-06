@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Foundation 2",
+  "active_step": "Foundation 2 \u2014 awaiting gate approval",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -42,14 +42,19 @@
     "approval": "User authorized Foundation 2 on 2026-10-07"
   },
   "foundation2": {
-    "status": "in_progress",
-    "gate": "Stop for review after Foundation 2; Foundation 3 requires approval",
+    "status": "ready_for_review",
+    "gate": "Implementation and verification complete. STOP for user review; Foundation 3 requires approval.",
     "scope": "Qt-free matrix/tableau types, explicit tolerances, numerical representation decision and observed number formatting",
     "report": "docs/FOUNDATION2_REPORT.md",
     "oracle_validation": "80 reviewed exact display strings; normal-case ordered table and two supplied pivots; computed quotient display; 19 focused inputs (17 successful output paths, 2 observed runtime errors); four extra summaries resolve clipping",
-    "remaining": "Three-OS CI; then stop for gate review",
+    "remaining": "User gate review only; recorded solver/field limits remain assigned to later module gates",
     "local_validation": "Debug 9/9; Qt-free C++17 headless 3/3; 80 exact reviewed strings in both locales; two complete observed pivots and ordered basis/columns",
     "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37520622032",
-    "initial_ci_validation": "9/9 tests per OS and all packages passed before the targeted significant-digit correction"
+    "initial_ci_validation": "9/9 tests per OS and all packages passed before the targeted significant-digit correction",
+    "source_commit": "8fa0decfc943b3ae652a2ae984f1d7f4788c6a36",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37521712509",
+    "ci_validation": "Windows/Linux/macOS build, 9/9 tests each (27/27 overall), deployed startup and all three native packages passed; downloaded XML confirms 80 exact TORA strings on each OS",
+    "test_reports": "build/foundation2/ci-final/Test-results-{os}/test-results.xml",
+    "artifacts": "Portable Windows EXE ZIP, Linux AppImage and universal arm64+x86_64 macOS app-in-DMG uploaded in the final CI run"
   }
 }

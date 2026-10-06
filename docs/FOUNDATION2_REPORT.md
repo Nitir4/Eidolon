@@ -78,8 +78,25 @@ all 80 strings, including more distant values that must round downward.
 Local Debug tests passed **9/9**, including the existing four-scale GUI suite.
 The Qt-free headless build/tests passed **3/3**; core formatting matched all
 80 reviewed strings under both locales. Final code has no known failing checks.
-The three-OS CI build/test/package result is pending. This report must be
-updated from actual CI results before declaring the gate ready for review.
+Final source `8fa0decfc943b3ae652a2ae984f1d7f4788c6a36` passed the
+[three-OS CI run](https://github.com/Nitir4/TORA-Clone/actions/runs/37521712509):
+
+| Platform | Tests | Package and deployed startup |
+| --- | --- | --- |
+| Windows | 9/9 passed | Portable EXE ZIP produced; passed |
+| Linux | 9/9 passed | AppImage produced; passed |
+| macOS | 9/9 passed | Universal arm64+x86_64 app-in-DMG produced; passed |
+
+Downloaded XML reports confirm **27/27 tests**, no failures/skips, and all
+80 exact formatting comparisons on each OS. Reports and original clone
+screenshots are under `build/foundation2/ci-final/Test-results-{os}/`.
+The initial CI run also passed before the additional precision regression
+was discovered; the result above covers the corrected source and tests.
+No raw TORA screenshot, saved file or executable is in committed source or
+CI artifacts. The Qt-free local check explicitly compiled with C++17.
+
+**Gate status: ready for review.** Work stops here until the user approves
+Foundation 2.
 
 ## Recorded limits and next gate
 
