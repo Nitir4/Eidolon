@@ -20,7 +20,7 @@ implementation or comparisons.
 | Q-03 | Undo enablement/restoration; column insert/delete/copy/paste; all advertised shortcuts, objective-cell editing, invalid relation/name/cell messages | Data-entry module gate |
 | Q-04 | Read-only editing/saving, suffix defaults, overwrite/cancel, quote/comma/non-ASCII encoding, other malformed counts/records/cells | Foundation 4 / file-I/O gate |
 | Q-05 | Graph eligibility for one-variable, finite-bound/unrestricted inputs; individual-constraint click states; general range/tick/dot/zoom rules | Graphical module gate |
-| Q-06 | Unrestricted expansion, inconsistent-bound validation, reverse bound complements, redundant equality/artificial-basic cleanup | Model/preprocessing and affected solver gates |
+| Q-06 | Unrestricted expansion, reverse bound complements, redundant equality/artificial-basic cleanup | Preprocessing and affected solver gates |
 | Q-07 | Direct applicable Dual infeasibility with no eligible entering column | Dual-simplex module gate |
 | Q-08 | Successful table/graph printing, pagination and print dialog defaults | Printing/output module gate |
 | Q-09 | Automatic Final solution's internal method/iteration accounting; bound/unrestricted sensitivity transformations | Final/sensitivity module gates |
@@ -54,3 +54,12 @@ runtime error 6. Exact policies, sources and remaining limits are recorded in
 `tora-analysis/NUMERIC_FOUNDATION.md`. The Qt-free pivot primitive matches the
 normal initial/next two tables. Solver thresholds/tie policies and iteration
 caps are still required at solver gates; the primitive never selects a pivot.
+
+Foundation 3 resolves the basic inconsistent-bound validation part of Q-06:
+TORA rejects lower > upper, including unrestricted y, with the captured
+two-line Input Data Error message. Equal bounds and default-bound y reach
+method format selection. Zero counts produce the captured Problem Size
+diagnostic. Signed finite input values are preserved. Near-equal bound
+thresholds, arbitrary numeric text parsing, unrestricted transformation and
+negative-bound algorithm behavior are not inferred from these input checks;
+their ownership and capture hashes are in `tora-analysis/LP_MODEL_VALIDATION.md`.

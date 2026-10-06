@@ -91,7 +91,22 @@ Foundation 5 evidence and explicit preview deviations are in
 | FMT-03 | Formatter settings/nonfinite diagnostics and signed infinite sensitivity endpoints | N=0 decimal rejection, precision bounds, NaN/infinity tests | decimal-n0/runtime-error.png; signed-zero/summary.png; safe replacement for observed crash |
 | BUILD-01 | Qt-free static core target, C++17 and consistent compiled floating operations | Full three-OS workflow and headless build | User requirements; FOUNDATION2_REPORT.md |
 
-Pivot-selection, model validation, file compatibility and LP result construction
+Pivot-selection, file compatibility and LP result construction
 remain behind their own gates. Formatting is available in the library; the
 Foundation 5 GUI remains the same navigation preview until the relevant module
 can supply real model/session values.
+
+## Foundation 3 implemented mappings
+
+| IDs | Implemented code | Verification | Capture / requirement |
+| --- | --- | --- | --- |
+| IN-02, ARCH-01 | `src/lp/problem.cpp`, `include/tora/lp/problem.hpp`: value-owned ordered LP fields, aliases separate from x labels, observed defaults | `tests/lp_model.cpp`: all 22 original transcriptions, default model, independent copies, ordered/checked labels | Existing 15-case corpus, three finite-bound inputs and four Save As/reopen probes; LP_MODEL_VALIDATION.md lists every source/hash |
+| IN-03 | `src/lp/validation.cpp`: dimensions checked before allocating, zero-count and 100-variable/constraint Student limits | `tests/lp_validation.cpp`: zero/max/overflow-size cases and exact captured messages | Existing 100/100 and 101/101 probes; foundation3/dimensions/zero-variables, zero-both, zero-constraints-two |
+| MODEL-01 | Finite coefficient/RHS and shape/enum safety; ordered located diagnostics | lp.validation: NaN/infinity, ragged objective/rows, bad enums, aggregation/order | Engineering safety requirements; message origins explicitly tagged, no guessed legacy numeric parser |
+| MODEL-02 | Raw bound/sign preservation, bound consistency independent of y | lp.validation: equal/reversed/signed bounds, y, signed zero and unsnapped small coefficients | Six foundation3/bounds input/Save As/menu checks; reviewed reversed-bound dialogs, including y |
+| MODEL-03 | Infeasible/unbounded inputs admitted; validation does not normalize or solve | lp.model: captured infeasible/unbounded, equality, minimization, negative RHS and unrestricted inputs | Existing corpus and probe-3var-2con round trip |
+| BUILD-01, ARCH-01 | Qt-free `tora::lp` static library in the existing workflow | C++17 headless tests and full Windows/Linux/macOS suite | FOUNDATION3_REPORT.md |
+
+Near-bound thresholds, free-variable expansion and negative-bound solver
+transforms remain later preprocessing/module obligations. F4 codecs and Phase
+2 GUI editing/binding are not implemented by these model tests.

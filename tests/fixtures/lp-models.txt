@@ -1,0 +1,175 @@
+# Original model transcriptions. This is a test-only grammar, not a TORA codec.
+# Provenance and capture hashes: docs/tora-analysis/LP_MODEL_VALIDATION.md
+case "01_normal" "Normal" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 3.00 2.00
+constraint <= 4.00 1.00 1.00
+constraint <= 2.00 1.00 0.00
+constraint <= 3.00 0.00 1.00
+end
+case "02_degenerate" "Degenerate" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 1.00 1.00
+constraint <= 2.00 1.00 1.00
+constraint <= 1.00 1.00 0.00
+constraint <= 1.00 0.00 1.00
+end
+case "03_infeasible" "Infeasible" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 1.00 1.00
+constraint <= 1.00 1.00 0.00
+constraint >= 3.00 1.00 0.00
+constraint <= 5.00 0.00 1.00
+end
+case "04_unbounded" "Unbounded" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 1.00 1.00
+constraint >= 1.00 1.00 -1.00
+constraint >= 0.00 1.00 0.00
+constraint >= 0.00 0.00 1.00
+end
+case "05_alternative" "Alternative optima" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 1.00 1.00
+constraint <= 4.00 1.00 1.00
+constraint <= 4.00 1.00 0.00
+constraint <= 4.00 0.00 1.00
+end
+case "06_equality" "Equality" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 3.00 2.00
+constraint = 4.00 1.00 1.00
+constraint >= 1.00 1.00 0.00
+constraint >= 1.00 0.00 1.00
+end
+case "07_big_m" "Big M" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 1.00 1.00
+constraint >= 4.00 1.00 1.00
+constraint <= 3.00 1.00 0.00
+constraint <= 3.00 0.00 1.00
+end
+case "08_two_phase" "Two phase" min 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 1.00 1.00
+constraint = 5.00 1.00 1.00
+constraint >= 2.00 1.00 0.00
+constraint >= 2.00 0.00 1.00
+end
+case "09_bounded" "Bounded variables" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 4.00 3.00
+constraint <= 10.00 1.00 1.00
+constraint <= 6.00 1.00 0.00
+constraint <= 7.00 0.00 1.00
+end
+case "10_dual" "Dual simplex seed" min 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 2.00 3.00
+constraint >= 4.00 1.00 1.00
+constraint >= 6.00 1.00 2.00
+constraint >= 5.00 2.00 1.00
+end
+case "11_zero_rhs" "Zero RHS" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 2.00 1.00
+constraint <= 0.00 1.00 1.00
+constraint <= 2.00 1.00 0.00
+constraint <= 2.00 0.00 1.00
+end
+case "12_negative_rhs" "Negative RHS" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 2.00 1.00
+constraint >= -1.00 1.00 1.00
+constraint <= 3.00 1.00 0.00
+constraint <= 3.00 0.00 1.00
+end
+case "13_mixed_sign" "Mixed signs" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 2.00 -1.00
+constraint <= 2.00 1.00 -1.00
+constraint <= 2.00 -1.00 1.00
+constraint <= 5.00 1.00 1.00
+end
+case "14_tight_bounds" "Tight bounds" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 1.00 2.00
+constraint <= 3.00 1.00 1.00
+constraint <= 1.00 1.00 0.00
+constraint <= 2.00 0.00 1.00
+end
+case "15_minimization" "Minimization" min 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 2.00 3.00
+constraint >= 4.00 1.00 1.00
+constraint >= 1.00 1.00 0.00
+constraint >= 1.00 0.00 1.00
+end
+case "finite-upper" "finite-upper" max 2 3
+variable "" 0.00 5.00 n
+variable "" 0.00 inf n
+objective 4.00 3.00
+constraint <= 10.00 1.00 1.00
+constraint <= 6.00 1.00 0.00
+constraint <= 7.00 0.00 1.00
+end
+case "finite-two-upper" "finite-two-upper" max 2 3
+variable "" 0.00 2.00 n
+variable "" 0.00 3.00 n
+objective 4.00 3.00
+constraint <= 10.00 1.00 1.00
+constraint <= 6.00 1.00 0.00
+constraint <= 7.00 0.00 1.00
+end
+case "finite-lower" "finite-lower" max 2 3
+variable "" 1.00 3.00 n
+variable "" 1.00 4.00 n
+objective 4.00 3.00
+constraint <= 10.00 1.00 1.00
+constraint <= 6.00 1.00 0.00
+constraint <= 7.00 0.00 1.00
+end
+case "probe-1var-1con" "One variable precision" max 1 1
+variable "decision" 1 2.5 n
+objective 1.234567
+constraint <= 3.5 1.5
+end
+case "probe-3var-2con" "Three variables mixed" max 3 2
+variable "" -1 inf y
+variable "" 0 5 n
+variable "" 0 inf n
+objective 0.5 -2.25 3000000
+constraint = 7.5 1 2 3
+constraint >= -4 -1 0 2
+end
+case "probe-scientific-flag2" "Scientific notation probe" max 2 3
+variable "" 0.000e0 inf n
+variable "" 0.000e0 inf n
+objective 8.000e0 7.000e0
+constraint <= 9.000e0 1.000e0 4.000e0
+constraint <= 6.000e0 1.000e0 0.000e0
+constraint <= 5.000e0 0.000e0 1.000e0
+end
+case "probe-numeric-digits" "Digit capture" max 2 3
+variable "" 0.00 inf n
+variable "" 0.00 inf n
+objective 8.00 7.00
+constraint <= 9.00 1.00 4.00
+constraint <= 6.00 1.00 0.00
+constraint <= 5.00 0.00 1.00
+end

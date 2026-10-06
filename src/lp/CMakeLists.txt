@@ -1,4 +1,6 @@
-# Target boundary only. LP model/validation belongs to Foundation 3.
-add_library(or_lp INTERFACE)
+add_library(or_lp STATIC problem.cpp validation.cpp)
 add_library(tora::lp ALIAS or_lp)
-target_link_libraries(or_lp INTERFACE tora::core)
+tora_target_defaults(or_lp)
+target_compile_features(or_lp PUBLIC cxx_std_17)
+target_include_directories(or_lp PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_link_libraries(or_lp PUBLIC tora::core)

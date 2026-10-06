@@ -56,7 +56,7 @@ it with identical displayed fields.
 ## Unknowns / things I could not verify
 
 The accepted maxima for input-format N/D, arbitrary malformed-cell messages,
-variable-name limits, inconsistent bounds, unrestricted expansion and every
+variable-name limits, unrestricted expansion and every
 combination of bounds/signs remain unverified. All three relations, negative
 coefficients/RHS, finite and infinite bounds, and saving an unrestricted y
 are represented in captured files. Saving y does not verify its solution
@@ -76,3 +76,15 @@ Undo attempts did not restore Paste or Delete; the menu item remained gray.
 The state needed to enable it remains unknown. An earlier unfocused probe
 produced an empty paste and is not evidence of normal copy/paste behavior.
 Column operations and successful keyboard shortcuts remain unverified.
+
+## Foundation 3 validation observations
+
+Targeted probes reject zero variables/constraints with `Problem Size` /
+`Invalid problem size`. Reversed bounds show `Input Data Error` and
+`Lower bound exceeds upper bound for variable 1.` followed by
+`Reenter correct bounds`; unrestricted `y` does not bypass this check.
+Equal bounds, a negative lower bound and default bounds with `y` reached the
+output-format screen. A negative finite bound pair reached Solve/Modify;
+its algorithm setup capture was incomplete and is not a solution claim.
+The shared model specification distinguishes these observations from
+engineering safety checks in [LP_MODEL_VALIDATION.md](LP_MODEL_VALIDATION.md).

@@ -4,7 +4,8 @@ All behavioral claims are based on the running TORA Windows 1.00 reference
 under Wine 11.18 at 800×600. Proposed clone design and inferred rules are
 identified separately. Raw captures/files remain private under reference/.
 Each screen/method document records unknowns; shared contracts avoid repeating
-input/file definitions for every solver. No product implementation exists yet.
+input/file definitions for every solver. Foundation implementation status is
+recorded in ../STATUS.json; this index retains the observation documents.
 
 | Screen or method | Document |
 | --- | --- |
@@ -33,3 +34,6 @@ See ../ARCHITECTURE.md, ../FILE_FORMAT.md, ../UI_SPEC.md, ../TRACEABILITY.md,
 
 Foundation 2 arithmetic/display decisions and targeted capture provenance:
 [NUMERIC_FOUNDATION.md](NUMERIC_FOUNDATION.md).
+
+Foundation 3 input-model decisions and targeted validation capture provenance:
+[LP_MODEL_VALIDATION.md](LP_MODEL_VALIDATION.md).

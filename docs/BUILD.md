@@ -20,8 +20,11 @@ normal window geometry is then remembered. `--no-settings` bypasses preferences
 and `--screen lp/output-format` (or another registered route) previews one
 layout. Editing, files and solving are disabled at this gate.
 
-The numerical target is a Qt-free static C++17 library. Model and compatibility
-targets remain interface boundaries until their gates. `core.numerics` checks
+The numerical and LP model targets are Qt-free static C++17 libraries.
+The compatibility target remains an interface boundary until Foundation 4.
+`lp.model` checks 22 original model transcriptions from the private reference;
+`lp.validation` checks observed dimension/bound messages and explicitly
+identified engineering safety diagnostics. `core.numerics` checks
 observed pivot tables and arithmetic failures; `core.formatting` checks reviewed
 TORA display strings under both classic and comma locales.
 This Qt-free configuration proves the core can build independently:

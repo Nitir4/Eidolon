@@ -4,8 +4,8 @@ This document specifies the clone's design; class names do not describe TORA
 internals. Gate 0 is approved. Foundation 1 implements the target boundaries
 and native bootstrap. Foundation 5 implements the desktop shell before
 Foundations 2, 3 and 4, following the user's approved order change. Foundation 2
-implements the Qt-free numerical core. LP models and codecs remain scheduled
-at their own gates.
+implements the Qt-free numerical core. Foundation 3 implements the LP model
+and validation. Codecs remain scheduled at Foundation 4.
 
 ## Targets and dependency boundaries
 
@@ -82,6 +82,25 @@ presentation policy distinct so any confirmed legacy display anomalies have
 narrow, testable compatibility handling.
 
 ## Class relationships
+
+### Implemented LP model boundary (Foundation 3)
+
+`or_lp` is a static C++17 library, publicly linked only to `tora::core`.
+`LpProblem` stores original objective direction, coefficients, constraint
+relations/RHS, variable aliases, finite lower bounds, finite/positive-infinite
+upper bounds and independent unrestricted flags. All collections own their
+values and retain input order. Aliases are distinct from generated x1/x2 labels.
+`blank(n,m)` validates observed Student-version dimensions before allocation.
+
+`LpValidator` returns ordered, located diagnostics without changing the model.
+Each diagnostic distinguishes observed TORA wording from an engineering
+safety rule. Validation checks structure and finite numbers; infeasible and
+unbounded models are still valid inputs. It does not apply solver tolerances,
+round numbers, normalize negative RHS values, split unrestricted variables or
+construct a tableau. No Qt, codec or screen dependency enters this target.
+Notation, source lexemes, read-only/dirty state and filenames belong to the
+future document/codec boundary. See
+[model policy and capture provenance](tora-analysis/LP_MODEL_VALIDATION.md).
 
 ```mermaid
 classDiagram

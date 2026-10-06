@@ -16,6 +16,18 @@ target_link_libraries(core_formatting PRIVATE tora::core)
 add_test(NAME core.formatting COMMAND core_formatting "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tora-number-format.tsv")
 set_tests_properties(core.formatting PROPERTIES TIMEOUT 15)
 
+add_executable(lp_model lp_model.cpp)
+tora_target_defaults(lp_model)
+target_link_libraries(lp_model PRIVATE tora::lp)
+add_test(NAME lp.model COMMAND lp_model "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lp-models.txt")
+set_tests_properties(lp.model PROPERTIES TIMEOUT 15)
+
+add_executable(lp_validation lp_validation.cpp)
+tora_target_defaults(lp_validation)
+target_link_libraries(lp_validation PRIVATE tora::lp)
+add_test(NAME lp.validation COMMAND lp_validation)
+set_tests_properties(lp.validation PROPERTIES TIMEOUT 15)
+
 if(TORA_BUILD_DESKTOP)
     find_package(Qt6 6.8 REQUIRED COMPONENTS Test)
     qt_add_executable(desktop_shell_test desktop_shell.cpp)
