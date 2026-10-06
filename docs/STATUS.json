@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Foundation 5",
+  "active_step": "Foundation 2",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Foundation 2, only after Foundation 5 gate approval",
+  "next_step": "Foundation 3, only after Foundation 2 gate approval",
   "foundation_order": [
     1,
     5,
@@ -28,8 +28,8 @@
     4
   ],
   "foundation5": {
-    "status": "ready_for_review",
-    "gate": "Implementation and verification complete. STOP for user review; Foundations 2/3/4 require approval.",
+    "status": "approved",
+    "gate": "Approved; user authorized Foundation 2 on 2026-10-07",
     "source_commit": "aeff4bb16fdb92cb01f7df165b51fd8e7fe966f3",
     "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37178902087",
     "local_validation": "Debug 7/7; Qt-free headless 1/1; native Wayland MAIN text/full-window layout visually verified",
@@ -38,6 +38,16 @@
     "preview": "Native shell/navigation only; editing/model/formatting/files/solvers remain gated",
     "remaining_hardware_validation": "Physical mixed-DPI handoff, hotplug and manual OS/version acceptance",
     "report": "docs/FOUNDATION5_REPORT.md",
-    "downloaded_artifacts": "dist/foundation5/: all three payload SHA-256 checks passed, Windows ZIP integrity passed, Linux AppImage offscreen extract-and-run startup passed locally"
+    "downloaded_artifacts": "dist/foundation5/: all three payload SHA-256 checks passed, Windows ZIP integrity passed, Linux AppImage offscreen extract-and-run startup passed locally",
+    "approval": "User authorized Foundation 2 on 2026-10-07"
+  },
+  "foundation2": {
+    "status": "in_progress",
+    "gate": "Stop for review after Foundation 2; Foundation 3 requires approval",
+    "scope": "Qt-free matrix/tableau types, explicit tolerances, numerical representation decision and observed number formatting",
+    "report": "docs/FOUNDATION2_REPORT.md",
+    "oracle_validation": "65 reviewed exact display strings; normal-case ordered table and two supplied pivots; 15 focused cases (13 successful output captures, 2 observed runtime errors); four extra summary captures resolve clipping",
+    "remaining": "Three-OS CI; then stop for gate review",
+    "local_validation": "Debug 9/9; Qt-free C++17 headless 3/3; 65 exact reviewed strings in both locales; two complete observed pivots and ordered basis/columns"
   }
 }

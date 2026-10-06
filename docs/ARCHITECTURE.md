@@ -3,8 +3,8 @@
 This document specifies the clone's design; class names do not describe TORA
 internals. Gate 0 is approved. Foundation 1 implements the target boundaries
 and native bootstrap. Foundation 5 implements the desktop shell before
-Foundations 2, 3 and 4, following the user's approved order change. Domain,
-numerical and codec components below remain scheduled at their own gates.
+Foundations 2, 3 and 4, following the user's approved order change. Foundation 2 implements the Qt-free numerical core. LP models and codecs
+remain scheduled at their own gates.
 
 ## Targets and dependency boundaries
 
@@ -66,9 +66,15 @@ Valid preferences remain intact. Window preferences can be bypassed with
 | `ScreenPresenter` | Converts model/trace fields into display models without recalculating the solution |
 | `PrintAdapter` | Native print preview/output using the same ordered display models |
 
-Arithmetic storage should initially use a configurable floating type and explicit
-tolerances. The oracle probes must decide precision, rounding, pivot tests,
-and whether an exact/rational audit backend is necessary before Foundation 2.
+Foundation 2 uses IEEE-754 binary64 for `Scalar`, value-owned
+`DenseMatrix<Value>` storage, and a `Tableau` that performs only caller-requested
+pivots. `Tolerance` makes absolute/relative comparisons explicit; its engineering
+defaults are not asserted to be TORA thresholds. `NumberFormatter` is display-only
+and locale-independent. See [numerical policy and evidence](tora-analysis/NUMERIC_FOUNDATION.md).
+A rational solver backend is deferred: no verified Foundation 2 comparison
+requires one. Wider matrix storage is available for later diagnostic work;
+`long double` is not a portable guarantee of additional precision. Method-specific
+zero, tie and termination policies remain requirements of the solver gates.
 Do not silently substitute a mathematically preferred pivot or termination
 rule for an observed TORA rule. Keep arithmetic results and the observed
 presentation policy distinct so any confirmed legacy display anomalies have

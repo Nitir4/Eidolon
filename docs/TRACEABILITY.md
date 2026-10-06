@@ -80,3 +80,18 @@ CI uploads only original clone screenshots alongside its test XML. No raw
 TORA screenshot or saved file is included in source/release artifacts.
 Foundation 5 evidence and explicit preview deviations are in
 `FOUNDATION5_REPORT.md` and `UI_SPEC.md`.
+
+## Foundation 2 implemented mappings
+
+| IDs | Implemented code | Verification | Capture / requirement |
+| --- | --- | --- | --- |
+| ARCH-01, NUM-01 | `src/core/include/tora/core/matrix.hpp`, `tableau.hpp`, `src/core/tableau.cpp`: ordered value-owned storage, caller-requested transactional pivots | `tests/core_numerics.cpp`, Qt-free headless preset | Normal all-slack initial and Iterations 2/3; NUMERIC_FOUNDATION.md source hashes |
+| NUM-02 | `src/core/include/tora/core/tolerance.hpp`: explicit finite absolute/relative comparisons | Boundary, below-unit relative, exact-zero, extreme overflow, NaN/infinity and caller-policy tests | Engineering requirement; thresholds are explicitly not asserted to be TORA's |
+| FMT-01, FMT-02 | `src/core/number_formatter.cpp`, public formatter header: locale-independent observed decimal/scientific display | `tests/core_formatting.cpp`, 65 exact TSV golden strings in classic and comma locales | Foundation 2 focused captures plus existing Phase 0 summaries, mapped and hashed in NUMERIC_FOUNDATION.md |
+| FMT-03 | Formatter settings/nonfinite diagnostics and signed infinite sensitivity endpoints | N=0 decimal rejection, precision bounds, NaN/infinity tests | decimal-n0/runtime-error.png; signed-zero/summary.png; safe replacement for observed crash |
+| BUILD-01 | Qt-free static core target, C++17 and consistent compiled floating operations | Full three-OS workflow and headless build | User requirements; FOUNDATION2_REPORT.md |
+
+Pivot-selection, model validation, file compatibility and LP result construction
+remain behind their own gates. Formatting is available in the library; the
+Foundation 5 GUI remains the same navigation preview until the relevant module
+can supply real model/session values.

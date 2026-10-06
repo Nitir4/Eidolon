@@ -4,6 +4,18 @@ target_link_libraries(core_smoke PRIVATE tora::core)
 add_test(NAME core.smoke COMMAND core_smoke)
 set_tests_properties(core.smoke PROPERTIES TIMEOUT 15)
 
+add_executable(core_numerics core_numerics.cpp)
+tora_target_defaults(core_numerics)
+target_link_libraries(core_numerics PRIVATE tora::core)
+add_test(NAME core.numerics COMMAND core_numerics)
+set_tests_properties(core.numerics PROPERTIES TIMEOUT 15)
+
+add_executable(core_formatting core_formatting.cpp)
+tora_target_defaults(core_formatting)
+target_link_libraries(core_formatting PRIVATE tora::core)
+add_test(NAME core.formatting COMMAND core_formatting "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tora-number-format.tsv")
+set_tests_properties(core.formatting PROPERTIES TIMEOUT 15)
+
 if(TORA_BUILD_DESKTOP)
     find_package(Qt6 6.8 REQUIRED COMPONENTS Test)
     qt_add_executable(desktop_shell_test desktop_shell.cpp)

@@ -30,3 +30,6 @@ input/file definitions for every solver. No product implementation exists yet.
 
 See ../ARCHITECTURE.md, ../FILE_FORMAT.md, ../UI_SPEC.md, ../TRACEABILITY.md,
 ../PHASE0_REPORT.md and ../OPEN_QUESTIONS.md for the Gate 0 review package.
+
+Foundation 2 arithmetic/display decisions and targeted capture provenance:
+[NUMERIC_FOUNDATION.md](NUMERIC_FOUNDATION.md).
