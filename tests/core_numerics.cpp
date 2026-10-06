@@ -1,4 +1,5 @@
 #include <tora/core/matrix.hpp>
+#include <tora/core/number_formatter.hpp>
 #include <tora/core/tableau.hpp>
 #include <tora/core/tolerance.hpp>
 
@@ -83,6 +84,12 @@ int main()
         Tableau fractional(Matrix(2, 3, {-1,0,0, 3,1,1}), {"x","s"}, {1});
         fractional.pivot(1, 0, strict);
         require(std::abs(fractional.values()(1, 1) - 1.0 / 3.0) < 1e-15, "Unrounded fractions");
+        // TORA computed-halfway summary: max x1 with .017*x1 <= .036125.
+        // Binary64 division lies below 2.125; display must still match 2.13.
+        Tableau computedHalf(Matrix(2, 3, {-1,0,0, .017,1,.036125}), {"x1","s"}, {1});
+        computedHalf.pivot(1, 0, strict);
+        require(computedHalf.rhs(0) == .036125 / .017, "Computed value retained at arithmetic precision");
+        require(NumberFormatter().format(computedHalf.rhs(0)) == "2.13", "TORA computed halfway display");
         Tableau tiny(Matrix(2, 3, {-1,0,0, 1e-12,1,1}), {"x","s"}, {1});
         rejects<std::domain_error>([&] { tiny.pivot(1, 0, tolerance); });
         tiny.pivot(1, 0, strict);

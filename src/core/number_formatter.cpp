@@ -16,11 +16,11 @@ struct Decimal {
 
 Decimal decimalDigits(double value)
 {
-    // A shortest round-trip spelling isolates the display policy from binary
-    // tails (1.005) and from the machine's locale. It is display-only; no
-    // solver value is converted back or rounded in numerical storage.
+    // Oracle neighbours around halfway points establish a 15-significant-
+    // digit display intermediate before the requested half-away rounding.
+    // This is display-only: numerical storage is never rounded or reparsed.
     char buffer[64];
-    const auto result = std::to_chars(buffer, buffer + sizeof(buffer), value, std::chars_format::scientific);
+    const auto result = std::to_chars(buffer, buffer + sizeof(buffer), value, std::chars_format::scientific, 14);
     if (result.ec != std::errc()) throw std::runtime_error("Cannot convert finite numerical value");
     std::string spelling(buffer, result.ptr);
     const auto e = spelling.find('e');

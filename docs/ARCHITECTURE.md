@@ -3,8 +3,9 @@
 This document specifies the clone's design; class names do not describe TORA
 internals. Gate 0 is approved. Foundation 1 implements the target boundaries
 and native bootstrap. Foundation 5 implements the desktop shell before
-Foundations 2, 3 and 4, following the user's approved order change. Foundation 2 implements the Qt-free numerical core. LP models and codecs
-remain scheduled at their own gates.
+Foundations 2, 3 and 4, following the user's approved order change. Foundation 2
+implements the Qt-free numerical core. LP models and codecs remain scheduled
+at their own gates.
 
 ## Targets and dependency boundaries
 

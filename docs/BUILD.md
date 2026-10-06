@@ -27,7 +27,7 @@ TORA display strings under both classic and comma locales.
 This Qt-free configuration proves the core can build independently:
 
 ```sh
-cmake --preset headless
+cmake --preset headless -DCMAKE_CXX_STANDARD=17
 cmake --build --preset headless
 ctest --preset headless
 ```

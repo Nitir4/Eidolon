@@ -51,10 +51,11 @@ establishes rounding at halfway values or exponent overflow.
 
 ## Foundation 2 targeted observations (2026-10-07)
 
-The focused [numerical evidence](NUMERIC_FOUNDATION.md) establishes halfway
-rounding away from zero, small negative values displayed as `-0.00`, trailing
+The focused [numerical evidence](NUMERIC_FOUNDATION.md) establishes
+15-significant-digit display preparation followed by halfway rounding away
+from zero, small negative values displayed as `-0.00`, trailing
 points at D=0, exponent padding at D=1 and D=3, scientific N=0/1/2/5/10,
-and decimal D=10. Sixty-five reviewed strings are portable golden fixtures.
+and decimal D=10. Eighty reviewed strings are portable golden fixtures.
 Decimal N=0 caused Run-time error '5' (Invalid procedure call or argument);
 scientific N=0 succeeds, for example `-3.e+00`. Extreme scientific input
 1e-100/1e100 caused Run-time error '6' (Overflow). These findings narrow Q-01/Q-02;

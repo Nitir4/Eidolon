@@ -32,9 +32,11 @@ Tests were written before the corresponding implementation. `core.numerics`
 compares all cells of the normal initial tableau and two requested pivots
 against independently reviewed TORA Iterations 2/3, with ordered labels/basis.
 It also checks unrounded fractions, custom thresholds, immutable copies,
-signed-zero preservation, overflow rollback and failure diagnostics.
+signed-zero preservation, overflow rollback and failure diagnostics. A
+computed quotient .036125/.017 remains unrounded in storage and matches
+TORA's objective display of 2.13.
 
-`core.formatting` compares 65 exact display strings with TORA, repeating each
+`core.formatting` compares 80 exact display strings with TORA, repeating each
 under a comma decimal locale. It checks signed infinite endpoints, NaN/invalid
 settings and isolation from arithmetic storage. The normal arithmetic input
 and original transcribed numbers are committed; raw captures are not.
@@ -51,26 +53,31 @@ and original transcribed numbers are committed; raw captures are not.
 | 16777217, scientific N=10/D=2 | 1.6777217000e+07 | 1.6777217000e+07 |
 | .00000000005, decimal D=10 | 0.0000000001 | 0.0000000001 |
 
-The completed Phase 0 corpus was reused without a new sweep. Fifteen focused
-inputs were observed through TORA under Wine at 800×600: thirteen output
-captures and two captured runtime errors. Four additional final summaries
+The completed Phase 0 corpus was reused without a new sweep. Nineteen focused
+inputs were observed through TORA under Wine at 800×600: seventeen successful
+output paths and two captured runtime errors. Four additional final summaries
 resolve cell clipping. TORA's decimal N=0 setting produced runtime error 5;
 the 1e-100/1e100 input produced runtime error 6 (Overflow). The clone diagnoses
 invalid settings/overflow safely rather than reproducing crashes. TORA was
-reused throughout; relaunches were necessary only after TORA itself exited
-when its runtime-error dialog was acknowledged. GUI driving needed one
-window-placement recovery and one Save As retry; successful captures were
-visually reviewed, not inferred from script completion.
+reused for successive cases; it exited after its runtime-error dialogs were
+acknowledged. GUI driving needed window-placement recovery and a Save As retry;
+one reference window also disappeared during positioning and was relaunched.
+Successful captures were visually reviewed, not inferred from script completion.
 
 Capture hashes, cell mappings, the representation decision and remaining
 limits are in [NUMERIC_FOUNDATION.md](tora-analysis/NUMERIC_FOUNDATION.md).
 Source/test/capture mapping is in [TRACEABILITY.md](TRACEABILITY.md).
 
+The initial shortest-spelling formatter failed the newly captured neighbour
+case (-2.12 versus TORA -2.13). Targeted cutoff/scientific probes isolated
+a 15-significant-digit display intermediate; the corrected formatter passes
+all 80 strings, including more distant values that must round downward.
+
 ## Verification state
 
 Local Debug tests passed **9/9**, including the existing four-scale GUI suite.
 The Qt-free headless build/tests passed **3/3**; core formatting matched all
-65 reviewed strings under both locales. Final code has no known failing checks.
+80 reviewed strings under both locales. Final code has no known failing checks.
 The three-OS CI build/test/package result is pending. This report must be
 updated from actual CI results before declaring the gate ready for review.
 

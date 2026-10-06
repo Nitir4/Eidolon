@@ -47,7 +47,7 @@ optimal notice with positive Rx5 is recorded legacy behavior, not an unresolved
 transcription mismatch. The clone's implementation must preserve observed
 compatibility explicitly rather than silently correcting that trace.
 
-Foundation 2 narrows Q-01/Q-02: 65 reviewed display strings verify halfway
+Foundation 2 narrows Q-01/Q-02: 80 reviewed display strings verify halfway
 rounding, tiny-negative display, exponent padding, D=0/D=10 and scientific
 N=0/1/2/5/10. Decimal N=0 triggers runtime error 5; 1e-100/1e100 triggers
 runtime error 6. Exact policies, sources and remaining limits are recorded in

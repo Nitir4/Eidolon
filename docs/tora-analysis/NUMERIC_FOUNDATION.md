@@ -53,9 +53,13 @@ Larger exponents are preserved. Rounding carries into the next exponent.
 
 Exact halfway cases and decimal-sensitive inputs round away from zero in the
 reviewed captures. A small negative number rounding to zero retains `-0.00`.
-The implementation rounds decimal digits from the shortest round-trip spelling
-of the magnitude. This is an explicit display policy chosen to match these
-observations; it is not an assertion about TORA's conversion implementation.
+The implementation first converts the magnitude to 15 significant decimal
+digits, then applies half-away rounding at the requested precision. Targeted
+neighbours distinguish this policy from rounding the shortest round-trip
+spelling: 2.1249999999999996 displays as 2.13, whereas 2.124999999999994 displays
+as 2.12. This is an explicit compatibility policy inferred from the observed
+cutoff, not an assertion about TORA's conversion implementation or numerical
+storage. Only display conversion is rounded; matrix/tableau values are retained.
 The C++ conversion operation is specified in the
 [standard character-conversion wording](https://eel.is/c++draft/charconv.to.chars).
 
@@ -67,6 +71,9 @@ been observed**. N=0 decimal format produced TORA Run-time error '5',
 Scientific N=0 is accepted: the mantissa retains a trailing decimal point
 (e.g. `-3.e+00`). The `1e-100`/`1e100` scientific input produced Run-time error '6', `Overflow`.
 Neither crash is a golden number string or a behavior to imitate by crashing.
+The extreme inputs are finite binary64 values; the core formatter can represent
+them. This observation does not define LP model acceptance limits, which must
+be investigated at the model/input gate.
 Output/input modules must establish their full acceptance and diagnostic
 policy before enabling these fields in the GUI.
 
@@ -107,12 +114,32 @@ values to binary32 throughout that calculation; it does not identify the
 implementation or establish every intermediate precision. Negative-zero source
 normalization does not establish how every solver-generated signed zero is shown.
 
+Three targeted cases isolated the significant-digit boundary:
+
+| Probe | Reviewed initial objective/RHS cells |
+| --- | --- |
+| halfway-neighbours | -2.1249999999999996/-2.1250000000000004 → -2.13/-2.13; RHS 1.0049999999999997/1.0050000000000001/.12499999999999999 → 1.01/1.01/.13 |
+| halfway-significant-boundary | -2.124999999999994/-2.124999999999995 → -2.12/-2.13; RHS 1.004999999999994/1.004999999999995/.1249999999999994 → 1.00/1.01/.12 |
+| scientific-neighbours | -1.1249999999999998/-1.1250000000000002 → -1.13e+00/-1.13e+00; RHS 9.994999999999999/9.995000000000001/1.3749999999999998 → 1.00e+01/1.00e+01/1.38e+00 |
+
+The first new neighbour fixture failed against the initial shortest-spelling
+formatter (-2.12 instead of -2.13), then passed after the isolated display
+precision correction. The more distant values remain below the rounding
+boundary; a blanket epsilon adjustment would not describe these observations.
+
 The normal-case golden arithmetic is independently reviewed in
 `methods/lp/corpus/01_normal/all_slack/tableau-top.png` (initial/Iteration 2)
 and `tableau-scroll-01.png` / `tableau-scroll-03.png` (Iteration 3). Tests request
 row 2/x1 followed by row 1/x2 and compare all 24 cells of each resulting table,
 plus basis/column ordering. This is a pivot-arithmetic comparison, not a solver
 implementation or a claim that all Phase 0 solver traces now pass.
+
+The computed-halfway case uses objective max x1, `.017*x1 <= .036125`,
+x2 constrained to zero, and x1+x2 <= 3. TORA's automatic final output displays
+objective/x1 `2.13`. The core's explicitly requested pivot retains binary64
+`.036125/.017` (2.1249999999999996 on the tested platforms) and formats it as
+`2.13`. This checks arithmetic-to-display integration as well as input cells;
+it does not implement the automatic LP solver.
 
 ## Provenance
 
@@ -141,6 +168,10 @@ hashes identify the reviewed evidence without publishing its contents.
 | probes/foundation2-20261007/scientific-precision/summary.png | `6a6a6ba924e391e0f6d616bf583314c198b78083af4c74720c4dae386760e092` |
 | probes/foundation2-20261007/decimal-high-precision/summary.png | `9ce7afc3d6170a99cb566a6617e18b2e87b82e8075fc6c7081017c134707acd3` |
 | probes/foundation2-20261007/scientific-n0/iteration-01.png | `596e1fbb30e5208963248e1f35769881ffad25d083eb8897c4b38832c421f3cc` |
+| probes/foundation2-20261007/halfway-neighbours/iteration-01.png | `02d2dcea8a962e0239a4da85612fba0f4ae03d1d02180220989f95b928d6c18c` |
+| probes/foundation2-20261007/halfway-significant-boundary/iteration-01.png | `b30d9f6a6995cb948682e8e7980924add17d4a3ca2b1146cc3f6c36bb12b769c` |
+| probes/foundation2-20261007/scientific-neighbours/iteration-01.png | `a087497eaf2ebff753543590a313b81b60ff5e7557919f11eb45b8d5aa83950d` |
+| probes/foundation2-20261007/computed-halfway/summary.png | `cc8d0711060968ec627c9b01d05a667c9bc92e4a51ad6cd189b5f296983464a6` |
 
 ## Unknowns / things I could not verify
 

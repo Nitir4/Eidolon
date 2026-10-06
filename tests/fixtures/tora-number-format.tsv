@@ -58,6 +58,21 @@ zero-scientific-carry scientific 0 2 9.5 1.e+01
 zero-scientific-small scientific 0 2 0.1 1.e-01
 zero-scientific-large scientific 0 2 100 1.e+02
 zero-scientific-zero scientific 0 2 0 0.e+00
+half-neighbour-negative-below decimal 5 2 -2.1249999999999996 -2.13
+half-neighbour-negative-above decimal 5 2 -2.1250000000000004 -2.13
+half-neighbour-positive-below decimal 5 2 1.0049999999999997 1.01
+half-neighbour-positive-above decimal 5 2 1.0050000000000001 1.01
+half-neighbour-small-below decimal 5 2 0.12499999999999999 0.13
+half-cutoff-negative-below decimal 5 2 -2.124999999999994 -2.12
+half-cutoff-negative-at decimal 5 2 -2.124999999999995 -2.13
+half-cutoff-positive-below decimal 5 2 1.004999999999994 1.00
+half-cutoff-positive-at decimal 5 2 1.004999999999995 1.01
+half-cutoff-small-below decimal 5 2 0.1249999999999994 0.12
+scientific-neighbour-negative-below scientific 2 2 -1.1249999999999998 -1.13e+00
+scientific-neighbour-negative-above scientific 2 2 -1.1250000000000002 -1.13e+00
+scientific-neighbour-carry-below scientific 2 2 9.994999999999999 1.00e+01
+scientific-neighbour-carry-above scientific 2 2 9.995000000000001 1.00e+01
+scientific-neighbour-rhs-below scientific 2 2 1.3749999999999998 1.38e+00
 # Saved Phase 0 scientific/decimal-three final summaries.
 scientific-objective scientific 5 2 5.5 5.50000e+00
 scientific-x1 scientific 5 2 3.5 3.50000e+00

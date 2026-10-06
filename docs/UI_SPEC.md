@@ -95,7 +95,7 @@ are clone acceptance requirements, not performed Phase 0 GUI tests.
 
 Successful printing is unavailable: Wine returned runtime error 482, Printer
 error, then exited. Exact print layout, graph eligibility outside the probes,
-Undo enablement, general zoom/dot rules, formatting limits/rounding and all
+Undo enablement, general zoom/dot rules, full formatting-field limits and all
 keyboard/mnemonic states remain in OPEN_QUESTIONS.md. Product GUI tests and
 visual comparisons begin only after Gate 0 and the relevant module gates.
 
@@ -140,3 +140,11 @@ handoff and manual Windows/macOS display checks still need those environments.
 Qt documents its [high-DPI scaling and test factors](https://doc.qt.io/qt-6/highdpi.html),
 [screen-change notification](https://doc.qt.io/qt-6/qwindow.html#screenChanged)
 and [available-geometry notification](https://doc.qt.io/qt-6/qscreen.html#availableGeometryChanged).
+
+## Foundation 2 library boundary
+
+The numerical library now supplies independently tested decimal/scientific
+formatting. [NUMERIC_FOUNDATION.md](tora-analysis/NUMERIC_FOUNDATION.md) records
+halfway/sign, exponent and precision observations. The format screen retains
+its reviewed read-only preview until model/output modules supply real values
+and confirm full field validation. Foundation 2 changes no screen layout.

@@ -31,6 +31,10 @@ def launch_visible(driver: oracle.ToraDriver) -> None:
 # Every value is a source lexeme, not a predicted display value. Coefficients
 # and RHSs are visible in an initial tableau without depending on pivot rules.
 CASES = [
+    ("computed-halfway", False, "5", "2", ["1", "0"], ["0.036125", "0", "3"]),
+    ("halfway-significant-boundary", False, "5", "2", ["2.124999999999994", "2.124999999999995"], ["1.004999999999994", "1.004999999999995", "0.1249999999999994"]),
+    ("scientific-neighbours", True, "2", "2", ["1.1249999999999998", "1.1250000000000002"], ["9.994999999999999", "9.995000000000001", "1.3749999999999998"]),
+    ("halfway-neighbours", False, "5", "2", ["2.1249999999999996", "2.1250000000000004"], ["1.0049999999999997", "1.0050000000000001", "0.12499999999999999"]),
     ("ties-exact", False, "5", "2", ["2.125", "2.375"], ["1.125", "1.375", "2.625"]),
     ("ties-decimal", False, "5", "2", ["2.675", "1.005"], ["0.005", "0.015", "0.025"]),
     ("negative-near-zero", False, "5", "2", ["0.0001", "-0.0001"], ["1", "2", "3"]),
@@ -53,7 +57,8 @@ def fixture(name: str, objectives: list[str], rhs: list[str]) -> bytes:
     lines = ["3000", "5", "2", "1", q("Foundation 2 " + name), "2", "3", q("Maximize")]
     lines += list(map(q, ["", "", "", ""]))
     lines += list(map(q, objectives + ["", ""]))
-    for coefficients, bound in zip((["1", "0"], ["0", "1"], ["1", "1"]), rhs):
+    first = ["0.017", "0"] if name == "computed-halfway" else ["1", "0"]
+    for coefficients, bound in zip((first, ["0", "1"], ["1", "1"]), rhs):
         lines += list(map(q, coefficients + ["        <=", bound]))
     for values in (["0", "0", "", ""], ["infinity", "infinity", "", ""], ["n", "n", "", ""]):
         lines += list(map(q, values))
@@ -131,7 +136,7 @@ def main() -> int:
         driver.load_case_from_main("Z:" + str(oracle.INSTALL / install_name).replace("/", "\\"))
         driver.capture(dest / "input.png")
         saved = dest / "tora-saved.txt"
-        if not saved.exists() and not args.summary:
+        if not saved.exists():
             driver.click(571, 290)
             driver.click(590, 326)
             driver.capture(dest / "save-as-dialog.png")
