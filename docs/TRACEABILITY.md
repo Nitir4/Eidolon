@@ -110,3 +110,17 @@ can supply real model/session values.
 Near-bound thresholds, free-variable expansion and negative-bound solver
 transforms remain later preprocessing/module obligations. F4 codecs and Phase
 2 GUI editing/binding are not implemented by these model tests.
+
+## Foundation 4 implemented mappings
+
+| IDs | Implemented code | Verification | Capture / requirement |
+| --- | --- | --- | --- |
+| FILE-02, FILE-03 | `src/compat/lp_codec.cpp`, `include/tora/compat/lp_file.hpp`: header/grid parsing, lexical precision, defaults/settings, preserved reserved/trailing records | `tests/codec_roundtrip.cpp`, `tests/verify_codec_hashes.py`: 27 exact saved-file transcriptions, byte counts and actual SHA-256 values; optional actual-private-file comparison | `tests/fixtures/tora-file-settings.tsv` lists all private TORA save paths/hashes; FILE_FORMAT.md |
+| FILE-04 | Located typed errors, observed marker warning, strict bounded malformed-input parsing | `tests/codec_errors.cpp`: exact marker title/body/origin, count/shape/framing/number/relation/flag errors, signed zero/reserved preservation | probes/file-errors-20261004; engineering safety policies in LP_FILE_IO.md |
+| FILE-05 | Default doubled-quote recovery and writer, opt-in rejection | compat.errors: decoded title/full model, exact storage, malformed-quote rejection | probes/foundation4/text/text/{text-entered,reopened}.png and tora-saved.txt; user explicitly approved recovery |
+| FILE-01, FILE-06 | `src/compat/lp_file_store.cpp`: source/read-only/dirty checkpoints, native binary paths, Save/Save As and atomic replacement | `tests/file_store.cpp`: exact Unicode filename, read-only Save redirect/copy, complete precision, replacement rollback, invalid serialization leaves destination intact | probes/foundation4/readonly and readonly-save; engineering filesystem policies in LP_FILE_IO.md |
+| BUILD-01, ARCH-01 | Qt-free C++17 static `tora::compat` with the existing single OS-matrix workflow | Headless and full desktop suite; F4 CI results in gate report | FOUNDATION4_REPORT.md |
+
+Dialogs, overwrite confirmation and grid bindings remain the first Phase 2
+module's controller work. File-library checks do not claim those preview UI
+actions are enabled.

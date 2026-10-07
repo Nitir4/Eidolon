@@ -69,14 +69,24 @@ and `new-scientific/`, including selected radio controls, initialized grids,
 save dialogs and original saved bytes. Scientific input therefore uses N
 mantissa decimal places for these zero cells; D is the exponent field setting.
 
-## Required parser/writer behavior and unresolved edges
+## Foundation 4 parser/writer
 
-Implement no product codec before its Foundation 4 gate. Its eventual reader
-must preserve ordered records and produce explicit diagnostics for malformed
-counts/cells. Its writer must produce approved TORA-compatible CRLF/quoted
-records and preserve unknown reserved fields during unchanged round trips.
-Do not infer arbitrary quote escaping, encoding, whitespace tolerance, record
-limits, or malformed-file messages from these successful files.
+The implemented Qt-free `ToraLpCodec` preserves original ordered records and
+provides typed, located diagnostics for malformed input. Its writer uses the
+observed CRLF/quoted layout and preserves unchanged lexemes and reserved fields.
+Twenty-seven actual saves, including two approved quoted-title recovery cases,
+are transcribed independently and checked against recorded byte counts/SHA-256
+in the golden tests. Local tests additionally compare actual private bytes.
+Edited values use shortest binary64 round-trip strings rather than display
+rounding. Engineering support limits and diagnostics are specified in
+[LP_FILE_IO.md](tora-analysis/LP_FILE_IO.md).
+
+TORA writes interior title quotes doubled: `F4, "quoted" cafe` is stored as
+`"F4, ""quoted"" cafe"`. Its own reader then displayed title `F4,` and zero
+dimensions. The user approved recovering that saved data; the clone unescapes
+doubled quotes and retains the complete model and original bytes. This is an
+explicit compatibility exception, not a successful legacy reopen. Unpaired
+quotes are rejected. Capture: `probes/foundation4/text/text/`.
 
 Direct error/framing probes: marker 9999 triggers the module-mismatch Retry
 warning; a 15-record file leaves its grid empty; an extra quoted record is
@@ -84,7 +94,16 @@ ignored on open; LF-only framing leaves title/count fields blank. See the
 original attempted bytes/screenshots in `probes/file-errors-20261004/`.
 These are observations for specific inputs, not a general malformed-input grammar.
 
-Still unverified: omitted filename suffix behavior, titles/names containing
-commas or quotes, non-ASCII encoding, other extra/truncated lengths,
-invalid bounds/sign flags, read-only behavior, and Save versus Save As edge
-cases. Actual messages and recovery paths belong in `tora-analysis/FILE_BEHAVIOR.md`.
+Comma-only titles reopen correctly. A title-only quote probe independently
+corrupts TORA's dimensions (0 variables, 2 constraints); the clone restores its
+saved 2×3 model. `F4 cafe é` is written with byte E9 and reopens correctly under
+the observed Windows-1252 reference profile. Title/alias strings at the low-level
+codec boundary retain legacy bytes, including non-ASCII; native presenters own
+conversion to/from Unicode. This format contains no code-page marker.
+
+The Text picker adds `.txt` to a filename without a suffix. Save after Save As
+opens a picker prefilled with the last Save As filename and writes that target
+after confirmation, retaining the old source in the window caption.
+Still unverified: quoted-alias input commitment, other code pages and arbitrary
+corrupt/extra/truncated records beyond the supported engineering policy.
+Native-dialog messages and recovery paths are in `tora-analysis/FILE_BEHAVIOR.md`.

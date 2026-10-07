@@ -20,8 +20,13 @@ normal window geometry is then remembered. `--no-settings` bypasses preferences
 and `--screen lp/output-format` (or another registered route) previews one
 layout. Editing, files and solving are disabled at this gate.
 
-The numerical and LP model targets are Qt-free static C++17 libraries.
-The compatibility target remains an interface boundary until Foundation 4.
+The numerical, LP model and compatibility targets are Qt-free static C++17 libraries.
+Tests also require Python 3 for comparison with recorded file SHA-256 values.
+`compat.roundtrip` checks ordered fields and exact bytes for 27 actual TORA
+saves reconstructed from original transcriptions. `compat.hashes` compares
+every generated file with its actual TORA byte count and SHA-256. `compat.errors`
+and `compat.files` cover recovery, malformed inputs, precision and transactional
+file operations. No private TORA file is needed by CI or packaged in the app.
 `lp.model` checks 22 original model transcriptions from the private reference;
 `lp.validation` checks observed dimension/bound messages and explicitly
 identified engineering safety diagnostics. `core.numerics` checks
@@ -34,6 +39,18 @@ cmake --preset headless -DCMAKE_CXX_STANDARD=17
 cmake --build --preset headless
 ctest --preset headless
 ```
+
+With the private reference corpus present, check the actual files directly:
+
+```sh
+build/headless/tests/codec_roundtrip tests/fixtures/lp-models.txt tests/fixtures/tora-file-settings.tsv build/foundation4/clone-roundtrips reference/tora-captures
+```
+
+`codec_probe --roundtrip input output`, `--edit input output`, or
+`--new decimal|scientific output` writes files for live reference checks.
+It is a test tool and is not installed. The F4 library is ready for the later
+data-entry controller; the existing navigation preview still has no enabled
+file/edit/solve actions.
 
 Release build and packaging:
 

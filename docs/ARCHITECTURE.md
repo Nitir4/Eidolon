@@ -5,7 +5,7 @@ internals. Gate 0 is approved. Foundation 1 implements the target boundaries
 and native bootstrap. Foundation 5 implements the desktop shell before
 Foundations 2, 3 and 4, following the user's approved order change. Foundation 2
 implements the Qt-free numerical core. Foundation 3 implements the LP model
-and validation. Codecs remain scheduled at Foundation 4.
+and validation. Foundation 4 implements the LP document, codec and file store.
 
 ## Targets and dependency boundaries
 
@@ -99,8 +99,32 @@ unbounded models are still valid inputs. It does not apply solver tolerances,
 round numbers, normalize negative RHS values, split unrestricted variables or
 construct a tableau. No Qt, codec or screen dependency enters this target.
 Notation, source lexemes, read-only/dirty state and filenames belong to the
-future document/codec boundary. See
+Foundation 4 document/codec boundary. See
 [model policy and capture provenance](tora-analysis/LP_MODEL_VALIDATION.md).
+
+### Implemented file boundary (Foundation 4)
+
+`tora::compat` is a static C++17 library linked publicly to `tora::lp`, with no
+Qt dependency. `LpDocument` implements the planned `ProblemDocument` role:
+editable model/settings, source path, read-only mode, semantic dirty tracking,
+saved checkpoints and original ordered records. `ToraLpCodec` parses and
+serializes bytes independently of the filesystem. Unchanged fields retain
+original lexemes; changed numerical fields serialize without display rounding.
+Reserved cells and trailing records survive edits. Resizing with unknown
+nonempty reserved grid data is rejected explicitly.
+
+`LpFileStore` reads bounded binary data and prepares the complete saved
+checkpoint before replacing a file via an exclusively created sibling
+temporary. Windows wide-path and POSIX atomic replacement code is isolated in
+one source file. Failed writes retain the document checkpoint and destination.
+Read-only Save produces a typed redirect signal for the later controller;
+Save As can create an editable copy, as observed in TORA. The later controller
+owns native dialogs, confirmation and navigation; no widgets enter this library.
+
+The user approved recovering TORA's doubled-quote records when TORA's own
+reader corrupts them. Recovery is the default; explicit strict rejection is
+available to callers. All other malformed-file safety messages are identified
+as engineering diagnostics. See [file boundary specification](tora-analysis/LP_FILE_IO.md).
 
 ```mermaid
 classDiagram

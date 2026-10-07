@@ -1,0 +1,29 @@
+# Original settings/hash transcription; raw TORA files remain private.
+# case N D mode byte_count sha256 reference_path
+01_normal	5	2	1	271	3bbf4f898538072795fd666c1618ea44c6dde6c04bcbebf313c5aed66ee76328	roundtrips/01_normal/tora-saved.txt
+02_degenerate	5	2	1	275	735e386af0557ada3faf38d619b1f5f4d81d85291ccab95ad645b81468b4fb38	roundtrips/02_degenerate/tora-saved.txt
+03_infeasible	5	2	1	275	28a59710760bbbfd459f753dad0875d214885c312a486188493dcff765838a45	roundtrips/03_infeasible/tora-saved.txt
+04_unbounded	5	2	1	275	3eeb362a16139539e97df3aab206cd2a6d516f72fd19021a28aaf88418237932	roundtrips/04_unbounded/tora-saved.txt
+05_alternative	5	2	1	283	1069b43fa6ed6ba726fdbf29d56cba402aba664f0d9d3990cf0d5f3cbe13f96b	roundtrips/05_alternative/tora-saved.txt
+06_equality	5	2	1	272	b62e261d3d0932eee48250fc014ab6aef01fea27b91c89340b5d3c423311118f	roundtrips/06_equality/tora-saved.txt
+07_big_m	5	2	1	270	f95b9c249861b19f288d7d055b37625999486986da9e428c12abf593e7f1ef63	roundtrips/07_big_m/tora-saved.txt
+08_two_phase	5	2	1	273	b88e03af5d01f2af582e05857a32381fdc009a270273b3f023b3497baa20070f	roundtrips/08_two_phase/tora-saved.txt
+09_bounded	5	2	1	283	0fd43bf03c872da24d224eb78ac6591f345ef81897841181f3e8ca8efe35ac81	roundtrips/09_bounded/tora-saved.txt
+10_dual	5	2	1	282	7b1101ec5feac17f11d69904ddb77a24419af5a190a3026b760454c8723cfa7f	roundtrips/10_dual/tora-saved.txt
+11_zero_rhs	5	2	1	273	b3b3e7c6f6e0b141b5facb637d61ee7bbf926ed15b0a889c11624880c95c12ec	roundtrips/11_zero_rhs/tora-saved.txt
+12_negative_rhs	5	2	1	278	09404a38bf49155bee8581a16a456884e563d2eafba3e9c349e289ecbb5719af	roundtrips/12_negative_rhs/tora-saved.txt
+13_mixed_sign	5	2	1	279	cd216384018dcdc627fd888d9f4abd8822aec61ed47e7ac8f961fa9d6d748cb2	roundtrips/13_mixed_sign/tora-saved.txt
+14_tight_bounds	5	2	1	277	60bae5d8c8f748de90d4ae8872430103fedc2aa5724b7f6c1f884a10c034fba3	roundtrips/14_tight_bounds/tora-saved.txt
+15_minimization	5	2	1	277	0abb3efdf85d2b33fad5bcbdf24162e96a6b04a134e896f6a53028e79088854d	roundtrips/15_minimization/tora-saved.txt
+probe-1var-1con	5	2	1	168	8e0f06aed579442dd172969af7cc2f371c3a0bcc307036ea0730703f75cf4395	roundtrips/probe-1var-1con/tora-saved.txt
+probe-3var-2con	5	2	1	268	dce41af6d3e9dab994a4313ae0c30f22d923f57d650b03a0f7c54b4d66c0c4a8	roundtrips/probe-3var-2con/tora-saved.txt
+probe-numeric-digits	5	2	1	278	563803102c144811696cfc5e8ebb01bb11ddaf941b57ba767a3e3e5b0b5848d1	roundtrips/probe-numeric-digits/tora-saved.txt
+probe-scientific-flag2	4	3	2	329	c629b6425f1a0451e279ee26d38bf64c3ef063d2670b0f3c1e0210985941ac41	roundtrips/probe-scientific-flag2/tora-saved.txt
+new-decimal	5	2	1	200	b1cbdecdaa5f4cee583c8491ef82ef0b761a1fae26532874704366f7950b613e	probes/targeted-20261004/new-decimal/tora-saved.txt
+new-scientific	5	2	2	252	0b6871a6721406d4ceab53ef91d91a88c9be31dd83bace9d08efd8b0962a081e	probes/targeted-20261004/new-scientific/tora-saved.txt
+quoted-title-recovery	5	2	1	284	a59456ae6d4fe71e71d18c1e50a4dc1547069c2e7afcec55c182deb6ef220c16	probes/foundation4/text/text/tora-saved.txt
+clone-precision	5	2	1	178	f64af249cc085bf05a36db13f165ada8b0ab55e22f3eeaeb97f3b4dbc6beb324	probes/foundation4/clone/precision-edited/tora-saved.txt
+clone-scientific	5	2	2	260	5b0f0b1dbc0b35f82e5c6eed124b71c56a5e1b2a8285a5de295bfdf0715f05f3	probes/foundation4/clone/fresh-scientific/tora-saved.txt
+comma-title	5	2	1	274	e542aa879aa629ce568a9e37bd30577714fa661f585d2ffa70ab95b57933feb6	probes/foundation4/comma-title/comma-title/tora-saved.txt
+quoted-title-only	5	2	1	278	95d3c3cbb57de37a1f893b2ea3ce5119c869b07f81c2904a53583c744a663286	probes/foundation4/quoted-title/quoted-title/tora-saved.txt
+legacy-text	5	2	1	274	bc5592afde34a48fbb4aac3131e025b6302066514c441118ceba1c3a5113fbde	probes/foundation4/unicode-title/unicode-title/tora-saved.txt

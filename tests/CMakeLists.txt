@@ -28,6 +28,35 @@ target_link_libraries(lp_validation PRIVATE tora::lp)
 add_test(NAME lp.validation COMMAND lp_validation)
 set_tests_properties(lp.validation PROPERTIES TIMEOUT 15)
 
+add_executable(codec_roundtrip codec_roundtrip.cpp)
+tora_target_defaults(codec_roundtrip)
+target_link_libraries(codec_roundtrip PRIVATE tora::compat)
+add_test(NAME compat.roundtrip COMMAND codec_roundtrip
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lp-models.txt"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tora-file-settings.tsv"
+    "${CMAKE_CURRENT_BINARY_DIR}/codec-goldens")
+set_tests_properties(compat.roundtrip PROPERTIES TIMEOUT 15 FIXTURES_SETUP codec_golden_files)
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_test(NAME compat.hashes COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_codec_hashes.py"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tora-file-settings.tsv"
+    "${CMAKE_CURRENT_BINARY_DIR}/codec-goldens")
+set_tests_properties(compat.hashes PROPERTIES FIXTURES_REQUIRED codec_golden_files TIMEOUT 15)
+add_executable(codec_errors codec_errors.cpp)
+tora_target_defaults(codec_errors)
+target_link_libraries(codec_errors PRIVATE tora::compat)
+add_test(NAME compat.errors COMMAND codec_errors)
+set_tests_properties(compat.errors PROPERTIES TIMEOUT 15)
+add_executable(file_store file_store.cpp)
+tora_target_defaults(file_store)
+target_link_libraries(file_store PRIVATE tora::compat)
+add_test(NAME compat.files COMMAND file_store "${CMAKE_CURRENT_BINARY_DIR}/file-store-check")
+set_tests_properties(compat.files PROPERTIES TIMEOUT 15)
+
+add_executable(codec_probe "${PROJECT_SOURCE_DIR}/tools/codec_probe.cpp")
+tora_target_defaults(codec_probe)
+target_link_libraries(codec_probe PRIVATE tora::compat)
+
 if(TORA_BUILD_DESKTOP)
     find_package(Qt6 6.8 REQUIRED COMPONENTS Test)
     qt_add_executable(desktop_shell_test desktop_shell.cpp)

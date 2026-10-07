@@ -33,12 +33,12 @@ Evidence: `probes/targeted-20261004/new-scientific/` and `new-decimal/`.
 
 ## Unknowns / things I could not verify
 
-Automatic filename suffixes, Save overwrite/cancel behavior, read-only editing,
-invalid counts/cells, quote/comma escaping, and non-ASCII encoding remain
-unverified. Four specific malformed-file observations are recorded below;
+Foundation 4 resolves the observed suffix, read-only, text and subsequent-Save
+paths below. Quoted-alias input commitment, other code pages and arbitrary
+invalid counts/cells remain unverified. Four specific malformed-file observations are recorded below;
 they do not establish recovery behavior for every malformed input.
 Only saved bytes and rendered fields are examined; no executable analysis is
-used. Clone-written compatibility will be tested at Foundation 4.
+used. Clone-written compatibility checks are recorded at Foundation 4.
 
 
 ## Printer response in this oracle environment
@@ -75,3 +75,47 @@ Evidence: `probes/file-errors-20261004/{truncated,extra-record,lf-only}/`,
 including attempted bytes and before/after acknowledgement screenshots.
 Do not infer that the malformed files are safe to solve, or that all truncated
 lengths behave identically. The successful compatible framing remains CRLF.
+
+## Foundation 4 text and read-only observations
+
+TORA saves interior quotes doubled. The directly saved title `F4, "quoted" cafe`
+reopened as `F4,` with zero variables/constraints; no successful legacy round
+trip is claimed for that file. The user approved recovery on 2026-10-07. The
+clone restores the complete saved data and preserves its original bytes.
+The combined text attempt reset the grid after editing an alias, so that
+capture does not establish quoted-alias behavior.
+Evidence: `probes/foundation4/text/text/{text-entered,reopened}.png` and saved
+file SHA-256 `a59456ae6d4fe71e71d18c1e50a4dc1547069c2e7afcec55c182deb6ef220c16`.
+
+Selecting Open read-only still allows input/title edits; File Save and Save As
+remain enabled. Save opens a native Save As picker and leaves the original
+file unchanged. Save As writes the edited title and original full model to a
+new file. Its window caption can still show the old source; that caption alone
+does not prove the subsequent Save target.
+Evidence: `probes/foundation4/readonly/readonly/readonly-selected.png`,
+`file-menu.png`, `after-edit.png`; `readonly-save/readonly-save/after-save-command.png`,
+`source-after-save.txt` and `tora-saved.txt`.
+
+The reference helper observed Windows ANSI code page 1252 through the OS API.
+Entering `F4 cafe é`, saving and reopening verified byte E9 and the same displayed
+title/counts. The codec preserves title/alias bytes opaquely; native presenters
+must convert those legacy fields with the selected code page. Unicode filesystem
+paths are independent. Capture: `probes/foundation4/unicode-title/unicode-title/`;
+saved SHA-256 `bc5592afde34a48fbb4aac3131e025b6302066514c441118ceba1c3a5113fbde`.
+
+The comma-only title `F4, comma` reopens without corruption. The quote-only title
+`F4 "quoted"` reopens as `F4` with 0 variables/2 constraints and misplaced grid
+values; its saved header still contains 2 variables/3 constraints. These isolate
+quotes as the problem. Both captured saved payloads are in the exact-byte
+goldens; the user-approved recovery handles the quoted one.
+Evidence: `probes/foundation4/{comma-title,quoted-title}/`.
+
+The Text picker appends `.txt` when given `without-suffix`. Save after Save As
+opens the same native picker with the previous filename selected. Accepting Save
+and Yes changes that Save As target; the original source stays byte-identical.
+The window caption continues to show the original source. The warning has an
+empty caption and the two-line body `File already exists.` / `Do you want to
+replace it?`, with Yes/No. Capture: `probes/foundation4/extension/extension/` and
+`save-target/save-target/{after-save-command,subsequent-overwrite,after-confirmed-save}.png`.
+Thus picker behavior belongs to the controller; the file store's source path
+represents the actual saved destination independently of the legacy caption.

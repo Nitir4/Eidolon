@@ -5,16 +5,18 @@ Qt 6 Widgets bootstrap, smoke tests and three-OS packaging pipeline.
 Foundation 5 adds the native TORA-style main window, menus and LP navigation
 preview. Foundation 2 supplies Qt-free matrix/tableau arithmetic, explicit
 tolerances and observed decimal/scientific formatting. Foundation 3 adds the
-Qt-free LP model and validation against observed input fields. Problem editing,
-algorithms and file compatibility remain behind
-their individual gates. The user changed the order to **1 → 5 → 2 → 3 → 4**;
-work stops after each foundation for review before starting the next.
+Qt-free LP model and validation against observed input fields. Foundation 4 adds
+the Qt-free TORA LP document, codec and binary file store. Problem editing and
+algorithms remain behind their individual module gates. The user changed the order to **1 → 5 → 2 → 3 → 4**;
+the latest instruction authorizes completing every foundation before requesting
+approval to switch to Phase 2.
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
 See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_REPORT.md)
 [Foundation 5 report](docs/FOUNDATION5_REPORT.md) and
 [Foundation 2 report](docs/FOUNDATION2_REPORT.md) and
-[Foundation 3 report](docs/FOUNDATION3_REPORT.md), plus
+[Foundation 3 report](docs/FOUNDATION3_REPORT.md) and
+[Foundation 4 report](docs/FOUNDATION4_REPORT.md), plus
 [build instructions](docs/BUILD.md). With CMake 3.24+, Ninja, a C++17 compiler
 and Qt 6.8+ Widgets installed:
 

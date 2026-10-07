@@ -1,4 +1,6 @@
-# Target boundary only. The observed file codec belongs to Foundation 4.
-add_library(tora_compat INTERFACE)
+add_library(tora_compat STATIC lp_codec.cpp lp_file_store.cpp)
 add_library(tora::compat ALIAS tora_compat)
-target_link_libraries(tora_compat INTERFACE tora::core)
+tora_target_defaults(tora_compat)
+target_compile_features(tora_compat PUBLIC cxx_std_17)
+target_include_directories(tora_compat PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_link_libraries(tora_compat PUBLIC tora::lp)

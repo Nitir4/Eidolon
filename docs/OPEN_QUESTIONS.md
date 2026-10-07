@@ -18,7 +18,7 @@ implementation or comparisons.
 | Q-01 | Hidden arithmetic precision, zero/near-tie thresholds, rounding at halfway values, negative-zero creation, cycling safeguard/iteration cap | Foundation 2 decisions and affected numerical module gates |
 | Q-02 | N/D allowed extrema, invalid notation-field messages, large-width/exponent overflow, scientific formatting beyond N=5/D=2 | Formatter/input/output module gates |
 | Q-03 | Undo enablement/restoration; column insert/delete/copy/paste; all advertised shortcuts, objective-cell editing, invalid relation/name/cell messages | Data-entry module gate |
-| Q-04 | Read-only editing/saving, suffix defaults, overwrite/cancel, quote/comma/non-ASCII encoding, other malformed counts/records/cells | Foundation 4 / file-I/O gate |
+| Q-04 | Quoted-alias input commitment, other text code pages and arbitrary malformed records; basic read-only flow, suffix, Save target, comma/quoted/non-ASCII titles resolved | Phase 2 input controller and any newly supported encoding/profile |
 | Q-05 | Graph eligibility for one-variable, finite-bound/unrestricted inputs; individual-constraint click states; general range/tick/dot/zoom rules | Graphical module gate |
 | Q-06 | Unrestricted expansion, reverse bound complements, redundant equality/artificial-basic cleanup | Preprocessing and affected solver gates |
 | Q-07 | Direct applicable Dual infeasibility with no eligible entering column | Dual-simplex module gate |
@@ -63,3 +63,14 @@ diagnostic. Signed finite input values are preserved. Near-equal bound
 thresholds, arbitrary numeric text parsing, unrestricted transformation and
 negative-bound algorithm behavior are not inferred from these input checks;
 their ownership and capture hashes are in `tora-analysis/LP_MODEL_VALIDATION.md`.
+
+Foundation 4 resolves read-only behavior and the quoted-title storage failure.
+Read-only Save opens Save As without changing the original; edits and Save As
+copies are allowed. TORA writes doubled quotes but corrupts its own reopened
+title/dimensions in the captured combined text case. The user explicitly chose
+recovery; that approved exception is tested against the actual saved bytes.
+The bounded parser uses explicit engineering diagnostics for unverified corrupt
+cases and does not create partial/blank legacy models. Native-picker policies
+belong to the later controller. See `tora-analysis/LP_FILE_IO.md` and the F4 gate
+report for current live bridge/encoding limits; no unreviewed automation frame
+is promoted to compatibility evidence.
