@@ -27,7 +27,23 @@ commands remain disabled for their separate module cycles.
 - Three new clone-written edited files (alias, unrestricted bounds and relation)
   opened, saved and reopened in TORA with identical bytes. No completed bridge
   was repeated. Private frames are under probes/foundation4/clone/.
-- Three-OS CI: pending final verification.
+- Final [three-OS CI run](https://github.com/Nitir4/TORA-Clone/actions/runs/37658262696)
+  verifies source `aaf0450032d30ee3670c5ba75e43ac5054aec84a`: Windows,
+  Linux and macOS each pass 20/20 CTest checks (60/60 overall), with no
+  failures or skipped checks. Downloaded complete input logs confirm 43/43
+  cases at each of four scales per OS, including all 22 oracle outcomes.
+- Windows initially failed the new offscreen glyph check; the input test
+  now configures the installed font directory like the existing shell/font
+  tests. Full per-scale logs are retained instead of relying on clipped
+  CTest console output. The final Windows run passes the font check.
+- Packaging, deployed startup and upload pass on all three OSes: portable
+  Windows EXE ZIP, Linux x86_64 AppImage, and universal arm64+x86_64 macOS
+  app-in-DMG. Final reports are under build/phase2-input/ci-final-verified/;
+  packages are under dist/phase2-input/final/.
+- All three downloaded payloads match their SHA-256 sidecars; the Windows
+  ZIP passes its integrity check. The downloaded Linux AppImage passes a
+  local offscreen extract-and-run startup check. Checksums are recorded in
+  build/phase2-input/packages-verified.json.
 
 ## Compatibility findings and limits
 
@@ -46,4 +62,16 @@ policies are identified separately from observed TORA wording.
 
 See [input specification](tora-analysis/LP_DATA_ENTRY_MODULE.md),
 [traceability](TRACEABILITY.md) and [open questions](OPEN_QUESTIONS.md).
-The next separate module is simplex with the all-slack starting solution.
+The input module is ready for its review gate. Phase 2 as a whole remains
+in progress; the next separate module is simplex with the all-slack starting
+solution, after approval.
+
+## Review on the laptop
+
+From the project folder, run `build/dev/src/desktop/ToraClone`. Choose Click
+Here → Linear Programming → Go to Input Screen, initialize counts with
+Return/Tab, then edit and save. Select Existing File to open a TORA LP file.
+The original native 1920×1080 input screenshot is
+build/phase2-input/ui-captures/input/normal-1.png. Numeric/file comparisons
+are summarized in build/phase2-input/comparison.tsv; no raw TORA capture is
+included in a package or the repository.
