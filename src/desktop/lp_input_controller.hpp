@@ -11,6 +11,7 @@ struct OpenSelection { QString path; bool readOnly = false; };
 struct InputDialogs {
     std::function<void(const QString&, const QString&)> showError;
     std::function<SaveChoice()> askSave;
+    std::function<bool(const QString&,const QString&)> askRetry;
     std::function<std::optional<OpenSelection>()> chooseOpen;
     std::function<std::optional<QString>(const QString&)> chooseSave;
 };
@@ -83,10 +84,12 @@ private:
     LpGridModel grid_;
     InputDialogs dialogs_;
     QString errorTitle_, error_, captionPath_;
+    QString preferredSavePath_;
     Axis selectionAxis_ = Axis::None, clipboardAxis_ = Axis::None;
     int selection_ = -1;
     bool editing_ = false;
     bool pendingCommitValid_ = true;
+    bool openingFromPicker_ = false, retryOpen_ = false;
     std::vector<std::string> clipboard_;
 };
 LpInputController& inputController(QWidget& shell);

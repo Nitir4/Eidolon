@@ -43,6 +43,11 @@ std::filesystem::path nativePath(const QString& path) {
 #endif
 }
 QString displayPath(const std::filesystem::path& path) { const auto bytes=path.u8string();return QString::fromUtf8(reinterpret_cast<const char*>(bytes.data()),static_cast<qsizetype>(bytes.size())); }
+QMessageBox::StandardButton message(QWidget* owner,QMessageBox::Icon icon,const QString& title,
+        const QString& text,QMessageBox::StandardButtons buttons) {
+    QMessageBox box(icon,title,text,buttons,owner);polishUsableFonts(box);
+    return static_cast<QMessageBox::StandardButton>(box.exec());
+}
 double enteredNumber(const QString& text) {
     // The reference accepts nonnumeric entry as zero (VB Val). Preserve a
     // finite numeric prefix, including exponent notation, before formatting.
@@ -117,8 +122,9 @@ void LpGridModel::valuesChanged() { if(rowCount()) emit dataChanged(index(0,0),i
 void LpGridModel::selectionChanged() { if(rowCount()) emit dataChanged(index(0,0),index(rowCount()-1,columnCount()-1),{Qt::BackgroundRole}); }
 
 LpInputController::LpInputController(QWidget* owner):QObject(owner),grid_(*this) {
-    dialogs_.showError=[owner](const QString& title,const QString& body){QMessageBox::warning(owner,title,body);};
-    dialogs_.askSave=[owner]{const auto answer=QMessageBox::question(owner,QStringLiteral("Save?"),QStringLiteral("Do you wish to save data?"),QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+    dialogs_.showError=[owner](const QString& title,const QString& body){message(owner,QMessageBox::Critical,title,body,QMessageBox::Ok);};
+    dialogs_.askRetry=[owner](const QString& title,const QString& body){return message(owner,QMessageBox::Warning,title,body,QMessageBox::Yes|QMessageBox::No)==QMessageBox::Yes;};
+    dialogs_.askSave=[owner]{const auto answer=message(owner,QMessageBox::Question,QStringLiteral("Save?"),QStringLiteral("Do you wish to save data?"),QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
         return answer==QMessageBox::Yes?SaveChoice::Yes:(answer==QMessageBox::No?SaveChoice::No:SaveChoice::Cancel);};
     dialogs_.chooseOpen=[owner]()->std::optional<OpenSelection>{
         QFileDialog picker(owner,QStringLiteral("Open"));picker.setFileMode(QFileDialog::ExistingFile);
@@ -126,12 +132,14 @@ LpInputController::LpInputController(QWidget* owner):QObject(owner),grid_(*this)
         picker.setOption(QFileDialog::DontUseNativeDialog);
         auto* readOnly=new QCheckBox(QStringLiteral("Open as read-only"),&picker);
         if(auto* layout=qobject_cast<QGridLayout*>(picker.layout())) layout->addWidget(readOnly,layout->rowCount(),0,1,layout->columnCount());
+        polishUsableFonts(picker);
         if(picker.exec()!=QDialog::Accepted || picker.selectedFiles().isEmpty()) return {};
         return OpenSelection{picker.selectedFiles().first(),readOnly->isChecked()};
     };
     dialogs_.chooseSave=[owner](const QString& current)->std::optional<QString>{
         QFileDialog picker(owner,QStringLiteral("Save As"),current);picker.setAcceptMode(QFileDialog::AcceptSave);
         picker.setNameFilter(QStringLiteral("Text Files (*.txt);;All Files (*)"));picker.setDefaultSuffix(QStringLiteral("txt"));
+        polishUsableFonts(picker);
         if(picker.exec()!=QDialog::Accepted || picker.selectedFiles().isEmpty()) return {};
         return picker.selectedFiles().first();
     };
@@ -139,7 +147,7 @@ LpInputController::LpInputController(QWidget* owner):QObject(owner),grid_(*this)
 bool LpInputController::fail(const QString& title,const QString& message) {pendingCommitValid_=false;errorTitle_=title;error_=message;dialogs_.showError(title,message);return false;}
 bool LpInputController::commitInput() {pendingCommitValid_=true;emit commitRequested();return pendingCommitValid_;}
 void LpInputController::refresh() {cells_=document_?ToraLpCodec::gridText(*document_):std::vector<std::string>{};clearSelection();grid_.refresh();emit changed();}
-void LpInputController::beginNew(tora::core::NumberFormat format) {newFormat_=format;document_.reset();captionPath_.clear();clipboard_.clear();clipboardAxis_=Axis::None;refresh();}
+void LpInputController::beginNew(tora::core::NumberFormat format) {newFormat_=format;document_.reset();clipboard_.clear();clipboardAxis_=Axis::None;refresh();}
 bool LpInputController::initialize(const QString& title,int variables,int constraints) {
     const auto dimensions=tora::lp::LpValidator::dimensions(variables<0?0:static_cast<std::size_t>(variables),constraints<0?0:static_cast<std::size_t>(constraints));
     if(!dimensions.valid()) return fail(QString::fromStdString(dimensions.issues.front().title),QString::fromStdString(dimensions.issues.front().message));
@@ -157,17 +165,30 @@ bool LpInputController::setTitle(const QString& title) {
     catch(const std::exception& e){return fail(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::openFile(const QString& path,bool readOnly) {
-    try {auto next=LpFileStore::open(nativePath(path),readOnly);document_=std::move(next);captionPath_=path;clipboard_.clear();clipboardAxis_=Axis::None;refresh();return true;}
-    catch(const tora::compat::FileError& e){return fail(QString::fromStdString(e.title()),QString::fromUtf8(e.what()));}
+    try {auto next=LpFileStore::open(nativePath(path),readOnly);document_=std::move(next);captionPath_=path;preferredSavePath_=path;clipboard_.clear();clipboardAxis_=Axis::None;refresh();return true;}
+    catch(const tora::compat::FileError& e){
+        if(openingFromPicker_ && e.code()==tora::compat::FileErrorCode::Marker) {
+            errorTitle_=QString::fromStdString(e.title());error_=QString::fromUtf8(e.what());
+            retryOpen_=dialogs_.askRetry(errorTitle_,error_);return false;
+        }
+        return fail(QString::fromStdString(e.title()),QString::fromUtf8(e.what()));
+    }
     catch(const std::exception& e){return fail(QStringLiteral("LP File Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::saveTo(const QString& path) {
     if(!document_) return false;
-    try {LpFileStore::saveAs(*document_,nativePath(path));emit changed();return true;}
+    try {LpFileStore::saveAs(*document_,nativePath(path));preferredSavePath_=path;emit changed();return true;}
     catch(const std::exception& e){return fail(QStringLiteral("LP File Error"),QString::fromUtf8(e.what()));}
 }
-bool LpInputController::requestOpen() {const auto selected=dialogs_.chooseOpen();return selected && openFile(selected->path,selected->readOnly);}
-bool LpInputController::requestSave() {if(!commitInput() || !document_)return false;const auto path=dialogs_.chooseSave(displayPath(document_->sourcePath()));return path && saveTo(*path);}
+bool LpInputController::requestOpen() {
+    do {
+        retryOpen_=false;const auto selected=dialogs_.chooseOpen();if(!selected)return false;
+        openingFromPicker_=true;const bool opened=openFile(selected->path,selected->readOnly);openingFromPicker_=false;
+        if(opened)return true;
+    }while(retryOpen_);
+    return false;
+}
+bool LpInputController::requestSave() {if(!commitInput() || !document_)return false;const auto path=dialogs_.chooseSave(preferredSavePath_.isEmpty()?displayPath(document_->sourcePath()):preferredSavePath_);return path && saveTo(*path);}
 bool LpInputController::leaveInput() {if(!commitInput())return false;if(!document_)return true;const auto choice=dialogs_.askSave();return choice==SaveChoice::No || (choice==SaveChoice::Yes && requestSave());}
 bool LpInputController::validateForSolve() {
     if(!commitInput())return false;

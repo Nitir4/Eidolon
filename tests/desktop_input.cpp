@@ -18,6 +18,7 @@
 #include <QTimer>
 #include <QFileDialog>
 #include <QCheckBox>
+#include <QFontMetrics>
 #include <cmath>
 
 using namespace tora::desktop;
@@ -217,6 +218,24 @@ private slots:
         QCOMPARE(c.document()->problem.title,std::string("Normal"));
         QCOMPARE(c.document()->problem.objective[0],3.0);
     }
+    void wrongModuleRetryAndCancel() {
+        LpInputController c;silent(c);QVERIFY(c.openFile(golden(QStringLiteral("01_normal"))));
+        QTemporaryDir dir;const auto badPath=dir.filePath(QStringLiteral("wrong-module.txt"));
+        QFile source(golden(QStringLiteral("01_normal")));QVERIFY(source.open(QIODevice::ReadOnly));auto bytes=source.readAll();bytes.replace(0,4,"9999");
+        QFile bad(badPath);QVERIFY(bad.open(QIODevice::WriteOnly));QCOMPARE(bad.write(bytes),qint64(bytes.size()));bad.close();
+        int pickers=0,retries=0;QString retryTitle,retryBody;
+        c.dialogs().chooseOpen=[&] {++pickers;return std::optional<OpenSelection>{{pickers==1?badPath:golden(QStringLiteral("15_minimization")),false}};};
+        c.dialogs().askRetry=[&](const QString& title,const QString& body) {++retries;retryTitle=title;retryBody=body;return true;};
+        QVERIFY(c.requestOpen());QCOMPARE(pickers,2);QCOMPARE(retries,1);QCOMPARE(c.document()->problem.sense,tora::lp::ObjectiveSense::Minimize);
+        QCOMPARE(retryTitle,QStringLiteral("Open FileSave As Warning"));QCOMPARE(retryBody,QStringLiteral("Target file does not match format of elected TORA module. Retry?"));
+        const auto before=tora::compat::ToraLpCodec::encode(*c.document());
+        c.dialogs().chooseOpen=[&] {return std::optional<OpenSelection>{{badPath,false}};};
+        c.dialogs().askRetry=[](const QString&,const QString&){return false;};QVERIFY(!c.requestOpen());
+        QCOMPARE(tora::compat::ToraLpCodec::encode(*c.document()),before);
+        int cancelled=0;c.dialogs().askRetry=[](const QString&,const QString&){return true;};
+        c.dialogs().chooseOpen=[&]()->std::optional<OpenSelection>{if(cancelled++==0)return OpenSelection{badPath,false};return {};};
+        QVERIFY(!c.requestOpen());QCOMPARE(tora::compat::ToraLpCodec::encode(*c.document()),before);
+    }
     void realPickerReadOnlyAndSaveCancel() {
         LpInputController c;silent(c);
         bool sawReadOnly=false;
@@ -231,6 +250,49 @@ private slots:
         QTimer::singleShot(0,[] {auto* picker=qobject_cast<QFileDialog*>(QApplication::activeModalWidget());QVERIFY(picker);picker->reject();});
         QVERIFY(!c.requestSave());QCOMPARE(c.document()->sourcePath(),path);QVERIFY(c.document()->dirty());
         QCOMPARE(tora::compat::ToraLpCodec::encode(*c.document()),before);
+    }
+    void existingPickerCancellationLeavesBlankInput() {
+        ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
+        auto& c=inputController(shell);silent(c);QVERIFY(c.openFile(golden(QStringLiteral("01_normal"))));
+        const auto caption=shell.windowTitle();QVERIFY(shell.navigate(QStringLiteral("lp/input-mode")));
+        bool sawBlankInput=false;
+        c.dialogs().chooseOpen=[&]()->std::optional<OpenSelection>{
+            sawBlankInput=shell.currentScreen()==QStringLiteral("lp/input") && !c.document();return {};
+        };
+        shell.currentContent()->findChild<QRadioButton*>(QStringLiteral("input-existing"))->click();
+        shell.currentContent()->findChild<QPushButton*>(QStringLiteral("input-go"))->click();
+        QVERIFY(sawBlankInput);QCOMPARE(shell.currentScreen(),QStringLiteral("lp/input"));
+        QVERIFY(!c.document());QCOMPARE(shell.windowTitle(),caption);
+        auto* page=shell.currentContent();
+        QVERIFY(page->findChild<QLineEdit*>(QStringLiteral("variable-count"))->text().isEmpty());
+        QVERIFY(page->findChild<QTableView*>(QStringLiteral("input-grid"))->isHidden());
+        QVERIFY(!page->findChild<QPushButton*>(QStringLiteral("input-solve-menu"))->isEnabled());
+    }
+    void newContextRetainsLastSaveDestination() {
+        LpInputController c;silent(c);QVERIFY(c.openFile(golden(QStringLiteral("01_normal"))));
+        const auto caption=c.captionPath();QTemporaryDir dir;
+        const auto destination=dir.filePath(QStringLiteral("copy.txt"));QVERIFY(c.saveTo(destination));
+        c.beginNew();QVERIFY(c.initialize(QStringLiteral("New problem"),2,3));
+        QString offeredPath;c.dialogs().chooseSave=[&](const QString& path)->std::optional<QString>{offeredPath=path;return {};};
+        QVERIFY(!c.requestSave());QCOMPARE(offeredPath,destination);QCOMPARE(c.captionPath(),caption);
+        QVERIFY(c.document()->sourcePath().empty());QVERIFY(c.document()->dirty());
+    }
+    void pickerRecoversMalformedThemeFont() {
+        struct RestoreFont { QFont font=QApplication::font();~RestoreFont(){QApplication::setFont(font);} } restore;
+        QFont broken=restore.font;broken.setStyleHint(static_cast<QFont::StyleHint>(255));broken.setPixelSize(128);
+        QApplication::setFont(broken);LpInputController c;silent(c);bool readable=false;
+        QTimer::singleShot(0,[&] {
+            auto* picker=qobject_cast<QFileDialog*>(QApplication::activeModalWidget());
+            if(!picker)return;
+            readable=true;auto widgets=picker->findChildren<QWidget*>();widgets.prepend(picker);
+            for(auto* widget:widgets) {
+                const QFontMetrics metrics(widget->font());
+                readable=readable && static_cast<int>(widget->font().styleHint())<=QFont::Fantasy
+                    && metrics.height()<100 && metrics.inFont(QLatin1Char('A'));
+            }
+            picker->reject();
+        });
+        QVERIFY(!c.requestOpen());QVERIFY(readable);
     }
     void unchangedCountReturnAndTabReinitialize() {
         ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();

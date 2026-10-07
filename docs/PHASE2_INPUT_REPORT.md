@@ -17,7 +17,10 @@ commands remain disabled for their separate module cycles.
   including formatted spellings, aliases/quotes, row/column order, sign/bounds,
   reinitialization and precision 11/99.
 - Keyboard Return/Tab, reserved-cell traversal, real Qt read-only picker,
-  save cancellation/failure and navigation cancellation are exercised.
+  save cancellation/failure and navigation cancellation are exercised. Wrong
+  module marker Yes/No/retry-picker Cancel matches the captured warning;
+  Existing Cancel leaves blank input. Pending title Save, retained last Save
+  destination and dialog recovery from malformed theme fonts are covered.
 - Normal/100×100 grids are exercised at 1366×768, 1920×1080 and 4K, at
   100/125/150/200% scaling. Original clone screenshots are produced under
   build/phase2-input/ui-captures/. Reference images/files remain private.

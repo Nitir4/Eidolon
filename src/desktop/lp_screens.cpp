@@ -219,7 +219,7 @@ ModuleDescriptor lpModule()
         inner->addWidget(format);
         auto* go = button(QStringLiteral("Go to Input Screen"), QStringLiteral("input-go"), *inner,
             [&shell,&c,existing,format] {
-                if(existing->isChecked()) {if(c.requestOpen())shell.navigate(QStringLiteral("lp/input"));return;}
+                if(existing->isChecked()) {c.beginNew();shell.navigate(QStringLiteral("lp/input"));c.requestOpen();return;}
                 bool nOk=false,dOk=false;
                 const int n=format->findChild<QLineEdit*>(QStringLiteral("input-format-N"))->text().toInt(&nOk);
                 const int d=format->findChild<QLineEdit*>(QStringLiteral("input-format-D"))->text().toInt(&dOk);
@@ -298,13 +298,14 @@ ModuleDescriptor lpModule()
             view->setMaximumHeight(std::max(18,model->rowCount())*view->verticalHeader()->defaultSectionSize()+view->horizontalHeader()->sizeHint().height()+2*view->frameWidth());
             gridArea->setStretch(0,model->rowCount()>18?1:0);gridArea->setStretch(1,model->rowCount()>18?0:1);
         };
-        const auto update=[page,title,variables,constraints,&c,metrics] {
+        const auto update=[page,title,variables,constraints,view,gridHeading,&c,metrics] {
             const QSignalBlocker a(title),b(variables),d(constraints);
             const auto* doc=c.document();
             title->setText(doc?legacyText(doc->problem.title):QString());
             variables->setText(doc?QString::number(doc->problem.variables.size()):QString());
             constraints->setText(doc?QString::number(doc->problem.constraints.size()):QString());
             page->findChild<QPushButton*>(QStringLiteral("input-solve-menu"))->setEnabled(doc!=nullptr);
+            view->setVisible(doc!=nullptr);gridHeading->setVisible(doc!=nullptr);
             metrics();
         };
         QObject::connect(&c,&LpInputController::changed,page,update);

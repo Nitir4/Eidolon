@@ -31,7 +31,8 @@ the supported profile was extended. All were then implemented and rerun.
 ## Inputs, grid order and entry behavior
 
 Input mode has New/Existing, Decimal/Scientific and N/D defaults 5/2. Existing
-opens the Text picker, with Open as read-only. New enables title/count entry;
+first opens blank input, then the Text picker with Open as read-only. Cancel
+leaves blank input with the grid hidden and SOLVE disabled. New enables title/count entry;
 SOLVE Menu stays disabled until initialization. Return/Tab in the constraint
 count initializes/reinitializes the entire grid, including unchanged counts.
 Counts 1..100 and exact invalid/Student-limit messages remain those observed
@@ -110,11 +111,18 @@ validation/save; constraint-count Return/Tab reinitializes the grid.
 Save and Save As both offer the captured picker workflow, prefilling the current
 actual destination. The save picker supplies .txt suffix and overwrite checks;
 cancellation does not write/checkpoint. Loaded source caption remains after
-Save As, while future Save targets the new destination. Failed Open keeps the
-old document. Read-only permits editing and saving a selected copy.
+Save As, while future Save targets the new destination. A fresh input context
+retains the previous caption and last save destination. Direct failed Open
+preserves the previous document transactionally; choosing Existing explicitly
+starts a blank context before the picker. A wrong module marker shows the
+captured `Open FileSave As Warning` / `Target file does not match format of
+elected TORA module. Retry?` with Yes/No. Yes repeats the picker; No or picker
+Cancel leaves the blank context. Source: file-errors-20261004/wrong-marker/after-open.png.
+Read-only permits editing and saving a selected copy.
 
 Qt dialogs/widgets and OS save dialogs are native desktop UI. The Open picker
 uses Qt Widgets to include its read-only checkbox consistently across OSes.
+Dialogs receive the same malformed-theme font recovery as the screens.
 No browser or HTML is used. The observed text profile is Windows-1252. Opaque
 legacy bytes convert to/from QString; unsupported characters receive an
 engineering diagnostic without replacing data. Unicode filenames are independent.

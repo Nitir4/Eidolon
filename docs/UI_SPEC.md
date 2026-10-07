@@ -169,8 +169,11 @@ cover populated normal/100×100 grids at three resolutions/four scale factors.
 
 The Qt Widgets Open picker includes Open as read-only; the save picker handles
 suffix/overwrite cancellation. Save prefills the actual last destination, even
-when the loaded source caption is retained. Failed/cancelled operations do not
-replace the model or checkpoint. Module guards also protect window close.
+when the loaded source caption is retained, including a new input context.
+Existing enters blank input before opening the picker; cancellation keeps that
+blank context. Wrong-module files offer the observed Yes/No retry warning.
+Direct failed Open and cancelled Save preserve data/checkpoints. Dialogs use
+the same theme-font repair as pages. Module guards also protect window close.
 
 See LP_DATA_ENTRY_MODULE.md for the 22 independently observed stored outcomes,
 verified keyboard states and explicit precision/code-page/hardware limits.
