@@ -6,18 +6,18 @@ Foundation 5 adds the native TORA-style main window, menus and LP navigation
 preview. Foundation 2 supplies Qt-free matrix/tableau arithmetic, explicit
 tolerances and observed decimal/scientific formatting. Foundation 3 adds the
 Qt-free LP model and validation against observed input fields. Foundation 4 adds
-the Qt-free TORA LP document, codec and binary file store. Problem editing and
-algorithms remain behind their individual module gates. The user changed the order to **1 → 5 → 2 → 3 → 4**;
-the latest instruction authorizes completing every foundation before requesting
-approval to switch to Phase 2. All five foundations are now implemented and
-verified; Phase 2 awaits that approval.
+the Qt-free TORA LP document, codec and binary file store. All foundations are
+complete in the approved order **1 → 5 → 2 → 3 → 4**. Phase 2 is authorized;
+its first module adds native LP data entry, row/column editing and Open/Save.
+Numerical solution methods retain their separate implementation gates.
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
 See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_REPORT.md)
 [Foundation 5 report](docs/FOUNDATION5_REPORT.md) and
 [Foundation 2 report](docs/FOUNDATION2_REPORT.md) and
 [Foundation 3 report](docs/FOUNDATION3_REPORT.md) and
-[Foundation 4 report](docs/FOUNDATION4_REPORT.md), plus
+[Foundation 4 report](docs/FOUNDATION4_REPORT.md) and
+[Phase 2 input report](docs/PHASE2_INPUT_REPORT.md), plus
 [build instructions](docs/BUILD.md). With CMake 3.24+, Ninja, a C++17 compiler
 and Qt 6.8+ Widgets installed:
 
@@ -33,8 +33,11 @@ without Qt; `ci` builds Release artifacts. The [workflow](.github/workflows/buil
 builds, tests, packages and checks deployed startup on all three OSes.
 
 The normal launch starts at Welcome. Choose **Click Here → Linear Programming
-→ Go to Input Screen → SOLVE Menu** to review the navigation. Save/edit/solve
-commands are disabled in this preview. Review individual layouts with, for
+→ Go to Input Screen**, enter the title/counts and press Return or Tab in the
+constraint count to initialize the editable grid. Choose Select Existing File
+to open a TORA .txt file, including a read-only copy. Save/Save As and EditGrid
+are enabled when applicable; SOLVE Menu validates the input and offers Save?.
+Solver leaf commands remain disabled. Review individual layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal

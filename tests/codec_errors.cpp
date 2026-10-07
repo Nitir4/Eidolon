@@ -27,6 +27,12 @@ int main(){try{
     auto quoted=compat::ToraLpCodec::decode(join(changed));
     require(quoted.problem.title=="F4, \"quoted\" cafe" && compat::ToraLpCodec::encode(quoted)==join(changed),"Decode the doubled quotes observed in TORA's saved record");
     auto fromModel=compat::ToraLpCodec::create(quoted.problem,quoted.inputFormat,compat::QuotePolicy::Recover);
+    auto freeModel=lp::LpProblem::blank(2,3);freeModel.variables[0].unrestricted=true;
+    freeModel.variables[0].lowerBound=-std::numeric_limits<double>::infinity();
+    auto freeDoc=compat::ToraLpCodec::create(freeModel);
+    const auto freeBytes=compat::ToraLpCodec::encode(freeDoc);
+    require(freeBytes.find("\"-infinity\"\r\n")!=std::string::npos,"Captured unrestricted bound spelling");
+    require(compat::ToraLpCodec::decode(freeBytes).problem.variables[0].lowerBound==freeModel.variables[0].lowerBound,"Negative infinity round trip");
     require(records(compat::ToraLpCodec::encode(fromModel))[4]==changed[4],"Writer follows observed doubled-quote storage");
     changed=r;changed[4]="\"dangling\"quote\"";rejected(join(changed),compat::FileErrorCode::QuotedField,5);
     changed=r;changed[7]="\"Maximum\"";rejected(join(changed),compat::FileErrorCode::Header,8);

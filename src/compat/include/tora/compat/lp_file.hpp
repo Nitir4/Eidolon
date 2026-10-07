@@ -65,6 +65,12 @@ public:
     static LpDocument create(lp::LpProblem problem, core::NumberFormat format = {}, QuotePolicy quotes = DefaultQuotePolicy);
     static LpDocument decode(std::string_view bytes, QuotePolicy quotes = DefaultQuotePolicy);
     static std::string encode(const LpDocument& document);
+    // Ordered legacy cell spellings, excluding the eight header records.
+    // Applying a complete grid is transactional and retains the document's
+    // source/read-only/saved semantic checkpoint. Values are parsed by the
+    // same codec; no presenter-specific formatting occurs here.
+    static std::vector<std::string> gridText(const LpDocument& document);
+    static void setGridText(LpDocument& document, const std::vector<std::string>& cells);
 };
 
 class LpFileStore {

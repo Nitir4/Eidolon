@@ -75,9 +75,10 @@ std::string_view trim(std::string_view s) {
     while (!s.empty() && (s.back()==' ' || s.back()=='\t')) s.remove_suffix(1);
     return s;
 }
-double number(const std::string& s,std::size_t record,bool upper=false) {
+double number(const std::string& s,std::size_t record,bool upper=false,bool freeLower=false) {
     auto token=trim(s);
     if (upper && token=="infinity") return std::numeric_limits<double>::infinity();
+    if (freeLower && token=="-infinity") return -std::numeric_limits<double>::infinity();
     if (!token.empty() && token.front()=='+') token.remove_prefix(1);
     double value=0;
     const auto parsed=std::from_chars(token.data(),token.data()+token.size(),value,std::chars_format::general);
@@ -86,7 +87,7 @@ double number(const std::string& s,std::size_t record,bool upper=false) {
     return value;
 }
 std::string spelling(double value,const core::NumberFormat& format,bool bound=false) {
-    if (bound && std::isinf(value) && value>0) return "infinity";
+    if (bound && std::isinf(value)) return value>0?"infinity":"-infinity";
     if (value==0) {
         if (std::signbit(value)) return "-0";
         return core::NumberFormatter(format).format(0);
@@ -129,7 +130,7 @@ LpDocument ToraLpCodec::decode(std::string_view bytes,QuotePolicy quotes) {
         throw FileError(FileErrorCode::Marker,"Target file does not match format of elected TORA module. Retry?",1,
                         lp::DiagnosticOrigin::ObservedTora,"Open FileSave As Warning");
     core::NumberFormat format;
-    format.n=static_cast<int>(integer(records[1],2,10));format.d=static_cast<int>(integer(records[2],3,10));
+    format.n=static_cast<int>(integer(records[1],2,core::NumberFormatter::MaximumDigits));format.d=static_cast<int>(integer(records[2],3,core::NumberFormatter::MaximumDigits));
     const auto mode=integer(records[3],4,std::numeric_limits<std::size_t>::max());
     if (mode<1 || mode>2) throw FileError(FileErrorCode::UnsupportedFormat,"Unsupported notation mode",4);
     format.notation=mode==1?core::Notation::Decimal:core::Notation::Scientific;
@@ -150,10 +151,11 @@ LpDocument ToraLpCodec::decode(std::string_view bytes,QuotePolicy quotes) {
     const auto numeric=[&](std::size_t row,std::size_t col,bool upper=false){return number(cell(row,col),9+index(row,col),upper);};
     for (std::size_t j=0;j<n;++j) {
         auto& variable=model.variables[j];variable.name=cell(0,j);model.objective[j]=numeric(1,j);
-        variable.lowerBound=numeric(m+2,j);variable.upperBound=numeric(m+3,j,true);
         const auto& flag=cell(m+4,j);
         if (flag!="n" && flag!="y") throw FileError(FileErrorCode::Flag,"Unrestricted flag must be n or y",9+index(m+4,j));
         variable.unrestricted=flag=="y";
+        variable.lowerBound=number(cell(m+2,j),9+index(m+2,j),false,variable.unrestricted);
+        variable.upperBound=numeric(m+3,j,true);
     }
     for (std::size_t i=0;i<m;++i) {
         auto& row=model.constraints[i];for (std::size_t j=0;j<n;++j) row.coefficients[j]=numeric(i+2,j);
@@ -216,5 +218,26 @@ std::string ToraLpCodec::encode(const LpDocument& document) {
     std::string bytes;for (const auto& record:records) bytes+=record+"\r\n";
     if (bytes.size()>MaxFileBytes) throw FileError(FileErrorCode::TooLarge,"LP file exceeds the supported byte limit");
     return bytes;
+}
+std::vector<std::string> ToraLpCodec::gridText(const LpDocument& document) {
+    const auto encoded=decode(encode(document),document.quotePolicy_);
+    const auto count=(document.problem.constraints.size()+5)*(document.problem.variables.size()+2);
+    std::vector<std::string> cells;cells.reserve(count);
+    for (std::size_t k=0;k<count;++k)
+        cells.push_back(unquote(encoded.originalRecords_[8+k],9+k,document.quotePolicy_));
+    return cells;
+}
+
+void ToraLpCodec::setGridText(LpDocument& document,const std::vector<std::string>& cells) {
+    const auto count=(document.problem.constraints.size()+5)*(document.problem.variables.size()+2);
+    if (cells.size()!=count) throw FileError(FileErrorCode::RecordCount,"Grid cell count does not match problem dimensions");
+    auto encoded=decode(encode(document),document.quotePolicy_);
+    for (std::size_t k=0;k<count;++k) encoded.originalRecords_[8+k]=quote(cells[k],document.quotePolicy_);
+    std::string bytes;
+    for (const auto& record:encoded.originalRecords_) bytes+=record+"\r\n";
+    auto edited=decode(bytes,document.quotePolicy_);
+    edited.path_=document.path_;edited.readOnly_=document.readOnly_;
+    edited.savedProblem_=document.savedProblem_;edited.savedFormat_=document.savedFormat_;
+    document=std::move(edited);
 }
 } // namespace tora::compat

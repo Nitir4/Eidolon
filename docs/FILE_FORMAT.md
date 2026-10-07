@@ -107,3 +107,23 @@ after confirmation, retaining the old source in the window caption.
 Still unverified: quoted-alias input commitment, other code pages and arbitrary
 corrupt/extra/truncated records beyond the supported engineering policy.
 Native-dialog messages and recovery paths are in `tora-analysis/FILE_BEHAVIOR.md`.
+
+## Phase 2 edited-cell records
+
+Raw core-model edits still use round-trip serialization. UI edits instead apply
+the chosen input formatter and retain that exact cell spelling: entering
+1.2345678901234567 at D=2 stores 1.23; at D=11 it stores 1.23456789012.
+Untouched imported records retain precision/padding. An edited relation > is
+stored as >= without initial padding; an inserted row's relation is also
+unpadded <=. Return/Tab on counts rebuilds defaults even for unchanged counts.
+
+Entering Y stores y, -infinity as the lower bound and infinity as the upper;
+N restores n/0.00/infinity. Negative-infinite lower bounds are parsed only
+with unrestricted y. Existing y with finite saved bounds remains unchanged
+on import. N/D=11 and 99 were saved directly; the bounded native profile
+now accepts up to 99. Exact larger success extrema are not asserted.
+
+Quoted aliases use the same doubled-quote grammar as titles. TORA's reader
+corrupts its own quoted-alias grid on reopen; the approved recovery policy
+retains the original alias/model. Sources and 22 exact hashes are in
+LP_DATA_ENTRY_MODULE.md and tests/fixtures/tora-input-edits.tsv.

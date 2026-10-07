@@ -53,11 +53,12 @@ ValidationReport LpValidator::validate(const LpProblem& problem) {
     }
     for (std::size_t j = 0; j < problem.variables.size(); ++j) {
         const auto& variable = problem.variables[j];
-        const bool lowerValid = std::isfinite(variable.lowerBound);
+        const bool lowerValid = std::isfinite(variable.lowerBound) ||
+            (variable.unrestricted && std::isinf(variable.lowerBound) && variable.lowerBound < 0);
         const bool upperValid = std::isfinite(variable.upperBound) ||
             (std::isinf(variable.upperBound) && variable.upperBound > 0);
         if (!lowerValid) {
-            add(report, IssueCode::InvalidLowerBound, "Lower bound must be finite", j);
+            add(report, IssueCode::InvalidLowerBound, "Lower bound must be finite, or negative infinity for an unrestricted variable", j);
         }
         if (!upperValid) {
             add(report, IssueCode::InvalidUpperBound, "Upper bound must be finite or positive infinity", j);

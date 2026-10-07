@@ -28,6 +28,7 @@ struct ModuleDescriptor {
     QString displayName;
     QString entryScreen;
     QVector<ScreenDescriptor> screens;
+    std::function<bool(ApplicationShell&, const QString& from, const QString& to)> beforeLeave;
 };
 
 // Work with individual screen rectangles: mixed-DPI desktops may have gaps.

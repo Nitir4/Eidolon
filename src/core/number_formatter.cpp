@@ -60,9 +60,9 @@ std::string fixed(std::string digits, int decimals)
 
 NumberFormatter::NumberFormatter(NumberFormat settings) : settings_(settings)
 {
-    // Safe library support envelope, not a claim about TORA's UI extrema.
-    // Higher settings need a targeted oracle probe before exposing them.
-    if (settings.n < 0 || settings.n > 10 || settings.d < 0 || settings.d > 10
+    // The native profile bounds allocation and diagnoses captured crashing
+    // settings without reproducing a legacy process exit.
+    if (settings.n < 0 || settings.n > MaximumDigits || settings.d < 0 || settings.d > MaximumDigits
         || (settings.notation == Notation::Decimal && settings.n == 0)
         || (settings.notation != Notation::Decimal && settings.notation != Notation::Scientific))
         throw std::invalid_argument("Number format is outside the supported precision range");

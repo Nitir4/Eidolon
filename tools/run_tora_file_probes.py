@@ -22,6 +22,9 @@ class FileProbeDriver(ModelProbeDriver):
         return subprocess.run([str(oracle.ROOT/'build/foundation4/tora-ui.exe'),*command],env=self.env,stdout=subprocess.DEVNULL).returncode
     def recover_main_menu(self):
         if not self._attach_to_running_window():raise RuntimeError('No reference window')
+        if self.ui('dialog')==0:
+            warning=subprocess.run(['xdotool','search','--onlyvisible','--name',r'^Input Data Error$|^Problem [Ss]ize$'],env=self.env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            if warning.returncode==0 and self.ui('button','OK')==0:self.pause(.6)
         if self.ui('button','Cancel')==0:self.pause(.6)
         if self.ui('button','No')==0:self.pause(.6)
         # VB command buttons need real pointer input. BM_CLICK is suitable for
@@ -186,7 +189,8 @@ def save_as(driver, path, dest):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute',action='store_true')
-    parser.add_argument('--kind',choices=['text','comma-title','quoted-title','unicode-title','quoted-name','extension','overwrite','readonly','readonly-save','save-target','clone'],required=True)
+    parser.add_argument('--kind',choices=['text','comma-title','quoted-title','unicode-title','quoted-name','extension','overwrite','readonly','readonly-save','save-target','clone','input'],required=True)
+    parser.add_argument('--input-probes',nargs='*')
     parser.add_argument('--capture-current',action='store_true')
     parser.add_argument('--capture-desktop',action='store_true')
     parser.add_argument('--stop-at-open',action='store_true')
@@ -261,6 +265,10 @@ def main():
         if not driver._attach_to_running_window():raise RuntimeError('No reference window')
         driver._arrange_wine_desktop()
     else:launch_visible(driver)
+    if args.kind=='input':
+        from run_tora_input_probes import run
+        run(driver,args.input_probes)
+        return
     if args.kind=='clone':
         if not args.files:parser.error('Provide clone-written files')
         cases=[(p.stem,p.resolve()) for p in args.files]

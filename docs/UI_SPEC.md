@@ -101,6 +101,9 @@ visual comparisons begin only after Gate 0 and the relevant module gates.
 
 ## Foundation 5 implementation and review boundary
 
+This subsection records the original Foundation 5 preview. The Phase 2 input
+implementation below supersedes its disabled editor/file controls.
+
 The shell now supplies seven native screen frameworks: welcome, MAIN,
 `lp/input-mode`, `lp/input`, `lp/solve-menu`, `lp/output-format`, `lp/m-value`.
 The first launch maximizes normally, filling the available window with the blue
@@ -148,3 +151,26 @@ formatting. [NUMERIC_FOUNDATION.md](tora-analysis/NUMERIC_FOUNDATION.md) records
 halfway/sign, exponent and precision observations. The format screen retains
 its reviewed read-only preview until model/output modules supply real values
 and confirm full field validation. Foundation 2 changes no screen layout.
+
+## Phase 2 native LP input
+
+New/Existing and N/D fields now drive the real LP controller. Title/count entry
+initializes the native editable table with Return/Tab. Save/Save As, read-only
+copies, the Save? Yes/No/Cancel flow and applicable EditGrid commands work.
+The empty input SOLVE button is disabled; after initialization it validates
+all-zero constraint rows before leaving. Solver leaf commands remain disabled.
+
+The table keeps aliases separate from x headers and shows observed row/column
+labels and exact stored numeric spellings. It uses cyan labels, blue numeric
+cells, bold white values, red heading selection and white native editors.
+Fonts determine panel/row/column sizes; large inputs scroll within the table,
+and the blue background fills the resizable window at native DPI. The tests
+cover populated normal/100×100 grids at three resolutions/four scale factors.
+
+The Qt Widgets Open picker includes Open as read-only; the save picker handles
+suffix/overwrite cancellation. Save prefills the actual last destination, even
+when the loaded source caption is retained. Failed/cancelled operations do not
+replace the model or checkpoint. Module guards also protect window close.
+
+See LP_DATA_ENTRY_MODULE.md for the 22 independently observed stored outcomes,
+verified keyboard states and explicit precision/code-page/hardware limits.

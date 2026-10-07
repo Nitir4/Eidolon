@@ -62,6 +62,8 @@ int main() {
         require(LpValidator::validate(model).valid(),"Signed finite bounds retained");
         model=LpProblem::blank(2,3);model.variables[0].unrestricted=true;
         require(LpValidator::validate(model).valid() && model.variables.size()==2,"Unrestricted flag stored without expansion");
+        model.variables[0].lowerBound=-inf;
+        require(LpValidator::validate(model).valid(),"Captured y entry sets negative infinite lower bound");
         model.variables[0].lowerBound=3;model.variables[0].upperBound=1;
         report=LpValidator::validate(model);
         require(!report.valid() && issue(report,IssueCode::InconsistentBounds).origin==DiagnosticOrigin::ObservedTora,"TORA checks reversed bounds even with unrestricted y");

@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 1 complete; Phase 2 review",
+  "active_step": "Phase 2: LP data entry and native file/controller bindings",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Phase 2 first module: LP data entry and native file/controller bindings, only after phase-switch approval",
+  "next_step": "Finish LP input module CI and gate report before starting the next LP method",
   "foundation_order": [
     1,
     5,
@@ -97,7 +97,19 @@
       3,
       4
     ],
-    "gate": "All foundations verified; waiting for user approval to enter Phase 2",
+    "gate": "Complete; user authorized Phase 2",
     "completed_on": "2026-10-07"
+  },
+  "phase2": {
+    "status": "in_progress",
+    "approval": "User: start phase 2",
+    "approved_on": "2026-10-07",
+    "current_module": "LP data entry and native Open/Save integration",
+    "step": "Local input module and live bridges verified; three-OS CI pending",
+    "input_validation": {
+      "local": "20/20 desktop tests; 10/10 Qt-free C++17 tests",
+      "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
+      "report": "docs/PHASE2_INPUT_REPORT.md"
+    }
   }
 }

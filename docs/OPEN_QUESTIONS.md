@@ -74,3 +74,18 @@ cases and does not create partial/blank legacy models. Native-picker policies
 belong to the later controller. See `tora-analysis/LP_FILE_IO.md` and the F4 gate
 report for current live bridge/encoding limits; no unreviewed automation frame
 is promoted to compatibility evidence.
+
+Phase 2 input narrows Q-02/Q-03/Q-04 further. N/D=11 and 99 initialize/save;
+N=999 raises runtime error 6 and exits after acknowledgment. The native
+engineering profile is bounded at 99; successful extrema 100..998 and
+arbitrary malformed-field messages remain unverified for future expansion.
+Real keyboard captures resolve numeric filtering, objective toggle, alias
+Return, relation/sign normalization, column/row Copy/Paste/Insert/Delete,
+count Return/Tab reinitialization and gray Undo states. No successful Undo
+state or pending insertion mode has been observed or invented.
+
+Quoted-alias commitment is resolved: TORA writes doubled quotes, then corrupts
+its own grid on reopen. The previously approved quoted-field data-recovery
+policy retains the model/alias. Windows-1252 native conversion and Unicode
+filenames are tested; additional code pages are not claimed. See the
+Phase 2 input specification/report for exact capture paths and limits.

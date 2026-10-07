@@ -57,7 +57,8 @@ Numerical parsing uses `from_chars`, independent of OS locale. It accepts
 ASCII space/tab around numeric/relation cells and an optional positive sign.
 Counts/settings are strict unquoted integers. The observed Student dimensions
 are 1..100; the existing formatter's supported engineering precision envelope
-is decimal N=1..10 / scientific N=0..10 and D=0..10. These bounds and the byte
+is now decimal N=1..99 / scientific N=0..99 and D=0..99 after focused Phase 2
+11/99 observations. Exact legacy extrema remain unknown. These bounds and the byte
 limit are explicitly not a claim about every legacy file or TORA's N/D limits.
 
 Unchanged fields reuse original record spellings, including numeric strings,

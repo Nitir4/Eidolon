@@ -94,7 +94,7 @@ QPushButton* button(const QString& text, const QString& id, QVBoxLayout& layout,
 
 QLabel* previewNotice(QVBoxLayout& layout)
 {
-    auto* notice = new QLabel(QStringLiteral("Navigation preview — problem editing, files and solving will be available in a later update."));
+    auto* notice = new QLabel(QStringLiteral("LP data entry and files are available. Solution methods are under development."));
     notice->setObjectName(QStringLiteral("preview-notice"));
     notice->setWordWrap(true);
     notice->setAlignment(Qt::AlignCenter);
@@ -122,7 +122,7 @@ ApplicationShell::ApplicationShell(QSettings* settings, QWidget* parent)
     QApplication::setFont(usableUiFont(QApplication::font()));
     setObjectName(QStringLiteral("application-shell"));
     setFont(usableUiFont(QApplication::font()));
-    setWindowTitle(QStringLiteral("TORA Clone — Navigation Preview"));
+    setWindowTitle(QStringLiteral("TORA Clone"));
     // Decorations are logical-pixel strokes; control sizes remain native font
     // metrics/layout hints. Scope palette overrides to this window so desktop
     // themes cannot turn TORA's blue/cyan roles into unreadable dark panels.
@@ -191,6 +191,14 @@ bool ApplicationShell::navigate(const QString& screenId)
         for (const auto& screen : module.screens)
             if (screen.id == screenId) descriptor = &screen;
     if (!descriptor) return false;
+    if (screenId != currentScreen_) {
+        for (const auto& module : modules_) {
+            for (const auto& screen : module.screens) {
+                if (screen.id == currentScreen_ && module.beforeLeave &&
+                    !module.beforeLeave(*this, currentScreen_, screenId)) return false;
+            }
+        }
+    }
     QWidget* page = nullptr;
     for (int i = 0; i < stack_->count(); ++i)
         if (stack_->widget(i)->objectName() == screenId) page = stack_->widget(i);
@@ -322,6 +330,10 @@ void ApplicationShell::showEvent(QShowEvent* event)
 
 void ApplicationShell::closeEvent(QCloseEvent* event)
 {
+    for (const auto& module : modules_)
+        for (const auto& screen : module.screens)
+            if (screen.id == currentScreen_ && module.beforeLeave &&
+                !module.beforeLeave(*this, currentScreen_, {})) { event->ignore(); return; }
     if (settings_) {
         settings_->setValue(QStringLiteral("window/normalGeometry"), isMaximized() ? normalGeometry() : geometry());
         settings_->setValue(QStringLiteral("window/maximized"), isMaximized());
@@ -331,7 +343,7 @@ void ApplicationShell::closeEvent(QCloseEvent* event)
 
 ModuleDescriptor shellModule()
 {
-    ModuleDescriptor module{QStringLiteral("shell"), {}, QStringLiteral("welcome"), {}};
+    ModuleDescriptor module{QStringLiteral("shell"), {}, QStringLiteral("welcome"), {}, {}};
     module.screens.append({QStringLiteral("welcome"), {}, [](ApplicationShell& shell) {
         auto* page = new QWidget;
         auto* layout = new QVBoxLayout(page);

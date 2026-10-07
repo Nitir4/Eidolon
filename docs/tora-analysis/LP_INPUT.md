@@ -73,7 +73,10 @@ restoring the count to 3 with 0.00/0.00/<=/0.00. Source model files were not
 overwritten. Evidence and hashes: `probes/closing-20261004/grid-focused/`.
 
 Undo attempts did not restore Paste or Delete; the menu item remained gray.
-The state needed to enable it remains unknown. An earlier unfocused probe
+The state needed to enable it remains unknown. Phase 2 focused row/column
+operations and keyboard findings supersede these initial probes; see
+LP_DATA_ENTRY_MODULE.md, including the clarified insertion position.
+An earlier unfocused probe
 produced an empty paste and is not evidence of normal copy/paste behavior.
 Column operations and successful keyboard shortcuts remain unverified.
 

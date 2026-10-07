@@ -6,6 +6,7 @@ and native bootstrap. Foundation 5 implements the desktop shell before
 Foundations 2, 3 and 4, following the user's approved order change. Foundation 2
 implements the Qt-free numerical core. Foundation 3 implements the LP model
 and validation. Foundation 4 implements the LP document, codec and file store.
+Phase 2 adds the persistent LP input controller, native grid and file dialogs.
 
 ## Targets and dependency boundaries
 
@@ -20,6 +21,10 @@ only. No HTML, browser runtime, or QtWebEngine dependency is permitted.
 ## Responsibilities
 
 ### Implemented desktop boundary (Foundation 5)
+
+The following Foundation 5 description records the original shell boundary.
+The implemented Phase 2 extension is described below; its input screen now
+owns a real controller/model rather than preview-only fields.
 
 `desktop_shell` is a static Qt Widgets library containing `ApplicationShell`,
 `ModuleDescriptor`, `ScreenDescriptor` and the LP screen factories. A descriptor
@@ -87,7 +92,7 @@ narrow, testable compatibility handling.
 
 `or_lp` is a static C++17 library, publicly linked only to `tora::core`.
 `LpProblem` stores original objective direction, coefficients, constraint
-relations/RHS, variable aliases, finite lower bounds, finite/positive-infinite
+relations/RHS, variable aliases, finite or unrestricted negative-infinite lower bounds, finite/positive-infinite
 upper bounds and independent unrestricted flags. All collections own their
 values and retain input order. Aliases are distinct from generated x1/x2 labels.
 `blank(n,m)` validates observed Student-version dimensions before allocation.
@@ -246,3 +251,36 @@ coverage are established by captures. Hidden numerical thresholds, remaining
 format limits, and successful printing still need observation. They are
 tracked in `OPEN_QUESTIONS.md`; this architecture provides boundaries for
 resolving them without guessing implementation behavior.
+
+## Implemented Phase 2 input boundary
+
+LpInputController is a persistent QObject parented to ApplicationShell, shared
+by lazy LP route factories. It owns an optional LpDocument, LpGridModel, typed
+row/column clipboard and injectable dialog services. The native delegate
+commits Return/Tab through editable cells; imported spellings remain cached.
+Cell changes go through ToraLpCodec::setGridText on a candidate document, then
+notify the view. Shape changes preserve unrelated fields and saved metadata.
+File dialogs convert Unicode filenames independently of legacy text bytes.
+
+ModuleDescriptor::beforeLeave is a generic callback taking shell/from/to.
+ApplicationShell invokes it before route changes/window close; a false result
+keeps the route/window. The LP callback commits editors, validates SOLVE input
+and runs Save?. The shell does not acquire a domain dependency. No solver
+session is created by editing/saving. These are the implemented relationships:
+
+```mermaid
+classDiagram
+    ApplicationShell o-- ModuleDescriptor
+    ModuleDescriptor ..> LpInputController : LP factory and leave guard
+    LpInputController o-- LpDocument
+    LpInputController *-- LpGridModel
+    LpInputController ..> LpFileStore
+    LpInputController ..> ToraLpCodec
+    QTableView --> LpGridModel
+    LpDocument *-- LpProblem
+    LpProblem ..> NumberFormatter : edited input precision
+```
+
+Windows-1252 conversion is a desktop boundary; the Qt-free codec retains raw
+legacy bytes. The input support profile extends to N/D=99 after direct oracle
+captures. Safe diagnostics do not reproduce N=999 overflow/process exit.

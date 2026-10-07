@@ -126,3 +126,19 @@ is covered by Foundation 4 below; GUI editing/binding belongs to Phase 2.
 Dialogs, overwrite confirmation and grid bindings remain the first Phase 2
 module's controller work. File-library checks do not claim those preview UI
 actions are enabled.
+
+## Phase 2 LP input implemented mappings
+
+| IDs | Code | Verification | Capture / requirement |
+| --- | --- | --- | --- |
+| IN-01, IN-02, IN-03 | lp_screens.cpp, LpInputController: New/Existing, title/count initialization and limits | desktop_input: defaults, native navigation, all 27 saved input bindings | Existing 15-case corpus; count-return/count-tab; Foundation 3 dimensions |
+| IN-04, MODEL-02 | LpGridModel, InputDelegate: aliases, sense, numeric/relation/bound/flag edits | 22 exact saved-file hashes at four scale factors; real Return/Tab keyboard editing | tests/fixtures/tora-input-edits.tsv; phase2-input matching directories |
+| IN-05 | Typed axis clipboard/reshape, native EditGrid actions | Row/column Copy/Paste/Delete/Insert, two-variable Delete floor, ordered inserted defaults | closing/grid-focused; column-copy-paste/delete-three/insert-menu; undo-menu-state |
+| IN-06 | SOLVE all-zero LHS check and generic module leave guard | Zero-row exact message; MAIN allowed; Yes/No/Cancel/picker failure retains input | column-copy-paste/save-unavailable.png; original Save? captures |
+| FILE-01, FILE-06, FILE-07 | Native Qt dialogs, controller, CP1252/Unicode-path boundary | Real Open read-only checkbox and Save Cancel; failed Open/Save; read-only copies and preserved checkpoints | Foundation 4 picker corpus; three edited-file live bridges in same clone capture folder |
+| FILE-05 | Existing doubled-quote recovery used by alias edits | Quoted alias exact bytes and full model preservation | quoted-alias-keyboard; reopen-quoted-alias/reopened.png, approved recovery exception |
+| MODEL-02, FILE-02 | Validator/codec accepts unrestricted negative-infinite lower bound | lp.validation, compat.errors, exact free-flag file hash | flag-replace-keyboard, flag-restore |
+| FORMAT-01 | NumberFormatter/codec support profile extended to 99 | 86 exact observed number strings, seven new profile saved-file outcomes | format-n11/d11/d11-value/scientific-n11/n99/d99; N=999 failure recorded separately |
+| UI-01, BUILD-01, ARCH-01 | Native table, font metrics, persistent controller and module guard | Normal/100×100 inputs at 3 resolutions × 4 scales; full single-workflow OS matrix | PHASE2_INPUT_REPORT.md; clone-only CI screenshots; hardware limits retained |
+
+No reference screenshots, files or executable are product/release resources.

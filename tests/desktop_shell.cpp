@@ -71,11 +71,11 @@ private slots:
         QVERIFY(!page->findChild<QRadioButton*>(QStringLiteral("input-format-decimal"))->isChecked());
         auto* existing = page->findChild<QRadioButton*>(QStringLiteral("input-existing"));
         existing->click();
-        QVERIFY(!page->findChild<QPushButton*>(QStringLiteral("input-go"))->isEnabled());
+        QVERIFY(page->findChild<QPushButton*>(QStringLiteral("input-go"))->isEnabled());
         page->findChild<QRadioButton*>(QStringLiteral("input-new"))->click();
         page->findChild<QPushButton*>(QStringLiteral("input-go"))->click();
         QCOMPARE(shell.currentScreen(), QStringLiteral("lp/input"));
-        QVERIFY(!shell.currentContent()->findChild<QLineEdit*>(QStringLiteral("variable-count"))->isEnabled());
+        QVERIFY(shell.currentContent()->findChild<QLineEdit*>(QStringLiteral("variable-count"))->isEnabled());
         auto* file = shell.menuBar()->actions()[0]->menu();
         const auto nativeMenuCount = shell.menuBar()->findChildren<QMenu*>(QString(), Qt::FindDirectChildrenOnly).size();
         QCOMPARE(labels(*file), (QStringList{QStringLiteral("Save"), QStringLiteral("Save As"), QStringLiteral("Main Menu"), QStringLiteral("Exit TORA")}));
@@ -84,7 +84,8 @@ private slots:
         QCOMPARE(labels(*edit), (QStringList{QStringLiteral("Undo Last Insert, Paste, Or Delete"), QStringLiteral("Copy Column or Row"),
             QStringLiteral("Paste on Column or Row"), QStringLiteral("Delete Column or Row"), QStringLiteral("Insert Column or Row")}));
         QCOMPARE(edit->actions()[0]->shortcut(), QKeySequence(QStringLiteral("Ctrl+U")));
-        shell.currentContent()->findChild<QPushButton*>(QStringLiteral("input-solve-menu"))->click();
+        QVERIFY(!shell.currentContent()->findChild<QPushButton*>(QStringLiteral("input-solve-menu"))->isEnabled());
+        QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
         QCOMPARE(shell.currentScreen(), QStringLiteral("lp/solve-menu"));
         shell.currentContent()->findChild<QPushButton*>(QStringLiteral("solve-view-input"))->click();
         QCOMPARE(shell.currentScreen(), QStringLiteral("lp/input"));
