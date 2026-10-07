@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Foundation 3",
+  "active_step": "Foundation 3 review",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -59,12 +59,17 @@
     "approval": "User approved and authorized Foundation 3"
   },
   "foundation3": {
-    "status": "in_progress",
+    "status": "ready_for_review",
     "scope": "Qt-free LP model, default initialization and validation; no codec, preprocessing or solver implementation",
-    "gate": "Stop for review after Foundation 3; Foundation 4 requires approval",
+    "gate": "Local and three-OS checks passed; stop for user review before Foundation 4",
     "report": "docs/FOUNDATION3_REPORT.md",
     "local_validation": "Debug 11/11; Qt-free C++17 headless 5/5",
     "oracle_validation": "22 existing model transcriptions; ten targeted dimension/bound observations, including zero-count and reversed-bound messages with unrestricted y; no corpus sweep",
-    "remaining": "Three-OS CI and gate review; codec/preprocessing/GUI binding deferred"
+    "remaining": "User gate review only; recorded codec/preprocessing/GUI/solver limits remain assigned to later gates",
+    "source_commit": "ba086cdb9ad37b35354f1b0fd309819c64a9cfa7",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37525304759",
+    "ci_validation": "Windows/Linux/macOS build, 11/11 tests each (33/33 overall), deployed startup and all three native packages passed; downloaded XML confirms 22 reference model comparisons on each OS",
+    "test_reports": "build/foundation3/ci-final/Test-results-{os}/test-results.xml",
+    "artifacts": "Portable Windows EXE ZIP, Linux AppImage and universal arm64+x86_64 macOS app-in-DMG uploaded"
   }
 }

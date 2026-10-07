@@ -41,14 +41,25 @@ assigned to the solver gate.
 
 Local Debug passed **11/11** including the prior GUI scale/font checks.
 The Qt-free configuration explicitly compiled C++17 and passed **5/5**.
-Three-OS CI is pending until the committed source completes the existing
-workflow. Raw TORA files, screenshots and executables remain excluded from
-committed source and CI artifacts.
+Source `ba086cdb9ad37b35354f1b0fd309819c64a9cfa7` passed the
+[three-OS CI run](https://github.com/Nitir4/TORA-Clone/actions/runs/37525304759):
+
+| Platform | Tests | Package and deployed startup |
+| --- | --- | --- |
+| Windows | 11/11 passed | Portable EXE ZIP produced; passed |
+| Linux | 11/11 passed | AppImage produced; passed |
+| macOS | 11/11 passed | Universal arm64+x86_64 app-in-DMG produced; passed |
+
+Downloaded XML reports confirm **33/33 tests**, no failures/skips, and all 22
+model comparisons plus validation checks on each OS. Reports and original
+clone screenshots are under `build/foundation3/ci-final/Test-results-{os}/`.
+Raw TORA files, screenshots and executables remain excluded from committed
+source and CI artifacts. No known mismatch remains in these foundation
+comparisons; solver behavior and the recorded module limits remain later work.
 
 Capture paths/hashes, diagnostics and precise limits are in
 [LP_MODEL_VALIDATION.md](tora-analysis/LP_MODEL_VALIDATION.md); requirements map
 to code/tests/evidence in [TRACEABILITY.md](TRACEABILITY.md).
 
-**Gate status: local checks passed; three-OS CI pending.** Foundation 4 must
-wait for this gate report and user approval. Its scope is the observed TORA
-file codec and round-trip compatibility, not solver implementation.
+**Gate status: ready for review.** Work stops here until user approval.
+Foundation 4's scope is the observed TORA file codec and round-trip compatibility.
