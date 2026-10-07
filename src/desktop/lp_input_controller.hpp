@@ -72,6 +72,7 @@ private:
     friend class LpGridModel;
     enum class Axis { None, Row, Column };
     bool fail(const QString& title, const QString& message);
+    bool commitInput();
     bool replaceGrid(std::vector<std::string> cells);
     bool editCell(int row, int column, const QString& value);
     bool reshape(bool insert, bool before);
@@ -85,6 +86,7 @@ private:
     Axis selectionAxis_ = Axis::None, clipboardAxis_ = Axis::None;
     int selection_ = -1;
     bool editing_ = false;
+    bool pendingCommitValid_ = true;
     std::vector<std::string> clipboard_;
 };
 LpInputController& inputController(QWidget& shell);

@@ -96,6 +96,24 @@ public:
     QSize minimumSizeHint() const override { return sizeHint(); }
 };
 
+class ConstraintCountEdit final : public QLineEdit {
+public:
+    std::function<void()> initialize;
+protected:
+    bool event(QEvent* event) override {
+        if(event->type()==QEvent::KeyPress) {
+            const auto* key=static_cast<QKeyEvent*>(event);
+            if(key->key()==Qt::Key_Return || key->key()==Qt::Key_Enter || key->key()==Qt::Key_Tab) {
+                // Qt editingFinished omits an unchanged field on Tab; TORA
+                // reinitializes on that key even when the counts are unchanged.
+                if(initialize)initialize();
+                event->accept();return true;
+            }
+        }
+        return QLineEdit::event(event);
+    }
+};
+
 QGroupBox* formatPanel(const QString& title, const QString& prefix, bool editable = false)
 {
     auto* group = new QGroupBox(title);
@@ -229,7 +247,7 @@ ModuleDescriptor lpModule()
         const QStringList labels{QStringLiteral("Problem Title:"), QStringLiteral("Nbr. of Variables:"), QStringLiteral("No. of Constraints:")};
         const QStringList ids{QStringLiteral("problem-title"), QStringLiteral("variable-count"), QStringLiteral("constraint-count")};
         for (int i = 0; i < labels.size(); ++i) {
-            auto* value = new QLineEdit;
+            QLineEdit* value = i==2?new ConstraintCountEdit:new QLineEdit;
             value->setObjectName(ids[i]);
             value->setAccessibleName(labels[i]);
             value->setStyleSheet(QStringLiteral("QLineEdit {background: white; color: black;}"));
@@ -291,7 +309,8 @@ ModuleDescriptor lpModule()
         };
         QObject::connect(&c,&LpInputController::changed,page,update);
         QObject::connect(&shell,&ApplicationShell::displayMetricsChanged,page,metrics);
-        QObject::connect(&c,&LpInputController::commitRequested,view,[view] {
+        QObject::connect(&c,&LpInputController::commitRequested,view,[view,title,&c] {
+            if(!c.setTitle(title->text()))return;
             if(auto* focused=QApplication::focusWidget();focused && view->isAncestorOf(focused) && focused!=view) view->setFocus();
         });
         QObject::connect(&c,&LpInputController::editRequested,view,[view](int row,int col) {
@@ -299,9 +318,11 @@ ModuleDescriptor lpModule()
         });
         QObject::connect(title,&QLineEdit::editingFinished,page,[title,&c]{c.setTitle(title->text());});
         QObject::connect(variables,&QLineEdit::returnPressed,constraints,[constraints]{constraints->setFocus();constraints->selectAll();});
-        QObject::connect(constraints,&QLineEdit::editingFinished,page,[title,variables,constraints,&c] {
-            c.initialize(title->text(),variables->text().toInt(),constraints->text().toInt());
-        });
+        static_cast<ConstraintCountEdit*>(constraints)->initialize=[title,variables,constraints,view,&c] {
+            if(c.initialize(title->text(),variables->text().toInt(),constraints->text().toInt())) {
+                const auto first=c.grid()->index(0,1);view->setFocus();view->setCurrentIndex(first);view->edit(first);
+            }
+        };
         QObject::connect(view,&QTableView::clicked,page,[&c](const QModelIndex& index) {
             if(index.column()==0) {if(index.row()==1)c.toggleObjective();else c.selectRow(index.row());}
             else c.clearSelection();

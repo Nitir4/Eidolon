@@ -136,7 +136,8 @@ LpInputController::LpInputController(QWidget* owner):QObject(owner),grid_(*this)
         return picker.selectedFiles().first();
     };
 }
-bool LpInputController::fail(const QString& title,const QString& message) {errorTitle_=title;error_=message;dialogs_.showError(title,message);return false;}
+bool LpInputController::fail(const QString& title,const QString& message) {pendingCommitValid_=false;errorTitle_=title;error_=message;dialogs_.showError(title,message);return false;}
+bool LpInputController::commitInput() {pendingCommitValid_=true;emit commitRequested();return pendingCommitValid_;}
 void LpInputController::refresh() {cells_=document_?ToraLpCodec::gridText(*document_):std::vector<std::string>{};clearSelection();grid_.refresh();emit changed();}
 void LpInputController::beginNew(tora::core::NumberFormat format) {newFormat_=format;document_.reset();captionPath_.clear();clipboard_.clear();clipboardAxis_=Axis::None;refresh();}
 bool LpInputController::initialize(const QString& title,int variables,int constraints) {
@@ -151,7 +152,8 @@ bool LpInputController::initialize(const QString& title,int variables,int constr
 }
 bool LpInputController::setTitle(const QString& title) {
     if(!document_) return true;
-    try {auto next=*document_;next.problem.title=encodedText(title);(void)ToraLpCodec::encode(next);document_=std::move(next);emit changed();return true;}
+    try {auto next=*document_;next.problem.title=encodedText(title);if(next.problem.title==document_->problem.title)return true;
+        (void)ToraLpCodec::encode(next);document_=std::move(next);emit changed();return true;}
     catch(const std::exception& e){return fail(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::openFile(const QString& path,bool readOnly) {
@@ -165,10 +167,10 @@ bool LpInputController::saveTo(const QString& path) {
     catch(const std::exception& e){return fail(QStringLiteral("LP File Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::requestOpen() {const auto selected=dialogs_.chooseOpen();return selected && openFile(selected->path,selected->readOnly);}
-bool LpInputController::requestSave() {emit commitRequested();if(!document_)return false;const auto path=dialogs_.chooseSave(displayPath(document_->sourcePath()));return path && saveTo(*path);}
-bool LpInputController::leaveInput() {emit commitRequested();if(!document_)return true;const auto choice=dialogs_.askSave();return choice==SaveChoice::No || (choice==SaveChoice::Yes && requestSave());}
+bool LpInputController::requestSave() {if(!commitInput() || !document_)return false;const auto path=dialogs_.chooseSave(displayPath(document_->sourcePath()));return path && saveTo(*path);}
+bool LpInputController::leaveInput() {if(!commitInput())return false;if(!document_)return true;const auto choice=dialogs_.askSave();return choice==SaveChoice::No || (choice==SaveChoice::Yes && requestSave());}
 bool LpInputController::validateForSolve() {
-    emit commitRequested();
+    if(!commitInput())return false;
     if(!document_)return false;
     for(std::size_t i=0;i<document_->problem.constraints.size();++i) {
         const auto& coefficients=document_->problem.constraints[i].coefficients;

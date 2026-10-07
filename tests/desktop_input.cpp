@@ -232,6 +232,33 @@ private slots:
         QVERIFY(!c.requestSave());QCOMPARE(c.document()->sourcePath(),path);QVERIFY(c.document()->dirty());
         QCOMPARE(tora::compat::ToraLpCodec::encode(*c.document()),before);
     }
+    void unchangedCountReturnAndTabReinitialize() {
+        ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
+        QVERIFY(shell.navigate(QStringLiteral("lp/input")));auto& c=inputController(shell);silent(c);
+        auto* count=shell.currentContent()->findChild<QLineEdit*>(QStringLiteral("constraint-count"));QVERIFY(count);
+        for(const auto key:{Qt::Key_Return,Qt::Key_Tab}) {
+            QVERIFY(c.openFile(golden(QStringLiteral("01_normal"))));QApplication::processEvents();
+            count->setFocus();QTest::keyClick(count,key);QApplication::processEvents();
+            QCOMPARE(c.document()->problem.objective[0],0.0);QCOMPARE(c.document()->problem.constraints[0].rhs,0.0);
+            const auto bytes=QByteArray::fromStdString(tora::compat::ToraLpCodec::encode(*c.document()));
+            QCOMPARE(QCryptographicHash::hash(bytes,QCryptographicHash::Sha256).toHex(),QByteArray("04ce77a49c9226d23e9a02a208d6ed618c1880dddc835416cdc8721e8a903e0f"));
+            auto* view=shell.currentContent()->findChild<QTableView*>(QStringLiteral("input-grid"));QCOMPARE(view->currentIndex(),c.grid()->index(0,1));
+        }
+    }
+    void pendingTitleSaveAndUnsupportedTextRollback() {
+        ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
+        QVERIFY(shell.navigate(QStringLiteral("lp/input")));auto& c=inputController(shell);silent(c);
+        QVERIFY(c.openFile(golden(QStringLiteral("01_normal"))));
+        auto* title=shell.currentContent()->findChild<QLineEdit*>(QStringLiteral("problem-title"));QVERIFY(title);
+        QTemporaryDir dir;const auto destination=dir.filePath(QStringLiteral("title.txt"));int pickers=0;
+        c.dialogs().chooseSave=[&](const QString&){++pickers;return std::optional<QString>{destination};};
+        title->setFocus();title->selectAll();QTest::keyClicks(title,"Pending title");
+        QVERIFY(c.requestSave());QCOMPARE(c.document()->problem.title,std::string("Pending title"));
+        QCOMPARE(pickers,1);const auto before=tora::compat::ToraLpCodec::encode(*c.document());
+        title->setText(QString::fromUtf8("δ"));QVERIFY(!c.requestSave());QCOMPARE(pickers,1);
+        QCOMPARE(tora::compat::ToraLpCodec::encode(*c.document()),before);
+        QFile saved(destination);QVERIFY(saved.open(QIODevice::ReadOnly));QCOMPARE(saved.readAll(),QByteArray::fromStdString(before));
+    }
     void nativeNavigationAndGrid() {
         ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
         QVERIFY(shell.navigate(QStringLiteral("lp/input-mode")));
