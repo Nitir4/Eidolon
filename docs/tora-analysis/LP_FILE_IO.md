@@ -39,8 +39,9 @@ file replacement. Save As changes the source path and makes the new copy
 editable. The selected read-only open mode permits in-memory edits.
 
 The observed read-only path opens the grid, allows title edits and leaves
-Save/Save As enabled. Save displays Save As rather than changing the original
-file; Save As writes an edited copy. `FileErrorCode::ReadOnly` is a controller
+Save/Save As enabled. Save displays the native Save As picker rather than
+immediately changing the original file; editable Save also uses this picker.
+Save As writes an edited copy. `FileErrorCode::ReadOnly` is a controller
 redirect signal, not a claimed TORA dialog. Likewise, MissingFilename asks the
 later controller to open its picker. File selection, suffix defaults, overwrite
 confirmation and cancellation are UI responsibilities; the store uses the
@@ -123,6 +124,8 @@ opens a picker prefilled with the latest Save As target; confirming replacement
 updates that target and leaves the original source unchanged. The legacy caption
 remains the original source. Confirmation/cancel behavior belongs to the native
 controller rather than the store's direct-save convenience function.
+No in the overwrite prompt returns to the picker; cancelling it preserves the
+existing bytes. A later Save As can save the edited model to another destination.
 Quoted-alias entry could not be committed by the observed grid workflow; this
 is an input-editor question for Phase 2, not a verified saved-alias capture.
 Arbitrary corrupted files, other Windows code pages, numerical

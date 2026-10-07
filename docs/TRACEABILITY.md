@@ -1,9 +1,9 @@
 # Phase 0 traceability
 
-This maps observed behavior to requirements, proposed code and future tests.
-Gate 0 is approved. LP behavior implementations/tests below remain planned;
-Foundation 1 implements build boundaries and bootstrap tests; Foundation 5
-implements the shell portions listed at the end of this document.
+This maps observed behavior to requirements, code and tests. Gate 0 is approved.
+The original analysis table records the full module plan; the foundation tables
+below identify implemented build, shell, numerical, model and file portions.
+Remaining LP screen/controller and solver behavior belongs to Phase 2.
 Paths in the evidence
 column are relative to reference/tora-captures/. Each full-trace test must use
 ordered labels, number strings, phase/iteration headings, selections and
@@ -61,8 +61,9 @@ results and artifact evidence are recorded in `FOUNDATION1_REPORT.md`.
 
 ## Foundation 5 implemented mappings
 
-Only the following UI portions are implemented. Numerical, document, printing,
-grid-editing and solver portions of the original rows remain planned.
+Only the following UI portions are implemented by Foundation 5. Numerical,
+model and document libraries are covered by the later foundation tables;
+printing, grid editing and solver portions remain planned.
 
 | IDs | Implemented code | Verification | Observation source |
 | --- | --- | --- | --- |
@@ -108,8 +109,8 @@ can supply real model/session values.
 | BUILD-01, ARCH-01 | Qt-free `tora::lp` static library in the existing workflow | C++17 headless tests and full Windows/Linux/macOS suite | FOUNDATION3_REPORT.md |
 
 Near-bound thresholds, free-variable expansion and negative-bound solver
-transforms remain later preprocessing/module obligations. F4 codecs and Phase
-2 GUI editing/binding are not implemented by these model tests.
+transforms remain later preprocessing/module obligations. File compatibility
+is covered by Foundation 4 below; GUI editing/binding belongs to Phase 2.
 
 ## Foundation 4 implemented mappings
 
@@ -119,6 +120,7 @@ transforms remain later preprocessing/module obligations. F4 codecs and Phase
 | FILE-04 | Located typed errors, observed marker warning, strict bounded malformed-input parsing | `tests/codec_errors.cpp`: exact marker title/body/origin, count/shape/framing/number/relation/flag errors, signed zero/reserved preservation | probes/file-errors-20261004; engineering safety policies in LP_FILE_IO.md |
 | FILE-05 | Default doubled-quote recovery and writer, opt-in rejection | compat.errors: decoded title/full model, exact storage, malformed-quote rejection | probes/foundation4/text/text/{text-entered,reopened}.png and tora-saved.txt; user explicitly approved recovery |
 | FILE-01, FILE-06 | `src/compat/lp_file_store.cpp`: source/read-only/dirty checkpoints, native binary paths, Save/Save As and atomic replacement | `tests/file_store.cpp`: exact Unicode filename, read-only Save redirect/copy, complete precision, replacement rollback, invalid serialization leaves destination intact | probes/foundation4/readonly and readonly-save; engineering filesystem policies in LP_FILE_IO.md |
+| FILE-07 | Codec preserves opaque legacy text bytes; native picker suffix, current Save destination and overwrite decisions specified for the future controller | compat.roundtrip/hash golden for byte E9; compat.files exact-path test; future controller tests for picker and cancel behavior | probes/foundation4/unicode-title, extension, save-target and overwrite; FILE_BEHAVIOR.md |
 | BUILD-01, ARCH-01 | Qt-free C++17 static `tora::compat` with the existing single OS-matrix workflow | Headless and full desktop suite; F4 CI results in gate report | FOUNDATION4_REPORT.md |
 
 Dialogs, overwrite confirmation and grid bindings remain the first Phase 2

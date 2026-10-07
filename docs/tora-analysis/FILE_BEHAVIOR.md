@@ -90,8 +90,9 @@ file SHA-256 `a59456ae6d4fe71e71d18c1e50a4dc1547069c2e7afcec55c182deb6ef220c16`.
 Selecting Open read-only still allows input/title edits; File Save and Save As
 remain enabled. Save opens a native Save As picker and leaves the original
 file unchanged. Save As writes the edited title and original full model to a
-new file. Its window caption can still show the old source; that caption alone
-does not prove the subsequent Save target.
+new file. Its window caption can still show the old source; the subsequent Save
+target is established by the separate follow-up below. Normal editable Save
+also opens this picker, so that dialog is not unique to read-only mode.
 Evidence: `probes/foundation4/readonly/readonly/readonly-selected.png`,
 `file-menu.png`, `after-edit.png`; `readonly-save/readonly-save/after-save-command.png`,
 `source-after-save.txt` and `tora-saved.txt`.
@@ -119,3 +120,11 @@ replace it?`, with Yes/No. Capture: `probes/foundation4/extension/extension/` an
 `save-target/save-target/{after-save-command,subsequent-overwrite,after-confirmed-save}.png`.
 Thus picker behavior belongs to the controller; the file store's source path
 represents the actual saved destination independently of the legacy caption.
+
+Choosing No in the overwrite warning returns to the Save As picker. Cancelling
+that picker leaves the existing file byte-identical to its original contents.
+A later Save As to a different destination succeeds with the edited title
+`F4 overwrite changed`. Capture: `probes/foundation4/overwrite/overwrite/`,
+including `overwrite-prompt.png`, `after-no.png`, the retained `tora-saved.txt`
+and the new `accepted-new.txt`. This is dialog/controller behavior; the store
+only writes after the controller has accepted a destination.

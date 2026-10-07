@@ -37,3 +37,6 @@ Foundation 2 arithmetic/display decisions and targeted capture provenance:
 
 Foundation 3 input-model decisions and targeted validation capture provenance:
 [LP_MODEL_VALIDATION.md](LP_MODEL_VALIDATION.md).
+
+Foundation 4 document/file decisions and targeted compatibility provenance:
+[LP_FILE_IO.md](LP_FILE_IO.md).

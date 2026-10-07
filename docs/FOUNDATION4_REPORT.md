@@ -36,7 +36,28 @@ Host Wine/Wayland input was flaky. The remaining captures moved to a dedicated
 800×600 nested Xwayland display and private Wine runtime, using actual TORA UI
 and native X screenshots. This removes host desktop/focus dependencies; no
 completed corpus was rerun and no TORA instance was deliberately killed.
-The three-OS CI run is pending and must be recorded before this gate closes.
+The final [CI run](https://github.com/Nitir4/TORA-Clone/actions/runs/37611008110)
+tested source commit `ab04734bf3628f55ad84fdd9d6b807cb812b6704` with Qt 6.10.3:
+
+| OS | Tests | Packaging and deployed startup |
+| --- | --- | --- |
+| Windows | 15/15 | Portable EXE folder ZIP passed |
+| Linux | 15/15 | AppImage passed |
+| macOS | 15/15 | Universal arm64+x86_64 APP in DMG passed |
+
+**45/45 CTest tests passed overall**, with no failures or skipped tests.
+Downloaded XML at `build/foundation4/ci-final/Test-results-{os}/test-results.xml`
+independently confirms all 27 file expectations and saved-byte hashes on each
+OS. Only the clone's original screenshots accompany those reports. Native
+packages and dependency/checksum manifests were uploaded in the same run.
+
+The final native-picker captures also confirm `.txt` suffix completion,
+subsequent Save targeting the latest Save As destination, and overwrite No /
+picker Cancel retaining the original bytes. The comma-only and Windows-1252
+title reopen correctly; the quote-only title independently isolates TORA's
+reader bug. Quoted-alias commitment remains an explicit Phase 2 input-editor
+question. These observations are specified in FILE_BEHAVIOR.md; no unverified
+alias behavior is claimed.
 
 The native app remains the reviewed navigation preview. The file library will
 be connected to enabled Open/Save and grid editing in the Phase 2 data-entry
@@ -46,4 +67,9 @@ See [file specification](tora-analysis/LP_FILE_IO.md),
 [format](FILE_FORMAT.md), [traceability](TRACEABILITY.md), and
 [recorded limits](OPEN_QUESTIONS.md).
 
-**Gate status: in progress.**
+**Foundation status: complete.** All five foundations are implemented and
+verified in the approved order. Phase 2 has not started. The next approval is
+the phase boundary, followed by one module cycle for LP data entry and its
+native file/controller bindings. Physical mixed-DPI hardware, additional legacy
+code pages, the quoted-alias grid workflow and printing remain explicitly
+recorded acceptance/module limits; this gate does not claim they were verified.

@@ -9,7 +9,8 @@ Qt-free LP model and validation against observed input fields. Foundation 4 adds
 the Qt-free TORA LP document, codec and binary file store. Problem editing and
 algorithms remain behind their individual module gates. The user changed the order to **1 → 5 → 2 → 3 → 4**;
 the latest instruction authorizes completing every foundation before requesting
-approval to switch to Phase 2.
+approval to switch to Phase 2. All five foundations are now implemented and
+verified; Phase 2 awaits that approval.
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
 See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_REPORT.md)
