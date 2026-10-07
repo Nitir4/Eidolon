@@ -140,7 +140,7 @@ actions are enabled.
 | FILE-04, IN-01 | Controller retry loop and blank Existing input route | Wrong-marker Yes/No/retry-picker Cancel; Existing picker Cancel; retained last Save destination | file-errors-20261004/wrong-marker/after-open.png; FILE_BEHAVIOR.md |
 | DPI-01 | Dialog font polishing | Real Qt picker with malformed application font remains readable | User's black-box screenshots and native-font requirement |
 | MODEL-02, FILE-02 | Validator/codec accepts unrestricted negative-infinite lower bound | lp.validation, compat.errors, exact free-flag file hash | flag-replace-keyboard, flag-restore |
-| FORMAT-01 | NumberFormatter/codec support profile extended to 99 | 86 exact observed number strings, seven new profile saved-file outcomes | format-n11/d11/d11-value/scientific-n11/n99/d99; N=999 failure recorded separately |
+| FORMAT-01 | NumberFormatter/codec support profile extended to 99 | 86 exact observed number strings, six new profile saved-file outcomes | format-n11/d11/d11-value/scientific-n11/n99/d99; N=999 failure recorded separately |
 | UI-01, BUILD-01, ARCH-01 | Native table, font metrics, persistent controller and module guard | Normal/100×100 inputs at 3 resolutions × 4 scales; full single-workflow OS matrix | PHASE2_INPUT_REPORT.md; clone-only CI screenshots; hardware limits retained |
 
 No reference screenshots, files or executable are product/release resources.

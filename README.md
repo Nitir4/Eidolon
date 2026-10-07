@@ -42,7 +42,8 @@ example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal
 resizable window. Automated screen captures contain only the clone's original
-UI, under `build/foundation5/screens/` locally and the CI test-results artifacts.
+UI, under `build/phase2-input/ui-captures/` for the input module, the earlier
+`build/foundation5/screens/` for navigation, and the CI test-results artifacts.
 
 The approved analysis is in [the Phase 0 report](docs/PHASE0_REPORT.md),
 [analysis index](docs/tora-analysis/README.md),

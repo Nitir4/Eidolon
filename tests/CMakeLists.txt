@@ -72,7 +72,8 @@ if(TORA_BUILD_DESKTOP)
     target_compile_definitions(desktop_input_test PRIVATE TORA_CODEC_GOLDENS="${CMAKE_CURRENT_BINARY_DIR}/codec-goldens")
     target_compile_definitions(desktop_input_test PRIVATE TORA_INPUT_EDITS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tora-input-edits.tsv")
     foreach(scale IN ITEMS 1 1.25 1.5 2)
-        add_test(NAME desktop.input.scale-${scale} COMMAND desktop_input_test)
+        add_test(NAME desktop.input.scale-${scale} COMMAND desktop_input_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-input-scale-${scale}.xml,junitxml" -o -,txt)
         set_tests_properties(desktop.input.scale-${scale} PROPERTIES TIMEOUT 45 FIXTURES_REQUIRED codec_golden_files
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
     endforeach()

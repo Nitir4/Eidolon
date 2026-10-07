@@ -79,5 +79,6 @@ jobs:
           name: Test-results-${{ matrix.os }}
           path: |
             build/ci/test-results.xml
+            build/ci/tests/desktop-input-scale-*.xml
             build/ci/ui-captures/
           if-no-files-found: warn

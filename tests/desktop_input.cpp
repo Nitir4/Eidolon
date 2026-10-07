@@ -342,5 +342,13 @@ private slots:
         QVERIFY(shell.navigate(QStringLiteral("lp/input")));QCOMPARE(c->document()->problem.title,std::string("Normal"));
     }
 };
-QTEST_MAIN(InputTest)
+int main(int argc,char** argv) {
+#ifdef Q_OS_WIN
+    // The offscreen Windows plugin uses FreeType and needs the installed
+    // font directory, just like the shell and font test executables.
+    qputenv("QT_QPA_FONTDIR",qgetenv("SystemRoot")+"/Fonts");
+#endif
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+    QApplication application(argc,argv);InputTest test;return QTest::qExec(&test,argc,argv);
+}
 #include "desktop_input.moc"
