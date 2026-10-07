@@ -50,6 +50,9 @@ Downloaded XML at `build/foundation4/ci-final/Test-results-{os}/test-results.xml
 independently confirms all 27 file expectations and saved-byte hashes on each
 OS. Only the clone's original screenshots accompany those reports. Native
 packages and dependency/checksum manifests were uploaded in the same run.
+All three packages were downloaded to `dist/foundation4/` and their SHA-256
+checks passed. Windows ZIP integrity also passed. The Linux transfer timed out
+once and succeeded on retry; its CI package/startup checks remained successful.
 
 The final native-picker captures also confirm `.txt` suffix completion,
 subsequent Save targeting the latest Save As destination, and overwrite No /

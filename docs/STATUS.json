@@ -84,7 +84,7 @@
     "oracle_validation": "27 exact saved-file expectations and hashes; three clone-written files opened, saved and reopened in TORA with identical bytes; native suffix, Save target, overwrite No/Cancel and Windows-1252 title directly reviewed",
     "ci_validation": "Windows/Linux/macOS 15/15 each (45/45 overall), no failures or skipped tests; packaging and deployed startup passed for all three native artifacts; downloaded XML confirms 27 file expectations and saved hashes per OS",
     "test_reports": "build/foundation4/ci-final/Test-results-{os}/test-results.xml",
-    "artifacts": "Portable Windows EXE ZIP, Linux AppImage and universal arm64+x86_64 macOS app-in-DMG uploaded; packages downloaded to dist/foundation4/",
+    "artifacts": "Portable Windows EXE ZIP, Linux AppImage and universal arm64+x86_64 macOS app-in-DMG uploaded and deployed-startup verified in CI. All three downloaded packages in dist/foundation4/ pass SHA-256; Windows ZIP integrity passes. Linux local transfer succeeded on retry after a network timeout.",
     "approved_exception": "User chose recovery of doubled-quote titles after TORA corrupted its own saved model on reopen",
     "remaining": "Phase 2 input-grid/file bindings; quoted-alias editor workflow and other code pages explicitly unverified; physical mixed-DPI and printing acceptance recorded separately"
   },
