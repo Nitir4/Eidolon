@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: all-slack simplex implementation and native iteration screen",
+  "active_step": "Phase 2: all-slack simplex review gate",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Finish all-slack golden/desktop tests, CI and method gate",
+  "next_step": "Wait for all-slack review, then start the separate M-method cycle",
   "foundation_order": [
     1,
     5,
@@ -105,32 +105,44 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "All-slack simplex",
-    "step": "All 57 direct tables and 2396 strings match; completing desktop/CI verification",
+    "step": "All-slack module complete and ready for review",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
       "report": "docs/PHASE2_INPUT_REPORT.md",
       "ci": "Windows/Linux/macOS 20/20 CTest checks each (60/60), no failures or skipped checks; full input logs confirm 43/43 cases at all four scales per OS, including 22 exact oracle outcomes",
       "test_reports": "build/phase2-input/ci-final-verified/",
-      "comparison": "build/phase2-input/comparison.tsv"
+      "comparison": "build/phase2-input/comparison.tsv",
+      "source_commit": "aaf0450032d30ee3670c5ba75e43ac5054aec84a",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37658262696",
+      "packages": "dist/phase2-input/final/"
     },
-    "source_commit": "aaf0450032d30ee3670c5ba75e43ac5054aec84a",
-    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37658262696",
+    "source_commit": "09615b8a7c526b48b170ff40e00e7af07128046c",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37731683552",
     "input_module_status": "approved",
     "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG; all deployed startup checks and uploads passed",
-    "packages": "dist/phase2-input/final/",
-    "remaining": "All-slack review gate and separate solver cycles; recorded numerical/printing/hardware limits remain explicit.",
-    "downloaded_artifacts": "All three final packages match SHA-256 sidecars; Windows ZIP integrity and local Linux AppImage offscreen extract-and-run startup pass. Checksums: build/phase2-input/packages-verified.json",
+    "packages": "dist/phase2-all-slack/",
+    "remaining": "All-slack review approval, separate M/Two-phase/Bounded/Dual/graphical/final/sensitivity cycles; recorded precision/printing/hardware limits remain explicit",
+    "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity passes; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-all-slack/packages-verified.json",
     "input_approval": "User: continue from where we left off (2026-10-08)",
     "all_slack": {
-      "status": "in_progress",
+      "status": "ready_for_review",
       "approval": "User continued after the input-module gate",
       "goldens": "tests/fixtures/all-slack.json",
       "oracle": "20 direct sessions (19 unique problems), 57 complete tables, 2396 cell strings; seven original artificial-method redirects; completed corpus reused and focused gaps captured only",
       "redirect_dependencies": "Seven corpus selections actually run Two-phase. Classification/warning/handoff belong here; redirected algorithm tables belong to their separate method cycles.",
       "report": "docs/PHASE2_ALL_SLACK_REPORT.md",
       "spec": "docs/tora-analysis/LP_ALL_SLACK_MODULE.md",
-      "local_validation": "26/26 desktop, 12/12 explicit C++17 Qt-free; 29 Qt cases at each of four scales; 57 exact tables and two residual notation checks"
+      "local_validation": "26/26 desktop, 12/12 explicit C++17 Qt-free; 29 Qt cases at each of four scales; 57 exact tables and two residual notation checks",
+      "source_commit": "09615b8a7c526b48b170ff40e00e7af07128046c",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37731683552",
+      "comparison": "build/phase2-all-slack/comparison.tsv",
+      "test_reports": "build/phase2-all-slack/ci-final/",
+      "ci_validation": "Windows/Linux/macOS each 26/26; zero failures/skips; four simplex scale logs each 29/29; all 3241 comparison fields match; packaging/deployed startup/upload successful on all OSes",
+      "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG",
+      "packages": "dist/phase2-all-slack/",
+      "gate": "Direct all-slack module verified; awaiting user review before the separate M-method cycle",
+      "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity passes; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-all-slack/packages-verified.json"
     }
   }
 }

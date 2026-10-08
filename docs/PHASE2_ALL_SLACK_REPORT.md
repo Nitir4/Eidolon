@@ -27,12 +27,22 @@ Qt tests compare every golden column, row and value in the native model at four
 scale factors. They cover manual validation/highlighting, automatic iterations,
 alternative pivots, initial optimal notices, real output-format controls/menu
 selection, input invalidation, 100×100 scrolling and pausing, and native PDF
-printing without numerical mutation. Populated layouts cover 1366×768,
+printing without numerical mutation. Offscreen Qt layout tests cover 1366×768,
 1920×1080 and 4K at 100/125/150/200% scaling.
 
 Local full desktop suite: 26/26. Explicit C++17 / Qt-free suite: 12/12.
-Three-OS CI is pending; its final results will be recorded after verification.
-This report is not yet a claim that the review gate passed.
+Final [three-OS CI](https://github.com/Nitir4/TORA-Clone/actions/runs/37731683552)
+verifies source `09615b8a7c526b48b170ff40e00e7af07128046c`. Windows,
+Linux and macOS each pass 26/26 CTest checks (78/78 overall), with no failed or
+skipped tests. Downloaded complete logs confirm 29/29 simplex Qt cases at each
+of four scales per OS and all 3241 side-by-side fields matching.
+Packaging, deployed startup and artifact upload pass on all three OSes: portable
+Windows EXE ZIP, Linux x86_64 AppImage and universal arm64+x86_64 macOS app-in-DMG.
+Full downloaded test evidence is under build/phase2-all-slack/ci-final/; the
+verified summary is build/phase2-all-slack/ci-verified.json. All three downloaded
+packages match their SHA-256 sidecars; Windows ZIP integrity passes and the Linux
+AppImage passes local offscreen extract-and-run startup. Package hashes are
+recorded in build/phase2-all-slack/packages-verified.json.
 
 ## Scope and recorded limits
 
@@ -55,5 +65,9 @@ Iterations now compute tables. Models requiring artificial variables reach the
 pending M/Two-phase handoff described above.
 
 Clone-only screenshots are generated in build/phase2-all-slack/ui-captures/.
-The module stops for review after successful CI; the next separate method is
-M-method, subject to approval.
+The complete side-by-side numerical/label comparison is in
+build/phase2-all-slack/comparison.tsv (3241 matching fields). Each CI report
+also contains all-slack-comparison.tsv.
+The direct all-slack module is ready for its review gate. There are no known
+golden mismatches. Phase 2 as a whole remains in progress. Work stops here
+for review; the next separate method is M-method, subject to approval.
