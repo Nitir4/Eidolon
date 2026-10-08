@@ -14,6 +14,8 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QStyle>
+#include <QLocale>
+#include <cmath>
 #include <algorithm>
 
 namespace tora::desktop {
@@ -24,27 +26,50 @@ LpSimplexController::LpSimplexController(ApplicationShell& shell):QObject(&shell
         QMessageBox box(QMessageBox::Information,title,body,QMessageBox::Ok,&shell);polishUsableFonts(box);box.exec();};
     redirect=[&shell](const QString& body){QMessageBox box(QMessageBox::Warning,QStringLiteral("Warning"),body,QMessageBox::Ok|QMessageBox::Cancel,&shell);
         polishUsableFonts(box);return box.exec()==QMessageBox::Ok;};
-    connect(&inputController(shell),&LpInputController::changed,this,[this]{timer_.stop();busy_=false;requested_=false;session_.reset();emit changed();});
+    connect(&inputController(shell),&LpInputController::changed,this,[this]{timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();emit changed();});
     connect(&shell,&ApplicationShell::screenChanged,this,[this](const QString& screen){if(screen!=QStringLiteral("lp/simplex") && busy_){timer_.stop();busy_=false;emit changed();}});
     timer_.setInterval(0);connect(&timer_,&QTimer::timeout,this,&LpSimplexController::runOne);
 }
 bool LpSimplexController::requestAllSlack() {
     const auto* doc=inputController(shell_).document();if(!doc)return false;
     if(!inputController(shell_).validateForSolve())return false;
-    requested_=false;session_.reset();
+    timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
+    requestedMethod_=tora::lp::PrimalMethod::AllSlack;
     try {
         if(tora::lp::AllSlackSession::requiresArtificial(doc->problem)) {
-            const bool twoPhase=redirect(QString::fromLatin1(tora::lp::AllSlackSession::redirectWarning()));emit changed();
+            const bool twoPhase=redirect(QString::fromLatin1(tora::lp::AllSlackSession::redirectWarning()));
+            if(!twoPhase){requestedMethod_=tora::lp::PrimalMethod::MMethod;mPending_=true;penalty_=100;}emit changed();
             shell_.navigate(twoPhase?QStringLiteral("lp/output-format"):QStringLiteral("lp/m-value"));return false;
         }
         requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
     }catch(const std::exception& e){notice(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));return false;}
 }
+bool LpSimplexController::requestMMethod() {
+    const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
+    requestedMethod_=tora::lp::PrimalMethod::MMethod;penalty_=100;
+    try {
+        if(!tora::lp::PrimalSimplexSession::requiresArtificial(doc->problem)) {
+            (void)redirect(QString::fromLatin1(tora::lp::MMethodSession::allSlackWarning())); // Captured OK and Cancel both continue.
+            requestedMethod_=tora::lp::PrimalMethod::AllSlack;requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
+        }
+        mPending_=true;emit changed();shell_.navigate(QStringLiteral("lp/m-value"));return true;
+    }catch(const std::exception& e){notice(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));return false;}
+}
+bool LpSimplexController::setPenalty(const QString& text) {
+    if(!mPending_ || !inputController(shell_).document())return false;
+    bool ok=false;auto value=QLocale::c().toDouble(text,&ok);
+    if(!ok)value=0; // Captured nonnumeric M="bogus" behaves as zero.
+    if(!std::isfinite(value)){notice(QStringLiteral("M-Method"),QStringLiteral("M must be a finite number"));return false;}
+    penalty_=value;requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
+}
 bool LpSimplexController::start(tora::core::NumberFormat format) {
     if(!requested_ || !inputController(shell_).document())return false;
     try {
         (void)tora::core::NumberFormatter(format);
-        auto next=std::make_unique<tora::lp::AllSlackSession>(inputController(shell_).document()->problem);
+        std::unique_ptr<tora::lp::PrimalSimplexSession> next;
+        if(requestedMethod_==tora::lp::PrimalMethod::MMethod)next=std::make_unique<tora::lp::MMethodSession>(inputController(shell_).document()->problem,penalty_);
+        else next=std::make_unique<tora::lp::AllSlackSession>(inputController(shell_).document()->problem);
         format_=format;session_=std::move(next);emit changed();shell_.navigate(QStringLiteral("lp/simplex"));terminal();return true;
     }catch(const std::exception& e){notice(QStringLiteral("Simplex"),QString::fromUtf8(e.what()));return false;}
 }
@@ -119,7 +144,7 @@ public:
         bool inverseCell=false;
         if(row>=3 && row<block_-4 && col>0) {
             const auto& name=table.columns[static_cast<std::size_t>(col-1)];
-            inverseCell=name.rfind("sx",0)==0 && std::none_of(table.rows.begin(),table.rows.end(),[&name](const auto& r){return r.label==name;});
+            inverseCell=name.rfind("sx",0)==0 || name.rfind("Rx",0)==0;
         }
         if(role==Qt::DisplayRole) {
             if(row==0)return col==0?QString::fromStdString(table.heading):QString();
@@ -181,7 +206,7 @@ bool printSimplexTrace(QPrinter& printer,const LpSimplexController& c,const QFon
 QWidget* simplexScreen(ApplicationShell& shell) {
     auto& c=simplexController(shell);auto* page=new QWidget;auto* outer=new QHBoxLayout(page);
     outer->addStretch(1);auto* body=new QWidget;outer->addWidget(body,8);outer->addStretch(1);auto* layout=new QVBoxLayout(body);
-    auto* heading=new QLabel(QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));heading->setAlignment(Qt::AlignCenter);auto bold=heading->font();bold.setBold(true);heading->setFont(bold);layout->addWidget(heading);
+    auto* heading=new QLabel(QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));heading->setObjectName(QStringLiteral("simplex-method"));heading->setAlignment(Qt::AlignCenter);auto bold=heading->font();bold.setBold(true);heading->setFont(bold);layout->addWidget(heading);
     auto* title=new QLabel;title->setObjectName(QStringLiteral("simplex-title"));layout->addWidget(title);
     auto* instructions=new QLabel(QStringLiteral("Steps for generating NEXT tableau from CURRENT one:\n"
         "1. ENTERING variable: Click a NONBASIC variable (if correct, column turns green)\n"
@@ -197,7 +222,8 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     layout->addWidget(view,1);
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("simplex-view-input"),footer);
     auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("simplex-main"),footer);auto* exit=button(QStringLiteral("Exit TORA"),QStringLiteral("simplex-exit"),footer);footer->addStretch();layout->addLayout(footer);
-    const auto update=[&c,title,next,all,print,view] {
+    const auto update=[&c,heading,title,next,all,print,view] {
+        heading->setText(c.session() && c.session()->method()==tora::lp::PrimalMethod::MMethod?QStringLiteral("SIMPLEX TABLEAU - (M-Method)"):QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));
         title->setText(c.session()?QStringLiteral("Title: ")+legacyText(c.session()->problem().title)+(c.session()->problem().sense==tora::lp::ObjectiveSense::Maximize?QStringLiteral(" (Maximize)"):QStringLiteral(" (Minimize)")):QString());
         next->setEnabled(c.canNext());all->setEnabled(c.session() && !c.busy() && c.session()->status()==SimplexStatus::Running);print->setEnabled(c.session() && !c.busy());
         const QFontMetrics fm(view->font());view->verticalHeader()->setDefaultSectionSize(fm.height()+fm.height()/2);

@@ -164,3 +164,18 @@ Golden selection metadata is checked where a captured choice exists; absent
 selection metadata is not invented from an unselected initial frame. Direct
 table labels/numbers and terminal messages are fully compared. Raw captures
 are excluded from repository and package contents.
+
+## Phase 2 M-method implemented mappings
+
+| IDs | Code | Verification | Capture / requirement |
+| --- | --- | --- | --- |
+| LP-MM-01 | requestMMethod/setPenalty, native M group | Default reset, real menu/format, bogus/exponent/zero/negative/fraction values | m-method.json, LP_M_VALUE; phase2-m-method/m-* |
+| LP-MM-02 | MMethodSession / PrimalSimplexSession initializer | Exact initial cost/RHS, surplus-first and original-row basis allocation | 03/04/06/07/08/10/15 original M traces |
+| LP-MM-03 | Shared recommendation/choice/next | 78 tables and observed choices; manual rollback/resumable cap | LP_PIVOT_POLICY; 15 direct M/eight fallback sessions |
+| LP-MM-04 | Cross-product inversion, dual-first costs, shared bounds/free normalization | Four scientific residuals, Ux1/Lx1/x1+ traces | m-dual-scientific-short, m-upper/lower-bound, m-free-variable |
+| LP-MM-05 | Shared terminal/alternative selection | Exact optimal/alternative/unbounded; positive artificial stopping retained | Original 03_infeasible; zero/negative/fraction/nonnumeric |
+| LP-MM-06 | Request handoffs, TraceModel, native M/output controls | All table cells at four scales; OK/Cancel fallback; inverse sx/Rx colors | Original normal fallback; m-slack-cancel-button/solve |
+| LP-MM-07, DPI-01 | Existing native screen/timer/printing | Three resolutions/four scales, 100×100 scroll/pause, stale data/PDF checks | desktop_m_method; native requirements; Q-08 retained |
+| ARCH-01, BUILD-01 | Common Qt-free primal base; one OS-matrix workflow | Full suite/deployed packages for all three OSes | PHASE2_M_METHOD_REPORT.md |
+
+Original reference files/screenshots stay excluded from source and releases.

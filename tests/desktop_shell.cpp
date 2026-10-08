@@ -129,8 +129,9 @@ private slots:
         QVERIFY(!shell.currentContent()->findChild<QPushButton*>(QStringLiteral("output-go"))->isEnabled());
         QVERIFY(shell.navigate(QStringLiteral("lp/m-value")));
         QCOMPARE(shell.currentContent()->findChild<QLineEdit*>(QStringLiteral("m-value"))->text(), QStringLiteral("100"));
+        QVERIFY(!shell.currentContent()->findChild<QPushButton*>(QStringLiteral("m-go"))->isEnabled());
         shell.currentContent()->findChild<QPushButton*>(QStringLiteral("m-go"))->click();
-        QCOMPARE(shell.currentScreen(), QStringLiteral("lp/output-format"));
+        QCOMPARE(shell.currentScreen(), QStringLiteral("lp/m-value"));
     }
 
     void moduleRegistration()

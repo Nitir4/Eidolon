@@ -39,3 +39,10 @@ Maximum magnitude, whitespace/prefix/comma parsing, symbolic M (none observed),
 overflow and all terminal consequences of small/negative penalties. These
 probes establish input acceptance and initial coefficients, not mathematical
 reliability for arbitrary M. Full M=100 traces remain the compatibility corpus.
+
+## Phase 2 focused terminal observations
+
+Full traces now exist under probes/phase2-m-method: zero/bogus reach iteration 3
+with alternatives, -1 becomes unbounded after three tables, 0.5 stops at iteration
+3 optimal despite a positive artificial value, and 1e2 reproduces the default
+iteration 4 equality optimum. See LP_M_METHOD_MODULE.md for exact scope.

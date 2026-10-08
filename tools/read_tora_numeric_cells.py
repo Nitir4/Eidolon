@@ -15,7 +15,7 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
-from transcribe_tora_captures import normalize_table
+from transcribe_tora_captures import normalize_table,oracle_rgb
 
 ROOT = Path(__file__).resolve().parents[1]
 CAPTURES = ROOT/'reference/tora-captures'
@@ -55,7 +55,7 @@ def glyphs(raw, box):
     return result
 
 def image_rgb(path):
-    return subprocess.check_output(['magick',str(path),'-depth','8','rgb:-'])
+    return oracle_rgb(path)
 
 def learn():
     frozen = CAPTURES/'reviewed-glyph-seeds'
@@ -83,6 +83,8 @@ def learn():
     templates = {}
     provenance = []
     raw_by_path = {}
+    free=CAPTURES/'reviewed-glyph-seeds/m-free-variable-iteration-01.png'
+    if free.exists():seeds.append((free,(173,210,250,225),'x1+'))
     for source,box,text in seeds:
         raw = raw_by_path.setdefault(source,image_rgb(source))
         patterns = glyphs(raw,box)
@@ -129,6 +131,9 @@ def learn_labels():
                   (unbounded,(76,275,172,289),'Rx8')])
     for i,label in enumerate(['Rx5','Rx6','Rx7']):
         seeds.append((wide,(76,243+16*i,172,257+16*i),label))
+    free=CAPTURES/'reviewed-glyph-seeds/m-free-variable-iteration-01.png'
+    if free.exists():
+        seeds.extend([(free,(173,210,250,225),'x1+'),(free,(173,290,250,305),'-infinity'),(free,(173,322,250,337),'y')])
     templates={}
     for source,box,label in seeds:
         raw=image_rgb(source)
@@ -156,6 +161,8 @@ def learn_caption_characters(digits):
         (CAPTURES/'methods/lp/corpus/finite-upper/bounded_simplex/tableau-scroll-02.png',(211,194,288,209),'Ux1'),
         (CAPTURES/'methods/lp/corpus/finite-lower/bounded_simplex/tableau-top.png',(211,210,288,225),'Lx1'),
     ])
+    free=CAPTURES/'reviewed-glyph-seeds/m-free-variable-iteration-01.png'
+    if free.exists():seeds.append((free,(173,210,250,225),'x1+'))
     for source,box,text in seeds:
         patterns=glyphs(image_rgb(source),box)
         if len(patterns)!=len(text):
@@ -198,19 +205,20 @@ def transcribe(source,templates,labels,captions):
             if match:heading={'phase':None,'iteration':int(match[1]),'display':f'Iteration {match[1]}'}
             match=re.fullmatch(r'Phase(\d+)\(Iter(\d+)\)?',caption)
             if match:heading={'phase':int(match[1]),'iteration':int(match[2]),'display':f'Phase {match[1]} (Iter {match[2]}'}
-            if not label and re.fullmatch(r'(?:x|sx|Sx|Rx|Ux|Lx|ULx)\d+',caption):label=caption
+            if not label and re.fullmatch(r'(?:x|sx|Sx|Rx|Ux|Lx|ULx)\d+[+-]?',caption):label=caption
             exact = '?' not in text and re.fullmatch(r'-?\d+\.\d+',text) is not None
             clipped = x1 == xs[-1] and (x1-x0) < 76
             exact = exact and not clipped
             cells.append({'box':box,'text':text if exact else None,
                           'column':column,'heading':heading,
+                          'background_rgb':list(raw[((y0+2)*808+x0+2)*3:((y0+2)*808+x0+2)*3+3]),
                           'label':label,
                           'clipped_at_viewport_edge':clipped,
                           'status':'exact-observed-glyph-match' if exact else 'exact-observed-label-match' if label else 'unresolved-label-or-clipped-cell'})
         while fingerprints and not fingerprints[-1]: fingerprints.pop()
         rows.append({'y':y0,'cells':cells,'glyph_fingerprint':hashlib.sha256(json.dumps(fingerprints).encode()).hexdigest()})
     output.write_text(json.dumps({'source':str(source.relative_to(ROOT)), 'source_sha256':digest,
-        'reader_version':3,
+        'reader_version':3, 'coordinate_frame':'808x608; isolated screenshots padded in memory by 4 pixels',
         'template_sha256':template_digest,
         'status':'numeric-cells-transcribed-table-and-label-review-pending',
         'rows':rows},indent=2)+'\n')
@@ -246,7 +254,7 @@ def main():
                     kept.append(cell);continue
                 label=labels.get('|'.join(glyphs(raw,cell['box'])))
                 caption=''.join(captions.get(p,'?') for p in glyphs(raw,cell['box']))
-                if not label and re.fullmatch(r'(?:x|sx|Sx|Rx|Ux|Lx|ULx)\d+',caption):label=caption
+                if not label and re.fullmatch(r'(?:x|sx|Sx|Rx|Ux|Lx|ULx)\d+[+-]?',caption):label=caption
                 if label=='__observed_cursor__':continue
                 if label:
                     cell['label']=label;cell['status']='exact-observed-label-match'

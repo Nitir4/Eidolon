@@ -176,11 +176,13 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
     auto* iterations = algebraic->addMenu(QStringLiteral("Iterations"));
     for (const auto& label : {"All-slack starting solution", "M-method", "Two-phase method", "Bounded simplex", "Dual simplex"}) {
         auto* action = iterations->addAction(QString::fromLatin1(label));
-        if(QString::fromLatin1(label)==QStringLiteral("All-slack starting solution")) {
-            action->setObjectName(QStringLiteral("solve-all-slack"));auto& input=inputController(shell);
+        const bool slack=QString::fromLatin1(label)==QStringLiteral("All-slack starting solution");
+        const bool mMethod=QString::fromLatin1(label)==QStringLiteral("M-method");
+        if(slack || mMethod) {
+            action->setObjectName(slack?QStringLiteral("solve-all-slack"):QStringLiteral("solve-m-method"));auto& input=inputController(shell);
             const auto update=[action,&input]{action->setEnabled(input.document()!=nullptr);};
             QObject::connect(&input,&LpInputController::changed,iterations,update);update();
-            QObject::connect(action,&QAction::triggered,&shell,[&shell]{simplexController(shell).requestAllSlack();});
+            QObject::connect(action,&QAction::triggered,&shell,[&shell,slack]{if(slack)simplexController(shell).requestAllSlack();else simplexController(shell).requestMMethod();});
         }else {action->setEnabled(false);action->setToolTip(QString::fromLatin1(previewReason));}
     }
     menu.setToolTipsVisible(true);
@@ -432,18 +434,21 @@ ModuleDescriptor lpModule()
     module.screens.append({QStringLiteral("lp/m-value"), heading, [](ApplicationShell& shell) {
         auto* page = new QWidget;
         auto* layout = new QVBoxLayout(page);
-        auto* panel = new QGroupBox;
+        auto* panel = new QGroupBox(QStringLiteral("M-Method"));
         auto* inner = new QVBoxLayout(panel);
         auto* form = new QFormLayout;
         auto* value = new QLineEdit(QStringLiteral("100"));
         value->setObjectName(QStringLiteral("m-value"));
-        value->setReadOnly(true);
+        auto& c=simplexController(shell);
         form->addRow(QStringLiteral("Enter value of M:"), value);
         inner->addLayout(form);
-        button(QStringLiteral("Go To Output Format Screen"), QStringLiteral("m-go"), *inner,
-            [&shell] { shell.navigate(QStringLiteral("lp/output-format")); });
+        auto* go=button(QStringLiteral("Go To Output Format Screen"), QStringLiteral("m-go"), *inner,
+            [&c,value] {c.setPenalty(value->text());});
+        const auto update=[&c,value,go]{value->setReadOnly(!c.canEnterM());go->setEnabled(c.canEnterM());};
+        QObject::connect(&c,&LpSimplexController::changed,page,update);
+        QObject::connect(&shell,&ApplicationShell::screenChanged,page,[value](const QString& screen){if(screen==QStringLiteral("lp/m-value")){value->setText(QStringLiteral("100"));value->selectAll();value->setFocus();}});
+        update();value->selectAll();
         centerPanel(*layout, panel);
-        previewNotice(*layout);
         footer(*layout, shell, true);
         return page;
     }, {}});

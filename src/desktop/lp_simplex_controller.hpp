@@ -1,6 +1,7 @@
 #pragma once
 #include "application_shell.hpp"
 #include <tora/lp/all_slack.hpp>
+#include <tora/lp/m_method.hpp>
 #include <QObject>
 #include <QTimer>
 #include <functional>
@@ -15,9 +16,12 @@ public:
     std::function<void(const QString&,const QString&)> notice;
     std::function<bool(const QString&)> redirect; // true = OK/Two-phase; false = Cancel/M
     bool requestAllSlack();
+    bool requestMMethod();
+    bool canEnterM() const {return mPending_;}
+    bool setPenalty(const QString& text);
     bool canStart() const {return requested_;}
     bool start(tora::core::NumberFormat format);
-    const tora::lp::AllSlackSession* session() const {return session_.get();}
+    const tora::lp::PrimalSimplexSession* session() const {return session_.get();}
     tora::core::NumberFormat format() const {return format_;}
     bool busy() const {return busy_;}
     bool canNext() const;
@@ -30,9 +34,11 @@ private:
     void runOne();
     void terminal();
     ApplicationShell& shell_;
-    std::unique_ptr<tora::lp::AllSlackSession> session_;
+    std::unique_ptr<tora::lp::PrimalSimplexSession> session_;
     tora::core::NumberFormat format_;
-    bool requested_=false,busy_=false;
+    bool requested_=false,busy_=false,mPending_=false;
+    tora::lp::PrimalMethod requestedMethod_=tora::lp::PrimalMethod::AllSlack;
+    double penalty_=100;
     std::size_t automaticSteps_=0;
     QTimer timer_;
 };

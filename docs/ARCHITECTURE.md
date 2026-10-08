@@ -315,3 +315,30 @@ classDiagram
 
 Artificial-method detection hands off to the separately gated M/Two-phase
 routes; it does not label their traces as all-slack results.
+
+## Implemented M-method extension
+
+PrimalSimplexSession now owns the common primal problem/history/selection API.
+AllSlackSession and MMethodSession are thin initialization-policy wrappers. The
+M policy allocates surplus and artificial columns, applies a finite penalty,
+and uses capture-verified cross-product basis inversion and dual-first objective
+reconstruction. All-slack arithmetic and all earlier goldens stay independently
+verified. There is no Qt/file dependency in either numerical wrapper.
+
+LpSimplexController owns a PrimalSimplexSession and requested method/penalty.
+M setup, the All-slack artificial-warning Cancel path and the M all-slack
+fallback all feed the same native view/printing path. Only Two-phase's setup
+handoff remains pending here. New solvers can reuse the display/teaching protocol
+without changing the generic shell or copying the accumulated-table widget.
+
+```mermaid
+classDiagram
+    PrimalSimplexSession <|-- AllSlackSession
+    PrimalSimplexSession <|-- MMethodSession
+    PrimalSimplexSession *-- SimplexStep
+    PrimalSimplexSession *-- LpProblem
+    SimplexStep *-- Tableau
+    LpSimplexController *-- PrimalSimplexSession
+    TraceModel --> LpSimplexController
+    QPrinter ..> PrimalSimplexSession : immutable displays
+```

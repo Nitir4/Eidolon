@@ -193,3 +193,19 @@ are in tora-analysis/LP_ALL_SLACK_MODULE.md.
 
 M/Two-phase warning handoffs keep Go disabled until those algorithms are built.
 Printing uses native QtPrintSupport; successful TORA print layout remains Q-08.
+
+## Phase 2 M-method screen
+
+M-method is now enabled alongside All-slack for a loaded problem. Its M-Method
+setup group has an editable selected default 100 and a working Go button. The
+common output panel starts the requested finite-M session and the accumulated
+view uses SIMPLEX TABLEAU - (M-Method). All-<= warning OK and explicit Cancel
+both continue to the All-slack output-format route, as directly captured.
+All-slack's artificial-warning Cancel now opens functional M setup; Two-phase
+Go remains gated.
+
+The white/blue inverse block covers initial identity columns sx/Rx in constraint
+rows, including still-basic columns; the earlier nonbasic-only description is
+corrected by direct initial-table review. Native font/layout/scroll/printing
+boundaries and original footer controls are shared. No original screenshots
+or proprietary visual assets form part of the interface.

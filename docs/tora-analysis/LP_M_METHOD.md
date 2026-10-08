@@ -57,3 +57,9 @@ Observed automatic rules and exact validation/termination text are in
 `LP_PIVOT_POLICY.md` and `LP_ALL_SLACK.md`. Model save/open behavior is shared
 and specified in `FILE_BEHAVIOR.md` / `../FILE_FORMAT.md`. These shared
 contracts apply to this method; unsupported edge cases stay explicit.
+
+## Phase 2 implementation contract
+
+See [LP_M_METHOD_MODULE.md](LP_M_METHOD_MODULE.md) for the reviewed 15 direct
+M sessions/eight fallback sequences, full finite-penalty outcomes, scientific
+residuals, Cancel behavior, native interface and remaining unknowns.

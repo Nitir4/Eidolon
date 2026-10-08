@@ -27,9 +27,17 @@ def grouped(values):
             groups[-1].append(value)
     return [sum(g) // len(g) for g in groups]
 
+def oracle_rgb(source):
+    # Canonical coordinates match frozen glyph seeds. Isolated captures exclude
+    # the offscreen four-pixel frame; pad only the transient read buffer.
+    size=subprocess.check_output(['magick','identify','-format','%wx%h',str(source)],text=True)
+    extra=['-bordercolor','black','-border','4'] if size=='800x600' else []
+    if size not in ['800x600','808x608']:raise ValueError(f'Unexpected oracle frame: {size}')
+    return subprocess.check_output(['magick',str(source),*extra,'-depth','8','rgb:-'])
+
 def normalize_table(source, destination):
     width, height = 808, 608
-    raw = subprocess.check_output(['magick', str(source), '-depth', '8', 'rgb:-'])
+    raw = oracle_rgb(source)
     if len(raw) != width * height * 3:
         raise ValueError(f'Unexpected image dimensions: {source}')
     def rgb(x, y):

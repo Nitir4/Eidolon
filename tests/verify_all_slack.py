@@ -10,13 +10,14 @@ for record in records:
     lines += [f"{v['lower']} {v['upper']} {int(v['unrestricted'])}" for v in p['variables']]
     lines += [' '.join(p['objective'])]
     lines += [f"{r['relation']} {r['rhs']} "+' '.join(r['coefficients']) for r in p['constraints']]
+    if 'm' in record:lines += [record['m']]
     lines += ['0 5 2',record.get('operation','all')]
     process=subprocess.run([sys.argv[1]],input='\n'.join(lines)+'\n',text=True,capture_output=True)
     if process.returncode:raise AssertionError(f"{record['case']}: {process.stderr}")
     actual=json.loads(process.stdout)
     assert actual['requires_artificial']==record['requires_artificial'],record['case']+' redirect'
     comparison.append([record['case'],'','classification','','',str(record['requires_artificial']),str(actual['requires_artificial'])])
-    if record['requires_artificial']:redirects+=1;continue
+    if record['requires_artificial'] and 'm' not in record:redirects+=1;continue
     assert len(actual['tables'])==len(record['tables']),record['case']+' iteration count'
     assert actual['message']==record['message'],record['case']+' terminal message: '+actual['message']
     comparison.append([record['case'],'','terminal','','',record['message'],actual['message']])
@@ -38,10 +39,15 @@ for record in records:
         result=subprocess.run([sys.argv[1]],input='\n'.join(probe_lines)+'\n',text=True,capture_output=True,check=True)
         got=json.loads(result.stdout)['tables'][sample['table']]['rows'][sample['row']]['values'][sample['column']]
         assert got==sample['value'],record['case']+' supplementary notation '+got
-        comparison.append([record['case'],'Iteration 4','notation','x1-','x2',sample['value'],got])
+        t=record['tables'][sample['table']]
+        comparison.append([record['case'],t['heading'],'notation',t['rows'][sample['row']]['label'],t['columns'][sample['column']],sample['value'],got])
         cells+=1
     print(record['case'],len(actual['tables']),'tables MATCH')
-print(f'{len(records)} input classifications, {redirects} artificial-method redirects, {tables} complete tables, {cells} exact cell strings MATCH')
+if records and 'm' in records[0]:
+    fallback=sum(not r['requires_artificial'] for r in records)
+    print(f'{len(records)-fallback} direct M sessions, {fallback} All-slack fallbacks, {tables} complete tables, {cells} exact cell strings MATCH')
+else:
+    print(f'{len(records)} input classifications, {redirects} artificial-method redirects, {tables} complete tables, {cells} exact cell strings MATCH')
 
 if len(sys.argv)>3:
     target=Path(sys.argv[3]);target.parent.mkdir(parents=True,exist_ok=True)

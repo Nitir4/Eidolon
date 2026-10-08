@@ -130,3 +130,32 @@ if(TORA_BUILD_DESKTOP)
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     )
 endif()
+
+add_executable(m_method_probe simplex_probe.cpp)
+tora_target_defaults(m_method_probe)
+target_compile_definitions(m_method_probe PRIVATE TORA_M_METHOD_PROBE)
+target_link_libraries(m_method_probe PRIVATE tora::lp)
+add_test(NAME lp.m-method.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_all_slack.py" "$<TARGET_FILE:m_method_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/m-method.json" "${CMAKE_CURRENT_BINARY_DIR}/m-method-comparison.tsv")
+set_tests_properties(lp.m-method.goldens PROPERTIES TIMEOUT 30)
+
+if(TORA_BUILD_DESKTOP)
+    qt_add_executable(desktop_m_method_test desktop_m_method.cpp)
+    set_target_properties(desktop_m_method_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_m_method_test)
+    target_link_libraries(desktop_m_method_test PRIVATE desktop_shell Qt6::Test)
+    target_compile_definitions(desktop_m_method_test PRIVATE TORA_CODEC_GOLDENS="${CMAKE_CURRENT_BINARY_DIR}/codec-goldens" TORA_M_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/m-method.json")
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.m-method.scale-${scale} COMMAND desktop_m_method_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-m-method-scale-${scale}.xml,junitxml" -o -,txt)
+        set_tests_properties(desktop.m-method.scale-${scale} PROPERTIES TIMEOUT 45 FIXTURES_REQUIRED codec_golden_files
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
+    endforeach()
+endif()
+
+add_executable(m_method_safety m_method_safety.cpp)
+tora_target_defaults(m_method_safety)
+target_link_libraries(m_method_safety PRIVATE tora::lp)
+add_test(NAME lp.m-method.safety COMMAND m_method_safety)
+set_tests_properties(lp.m-method.safety PROPERTIES TIMEOUT 15)

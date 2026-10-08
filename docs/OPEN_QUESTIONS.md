@@ -106,3 +106,13 @@ Successful native PDF generation does not resolve Q-08's unavailable TORA print
 output. Seven artificial-method handoffs are classified and their setup routes
 are tested; actual M/Two-phase algorithms remain separate cycles with Go disabled
 for their pending sessions.
+
+Phase 2 M-method narrows Q-01/Q-06: fifteen direct sessions/eight fallback
+sequences and four scientific cells now match. Complete 0/-1/0.5/1e2/bogus
+outcomes and upper/lower/free traces replace their earlier initial-only limits
+for these exact inputs. Explicit fallback Cancel also advances to output format.
+Cross-product basis inversion with a dual-first cost row reproduces the observed
+1.11e-16/5.55e-17 residuals without cell-specific patches; this is not proof of
+TORA internals. Arbitrary M parsing, ill-conditioned/unseen cases, cycling, exact
+bound ties and physical DPI/legacy-print acceptance remain unknown. M Go is
+now functional; Two-phase is the next separately gated numerical cycle.
