@@ -14,7 +14,7 @@ class LpSimplexController final:public QObject {
 public:
     explicit LpSimplexController(ApplicationShell& shell);
     std::function<void(const QString&,const QString&)> notice;
-    std::function<bool(const QString&)> redirect; // true = OK/Two-phase; false = Cancel/M
+    std::function<bool(const QString&)> redirect; // true = OK, false = Cancel; each method preserves its captured handoff
     bool requestAllSlack();
     bool requestMMethod();
     bool canEnterM() const {return mPending_;}

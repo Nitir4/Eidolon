@@ -28,14 +28,14 @@ int main() {
         for(auto& cost:p.objective)cost=number(std::cin);
         for(auto& r:p.constraints){std::string relation;std::cin>>relation;r.relation=relation=="<="?Relation::LessEqual:relation==">="?Relation::GreaterEqual:Relation::Equal;
             r.rhs=number(std::cin);for(auto& a:r.coefficients)a=number(std::cin);}
-        #ifndef TORA_M_METHOD_PROBE
+#ifndef TORA_M_METHOD_PROBE
         if(AllSlackSession::requiresArtificial(p)){std::cout<<"{\"requires_artificial\":true}";return 0;}
-        #else
+#else
         const double penalty=number(std::cin);
 #endif
         int scientific,nDigits,dDigits;std::cin>>scientific>>nDigits>>dDigits;
         std::string operation;std::cin>>operation;
-        #ifdef TORA_M_METHOD_PROBE
+#ifdef TORA_M_METHOD_PROBE
         MMethodSession solver(p,penalty);
 #else
         AllSlackSession solver(p);

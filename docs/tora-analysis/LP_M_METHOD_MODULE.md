@@ -79,7 +79,9 @@ about TORA's hidden code. It matches the scientific iteration-3 Rx6/x1 residual
 and the final Sx5/x1 is 0.00e+00. Ordinary incremental tableau elimination or
 dividing the inverse's pivot row first did not match all these observations.
 There is no per-cell correction, tolerance cleanup or display-driven arithmetic.
-All-slack retains its independently verified reconstruction order.
+All-slack retains its independently verified reconstruction order. The LP
+target disables contraction/fast-math (MSVC strict FP), matching the core
+policy so compiler optimizations preserve the tested operation order.
 
 The native 1024-pivot cap retains a resumable partial trace. It is engineering
 protection, not an observed TORA cycling limit.
