@@ -39,8 +39,9 @@ warning and resulting tableau are both captured under
 
 ## Unknowns / things I could not verify
 
-Alternate M acceptance and initial coefficients are captured in `LP_M_VALUE.md`;
-these focused probes are not full terminal traces for every penalty.
+Alternate M acceptance and initial coefficients are captured in `LP_M_VALUE.md`.
+Phase 2 also captures full terminal traces for 0, -1, 0.5, 1e2 and bogus;
+other penalties and arbitrary text remain unverified.
 All fifteen main M selections now have full numeric transcriptions, including
 All-slack redirections. Shared pivot/termination observations and the repeated
 positive-artificial stopping result are in `LP_PIVOT_POLICY.md`.

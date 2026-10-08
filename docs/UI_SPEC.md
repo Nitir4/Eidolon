@@ -207,5 +207,9 @@ Go remains gated.
 The white/blue inverse block covers initial identity columns sx/Rx in constraint
 rows, including still-basic columns; the earlier nonbasic-only description is
 corrected by direct initial-table review. Native font/layout/scroll/printing
-boundaries and original footer controls are shared. No original screenshots
+boundaries and original footer controls are shared. The Basic/row-label column
+remains pinned while numeric columns scroll horizontally; vertical scrolling
+and leaving-row clicks stay synchronized. Column widths come from font metrics,
+and Solution stays visible when the numeric columns fit the viewport.
+No original screenshots
 or proprietary visual assets form part of the interface.

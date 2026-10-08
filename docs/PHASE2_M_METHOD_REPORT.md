@@ -11,7 +11,10 @@ M interfaces. Golden tests then exposed signed-zero arithmetic differences.
 Focused scientific captures distinguish basis reconstruction from ordinary
 incremental pivots. The final cross-product inverse and dual-row construction
 match those observed residuals; no formatter or cell-specific patch was added.
-An additional visual review corrected initial sx/Rx inverse-cell coloring.
+An additional visual review corrected initial sx/Rx inverse-cell coloring and
+kept the Basic labels pinned during horizontal scrolling. Regression checks
+exercise vertical synchronization, a real pinned-label leaving-row click and
+an unclipped Solution column.
 
 Validation covers 15 direct M sessions and eight actual All-slack fallbacks:
 78 complete tables, 4095 strings plus four scientific cells, all captured

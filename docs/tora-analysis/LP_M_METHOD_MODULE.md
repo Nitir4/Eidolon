@@ -110,6 +110,12 @@ Next Iteration, All Iterations, Write to Printer and original footer navigation
 use the shared native Qt Widgets view/controller. Automatic work yields to Qt,
 pauses on navigation and is discarded on input edits. Font metrics determine
 sizes; large tables scroll and the blue background fills each native window.
+The Basic/row-label column stays visible during horizontal scrolling, as seen
+in the existing wide-table right-scroll captures. Two synchronized native
+table views share one model; clicking a pinned basis label still selects its
+leaving row. Font-derived widths preserve the visible Solution column when
+the numeric columns fit. Tests exercise both scroll directions and a real
+pinned-label click on the 100×100 input at all four scales.
 Native PDF printing consumes the same immutable displays. Legacy successful
 print layout remains unverified because Wine printing raises runtime error 482.
 Open/save/new/export behavior remains the shared captured file contract; M is

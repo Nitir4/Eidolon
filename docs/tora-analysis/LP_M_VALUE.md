@@ -36,9 +36,10 @@ invalid test inputs; they are excluded from these findings.
 ## Unknowns / things I could not verify
 
 Maximum magnitude, whitespace/prefix/comma parsing, symbolic M (none observed),
-overflow and all terminal consequences of small/negative penalties. These
-probes establish input acceptance and initial coefficients, not mathematical
-reliability for arbitrary M. Full M=100 traces remain the compatibility corpus.
+overflow and terminal consequences outside the five captured penalties.
+The original initial-only probes establish acceptance; Phase 2 adds complete
+terminal traces for those same five values, without asserting mathematical
+reliability for arbitrary M. Default M=100 remains covered by the main corpus.
 
 ## Phase 2 focused terminal observations
 

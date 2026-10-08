@@ -105,7 +105,7 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "M-method",
-    "step": "Local M-method gate checks passed; three-OS CI pending",
+    "step": "Final native Basic-column freeze found in wide reference frames; revalidating UI/CI",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -153,7 +153,13 @@
       "comparison": "build/phase2-m-method/comparison.tsv",
       "report": "docs/PHASE2_M_METHOD_REPORT.md",
       "spec": "docs/tora-analysis/LP_M_METHOD_MODULE.md",
-      "goldens": "tests/fixtures/m-method.json"
+      "goldens": "tests/fixtures/m-method.json",
+      "source_commit": "28751d9fc294e77cae6976ddf14246e724650d5d",
+      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37781232812",
+      "initial_ci_validation": "All three jobs completed successfully before strict LP compiler flags were added",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37781978838",
+      "ci_validation": "Prior source 28751d9 passed 32/32 on each OS and all package checks; final fixed Basic-column change needs a fresh CI run",
+      "prior_verified_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37781978838"
     }
   }
 }

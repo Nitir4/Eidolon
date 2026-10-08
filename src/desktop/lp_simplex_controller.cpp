@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QTableView>
 #include <QHeaderView>
+#include <QScrollBar>
 #include <QLabel>
 #include <QPushButton>
 #include <QMessageBox>
@@ -117,17 +118,43 @@ LpSimplexController& simplexController(ApplicationShell& shell) {
 namespace {
 class TraceView final:public QTableView {
 public:
+    TraceView():labelHost_(new QWidget),labels_(new QTableView(labelHost_)),labelLayout_(new QVBoxLayout(labelHost_)) {
+        labelLayout_->setContentsMargins(0,0,0,0);labelLayout_->addWidget(labels_);
+        labels_->setObjectName(QStringLiteral("simplex-basic-column"));
+        labels_->setFrameShape(QFrame::NoFrame);labels_->setStyleSheet(QStringLiteral("QTableView {border: none; background: #00ffff; gridline-color: white;}"));labels_->verticalHeader()->hide();labels_->horizontalHeader()->hide();
+        labels_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);labels_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        labels_->setFocusPolicy(Qt::NoFocus);labels_->setSelectionMode(QAbstractItemView::NoSelection);
+        connect(verticalScrollBar(),&QScrollBar::valueChanged,labels_->verticalScrollBar(),&QScrollBar::setValue);
+        connect(labels_->verticalScrollBar(),&QScrollBar::valueChanged,verticalScrollBar(),&QScrollBar::setValue);
+        connect(labels_,&QTableView::clicked,this,[this](const QModelIndex& index){emit clicked(index);});
+    }
+    void setModel(QAbstractItemModel* model) override {
+        QTableView::setModel(model);labels_->setModel(model);fitColumns();
+    }
+    QWidget* labelHost() const {return labelHost_;}
     const std::vector<int>& baseWidths() const {return widths_;}
     void setBaseWidths(std::vector<int> widths){widths_=std::move(widths);fitColumns();}
 protected:
     void resizeEvent(QResizeEvent* event) override {QTableView::resizeEvent(event);fitColumns();}
 private:
     void fitColumns() {
-        if(widths_.empty())return;
-        int total=0;for(const auto width:widths_)total+=width;
-        const int extra=std::max(0,viewport()->width()-total),count=static_cast<int>(widths_.size());
-        for(int j=0;j<count;++j)setColumnWidth(j,widths_[static_cast<std::size_t>(j)]+extra/count+(j==count-1?extra%count:0));
+        if(fitting_)return;
+        fitting_=true;
+        if(widths_.empty()){labelHost_->hide();fitting_=false;return;}
+        hideColumn(0);labels_->showColumn(0);
+        for(int j=1;j<labels_->model()->columnCount();++j)labels_->hideColumn(j);
+        labelHost_->setFixedWidth(widths_[0]);labelHost_->show();
+        labels_->setColumnWidth(0,widths_[0]);labels_->verticalHeader()->setDefaultSectionSize(verticalHeader()->defaultSectionSize());
+        labelLayout_->setContentsMargins(0,viewport()->y(),0,std::max(0,height()-viewport()->height()-viewport()->y()));
+        int total=0;for(std::size_t j=1;j<widths_.size();++j)total+=widths_[j];
+        const int count=static_cast<int>(widths_.size())-1,extra=std::max(0,viewport()->width()-total);
+        for(int j=1;j<=count;++j)setColumnWidth(j,widths_[static_cast<std::size_t>(j)]+extra/count+(j==count?extra%count:0));
+        fitting_=false;
     }
+    QWidget* labelHost_;
+    QTableView* labels_;
+    QVBoxLayout* labelLayout_;
+    bool fitting_=false;
     std::vector<int> widths_;
 };
 class TraceModel final:public QAbstractTableModel {
@@ -219,7 +246,8 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     auto* print=button(QStringLiteral("Write to Printer"),QStringLiteral("simplex-print"),commands);commands->addStretch();layout->addLayout(commands);
     auto* view=new TraceView;view->setObjectName(QStringLiteral("simplex-grid"));view->setModel(new TraceModel(c,view));view->verticalHeader()->hide();view->horizontalHeader()->hide();view->setSelectionMode(QAbstractItemView::NoSelection);
     view->setStyleSheet(QStringLiteral("QTableView {background: #00ffff; gridline-color: white; border: 1px solid white;}"));
-    layout->addWidget(view,1);
+    auto* gridArea=new QWidget(page);auto* gridLayout=new QHBoxLayout(gridArea);gridLayout->setContentsMargins(0,0,0,0);gridLayout->setSpacing(0);
+    gridLayout->addWidget(view->labelHost());gridLayout->addWidget(view,1);layout->addWidget(gridArea,1);
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("simplex-view-input"),footer);
     auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("simplex-main"),footer);auto* exit=button(QStringLiteral("Exit TORA"),QStringLiteral("simplex-exit"),footer);footer->addStretch();layout->addLayout(footer);
     const auto update=[&c,heading,title,next,all,print,view] {

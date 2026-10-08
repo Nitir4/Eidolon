@@ -87,6 +87,7 @@ private slots:
         for(const auto size:{QSize(1366,768),QSize(1920,1080),QSize(3840,2160)}) {
             shell.resize(qRound(size.width()/scale),qRound(size.height()/scale));QApplication::processEvents();
             auto* page=shell.currentContent();auto* grid=page->findChild<QTableView*>(QStringLiteral("simplex-grid"));QVERIFY(grid && grid->width()>shell.width()/2 && grid->height()>0);
+            if(grid->horizontalScrollBar()->maximum()==0)QVERIFY(grid->visualRect(grid->model()->index(1,grid->model()->columnCount()-1)).right()<grid->viewport()->width());
             for(auto* button:page->findChildren<QPushButton*>()){QVERIFY(button->width()>=button->minimumSizeHint().width());QVERIFY(page->rect().contains(button->geometry().center()));}
             if(size==QSize(1920,1080) && !qEnvironmentVariable("TORA_UI_CAPTURES").isEmpty()){
                 const auto root=qEnvironmentVariable("TORA_UI_CAPTURES")+QStringLiteral("/m-method");QVERIFY(QDir().mkpath(root));QVERIFY(shell.grab().save(root+QStringLiteral("/equality-%1.png").arg(scale)));
@@ -95,7 +96,12 @@ private slots:
         QPrinter printer(QPrinter::HighResolution);printer.setOutputFormat(QPrinter::PdfFormat);QTemporaryDir temp;printer.setOutputFileName(temp.filePath(QStringLiteral("m.pdf")));auto snapshot=c.session()->history().back().tableau.values().data();QVERIFY(printSimplexTrace(printer,c,shell.font()));QCOMPARE(c.session()->history().back().tableau.values().data(),snapshot);
         auto big=tora::lp::LpProblem::blank(100,100);for(std::size_t j=0;j<100;++j){big.objective[j]=1;big.constraints[j].coefficients[j]=1;big.constraints[j].relation=tora::lp::Relation::GreaterEqual;big.constraints[j].rhs=1;}
         auto doc=tora::compat::ToraLpCodec::create(big);const auto file=temp.filePath(QStringLiteral("large.txt"));tora::compat::LpFileStore::saveAs(doc,std::filesystem::path(file.toStdString()));QVERIFY(in.openFile(file));QVERIFY(!c.session());QVERIFY(c.requestMMethod());QVERIFY(c.setPenalty(QStringLiteral("100")));QVERIFY(c.start({}));
-        auto* grid=shell.currentContent()->findChild<QTableView*>(QStringLiteral("simplex-grid"));QCOMPARE(grid->model()->columnCount(),302);c.next();c.all();QVERIFY(c.busy());QVERIFY(shell.navigate(QStringLiteral("main")));QVERIFY(!c.busy());
+        auto* grid=shell.currentContent()->findChild<QTableView*>(QStringLiteral("simplex-grid"));QCOMPARE(grid->model()->columnCount(),302);
+        auto* labels=grid->parentWidget()->findChild<QTableView*>(QStringLiteral("simplex-basic-column"));QVERIFY(labels && labels->isVisible());
+        grid->horizontalScrollBar()->setValue(grid->horizontalScrollBar()->maximum());QApplication::processEvents();
+        QVERIFY(labels->visualRect(labels->model()->index(1,0)).left()>=0);QCOMPARE(labels->model()->data(labels->model()->index(1,0)).toString(),QStringLiteral("Basic"));
+        grid->verticalScrollBar()->setValue(grid->verticalScrollBar()->maximum());QCOMPARE(labels->verticalScrollBar()->value(),grid->verticalScrollBar()->value());
+        c.next();const auto at=labels->model()->index(111,0);labels->scrollTo(at);QApplication::processEvents();QTest::mouseClick(labels->viewport(),Qt::LeftButton,Qt::NoModifier,labels->visualRect(at).center());QCOMPARE(c.session()->history().back().leaving,std::optional<std::size_t>(2));c.all();QVERIFY(c.busy());QVERIFY(shell.navigate(QStringLiteral("main")));QVERIFY(!c.busy());
     }
     void initTestCase(){
 #ifdef Q_OS_WIN

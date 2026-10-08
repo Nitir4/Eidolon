@@ -175,7 +175,7 @@ are excluded from repository and package contents.
 | LP-MM-04 | Cross-product inversion, dual-first costs, shared bounds/free normalization | Four scientific residuals, Ux1/Lx1/x1+ traces | m-dual-scientific-short, m-upper/lower-bound, m-free-variable |
 | LP-MM-05 | Shared terminal/alternative selection | Exact optimal/alternative/unbounded; positive artificial stopping retained | Original 03_infeasible; zero/negative/fraction/nonnumeric |
 | LP-MM-06 | Request handoffs, TraceModel, native M/output controls | All table cells at four scales; OK/Cancel fallback; inverse sx/Rx colors | Original normal fallback; m-slack-cancel-button/solve |
-| LP-MM-07, DPI-01 | Existing native screen/timer/printing | Three resolutions/four scales, 100×100 scroll/pause, stale data/PDF checks | desktop_m_method; native requirements; Q-08 retained |
+| LP-MM-07, DPI-01, SCROLL-01 | Shared native screen/timer/printing; synchronized Basic/number views | Three resolutions/four scales, 100×100 horizontal pinning/vertical sync/basis-label click/pause, visible Solution, stale data/PDF checks | desktop_m_method; original wide-table right-scroll captures; native requirements; Q-08 retained |
 | ARCH-01, BUILD-01 | Common Qt-free primal base; one OS-matrix workflow | Full suite/deployed packages for all three OSes | PHASE2_M_METHOD_REPORT.md |
 
 Original reference files/screenshots stay excluded from source and releases.
