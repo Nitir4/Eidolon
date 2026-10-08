@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: Two-phase",
+  "active_step": "Phase 2: Two-phase gate review",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Complete Two-phase gate; wait before the next module",
+  "next_step": "Await Two-phase approval before starting Bounded or another module",
   "foundation_order": [
     1,
     5,
@@ -105,7 +105,7 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "Two-phase",
-    "step": "Local Two-phase tests pass; final documentation and three-OS CI",
+    "step": "Two-phase implementation cycle complete; await review",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -117,13 +117,13 @@
       "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37658262696",
       "packages": "dist/phase2-input/final/"
     },
-    "source_commit": "09615b8a7c526b48b170ff40e00e7af07128046c",
-    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37731683552",
+    "source_commit": "4b310e2b7e038210befbb172b74f87f393604d92",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37818806966",
     "input_module_status": "approved",
     "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG; all deployed startup checks and uploads passed",
-    "packages": "dist/phase2-all-slack/",
-    "remaining": "M-method review approval; separate Two-phase/Bounded/Dual/graphical/final/sensitivity cycles",
-    "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity passes; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-all-slack/packages-verified.json",
+    "packages": "dist/phase2-two-phase/final/",
+    "remaining": "Two-phase review approval; separate Bounded/Dual/graphical/final/sensitivity cycles",
+    "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-two-phase/packages-verified.json and linux-startup.json",
     "input_approval": "User: continue from where we left off (2026-10-08)",
     "all_slack": {
       "status": "approved",
@@ -163,23 +163,32 @@
       "test_reports": "build/phase2-m-method/ci-reviewed-final/",
       "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG",
       "packages": "dist/phase2-m-method/final/",
-      "gate": "Complete implementation cycle; stop for user review before Two-phase",
+      "gate": "Approved; user authorized Two-phase",
       "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-m-method/packages-reviewed-verified.json and linux-reviewed-startup.json",
       "completed_on": "2026-10-08",
-      "remaining": "User review; recorded legacy printing/physical mixed-DPI and unobserved numerical/parse limits remain explicit"
+      "remaining": "Recorded legacy printing/physical mixed-DPI and unobserved numerical/parse limits remain explicit"
     },
     "two_phase": {
-      "status": "in_progress",
+      "status": "ready_for_review",
       "approval": "User: go ahead and do it (2026-10-08)",
       "scope": "Two-phase feasibility transition, restored objective, blocked artificial columns and native iteration controls",
-      "remaining": "Three-OS CI/packages and review gate",
+      "remaining": "User review; recorded legacy printing/physical mixed-DPI and unobserved numerical/keyboard limits remain explicit",
       "tests_first": "Golden, safety and native workflow tests added before implementation; missing TwoPhaseSession header produces the recorded build failure in build/phase2-two-phase/tests-before-implementation.log",
       "spec": "docs/tora-analysis/LP_TWO_PHASE_MODULE.md",
       "goldens": "tests/fixtures/two-phase.json",
       "local_validation": "38/38 desktop, 16/16 explicit C++17 Qt-free; four scales \u00d7 29 Two-phase Qt cases",
-      "oracle": "15 direct problems plus full scientific repeat; eight All-slack fallbacks; 99 tables, 5278 exact cell strings and 6872 comparison fields; original corpus reused",
+      "oracle": "16 direct sessions including a full scientific repeat; eight All-slack fallbacks; 99 tables, 5278 exact cell strings and 6872 comparison fields; original corpus reused",
       "report": "docs/PHASE2_TWO_PHASE_REPORT.md",
-      "comparison": "build/phase2-two-phase/comparison.tsv"
+      "comparison": "build/phase2-two-phase/comparison.tsv",
+      "source_commit": "4b310e2b7e038210befbb172b74f87f393604d92",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37818806966",
+      "ci_validation": "Windows/Linux/macOS each 38/38 CTest (114/114 overall), zero failures/skips; four-scale Qt logs each 29 Two-phase/29 M/29 All-slack/43 input cases; all 6872 Two-phase, 5354 M and 3241 All-slack comparison fields match; packaging/deployed startup/upload successful on all OSes",
+      "test_reports": "build/phase2-two-phase/ci-final/",
+      "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG",
+      "packages": "dist/phase2-two-phase/final/",
+      "gate": "Complete implementation cycle; stop for user review before Bounded or another method",
+      "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-two-phase/packages-verified.json and linux-startup.json",
+      "completed_on": "2026-10-08"
     }
   }
 }

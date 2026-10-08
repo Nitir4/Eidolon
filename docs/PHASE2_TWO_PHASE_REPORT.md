@@ -40,10 +40,26 @@ controls, phase notices, blocked-column rejection, stale-input cancellation,
 100×100 tables, navigation pause, PDF non-mutation and layouts from 1366×768
 through 4K. Existing numerical goldens remain unchanged and pass.
 
-Three-OS CI and downloaded package verification are pending. The gate is not
-ready until all required checks pass. Remaining unobserved arithmetic,
-keyboard, original print-layout and physical mixed-DPI limits are explicit
-in LP_TWO_PHASE_MODULE.md and OPEN_QUESTIONS.md.
+[Three-OS CI](https://github.com/Nitir4/TORA-Clone/actions/runs/37818806966)
+passes for source commit `4b310e2b7e038210befbb172b74f87f393604d92`.
+Downloaded XML confirms 38/38 CTest checks on Windows, Linux and macOS
+(114/114 overall), with zero failures or skipped checks. Each OS passes all
+four scale runs with 29 Two-phase, 29 M, 29 All-slack and 43 input Qt cases.
+All 6872 Two-phase, 5354 M and 3241 All-slack comparison fields match on
+all three OSes. Evidence: build/phase2-two-phase/ci-verified.json.
+
+Native packaging, deployed startup and uploads pass in CI. The Linux
+AppImage also passes local extract-and-run startup with Qt offscreen:
+build/phase2-two-phase/linux-startup.json. All three downloaded package
+SHA-256 values match. Windows ZIP integrity, native EXE and Qt PrintSupport
+checks pass. The portable Windows ZIP, Linux x86_64 AppImage and universal
+arm64+x86_64 macOS app-in-DMG are in dist/phase2-two-phase/final/.
+Package evidence: build/phase2-two-phase/packages-verified.json.
+No original reference assets are included. The Two-phase gate is ready for review.
+
+Remaining unobserved arithmetic, keyboard, original print-layout and physical
+mixed-DPI limits are explicit in LP_TWO_PHASE_MODULE.md and OPEN_QUESTIONS.md.
+Stop for review before starting Bounded or another method.
 
 For review, restart ./build/dev/src/desktop/ToraClone, open an LP with >= or =
 constraints and select Solve Problem → Algebraic → Iterations → Two-phase
