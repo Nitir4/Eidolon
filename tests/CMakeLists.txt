@@ -188,3 +188,32 @@ if(TORA_BUILD_DESKTOP)
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
     endforeach()
 endif()
+
+add_executable(bounded_probe simplex_probe.cpp)
+tora_target_defaults(bounded_probe)
+target_compile_definitions(bounded_probe PRIVATE TORA_BOUNDED_PROBE)
+target_link_libraries(bounded_probe PRIVATE tora::lp)
+add_test(NAME lp.bounded.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_all_slack.py" "$<TARGET_FILE:bounded_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bounded.json" "${CMAKE_CURRENT_BINARY_DIR}/bounded-comparison.tsv")
+set_tests_properties(lp.bounded.goldens PROPERTIES TIMEOUT 30)
+
+add_executable(bounded_safety bounded_safety.cpp)
+tora_target_defaults(bounded_safety)
+target_link_libraries(bounded_safety PRIVATE tora::lp)
+add_test(NAME lp.bounded.safety COMMAND bounded_safety)
+set_tests_properties(lp.bounded.safety PROPERTIES TIMEOUT 15)
+
+if(TORA_BUILD_DESKTOP)
+    qt_add_executable(desktop_bounded_test desktop_bounded.cpp)
+    set_target_properties(desktop_bounded_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_bounded_test)
+    target_link_libraries(desktop_bounded_test PRIVATE desktop_shell Qt6::Test)
+    target_compile_definitions(desktop_bounded_test PRIVATE TORA_CODEC_GOLDENS="${CMAKE_CURRENT_BINARY_DIR}/codec-goldens" TORA_BOUNDED_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bounded.json")
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.bounded.scale-${scale} COMMAND desktop_bounded_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-bounded-scale-${scale}.xml,junitxml" -o -,txt)
+        set_tests_properties(desktop.bounded.scale-${scale} PROPERTIES TIMEOUT 45 FIXTURES_REQUIRED codec_golden_files
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
+    endforeach()
+endif()

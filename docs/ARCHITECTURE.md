@@ -360,3 +360,11 @@ infeasible Phase 1 from normal terminal dialogs, and suppresses that intermediat
 notice during automatic iterations. The same TraceModel, pinned Basic/number
 views and QPrinter path consume all three primal method traces. No shell/module
 registration or file-format changes are needed for this extension.
+
+
+The Bounded menu prepares the existing bound-aware All-slack/Two-phase session
+directly after normalization. BoundedSession selects the shared All-slack/Two-phase engine with the captured
+Bounded profile, which writes basic objective costs as exact zero while retaining
+constraint residuals. The controller
+keeps the distinct no-warning Bounded setup path while displaying the actual
+method. No file fields, pivot rules or new numerical engine are added.

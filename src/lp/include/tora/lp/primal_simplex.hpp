@@ -30,7 +30,7 @@ struct SimplexChoice {
 // No GUI/file dependency. Each numerical snapshot remains independently owned.
 // Strict binary64 comparisons match the captured policy; hidden TORA tolerances
 // are not claimed. Presentation precision never changes arithmetic.
-enum class PrimalMethod { AllSlack, MMethod, TwoPhase };
+enum class PrimalMethod { AllSlack, MMethod, TwoPhase, Bounded }; // Bounded selects a captured shared method/profile.
 class PrimalSimplexSession {
 public:
     virtual ~PrimalSimplexSession()=default;
@@ -66,5 +66,6 @@ private:
     std::vector<SimplexStep> history_;
     SimplexStatus status_=SimplexStatus::Running;
     bool phaseReady_=false;
+    bool canonicalBasicCosts_=false;
 };
 } // namespace tora::lp

@@ -77,12 +77,24 @@ bool LpSimplexController::requestTwoPhase() {
         requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
     }catch(const std::exception& e){notice(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));return false;}
 }
+bool LpSimplexController::requestBounded() {
+    const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
+    try {
+        // Bounded reaches output formatting directly, without either shared
+        // method's warning. Dispatch after normalization and lower-bound shifts.
+        (void)tora::lp::PrimalSimplexSession::requiresArtificial(doc->problem);
+        requestedMethod_=tora::lp::PrimalMethod::Bounded;
+        requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
+    }catch(const std::exception& e){notice(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));return false;}
+}
 bool LpSimplexController::start(tora::core::NumberFormat format) {
     if(!requested_ || !inputController(shell_).document())return false;
     try {
         (void)tora::core::NumberFormatter(format);
         std::unique_ptr<tora::lp::PrimalSimplexSession> next;
-        if(requestedMethod_==tora::lp::PrimalMethod::MMethod)next=std::make_unique<tora::lp::MMethodSession>(inputController(shell_).document()->problem,penalty_);
+        if(requestedMethod_==tora::lp::PrimalMethod::Bounded)next=std::make_unique<tora::lp::BoundedSession>(inputController(shell_).document()->problem);
+        else if(requestedMethod_==tora::lp::PrimalMethod::MMethod)next=std::make_unique<tora::lp::MMethodSession>(inputController(shell_).document()->problem,penalty_);
         else if(requestedMethod_==tora::lp::PrimalMethod::TwoPhase)next=std::make_unique<tora::lp::TwoPhaseSession>(inputController(shell_).document()->problem);
         else next=std::make_unique<tora::lp::AllSlackSession>(inputController(shell_).document()->problem);
         format_=format;session_=std::move(next);emit changed();shell_.navigate(QStringLiteral("lp/simplex"));terminal();return true;

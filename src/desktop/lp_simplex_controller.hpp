@@ -3,6 +3,7 @@
 #include <tora/lp/all_slack.hpp>
 #include <tora/lp/m_method.hpp>
 #include <tora/lp/two_phase.hpp>
+#include <tora/lp/bounded.hpp>
 #include <QObject>
 #include <QTimer>
 #include <functional>
@@ -19,6 +20,7 @@ public:
     bool requestAllSlack();
     bool requestMMethod();
     bool requestTwoPhase();
+    bool requestBounded();
     bool canEnterM() const {return mPending_;}
     bool setPenalty(const QString& text);
     bool canStart() const {return requested_;}

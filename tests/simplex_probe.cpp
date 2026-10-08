@@ -5,6 +5,9 @@
 #ifdef TORA_TWO_PHASE_PROBE
 #include <tora/lp/two_phase.hpp>
 #endif
+#ifdef TORA_BOUNDED_PROBE
+#include <tora/lp/bounded.hpp>
+#endif
 #include <iomanip>
 #include <iostream>
 #include <locale>
@@ -31,7 +34,7 @@ int main() {
         for(auto& cost:p.objective)cost=number(std::cin);
         for(auto& r:p.constraints){std::string relation;std::cin>>relation;r.relation=relation=="<="?Relation::LessEqual:relation==">="?Relation::GreaterEqual:Relation::Equal;
             r.rhs=number(std::cin);for(auto& a:r.coefficients)a=number(std::cin);}
-#if !defined(TORA_M_METHOD_PROBE) && !defined(TORA_TWO_PHASE_PROBE)
+#if !defined(TORA_M_METHOD_PROBE) && !defined(TORA_TWO_PHASE_PROBE) && !defined(TORA_BOUNDED_PROBE)
         if(AllSlackSession::requiresArtificial(p)){std::cout<<"{\"requires_artificial\":true}";return 0;}
 #elif defined(TORA_M_METHOD_PROBE)
         const double penalty=number(std::cin);
@@ -42,6 +45,8 @@ int main() {
         MMethodSession solver(p,penalty);
 #elif defined(TORA_TWO_PHASE_PROBE)
         TwoPhaseSession solver(p);
+#elif defined(TORA_BOUNDED_PROBE)
+        BoundedSession solver(p);
 #else
         AllSlackSession solver(p);
 #endif

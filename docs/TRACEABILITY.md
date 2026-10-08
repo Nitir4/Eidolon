@@ -193,3 +193,13 @@ Original reference files/screenshots stay excluded from source and releases.
 | ARCH-01, BUILD-01 | Shared Qt-free base and one OS-matrix workflow | Full suites, deployed startup and three artifacts required for gate | PHASE2_TWO_PHASE_REPORT.md |
 
 Raw reference screenshots/files/executables remain excluded from source and releases.
+
+
+| Requirement | Captured Bounded behavior | Code | Tests | Capture |
+| --- | --- | --- | --- | --- |
+| LP-BD-01 | Direct setup; actual All-slack/Two-phase path, no warning | lp_screens.cpp; LpSimplexController::requestBounded | desktop_bounded actualMenuRoutingWithoutWarnings; bounded goldens | corpus/*/bounded_simplex; bd-artificial-bounds |
+| LP-BD-02 | Lower/upper representations and complement return | BoundedSession/profile; primal_simplex.cpp | bounded_safety; native manualComplementsLayoutPrintingAndLifecycle; bounded goldens | finite-*; bd-complement-return |
+| LP-BD-03 | Bound/row exact tie and zero-width step | PrimalSimplexSession::choice/next | bounded_safety; bounded goldens | bd-bound-row-tie; bd-fixed-variable |
+| LP-BD-04 | Exact labels/numbers/scientific output | shared display/formatter/model | lp.bounded.goldens; four native scale tests | 24 source-hashed traces; bd-free-crossing-scientific |
+| LP-BD-05 | Artificial phase and initial infeasibility | shared Two-phase state; controller terminal | bounded goldens; native menu/cell tests | bd-artificial-bounds; bd-shift-start; bd-shift-start-notice |
+| LP-BD-06 | Shared files/lifecycle/native layout/printing | input/simplex controllers; Qt layouts | native lifecycle/PDF and full suite | clone UI captures; original print remains unverified |

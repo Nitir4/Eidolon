@@ -179,11 +179,12 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
         const bool slack=QString::fromLatin1(label)==QStringLiteral("All-slack starting solution");
         const bool mMethod=QString::fromLatin1(label)==QStringLiteral("M-method");
         const bool twoPhase=QString::fromLatin1(label)==QStringLiteral("Two-phase method");
-        if(slack || mMethod || twoPhase) {
-            action->setObjectName(slack?QStringLiteral("solve-all-slack"):mMethod?QStringLiteral("solve-m-method"):QStringLiteral("solve-two-phase"));auto& input=inputController(shell);
+        const bool bounded=QString::fromLatin1(label)==QStringLiteral("Bounded simplex");
+        if(slack || mMethod || twoPhase || bounded) {
+            action->setObjectName(slack?QStringLiteral("solve-all-slack"):mMethod?QStringLiteral("solve-m-method"):twoPhase?QStringLiteral("solve-two-phase"):QStringLiteral("solve-bounded"));auto& input=inputController(shell);
             const auto update=[action,&input]{action->setEnabled(input.document()!=nullptr);};
             QObject::connect(&input,&LpInputController::changed,iterations,update);update();
-            QObject::connect(action,&QAction::triggered,&shell,[&shell,slack,mMethod]{if(slack)simplexController(shell).requestAllSlack();else if(mMethod)simplexController(shell).requestMMethod();else simplexController(shell).requestTwoPhase();});
+            QObject::connect(action,&QAction::triggered,&shell,[&shell,slack,mMethod,twoPhase]{if(slack)simplexController(shell).requestAllSlack();else if(mMethod)simplexController(shell).requestMMethod();else if(twoPhase)simplexController(shell).requestTwoPhase();else simplexController(shell).requestBounded();});
         }else {action->setEnabled(false);action->setToolTip(QString::fromLatin1(previewReason));}
     }
     menu.setToolTipsVisible(true);

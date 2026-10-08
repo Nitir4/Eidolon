@@ -37,6 +37,8 @@ PrimalSimplexSession::PrimalSimplexSession(LpProblem problem,PrimalMethod method
     const auto p=normalized(problem_);
     if(!std::isfinite(penalty))throw std::invalid_argument("M must be a finite number");
     const bool artificial=requiresArtificial(problem_);
+    canonicalBasicCosts_=method==PrimalMethod::Bounded;
+    if(canonicalBasicCosts_)method_=artificial?PrimalMethod::TwoPhase:PrimalMethod::AllSlack;
     if(artificial && method==PrimalMethod::AllSlack)throw std::invalid_argument(redirectWarning());
     if(!artificial)method_=PrimalMethod::AllSlack;
     const auto n=p.variables.size(),m=p.constraints.size();
@@ -210,10 +212,10 @@ core::Tableau PrimalSimplexSession::reconstructed(const core::Tableau& table,boo
         result(0,j)=original(0,j);
         for(std::size_t i=0;i<m;++i)result(0,j)-=original(0,table.basis()[i])*result(i+1,j);
     }
-    // Two-phase feasibility/restored objectives are canonical on the basis.
+    // Two-phase and the captured Bounded profile are canonical on the basis.
     // Preserve the separately observed constraint residuals; only these
     // mathematically zero basic reduced costs are written as exact zero.
-    if(method_==PrimalMethod::TwoPhase)for(const auto column:table.basis())result(0,column)=0;
+    if(method_==PrimalMethod::TwoPhase || canonicalBasicCosts_)for(const auto column:table.basis())result(0,column)=0;
     return retainingBlocks(core::Tableau(std::move(result),table.columns(),table.basis()),table);
 }
 bool PrimalSimplexSession::next() {

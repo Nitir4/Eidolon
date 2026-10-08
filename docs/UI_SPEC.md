@@ -230,3 +230,11 @@ intermediate message. Infeasibility uses the captured Phase 1 dialog and stops
 before Phase 2. All-<= warning OK/Cancel both continue to All-slack. Native
 table colors, pinned Basic labels, font metrics, printing, timer cancellation
 and input invalidation are shared with the earlier methods.
+
+
+Bounded simplex is enabled with a loaded LP document. It reaches output format
+directly without an all-slack/artificial redirect warning or M entry. After
+lower-bound/RHS normalization its heading is Starting All-Slack Method or
+Two-Phase Method. The shared native bound/sign rows, complements, phase controls,
+blocked artificial columns, printing and navigation apply. A captured initial
+shifted-start infeasibility shows the Phase 1 modal immediately on output.

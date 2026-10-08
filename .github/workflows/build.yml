@@ -82,9 +82,11 @@ jobs:
             build/ci/tests/all-slack-comparison.tsv
             build/ci/tests/m-method-comparison.tsv
             build/ci/tests/two-phase-comparison.tsv
+            build/ci/tests/bounded-comparison.tsv
             build/ci/tests/desktop-input-scale-*.xml
             build/ci/tests/desktop-simplex-scale-*.xml
             build/ci/tests/desktop-m-method-scale-*.xml
             build/ci/tests/desktop-two-phase-scale-*.xml
+            build/ci/tests/desktop-bounded-scale-*.xml
             build/ci/ui-captures/
           if-no-files-found: warn

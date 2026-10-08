@@ -52,10 +52,11 @@ mathematical recomputation was used to fill these transcriptions.
 
 ## Unknowns / things I could not verify
 
-Inconsistent bound validation, unrestricted-variable expansion, a return from
-an upper complement to the original representation, and exact numerical
-thresholds for near-tied bound/constraint steps remain unverified. The three
-comparisons do not prove the two menu selections are identical for every LP.
+Exact numerical thresholds for near-tied bound/constraint steps, cycling and
+unseen signed/infinite/unrestricted combinations remain unverified. Input bound
+validation is covered by Foundation 3; later focused captures verify complement
+return and an exact bound/row tie. These finite comparisons do not establish
+equivalence for every unseen LP.
 
 ## Shared input, UI and file contract
 
@@ -67,3 +68,29 @@ Observed automatic rules and exact validation/termination text are in
 `LP_PIVOT_POLICY.md` and `LP_ALL_SLACK.md`. Model save/open behavior is shared
 and specified in `FILE_BEHAVIOR.md` / `../FILE_FORMAT.md`. These shared
 contracts apply to this method; unsupported edge cases stay explicit.
+
+## Phase 2 verified Bounded contract
+
+The Bounded menu reaches output formatting directly with no redirect warning
+or M input. The actual screen is All-slack or Two-phase after lower-bound and
+negative-RHS normalization. Eighteen original sessions/64 tables were reused;
+six valid focused runs add 21 tables. All 24 sessions/85 tables (4186 exact
+cell strings) have screenshot-hashed transcriptions in tests/fixtures/bounded.json.
+The attempted Cancel-dialog probe assumed a nonexistent warning and is excluded.
+Raw evidence remains private under probes/phase2-bounded.
+
+The focused bound/row tie (x1 upper 6 and x1<=6) chooses the row, retaining
+column x1 and making it basic. The complement-return run changes x1 to Ux1,
+then returns to x1 at iteration 4 with objective 12.00. A zero-width bound
+makes a zero-step complement. An unrestricted scientific run checks four
+complete tables. An artificial finite-bound start uses six Two-phase tables.
+A lower-bound shift can create the artificial start despite original <= rows;
+its initial infeasibility dialog is Phase 1 / Phase 2 nixed. Phase1 shows the
+problem has no feasible solution (separate initial-notice capture).
+
+BoundedSession uses the verified shared All-slack/Two-phase engine, with exact
+basic objective costs in its scientific profile; requestBounded selects the
+actual method without the other menu warnings. The shared Next/All, pinned Basic labels, immutable PDF printing,
+file bindings and stale-session/navigation rules apply. Numerical and native
+workflow tests precede these interfaces. Hidden tolerances, unobserved arithmetic,
+successful original printing and physical mixed-DPI moves remain explicit.

@@ -125,3 +125,17 @@ table; the following Next appends Phase 2, whereas All suppresses the feasible
 boundary message. Cancel on the all-<= warning also uses All-slack. Hidden
 near-zero feasibility thresholds, ill-conditioned inputs beyond these captures
 and redundant-basis behavior outside the reviewed cases remain unverified.
+
+
+The Bounded cycle resolves an exact entering-bound/constraint-row tie (row wins),
+complement return Ux1 to x1, zero-width complement, direct warning-free setup,
+and lower-shift artificial dispatch with an initial infeasibility notice.
+Its 24-session/85-table corpus retains a full unrestricted scientific trace.
+Near-tied steps, unseen bound/sign combinations, hidden thresholds/cycling,
+original successful print layout and physical mixed-DPI moves remain unverified.
+The excluded attempted Cancel probe supplies no M-routing claim.
+
+Bounded scientific output distinguishes its canonical basic objective costs
+(exact zero) from the earlier All-slack residual display (1.67e-16). Constraint
+residuals remain unchanged. The implementation retains separate profiles;
+decimal trace agreement did not establish identical floating-point output.
