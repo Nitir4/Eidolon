@@ -179,3 +179,17 @@ are excluded from repository and package contents.
 | ARCH-01, BUILD-01 | Common Qt-free primal base; one OS-matrix workflow | Full suite/deployed packages for all three OSes | PHASE2_M_METHOD_REPORT.md |
 
 Original reference files/screenshots stay excluded from source and releases.
+
+## Phase 2 Two-phase mappings
+
+| IDs | Code | Verification | Capture / requirement |
+| --- | --- | --- | --- |
+| LP-TP-01 | requestTwoPhase, solve-two-phase, artificial-warning OK | Real menu/format, OK/Cancel all-<= fallback, earlier M Cancel route retained | Original fifteen two_phase selections; tp-slack-cancel |
+| LP-TP-02/03 | TwoPhaseSession / shared initializer and pivots | 99 ordered tables, 5278 cell strings and observed choices | two-phase.json; original 03/04/06/07/08/10/15 plus eight focused direct cases |
+| LP-TP-04 | SimplexStep::phase, phaseOneComplete, restored objective and masks | Separate transition, infeasibility without transition, retained zero artificial basis, blocked-column rejection | tp-redundant/zero-equality; tp-bound-infeasible; original03 |
+| LP-TP-05 | Session terminalMessage and controller manual/automatic notices | Exact phase/terminal text and acknowledgement timing | tp-manual-transition/ack/transition-bottom; original optimal/alternative/unbounded |
+| LP-TP-06 | Cross-product reconstruction, original feasibility costs and canonical basic costs | Full six-table scientific comparison, both residuals and exact objective zeros | tp-dual-scientific; reviewed glyph seeds; independent screenshot hashes |
+| LP-TP-07, DPI-01 | Shared native views/timer/printing/input invalidation | Four scales, three resolutions, 100×100 scrolling/pause, native menu/output, PDF non-mutation | desktop_two_phase; native requirements; Q-08 retained |
+| ARCH-01, BUILD-01 | Shared Qt-free base and one OS-matrix workflow | Full suites, deployed startup and three artifacts required for gate | PHASE2_TWO_PHASE_REPORT.md |
+
+Raw reference screenshots/files/executables remain excluded from source and releases.

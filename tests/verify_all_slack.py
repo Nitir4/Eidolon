@@ -11,13 +11,13 @@ for record in records:
     lines += [' '.join(p['objective'])]
     lines += [f"{r['relation']} {r['rhs']} "+' '.join(r['coefficients']) for r in p['constraints']]
     if 'm' in record:lines += [record['m']]
-    lines += ['0 5 2',record.get('operation','all')]
+    lines += [' '.join(map(str,record.get('format',[0,5,2]))),record.get('operation','all')]
     process=subprocess.run([sys.argv[1]],input='\n'.join(lines)+'\n',text=True,capture_output=True)
     if process.returncode:raise AssertionError(f"{record['case']}: {process.stderr}")
     actual=json.loads(process.stdout)
     assert actual['requires_artificial']==record['requires_artificial'],record['case']+' redirect'
     comparison.append([record['case'],'','classification','','',str(record['requires_artificial']),str(actual['requires_artificial'])])
-    if record['requires_artificial'] and 'm' not in record:redirects+=1;continue
+    if record['requires_artificial'] and 'm' not in record and record.get('method')!='two_phase':redirects+=1;continue
     assert len(actual['tables'])==len(record['tables']),record['case']+' iteration count'
     assert actual['message']==record['message'],record['case']+' terminal message: '+actual['message']
     comparison.append([record['case'],'','terminal','','',record['message'],actual['message']])
@@ -43,7 +43,10 @@ for record in records:
         comparison.append([record['case'],t['heading'],'notation',t['rows'][sample['row']]['label'],t['columns'][sample['column']],sample['value'],got])
         cells+=1
     print(record['case'],len(actual['tables']),'tables MATCH')
-if records and 'm' in records[0]:
+if records and records[0].get('method')=='two_phase':
+    fallback=sum(not r['requires_artificial'] for r in records)
+    print(f'{len(records)-fallback} direct Two-phase sessions, {fallback} All-slack fallbacks, {tables} complete tables, {cells} exact cell strings MATCH')
+elif records and 'm' in records[0]:
     fallback=sum(not r['requires_artificial'] for r in records)
     print(f'{len(records)-fallback} direct M sessions, {fallback} All-slack fallbacks, {tables} complete tables, {cells} exact cell strings MATCH')
 else:

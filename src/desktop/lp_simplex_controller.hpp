@@ -2,6 +2,7 @@
 #include "application_shell.hpp"
 #include <tora/lp/all_slack.hpp>
 #include <tora/lp/m_method.hpp>
+#include <tora/lp/two_phase.hpp>
 #include <QObject>
 #include <QTimer>
 #include <functional>
@@ -17,6 +18,7 @@ public:
     std::function<bool(const QString&)> redirect; // true = OK, false = Cancel; each method preserves its captured handoff
     bool requestAllSlack();
     bool requestMMethod();
+    bool requestTwoPhase();
     bool canEnterM() const {return mPending_;}
     bool setPenalty(const QString& text);
     bool canStart() const {return requested_;}

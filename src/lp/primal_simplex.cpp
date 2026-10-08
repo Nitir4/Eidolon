@@ -24,6 +24,10 @@ LpProblem normalized(LpProblem p) {
 std::string bound(Scalar x,const core::NumberFormatter& formatter) {
     return std::isfinite(x)?formatter.format(x):(x<0?"-infinity":"infinity");
 }
+core::Tableau retainingBlocks(core::Tableau next,const core::Tableau& previous) {
+    for(std::size_t j=0;j<previous.columns().size();++j)next.setObjectiveBlocked(j,previous.objectiveBlocked(j));
+    return next;
+}
 }
 bool PrimalSimplexSession::requiresArtificial(const LpProblem& problem) {
     const auto p=normalized(problem);
@@ -38,19 +42,24 @@ PrimalSimplexSession::PrimalSimplexSession(LpProblem problem,PrimalMethod method
     const auto n=p.variables.size(),m=p.constraints.size();
     const auto surplus=static_cast<std::size_t>(std::count_if(p.constraints.begin(),p.constraints.end(),[](const auto& r){return r.relation==Relation::GreaterEqual;}));
     const auto cols=n+surplus+m;
+    const bool twoPhase=method_==PrimalMethod::TwoPhase;
+    originalObjective_.resize(cols+1,0);
     core::Matrix values(m+1,cols+1);std::vector<std::string> columns;std::vector<std::size_t> basis;
     for(std::size_t j=0;j<n;++j) {
         const auto& v=p.variables[j];
         ranges_.push_back(v.unrestricted?std::numeric_limits<Scalar>::infinity():v.upperBound-v.lowerBound);
-        const bool negative=v.unrestricted && (p.sense==ObjectiveSense::Maximize?p.objective[j]<0:p.objective[j]>0);
+        Scalar feasibilityCost=0;
+        if(twoPhase)for(const auto& r:p.constraints)if(r.relation!=Relation::LessEqual)feasibilityCost+=r.coefficients[j];
+        const bool negative=v.unrestricted && (twoPhase?feasibilityCost<0:(p.sense==ObjectiveSense::Maximize?p.objective[j]<0:p.objective[j]>0));
         columns.push_back(v.unrestricted?p.variableLabel(j)+(negative?"-":"+"):(v.lowerBound!=0?"L":"")+p.variableLabel(j));
-        values(0,j)=negative?p.objective[j]:-p.objective[j];
-        if(!v.unrestricted)values(0,cols)+=p.objective[j]*v.lowerBound;
+        originalObjective_[j]=negative?p.objective[j]:-p.objective[j];
+        if(!v.unrestricted)originalObjective_[cols]+=p.objective[j]*v.lowerBound;
+        if(!twoPhase){values(0,j)=originalObjective_[j];if(!v.unrestricted)values(0,cols)+=p.objective[j]*v.lowerBound;}
     }
     ranges_.resize(cols,std::numeric_limits<Scalar>::infinity());
     for(std::size_t k=0;k<surplus;++k)columns.push_back("Sx"+std::to_string(n+k+1));
     std::size_t k=0;
-    const auto signedPenalty=p.sense==ObjectiveSense::Maximize?-penalty:penalty;
+    const auto signedPenalty=twoPhase?Scalar(1):(p.sense==ObjectiveSense::Maximize?-penalty:penalty);
     for(std::size_t i=0;i<m;++i) {
         const bool slack=p.constraints[i].relation==Relation::LessEqual;
         const auto basicColumn=n+surplus+i;
@@ -62,8 +71,11 @@ PrimalSimplexSession::PrimalSimplexSession(LpProblem problem,PrimalMethod method
             if(j!=basicColumn)values(0,j)+=signedPenalty*values(i+1,j);
         }
     }
-    history_.push_back({core::Tableau(std::move(values),std::move(columns),std::move(basis)),{}, {}});
+    history_.push_back({core::Tableau(std::move(values),std::move(columns),std::move(basis)),{}, {},twoPhase?1:0});
     assess();
+}
+ObjectiveSense PrimalSimplexSession::objectiveSense() const {
+    return history_.back().phase==1?ObjectiveSense::Minimize:problem_.sense;
 }
 bool PrimalSimplexSession::basic(std::size_t column) const {
     const auto& basis=history_.back().tableau.basis();return std::find(basis.begin(),basis.end(),column)!=basis.end();
@@ -89,7 +101,7 @@ std::optional<SimplexChoice> PrimalSimplexSession::recommendation() const {
     for(std::size_t j=0;j<t.columns().size();++j) {
         if(basic(j) || t.objectiveBlocked(j))continue;
         const Scalar a=t.values()(0,j);
-        if((problem_.sense==ObjectiveSense::Maximize && a<best) || (problem_.sense==ObjectiveSense::Minimize && a>best)){best=a;col=j;}
+        if((objectiveSense()==ObjectiveSense::Maximize && a<best) || (objectiveSense()==ObjectiveSense::Minimize && a>best)){best=a;col=j;}
     }
     return col?choice(*col):std::optional<SimplexChoice>{};
 }
@@ -101,13 +113,18 @@ void PrimalSimplexSession::assess() {
     for(std::size_t j=0;j<problem_.variables.size();++j) {
         if(!problem_.variables[j].unrestricted || basic(j))continue;
         const auto cost=values(0,j);
-        if(problem_.sense==ObjectiveSense::Maximize?cost>0:cost<0) {
+        if(objectiveSense()==ObjectiveSense::Maximize?cost>0:cost<0) {
             for(std::size_t i=0;i<values.rows();++i)values(i,j)=-values(i,j);
             columns[j].back()=columns[j].back()=='+'?'-':'+';changed=true;
         }
     }
-    if(changed)table=core::Tableau(std::move(values),std::move(columns),table.basis());
+    if(changed)table=retainingBlocks(core::Tableau(std::move(values),std::move(columns),table.basis()),table);
     if(recommendation()){status_=SimplexStatus::Running;return;}
+    if(history_.back().phase==1) {
+        phaseReady_=table.rhs(0)<=0;
+        status_=phaseReady_?SimplexStatus::Running:SimplexStatus::Infeasible;
+        return;
+    }
     status_=SimplexStatus::Optimal;
     const auto& t=history_.back().tableau;
     for(std::size_t j=0;j<t.columns().size();++j)
@@ -115,7 +132,7 @@ void PrimalSimplexSession::assess() {
 }
 void PrimalSimplexSession::selectEntering(std::size_t col) {
     const auto recommended=recommendation();const auto& t=history_.back().tableau;
-    if(col>=t.columns().size() || basic(col) || status_==SimplexStatus::Unbounded ||
+    if(col>=t.columns().size() || basic(col) || t.objectiveBlocked(col) || status_==SimplexStatus::Unbounded || status_==SimplexStatus::Infeasible ||
         (status_==SimplexStatus::Running?(!recommended || recommended->column!=col):t.values()(0,col)!=0))
         throw std::invalid_argument(enteringError());
     history_.back().entering=col;history_.back().leaving.reset();
@@ -137,9 +154,9 @@ core::Tableau PrimalSimplexSession::complemented(core::Tableau t,std::size_t col
         for(std::size_t j=0;j<values.columns();++j)values(row,j)=-values(row,j);
     }
     if(columns[column].front()=='U')columns[column].erase(0,1);else columns[column].insert(0,"U");
-    return core::Tableau(std::move(values),std::move(columns),t.basis());
+    return retainingBlocks(core::Tableau(std::move(values),std::move(columns),t.basis()),t);
 }
-core::Tableau PrimalSimplexSession::reconstructed(const core::Tableau& table) const {
+core::Tableau PrimalSimplexSession::reconstructed(const core::Tableau& table,bool restoreObjective) const {
     // Reconstruct from the original equations and the ordered basis instead
     // of repeatedly rounding previously eliminated coefficients. This is a
     // numerical implementation choice, not a claim about TORA's internals.
@@ -147,6 +164,13 @@ core::Tableau PrimalSimplexSession::reconstructed(const core::Tableau& table) co
     // that is lost by forcing every basic-column off-diagonal to exact zero.
     const auto& initial=history_.front().tableau;
     auto original=initial.values();const auto m=table.basis().size(),cols=table.columns().size();
+    if(restoreObjective || history_.back().phase==2)for(std::size_t j=0;j<=cols;++j)original(0,j)=originalObjective_[j];
+    else if(method_==PrimalMethod::TwoPhase) {
+        // Rebuild the feasibility dual from the original -sum(Rx) costs.
+        // Reusing its already canonical initial row introduces residuals in
+        // basic decision costs that the full scientific oracle excludes.
+        for(std::size_t j=0;j<=cols;++j)original(0,j)=j<cols && initial.columns()[j].rfind("Rx",0)==0?Scalar(-1):Scalar(0);
+    }
     for(std::size_t j=0;j<problem_.variables.size();++j) {
         if(table.columns()[j]==initial.columns()[j])continue;
         for(std::size_t i=0;i<original.rows();++i) {
@@ -162,7 +186,7 @@ core::Tableau PrimalSimplexSession::reconstructed(const core::Tableau& table) co
         if(row==m)throw std::domain_error("Selected simplex basis is singular");
         if(row!=j)for(std::size_t k=0;k<2*m;++k)std::swap(inverse(row,k),inverse(j,k));
         const auto pivot=inverse(j,j);
-        if(method_==PrimalMethod::MMethod) {
+        if(method_!=PrimalMethod::AllSlack) {
             // Cross-product elimination avoids introducing fractions until
             // after each row update; the M scientific oracle distinguishes
             // this order from dividing the pivot row first.
@@ -178,7 +202,7 @@ core::Tableau PrimalSimplexSession::reconstructed(const core::Tableau& table) co
         const auto pos=static_cast<std::size_t>(std::find(ordered.begin(),ordered.end(),table.basis()[i])-ordered.begin());
         for(std::size_t j=0;j<=cols;++j)for(std::size_t k=0;k<m;++k)result(i+1,j)+=inverse(pos,m+k)*original(k+1,j);
     }
-    if(method_==PrimalMethod::MMethod) {
+    if(method_!=PrimalMethod::AllSlack) {
         std::vector<Scalar> dual(m,0);
         for(std::size_t i=0;i<m;++i){const auto pos=static_cast<std::size_t>(std::find(ordered.begin(),ordered.end(),table.basis()[i])-ordered.begin());for(std::size_t k=0;k<m;++k)dual[k]+=original(0,table.basis()[i])*inverse(pos,m+k);}
         for(std::size_t j=0;j<=cols;++j){result(0,j)=original(0,j);for(std::size_t k=0;k<m;++k)result(0,j)-=dual[k]*original(k+1,j);}
@@ -186,10 +210,20 @@ core::Tableau PrimalSimplexSession::reconstructed(const core::Tableau& table) co
         result(0,j)=original(0,j);
         for(std::size_t i=0;i<m;++i)result(0,j)-=original(0,table.basis()[i])*result(i+1,j);
     }
-    return core::Tableau(std::move(result),table.columns(),table.basis());
+    // Two-phase feasibility/restored objectives are canonical on the basis.
+    // Preserve the separately observed constraint residuals; only these
+    // mathematically zero basic reduced costs are written as exact zero.
+    if(method_==PrimalMethod::TwoPhase)for(const auto column:table.basis())result(0,column)=0;
+    return retainingBlocks(core::Tableau(std::move(result),table.columns(),table.basis()),table);
 }
 bool PrimalSimplexSession::next() {
-    if(status_==SimplexStatus::Unbounded)return false;
+    if(status_==SimplexStatus::Unbounded || status_==SimplexStatus::Infeasible)return false;
+    if(phaseReady_) {
+        auto table=reconstructed(history_.back().tableau,true);
+        for(std::size_t j=0;j<table.columns().size();++j)
+            if(history_.front().tableau.columns()[j].rfind("Rx",0)==0)table.setObjectiveBlocked(j,true);
+        history_.push_back({std::move(table),{}, {},2});phaseReady_=false;assess();return true;
+    }
     auto picked=history_.back().entering?choice(*history_.back().entering):recommendation();
     if(!picked){assess();return false;}
     if(!std::isfinite(picked->step)){
@@ -206,7 +240,8 @@ bool PrimalSimplexSession::next() {
     }
     next=reconstructed(next);
     history_.back().entering=picked->column;history_.back().leaving=picked->row;
-    history_.push_back({std::move(next),{}, {}});assess();return true;
+    const int phase=history_.back().phase;
+    history_.push_back({std::move(next),{}, {},phase});assess();return true;
 }
 void PrimalSimplexSession::solveAll(std::size_t limit) {
     std::size_t count=0;
@@ -218,9 +253,10 @@ void PrimalSimplexSession::solveAll(std::size_t limit) {
 SimplexDisplay PrimalSimplexSession::display(std::size_t index,core::NumberFormat format) const {
     const auto& step=history_.at(index);const auto& t=step.tableau;const core::NumberFormatter f(format);
     SimplexDisplay result;result.heading="Iteration "+std::to_string(index+1);result.columns=t.columns();result.columns.push_back("Solution");
+    if(step.phase)result.heading="Phase "+std::to_string(step.phase)+" (Iter "+std::to_string(index+1);
     for(std::size_t i=0;i<t.values().rows();++i) {
-        SimplexDisplayRow row{i==0?(problem_.sense==ObjectiveSense::Maximize?"z (max)":"z (min)"):t.basicLabel(i),{}};
-        for(std::size_t j=0;j<t.values().columns();++j)row.values.push_back(f.format(t.values()(i,j)));
+        SimplexDisplayRow row{i==0?(step.phase!=1 && problem_.sense==ObjectiveSense::Maximize?"z (max)":"z (min)"):t.basicLabel(i),{}};
+        for(std::size_t j=0;j<t.values().columns();++j)row.values.push_back(i==0 && j<t.columns().size() && t.objectiveBlocked(j)?"blocked":f.format(t.values()(i,j)));
         result.rows.push_back(std::move(row));
     }
     for(int i=0;i<3;++i) {
@@ -235,6 +271,7 @@ SimplexDisplay PrimalSimplexSession::display(std::size_t index,core::NumberForma
     return result;
 }
 std::string PrimalSimplexSession::terminalMessage() const {
+    if(status_==SimplexStatus::Infeasible)return "Phase 2 nixed. Phase1 shows the problem has no feasible solution";
     if(status_==SimplexStatus::Unbounded)return "Last tableau shows solution is unbounded";
     if(status_==SimplexStatus::Running)return {};
     auto message="Iteration "+std::to_string(history_.size())+" is optimal";

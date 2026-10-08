@@ -6,11 +6,12 @@
 #include <utility>
 
 namespace tora::lp {
-enum class SimplexStatus { Running, Optimal, Alternative, Unbounded };
+enum class SimplexStatus { Running, Optimal, Alternative, Unbounded, Infeasible };
 struct SimplexStep {
     core::Tableau tableau;
     std::optional<std::size_t> entering;
     std::optional<std::size_t> leaving; // numerical row; row zero is objective
+    int phase=0; // zero for All-slack/M; observed Two-phase snapshots use 1/2
 };
 struct SimplexDisplayRow {std::string label;std::vector<std::string> values;};
 struct SimplexDisplay {
@@ -29,7 +30,7 @@ struct SimplexChoice {
 // No GUI/file dependency. Each numerical snapshot remains independently owned.
 // Strict binary64 comparisons match the captured policy; hidden TORA tolerances
 // are not claimed. Presentation precision never changes arithmetic.
-enum class PrimalMethod { AllSlack, MMethod };
+enum class PrimalMethod { AllSlack, MMethod, TwoPhase };
 class PrimalSimplexSession {
 public:
     virtual ~PrimalSimplexSession()=default;
@@ -38,6 +39,7 @@ public:
     const std::vector<SimplexStep>& history() const noexcept {return history_;}
     const LpProblem& problem() const noexcept {return problem_;}
     SimplexStatus status() const noexcept {return status_;}
+    bool phaseOneComplete() const noexcept {return phaseReady_;}
     std::optional<SimplexChoice> recommendation() const;
     void selectEntering(std::size_t column);
     void selectLeaving(std::size_t row);
@@ -54,12 +56,15 @@ private:
     std::optional<SimplexChoice> choice(std::size_t column) const;
     bool basic(std::size_t column) const;
     void assess();
+    ObjectiveSense objectiveSense() const;
     core::Tableau complemented(core::Tableau table,std::size_t column) const;
-    core::Tableau reconstructed(const core::Tableau& table) const;
+    core::Tableau reconstructed(const core::Tableau& table,bool restoreObjective=false) const;
     PrimalMethod method_;
     LpProblem problem_;
     std::vector<Scalar> ranges_;
+    std::vector<Scalar> originalObjective_;
     std::vector<SimplexStep> history_;
     SimplexStatus status_=SimplexStatus::Running;
+    bool phaseReady_=false;
 };
 } // namespace tora::lp

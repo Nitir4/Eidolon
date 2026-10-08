@@ -116,3 +116,12 @@ Cross-product basis inversion with a dual-first cost row reproduces the observed
 TORA internals. Arbitrary M parsing, ill-conditioned/unseen cases, cycling, exact
 bound ties and physical DPI/legacy-print acceptance remain unknown. M Go is
 now functional; Two-phase is the next separately gated numerical cycle.
+
+Two-phase narrows Q-01/Q-06 further: the captured redundant equality and zero
+RHS runs retain zero-valued artificial basic rows when entering Phase 2. The
+full scientific run retains tiny constraint residuals but exact zero basic
+objective costs. Manual feasible-phase acknowledgement leaves the final Phase 1
+table; the following Next appends Phase 2, whereas All suppresses the feasible
+boundary message. Cancel on the all-<= warning also uses All-slack. Hidden
+near-zero feasibility thresholds, ill-conditioned inputs beyond these captures
+and redundant-basis behavior outside the reviewed cases remain unverified.

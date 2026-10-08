@@ -9,7 +9,7 @@ Qt-free LP model and validation against observed input fields. Foundation 4 adds
 the Qt-free TORA LP document, codec and binary file store. All foundations are
 complete in the approved order **1 → 5 → 2 → 3 → 4**. Phase 2 is authorized;
 its input module supplies native LP data entry, row/column editing and Open/Save.
-All-slack and finite M-method now supply manual/automatic iteration tables;
+All-slack, finite M-method and Two-phase now supply manual/automatic iteration tables;
 other numerical methods retain their separate implementation gates.
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
@@ -20,7 +20,8 @@ See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_R
 [Foundation 4 report](docs/FOUNDATION4_REPORT.md) and
 [Phase 2 input report](docs/PHASE2_INPUT_REPORT.md),
 [All-slack report](docs/PHASE2_ALL_SLACK_REPORT.md),
-[M-method report](docs/PHASE2_M_METHOD_REPORT.md), plus
+[M-method report](docs/PHASE2_M_METHOD_REPORT.md),
+[Two-phase report](docs/PHASE2_TWO_PHASE_REPORT.md), plus
 [build instructions](docs/BUILD.md). With CMake 3.24+, Ninja, a C++17 compiler
 and Qt 6.8+ Widgets/PrintSupport installed:
 
@@ -41,8 +42,10 @@ constraint count to initialize the editable grid. Choose Select Existing File
 to open a TORA .txt file, including a read-only copy. Save/Save As and EditGrid
 are enabled when applicable; SOLVE Menu validates the input and offers Save?.
 Choose Solve Problem → Algebraic → Iterations → All-slack starting solution or
-M-method. M-method asks for a finite penalty (default 100), then output format;
-both methods support Next/All Iterations and native printing. Other solver
+M-method or Two-phase method. M-method asks for a finite penalty (default 100),
+then output format. Two-phase uses the common output format and shows its
+feasibility and original-objective phases. These methods support Next/All
+Iterations and native printing. Other solver
 leaf commands remain disabled until their separate gates. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).

@@ -327,14 +327,15 @@ verified. There is no Qt/file dependency in either numerical wrapper.
 
 LpSimplexController owns a PrimalSimplexSession and requested method/penalty.
 M setup, the All-slack artificial-warning Cancel path and the M all-slack
-fallback all feed the same native view/printing path. Only Two-phase's setup
-handoff remains pending here. New solvers can reuse the display/teaching protocol
+fallback all feed the same native view/printing path. Two-phase now completes
+the artificial-warning OK handoff. New solvers can reuse the display/teaching protocol
 without changing the generic shell or copying the accumulated-table widget.
 
 ```mermaid
 classDiagram
     PrimalSimplexSession <|-- AllSlackSession
     PrimalSimplexSession <|-- MMethodSession
+    PrimalSimplexSession <|-- TwoPhaseSession
     PrimalSimplexSession *-- SimplexStep
     PrimalSimplexSession *-- LpProblem
     SimplexStep *-- Tableau
@@ -342,3 +343,20 @@ classDiagram
     TraceModel --> LpSimplexController
     QPrinter ..> PrimalSimplexSession : immutable displays
 ```
+
+## Implemented Two-phase state
+
+TwoPhaseSession is another thin policy wrapper over PrimalSimplexSession.
+SimplexStep stores its phase alongside its immutable tableau and selections.
+The session owns the original objective and a feasible-boundary flag; Next
+appends the Phase 2 table as a separate step and carries objective-block masks
+through reconstruction, complements and free-column orientation changes.
+Phase 1 reconstructs from the original artificial costs, while Phase 2 restores
+original decision costs and the lower-bound objective constant. Canonical basic
+reduced costs retain the captured exact zeros; constraint residuals are kept.
+
+LpSimplexController reports the manual feasible-boundary notice, distinguishes
+infeasible Phase 1 from normal terminal dialogs, and suppresses that intermediate
+notice during automatic iterations. The same TraceModel, pinned Basic/number
+views and QPrinter path consume all three primal method traces. No shell/module
+registration or file-format changes are needed for this extension.

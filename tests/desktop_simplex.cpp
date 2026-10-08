@@ -60,7 +60,7 @@ private slots:
         auto& c=simplexController(shell);c.notice=[](const QString&,const QString&){};QString warning;
         c.redirect=[&](const QString& text){warning=text;return true;};
         QVERIFY(!c.requestAllSlack());QVERIFY(warning.contains(QStringLiteral("Two-phase method will be used")));
-        QCOMPARE(shell.currentScreen(),QStringLiteral("lp/output-format"));QVERIFY(!c.canStart());QVERIFY(!c.session());
+        QCOMPARE(shell.currentScreen(),QStringLiteral("lp/output-format"));QVERIFY(c.canStart());QVERIFY(!c.session());
         c.redirect=[](const QString&){return false;};QVERIFY(!c.requestAllSlack());QCOMPARE(shell.currentScreen(),QStringLiteral("lp/m-value"));
     }
     void initialOptimalNoticeAndScientificOutput() {

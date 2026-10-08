@@ -85,6 +85,8 @@ def learn():
     raw_by_path = {}
     free=CAPTURES/'reviewed-glyph-seeds/m-free-variable-iteration-01.png'
     if free.exists():seeds.append((free,(173,210,250,225),'x1+'))
+    scientific=CAPTURES/'reviewed-glyph-seeds/m-scientific-short-iteration-01.png'
+    if scientific.exists():seeds.append((scientific,(173,227,250,241),'3.98e+02'))
     for source,box,text in seeds:
         raw = raw_by_path.setdefault(source,image_rgb(source))
         patterns = glyphs(raw,box)
@@ -206,7 +208,7 @@ def transcribe(source,templates,labels,captions):
             match=re.fullmatch(r'Phase(\d+)\(Iter(\d+)\)?',caption)
             if match:heading={'phase':int(match[1]),'iteration':int(match[2]),'display':f'Phase {match[1]} (Iter {match[2]}'}
             if not label and re.fullmatch(r'(?:x|sx|Sx|Rx|Ux|Lx|ULx)\d+[+-]?',caption):label=caption
-            exact = '?' not in text and re.fullmatch(r'-?\d+\.\d+',text) is not None
+            exact = '?' not in text and re.fullmatch(r'-?\d+\.\d+(?:e[+-]\d+)?',text) is not None
             clipped = x1 == xs[-1] and (x1-x0) < 76
             exact = exact and not clipped
             cells.append({'box':box,'text':text if exact else None,

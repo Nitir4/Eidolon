@@ -39,7 +39,8 @@ bool LpSimplexController::requestAllSlack() {
     try {
         if(tora::lp::AllSlackSession::requiresArtificial(doc->problem)) {
             const bool twoPhase=redirect(QString::fromLatin1(tora::lp::AllSlackSession::redirectWarning()));
-            if(!twoPhase){requestedMethod_=tora::lp::PrimalMethod::MMethod;mPending_=true;penalty_=100;}emit changed();
+            if(twoPhase){requestedMethod_=tora::lp::PrimalMethod::TwoPhase;requested_=true;}
+            else {requestedMethod_=tora::lp::PrimalMethod::MMethod;mPending_=true;penalty_=100;}emit changed();
             shell_.navigate(twoPhase?QStringLiteral("lp/output-format"):QStringLiteral("lp/m-value"));return false;
         }
         requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
@@ -64,12 +65,25 @@ bool LpSimplexController::setPenalty(const QString& text) {
     if(!std::isfinite(value)){notice(QStringLiteral("M-Method"),QStringLiteral("M must be a finite number"));return false;}
     penalty_=value;requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
 }
+bool LpSimplexController::requestTwoPhase() {
+    const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
+    requestedMethod_=tora::lp::PrimalMethod::TwoPhase;
+    try {
+        if(!tora::lp::PrimalSimplexSession::requiresArtificial(doc->problem)) {
+            (void)redirect(QString::fromLatin1(tora::lp::MMethodSession::allSlackWarning()));
+            requestedMethod_=tora::lp::PrimalMethod::AllSlack;
+        }
+        requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
+    }catch(const std::exception& e){notice(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));return false;}
+}
 bool LpSimplexController::start(tora::core::NumberFormat format) {
     if(!requested_ || !inputController(shell_).document())return false;
     try {
         (void)tora::core::NumberFormatter(format);
         std::unique_ptr<tora::lp::PrimalSimplexSession> next;
         if(requestedMethod_==tora::lp::PrimalMethod::MMethod)next=std::make_unique<tora::lp::MMethodSession>(inputController(shell_).document()->problem,penalty_);
+        else if(requestedMethod_==tora::lp::PrimalMethod::TwoPhase)next=std::make_unique<tora::lp::TwoPhaseSession>(inputController(shell_).document()->problem);
         else next=std::make_unique<tora::lp::AllSlackSession>(inputController(shell_).document()->problem);
         format_=format;session_=std::move(next);emit changed();shell_.navigate(QStringLiteral("lp/simplex"));terminal();return true;
     }catch(const std::exception& e){notice(QStringLiteral("Simplex"),QString::fromUtf8(e.what()));return false;}
@@ -92,11 +106,15 @@ void LpSimplexController::selectCell(int row,int col) {
     }catch(const std::invalid_argument& e){notice(relative==1?QStringLiteral("Entering Variable"):QStringLiteral("Leaving Variable"),QString::fromUtf8(e.what()));}
 }
 void LpSimplexController::terminal() {
-    if(session_ && session_->status()!=SimplexStatus::Running)notice(QStringLiteral("Optimal Tableau"),QString::fromStdString(session_->terminalMessage()));
+    if(session_ && session_->status()!=SimplexStatus::Running)notice(session_->status()==SimplexStatus::Infeasible?QStringLiteral("Phase 1"):QStringLiteral("Optimal Tableau"),QString::fromStdString(session_->terminalMessage()));
 }
 void LpSimplexController::next() {
     if(!canNext())return;
-    try {session_->next();emit changed();terminal();}
+    try {
+        session_->next();emit changed();
+        if(session_ && session_->phaseOneComplete())notice(QStringLiteral("Phase 1"),QStringLiteral("End of Phase 1: Feasible solution found--initiating Phase 2"));
+        else terminal();
+    }
     catch(const std::exception& e){notice(QStringLiteral("Simplex"),QString::fromUtf8(e.what()));}
 }
 void LpSimplexController::all() {
@@ -251,7 +269,8 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("simplex-view-input"),footer);
     auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("simplex-main"),footer);auto* exit=button(QStringLiteral("Exit TORA"),QStringLiteral("simplex-exit"),footer);footer->addStretch();layout->addLayout(footer);
     const auto update=[&c,heading,title,next,all,print,view] {
-        heading->setText(c.session() && c.session()->method()==tora::lp::PrimalMethod::MMethod?QStringLiteral("SIMPLEX TABLEAU - (M-Method)"):QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));
+        const auto method=c.session()?c.session()->method():tora::lp::PrimalMethod::AllSlack;
+        heading->setText(method==tora::lp::PrimalMethod::MMethod?QStringLiteral("SIMPLEX TABLEAU - (M-Method)"):method==tora::lp::PrimalMethod::TwoPhase?QStringLiteral("SIMPLEX TABLEAU - (Two-Phase Method)"):QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));
         title->setText(c.session()?QStringLiteral("Title: ")+legacyText(c.session()->problem().title)+(c.session()->problem().sense==tora::lp::ObjectiveSense::Maximize?QStringLiteral(" (Maximize)"):QStringLiteral(" (Minimize)")):QString());
         next->setEnabled(c.canNext());all->setEnabled(c.session() && !c.busy() && c.session()->status()==SimplexStatus::Running);print->setEnabled(c.session() && !c.busy());
         const QFontMetrics fm(view->font());view->verticalHeader()->setDefaultSectionSize(fm.height()+fm.height()/2);

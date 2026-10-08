@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: M-method review gate",
+  "active_step": "Phase 2: Two-phase",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Wait for M-method approval before Two-phase",
+  "next_step": "Complete Two-phase gate; wait before the next module",
   "foundation_order": [
     1,
     5,
@@ -104,8 +104,8 @@
     "status": "in_progress",
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
-    "current_module": "M-method",
-    "step": "M-method gate ready for review",
+    "current_module": "Two-phase",
+    "step": "Local Two-phase tests pass; final documentation and three-OS CI",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -145,8 +145,8 @@
       "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity passes; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-all-slack/packages-verified.json"
     },
     "m_method": {
-      "status": "ready_for_review",
-      "approval": "User: continue (2026-10-08)",
+      "status": "approved",
+      "approval": "User: go ahead and do it (2026-10-08)",
       "scope": "Finite M setup, shared primal session, native M screen and direct/fallback iteration comparisons",
       "local_validation": "32/32 desktop including pinned Basic labels, synchronized scrolling and leaving-row click at four scales; unchanged explicit C++17 Qt-free 14/14",
       "oracle": "15 direct M sessions/eight All-slack fallbacks; 78 complete tables, 4099 exact strings including four scientific cells",
@@ -167,6 +167,19 @@
       "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-m-method/packages-reviewed-verified.json and linux-reviewed-startup.json",
       "completed_on": "2026-10-08",
       "remaining": "User review; recorded legacy printing/physical mixed-DPI and unobserved numerical/parse limits remain explicit"
+    },
+    "two_phase": {
+      "status": "in_progress",
+      "approval": "User: go ahead and do it (2026-10-08)",
+      "scope": "Two-phase feasibility transition, restored objective, blocked artificial columns and native iteration controls",
+      "remaining": "Three-OS CI/packages and review gate",
+      "tests_first": "Golden, safety and native workflow tests added before implementation; missing TwoPhaseSession header produces the recorded build failure in build/phase2-two-phase/tests-before-implementation.log",
+      "spec": "docs/tora-analysis/LP_TWO_PHASE_MODULE.md",
+      "goldens": "tests/fixtures/two-phase.json",
+      "local_validation": "38/38 desktop, 16/16 explicit C++17 Qt-free; four scales \u00d7 29 Two-phase Qt cases",
+      "oracle": "15 direct problems plus full scientific repeat; eight All-slack fallbacks; 99 tables, 5278 exact cell strings and 6872 comparison fields; original corpus reused",
+      "report": "docs/PHASE2_TWO_PHASE_REPORT.md",
+      "comparison": "build/phase2-two-phase/comparison.tsv"
     }
   }
 }

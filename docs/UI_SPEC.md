@@ -191,7 +191,7 @@ precision. Automatic steps yield to the event loop and pause on navigation.
 Input changes discard stale tables. The exact table/notice strings and limits
 are in tora-analysis/LP_ALL_SLACK_MODULE.md.
 
-M/Two-phase warning handoffs keep Go disabled until those algorithms are built.
+M/Two-phase warning handoffs now enter their functional setup/output routes.
 Printing uses native QtPrintSupport; successful TORA print layout remains Q-08.
 
 ## Phase 2 M-method screen
@@ -201,8 +201,8 @@ setup group has an editable selected default 100 and a working Go button. The
 common output panel starts the requested finite-M session and the accumulated
 view uses SIMPLEX TABLEAU - (M-Method). All-<= warning OK and explicit Cancel
 both continue to the All-slack output-format route, as directly captured.
-All-slack's artificial-warning Cancel now opens functional M setup; Two-phase
-Go remains gated.
+All-slack's artificial-warning Cancel opens functional M setup; OK selects
+Two-phase and enables its output Go.
 
 The white/blue inverse block covers initial identity columns sx/Rx in constraint
 rows, including still-basic columns; the earlier nonbasic-only description is
@@ -213,3 +213,20 @@ and leaving-row clicks stay synchronized. Column widths come from font metrics,
 and Solution stays visible when the numeric columns fit the viewport.
 No original screenshots
 or proprietary visual assets form part of the interface.
+
+## Phase 2 Two-phase screen
+
+Two-phase method is enabled for a loaded problem. It uses the common format
+panel and SIMPLEX TABLEAU - (Two-Phase Method). Ordered headings are literally
+Phase 1 (Iter N and Phase 2 (Iter N, as captured, with globally consecutive
+iteration numbers. Phase 1 uses z (min); Phase 2 restores the original sense.
+Artificial columns remain visible and show blocked only in objective cells.
+Their constraint values, including zero-valued artificial basic rows, remain.
+
+Manual Next shows Phase 1 / End of Phase 1: Feasible solution found--initiating
+Phase 2 at the feasible boundary. Acknowledgement retains the final Phase 1
+table; the following Next appends Phase 2. All Iterations suppresses this
+intermediate message. Infeasibility uses the captured Phase 1 dialog and stops
+before Phase 2. All-<= warning OK/Cancel both continue to All-slack. Native
+table colors, pinned Basic labels, font metrics, printing, timer cancellation
+and input invalidation are shared with the earlier methods.

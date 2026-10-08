@@ -190,7 +190,7 @@ def save_as(driver, path, dest):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute',action='store_true')
-    parser.add_argument('--kind',choices=['text','comma-title','quoted-title','unicode-title','quoted-name','extension','overwrite','readonly','readonly-save','save-target','clone','input','simplex','m-method'],required=True)
+    parser.add_argument('--kind',choices=['text','comma-title','quoted-title','unicode-title','quoted-name','extension','overwrite','readonly','readonly-save','save-target','clone','input','simplex','m-method','two-phase'],required=True)
     parser.add_argument('--input-probes',nargs='*')
     parser.add_argument('--capture-current',action='store_true')
     parser.add_argument('--capture-desktop',action='store_true')
@@ -266,6 +266,10 @@ def main():
         if not driver._attach_to_running_window():raise RuntimeError('No reference window')
         driver._arrange_wine_desktop()
     else:launch_visible(driver)
+    if args.kind=='two-phase':
+        from run_tora_two_phase_probes import run
+        run(driver,args.input_probes)
+        return
     if args.kind=='m-method':
         from run_tora_m_probes import run
         run(driver,args.input_probes)

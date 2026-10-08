@@ -159,3 +159,32 @@ tora_target_defaults(m_method_safety)
 target_link_libraries(m_method_safety PRIVATE tora::lp)
 add_test(NAME lp.m-method.safety COMMAND m_method_safety)
 set_tests_properties(lp.m-method.safety PROPERTIES TIMEOUT 15)
+
+add_executable(two_phase_probe simplex_probe.cpp)
+tora_target_defaults(two_phase_probe)
+target_compile_definitions(two_phase_probe PRIVATE TORA_TWO_PHASE_PROBE)
+target_link_libraries(two_phase_probe PRIVATE tora::lp)
+add_test(NAME lp.two-phase.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_all_slack.py" "$<TARGET_FILE:two_phase_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/two-phase.json" "${CMAKE_CURRENT_BINARY_DIR}/two-phase-comparison.tsv")
+set_tests_properties(lp.two-phase.goldens PROPERTIES TIMEOUT 30)
+
+add_executable(two_phase_safety two_phase_safety.cpp)
+tora_target_defaults(two_phase_safety)
+target_link_libraries(two_phase_safety PRIVATE tora::lp)
+add_test(NAME lp.two-phase.safety COMMAND two_phase_safety)
+set_tests_properties(lp.two-phase.safety PROPERTIES TIMEOUT 15)
+
+if(TORA_BUILD_DESKTOP)
+    qt_add_executable(desktop_two_phase_test desktop_two_phase.cpp)
+    set_target_properties(desktop_two_phase_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_two_phase_test)
+    target_link_libraries(desktop_two_phase_test PRIVATE desktop_shell Qt6::Test)
+    target_compile_definitions(desktop_two_phase_test PRIVATE TORA_CODEC_GOLDENS="${CMAKE_CURRENT_BINARY_DIR}/codec-goldens" TORA_TWO_PHASE_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/two-phase.json")
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.two-phase.scale-${scale} COMMAND desktop_two_phase_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-two-phase-scale-${scale}.xml,junitxml" -o -,txt)
+        set_tests_properties(desktop.two-phase.scale-${scale} PROPERTIES TIMEOUT 45 FIXTURES_REQUIRED codec_golden_files
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
+    endforeach()
+endif()

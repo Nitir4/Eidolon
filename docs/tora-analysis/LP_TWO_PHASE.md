@@ -15,8 +15,8 @@ The screen is titled `SIMPLEX TABLEAU - (Two-Phase Method)`. Its common
 instructions identify entering and leaving selections by clicking a
 nonbasic-variable column and a basic-variable row, and provide `Next
 Iteration` and `All Iterations`. The first tableau heading is `Phase 1 (Iter
-1)` and includes artificial variables `Rx5`, `Rx6`, and `Rx7`. The captured
-accumulated output shows Phase 1 iterations 1–4 followed by `Phase 2 (Iter 5)`;
+1` and includes artificial variables `Rx5`, `Rx6`, and `Rx7`. The captured
+accumulated output shows Phase 1 iterations 1–4 followed by `Phase 2 (Iter 5`;
 the Phase 2 tableau marks the artificial-variable columns `blocked`. Clicking
 `All Iterations` displays `Optimal Tableau`, `Iteration 5 is optimal`, and an
 alternative-solution message directing the user to select a nonbasic
@@ -45,9 +45,14 @@ phase/iteration sequence.
 ## Unknowns / things I could not verify
 
 Near-zero Phase 1 feasibility thresholds, redundant equality/artificial-basic
-cleanup beyond these cases, cycling safeguards, and internal precision remain
+cleanup beyond the observed cases, cycling safeguards, and internal precision remain
 unknown. The artificial columns remain visible in the captured Phase 2 tables;
 no deletion policy is invented for unseen cases.
+
+The Phase 2 implementation cycle verified retained zero-valued artificial
+basic rows, the separate manual phase-transition step and scientific residuals.
+See [LP_TWO_PHASE_MODULE.md](LP_TWO_PHASE_MODULE.md) for the complete contract
+and the expanded 99-table corpus. Its exact headings have no closing parenthesis.
 
 ## Shared input, UI and file contract
 

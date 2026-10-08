@@ -81,7 +81,7 @@ def manifest(stage, qt_root, version, target):
     qmake = sdk_tool(qt_root, 'qmake')
     qt_version = subprocess.check_output([str(qmake), '-query', 'QT_VERSION'], text=True).strip()
     data = {'application': 'ToraClone', 'version': version, 'qt_version': qt_version,
-            'platform': target, 'stage': 'Phase 2: LP input, All-slack and M-method',
+            'platform': target, 'stage': 'Phase 2: LP input, All-slack, M-method and Two-phase',
             'files': {str(p.relative_to(stage)).replace('\\', '/'): digest(p)
                       for p in sorted(stage.rglob('*')) if p.is_file()}}
     (stage / 'package-manifest.json').write_text(json.dumps(data, indent=2) + '\n')
