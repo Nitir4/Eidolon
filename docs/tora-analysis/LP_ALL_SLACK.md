@@ -5,8 +5,8 @@
 TORA offers this as `All-slack starting solution` under `Solve Problem →
 Algebraic → Iterations`. The screen calls it `Starting All-Slack Method`. This
 is the observed default tableau path for models whose initial slack basis can
-be used; the criteria for selecting another method are not stated by the
-screen.
+be used. Observed lower-bound/RHS normalization and the resulting method
+classification are now specified in LP_ALL_SLACK_MODULE.md.
 
 ## Inputs and interaction
 
@@ -26,7 +26,7 @@ also has `Next Iteration`, `All Iterations`, and `Write to Printer` controls.
 
 For the smoke model, Iteration 1 has `z (max)` coefficients -3.00 and -2.00,
 slack basics sx3/sx4/sx5, and RHS values 4.00, 2.00, and 3.00. Iteration 2 has
-objective value 6.00 and basis sx3/x1/sx5. A third `Next Iteration` click
+objective value 6.00 and basis sx3/x1/sx5. The final table
 displays the `Optimal Tableau` dialog with `Iteration 3 is optimal`. The
 selected pivot row and column are highlighted in color.
 
@@ -40,8 +40,8 @@ Two-phase method will be used. Else click CANCEL to use M-method`. A fresh
 tableau. Every corpus selection now has a validated first-table heading and
 complete trace. The Cancel branch is captured separately below. One
 negative-RHS fixture contains an input `>=` yet did not show the warning, so the
-trigger appears to depend on TORA's processed model and is not fully
-characterized.
+trigger depends on the processed model. Phase 2 now verifies normalization
+and the seven recorded redirects; see LP_ALL_SLACK_MODULE.md.
 
 ## Unknowns / things I could not verify
 
@@ -99,3 +99,11 @@ Observed automatic rules and exact validation/termination text are in
 `LP_PIVOT_POLICY.md` and `LP_ALL_SLACK.md`. Model save/open behavior is shared
 and specified in `FILE_BEHAVIOR.md` / `../FILE_FORMAT.md`. These shared
 contracts apply to this method; unsupported edge cases stay explicit.
+
+## Phase 2 implementation evidence
+
+The per-method contract in LP_ALL_SLACK_MODULE.md supersedes earlier unknowns
+resolved by focused captures: reverse bound complements, x1+/x1- direction
+changes, the measured near entering tie, and the crossing scientific residual.
+It records 20 direct sessions (19 unique problems) and 57 reviewed ordered
+tables, distinct from the seven original artificial-method redirects.

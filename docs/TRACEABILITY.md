@@ -144,3 +144,23 @@ actions are enabled.
 | UI-01, BUILD-01, ARCH-01 | Native table, font metrics, persistent controller and module guard | Normal/100×100 inputs at 3 resolutions × 4 scales; full single-workflow OS matrix | PHASE2_INPUT_REPORT.md; clone-only CI screenshots; hardware limits retained |
 
 No reference screenshots, files or executable are product/release resources.
+
+## Phase 2 all-slack implemented mappings
+
+| IDs | Code | Verification | Capture / requirement |
+| --- | --- | --- | --- |
+| LP-AS-01 | AllSlackSession::requiresArtificial / normalized | 27 exact classifications; GUI OK/Cancel handoff | all-slack.json capture fields; seven original Two-phase redirects; negative-RHS case12 |
+| LP-AS-02 | AllSlackSession recommendation/choice/next | 57 complete table strings, selected pivots; manual-error rollback | 20 direct sessions / 19 unique inputs; LP_ALL_SLACK_MODULE.md |
+| LP-AS-03 | Lower shifts, complements, basis reconstruction | Finite upper/lower goldens and reverse Ux1 transition | Existing finite-upper/two-upper/lower; new slack-complement-return |
+| LP-AS-04 | Free-column orientation and basis reconstruction | x1+/x1- traces, crossing; D=12 and scientific residual checks | slack-unrestricted/negative/crossing, crossing-precision/scientific |
+| LP-AS-05 | Session status/terminalMessage and controller selection | Exact optimal/alternative/unbounded text, manual alternative pivot | Original degenerate/alternative; alternative-20261004; slack-unbounded |
+| LP-AS-06 | LpSimplexController / TraceModel | Every golden label/column/value bound to Qt at four scales; manual colors/errors; initial optimal popup | LP_ITERATION_SCREEN; original normal/zero-RHS; Foundation2 signed-zero |
+| LP-AS-07, DPI-01 | Native layouts, font metrics and scroll bars | 3 resolutions × 4 scales; 100×100 scroll/pause; native menu/output settings | User's full-window and font-glyph requirements; clone-only UI captures |
+| LP-AS-08 | Timer, cached display rows and input invalidation | Pause on navigation, stale session discarded, resumable numerical cap | Engineering responsiveness/safety; cap not asserted as TORA policy |
+| LP-AS-09 | QtPrintSupport / printSimplexTrace | Native PDF creation and trace non-mutation | Native printing requirement; Q-08 retains unverified TORA print fidelity |
+| BUILD-01, ARCH-01 | Existing single OS-matrix workflow and Qt-free library | Full core/GUI tests, deployed startup and three packages | PHASE2_ALL_SLACK_REPORT.md records verified final run |
+
+Golden selection metadata is checked where a captured choice exists; absent
+selection metadata is not invented from an unselected initial frame. Direct
+table labels/numbers and terminal messages are fully compared. Raw captures
+are excluded from repository and package contents.

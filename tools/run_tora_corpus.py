@@ -646,15 +646,17 @@ class ToraDriver:
         # Artificial-variable columns widen the actual MSFlexGrid. Find its
         # cyan surface rather than assuming the all-slack scrollbar location.
         left, right, bottom = self._table_bounds(dest / "tableau-top.png")
+        offset = getattr(self,'capture_frame_offset',4)
         if bottom < 495:
             # A horizontal scrollbar is present. All Iterations can leave it
             # scrolled to the final variable; return to the leftmost columns.
-            self.move(LEGACY_ORIGIN[0] + left + 8 - 4,
-                      LEGACY_ORIGIN[1] + bottom + 10 - 4)
+            self.move(LEGACY_ORIGIN[0] + left + 8 - offset,
+                      LEGACY_ORIGIN[1] + bottom + 10 - offset)
             self.run("xdotool", "click", "--repeat", "40", "--delay", "20", "1")
             self.pause(0.5)
-        scroll_x = LEGACY_ORIGIN[0] + right + 8 - 4
-        scroll_y = LEGACY_ORIGIN[1] + bottom - 7 - 4
+        offset = getattr(self,'capture_frame_offset',4)
+        scroll_x = LEGACY_ORIGIN[0] + right + 8 - offset
+        scroll_y = LEGACY_ORIGIN[1] + bottom - 7 - offset
         self.move(1300, 825)
         self.capture(dest / "tableau-top.png")
         if bottom < 495:
@@ -690,7 +692,8 @@ class ToraDriver:
 
     def _capture_right_columns(self, path: Path, left: int, right: int, bottom: int) -> None:
         for x, capture in ((right - 8, True), (left + 8, False)):
-            self.move(LEGACY_ORIGIN[0] + x - 4, LEGACY_ORIGIN[1] + bottom + 10 - 4)
+            offset = getattr(self,'capture_frame_offset',4)
+            self.move(LEGACY_ORIGIN[0] + x - offset, LEGACY_ORIGIN[1] + bottom + 10 - offset)
             self.run("xdotool", "click", "--repeat", "40", "--delay", "20", "1")
             self.pause(0.5)
             self.move(1300, 825)
@@ -700,8 +703,9 @@ class ToraDriver:
     @staticmethod
     def _table_bounds(path: Path) -> tuple[int, int, int]:
         raw = subprocess.check_output(["magick", str(path), "-depth", "8", "rgb:-"])
+        width=int(subprocess.check_output(['magick','identify','-format','%w',str(path)],text=True))
         def cyan(x: int, y: int) -> bool:
-            at = (y * 808 + x) * 3
+            at = (y * width + x) * 3
             r, g, b = raw[at:at + 3]
             return r < 100 and g > 150 and b > 150
         surface = [(x, y) for y in range(194, 508)
@@ -717,7 +721,7 @@ class ToraDriver:
         for x in range(40, 765):
             gray = 0
             for y in range(240, 480):
-                at = (y * 808 + x) * 3
+                at = (y * width + x) * 3
                 p = raw[at:at + 3]
                 gray += min(p) > 100 and max(p) - min(p) < 30
             if gray > 180:

@@ -177,3 +177,19 @@ the same theme-font repair as pages. Module guards also protect window close.
 
 See LP_DATA_ENTRY_MODULE.md for the 22 independently observed stored outcomes,
 verified keyboard states and explicit precision/code-page/hardware limits.
+
+## Phase 2 all-slack screen
+
+All-slack starting solution is enabled for a loaded LP. Its output-format panel
+is editable and Go starts the all-slack session. `lp/simplex` is a native lazy
+route with an accumulated QTableView, three observed iteration instructions,
+Next/All/Write to Printer and the original footer navigation. Nonbasic original
+slack columns in constraint rows use white/blue inverse cells; selected columns
+are green and selected leaving rows red. Actual bold-font metrics determine
+numeric widths; horizontal/vertical scrolling supports 100×100 tables and large
+precision. Automatic steps yield to the event loop and pause on navigation.
+Input changes discard stale tables. The exact table/notice strings and limits
+are in tora-analysis/LP_ALL_SLACK_MODULE.md.
+
+M/Two-phase warning handoffs keep Go disabled until those algorithms are built.
+Printing uses native QtPrintSupport; successful TORA print layout remains Q-08.

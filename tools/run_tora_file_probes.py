@@ -108,6 +108,7 @@ class FileProbeDriver(ModelProbeDriver):
 
 class IsolatedFileDriver(FileProbeDriver):
     """Dedicated 800x600 X screen: no host focus/cursor/capture dependency."""
+    capture_frame_offset=0
     def __init__(self,*args):
         super().__init__(*args)
         self.env['DISPLAY']=':97'
@@ -189,7 +190,7 @@ def save_as(driver, path, dest):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute',action='store_true')
-    parser.add_argument('--kind',choices=['text','comma-title','quoted-title','unicode-title','quoted-name','extension','overwrite','readonly','readonly-save','save-target','clone','input'],required=True)
+    parser.add_argument('--kind',choices=['text','comma-title','quoted-title','unicode-title','quoted-name','extension','overwrite','readonly','readonly-save','save-target','clone','input','simplex'],required=True)
     parser.add_argument('--input-probes',nargs='*')
     parser.add_argument('--capture-current',action='store_true')
     parser.add_argument('--capture-desktop',action='store_true')
@@ -265,6 +266,10 @@ def main():
         if not driver._attach_to_running_window():raise RuntimeError('No reference window')
         driver._arrange_wine_desktop()
     else:launch_visible(driver)
+    if args.kind=='simplex':
+        from run_tora_simplex_probes import run
+        run(driver,args.input_probes)
+        return
     if args.kind=='input':
         from run_tora_input_probes import run
         run(driver,args.input_probes)

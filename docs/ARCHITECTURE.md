@@ -284,3 +284,34 @@ classDiagram
 Windows-1252 conversion is a desktop boundary; the Qt-free codec retains raw
 legacy bytes. The input support profile extends to N/D=99 after direct oracle
 captures. Safe diagnostics do not reproduce N=999 overflow/process exit.
+
+## Implemented all-slack solver boundary
+
+`tora::lp::AllSlackSession` owns the validated source problem and immutable
+numerical snapshots. It normalizes lower bounds/RHS, chooses or validates pivots,
+handles finite-bound complements/free directions, reconstructs the current basis,
+and exposes formatting-only display records. It has no Qt or file dependency.
+`LpSimplexController` owns one session, its output format and a zero-interval Qt
+timer; input changes invalidate it and route changes pause automatic iterations.
+`TraceModel` presents ordered accumulated tables; unchanged numerical displays
+are cached, and new rows are inserted without resetting scrolling. Font-metric
+widths are measured only for appended rows or changed display metrics. Native
+printing is a separate QPrinter consumer of the same display records.
+
+```mermaid
+classDiagram
+    ApplicationShell o-- LpSimplexController
+    LpInputController --> LpSimplexController : invalidate on input change
+    LpSimplexController *-- AllSlackSession
+    LpSimplexController *-- QTimer
+    AllSlackSession *-- LpProblem
+    AllSlackSession *-- SimplexStep
+    SimplexStep *-- Tableau
+    AllSlackSession ..> NumberFormatter : display only
+    TraceModel --> LpSimplexController
+    QTableView --> TraceModel
+    QPrinter ..> AllSlackSession : ordered display records
+```
+
+Artificial-method detection hands off to the separately gated M/Two-phase
+routes; it does not label their traces as all-slack results.

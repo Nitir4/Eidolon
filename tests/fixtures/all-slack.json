@@ -1,0 +1,6771 @@
+[
+  {
+    "case": "01_normal",
+    "problem": {
+      "title": "Normal",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-3.00",
+              "-2.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx4"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-2.00",
+              "0.00",
+              "3.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "2.00",
+              "1.00",
+              "0.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/01_normal/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "02_degenerate",
+    "problem": {
+      "title": "Degenerate",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-1.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/02_degenerate/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal. Alternative soltuion(s) detected: Click a nonbasic var with zj-cj=0 in last tableau, then click NEXT ITERATION button.\nOutput Summary cannot be used to view alternative optima solution"
+  },
+  {
+    "case": "03_infeasible",
+    "problem": {
+      "title": "Infeasible",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": true,
+    "tables": [],
+    "capture": "reference/tora-captures/methods/lp/corpus/03_infeasible/all_slack/transcribed-trace.json"
+  },
+  {
+    "case": "04_unbounded",
+    "problem": {
+      "title": "Unbounded",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "0.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "0.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": true,
+    "tables": [],
+    "capture": "reference/tora-captures/methods/lp/corpus/04_unbounded/all_slack/transcribed-trace.json"
+  },
+  {
+    "case": "05_alternative",
+    "problem": {
+      "title": "Alternative optima",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-1.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "-1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/05_alternative/all_slack/transcribed-trace.json",
+    "message": "Iteration 2 is optimal. Alternative soltuion(s) detected: Click a nonbasic var with zj-cj=0 in last tableau, then click NEXT ITERATION button.\nOutput Summary cannot be used to view alternative optima solution"
+  },
+  {
+    "case": "06_equality",
+    "problem": {
+      "title": "Equality",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": true,
+    "tables": [],
+    "capture": "reference/tora-captures/methods/lp/corpus/06_equality/all_slack/transcribed-trace.json"
+  },
+  {
+    "case": "07_big_m",
+    "problem": {
+      "title": "Big M",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": true,
+    "tables": [],
+    "capture": "reference/tora-captures/methods/lp/corpus/07_big_m/all_slack/transcribed-trace.json"
+  },
+  {
+    "case": "08_two_phase",
+    "problem": {
+      "title": "Two phase",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": true,
+    "tables": [],
+    "capture": "reference/tora-captures/methods/lp/corpus/08_two_phase/all_slack/transcribed-trace.json"
+  },
+  {
+    "case": "09_bounded",
+    "problem": {
+      "title": "Bounded variables",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "4.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "10.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "7.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx4"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-3.00",
+              "0.00",
+              "4.00",
+              "0.00",
+              "24.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "3.00",
+              "1.00",
+              "0.00",
+              "36.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/09_bounded/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "10_dual",
+    "problem": {
+      "title": "Dual simplex seed",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "2.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "5.00",
+          "coefficients": [
+            "2.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": true,
+    "tables": [],
+    "capture": "reference/tora-captures/methods/lp/corpus/10_dual/all_slack/transcribed-trace.json"
+  },
+  {
+    "case": "11_zero_rhs",
+    "problem": {
+      "title": "Zero RHS",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "0.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-2.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "1.00",
+              "2.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "-1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/11_zero_rhs/all_slack/transcribed-trace.json",
+    "message": "Iteration 2 is optimal"
+  },
+  {
+    "case": "12_negative_rhs",
+    "problem": {
+      "title": "Negative RHS",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "-1.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-2.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx4"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-1.00",
+              "0.00",
+              "2.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx5"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "0.00",
+              "2.00",
+              "1.00",
+              "9.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "1.00",
+              "1.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/12_negative_rhs/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "13_mixed_sign",
+    "problem": {
+      "title": "Mixed signs",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "-1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "-1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-2.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-1.00",
+              "2.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "2.00",
+              "-1.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx5"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.50",
+              "0.00",
+              "0.50",
+              "5.50"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.50",
+              "0.00",
+              "0.50",
+              "3.50"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "-0.50",
+              "0.00",
+              "0.50",
+              "1.50"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/13_mixed_sign/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "14_tight_bounds",
+    "problem": {
+      "title": "Tight bounds",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-1.00",
+              "-2.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx5"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "2.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "-1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "-1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/14_tight_bounds/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "15_minimization",
+    "problem": {
+      "title": "Minimization",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": true,
+    "tables": [],
+    "capture": "reference/tora-captures/methods/lp/corpus/15_minimization/all_slack/transcribed-trace.json"
+  },
+  {
+    "case": "finite-upper",
+    "problem": {
+      "title": "finite-upper",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "5.00",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "4.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "10.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "7.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "5.00",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "Ux1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "20.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "5.00",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "Ux1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "1.00",
+              "0.00",
+              "3.00",
+              "0.00",
+              "0.00",
+              "35.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "1.00",
+              "0.00",
+              "-1.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "5.00",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/finite-upper/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "finite-two-upper",
+    "problem": {
+      "title": "finite-two-upper",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "2.00",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "3.00",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "4.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "10.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "7.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "2.00",
+              "3.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "Ux1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "8.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "8.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "2.00",
+              "3.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "Ux1",
+          "Ux2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "4.00",
+              "3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "17.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "2.00",
+              "3.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/finite-two-upper/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "finite-lower",
+    "problem": {
+      "title": "finite-lower",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "1.00",
+          "upper": "3.00",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "1.00",
+          "upper": "4.00",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "4.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "10.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "7.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "Lx1",
+          "Lx2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "8.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "1.00",
+              "1.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "3.00",
+              "4.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "Lx1",
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "ULx1",
+          "Lx2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "15.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "1.00",
+              "1.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "3.00",
+              "4.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "Lx2",
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "ULx1",
+          "ULx2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "4.00",
+              "3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "24.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "1.00",
+              "1.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "3.00",
+              "4.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/methods/lp/corpus/finite-lower/all_slack/transcribed-trace.json",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "slack-minimum",
+    "problem": {
+      "title": "slack-minimum",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "-3",
+        "-2"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4",
+          "coefficients": [
+            "1",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2",
+          "coefficients": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (min)",
+            "values": [
+              "3.00",
+              "2.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx4"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (min)",
+            "values": [
+              "0.00",
+              "2.00",
+              "0.00",
+              "-3.00",
+              "0.00",
+              "-6.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (min)",
+            "values": [
+              "0.00",
+              "0.00",
+              "-2.00",
+              "-1.00",
+              "0.00",
+              "-10.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-minimum",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "slack-unbounded",
+    "problem": {
+      "title": "slack-unbounded",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1",
+        "0"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "1",
+          "coefficients": [
+            "-1",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-unbounded",
+    "message": "Last tableau shows solution is unbounded"
+  },
+  {
+    "case": "slack-row-tie",
+    "problem": {
+      "title": "slack-row-tie",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2",
+        "1"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2",
+          "coefficients": [
+            "1",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2",
+          "coefficients": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-2.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "1.00",
+              "2.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "-1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-row-tie",
+    "message": "Iteration 2 is optimal"
+  },
+  {
+    "case": "slack-near-tie",
+    "problem": {
+      "title": "slack-near-tie",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3",
+        "3.0000000001"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4",
+          "coefficients": [
+            "1",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3",
+          "coefficients": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-3.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx5"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "3.00",
+              "9.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "-1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "3.00",
+              "0.00",
+              "0.00",
+              "12.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "-1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-near-tie",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "05_alternative-manual",
+    "problem": {
+      "title": "Alternative optima",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-1.00",
+              "-1.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x1",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "-1.00",
+              "-1.00",
+              "1.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "x1"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "-1.00",
+              "0.00",
+              "-1.00",
+              "0.00",
+              "1.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/alternative-20261004/observations.json",
+    "operation": "alternative 1",
+    "message": "Iteration 3 is optimal. Alternative soltuion(s) detected: Click a nonbasic var with zj-cj=0 in last tableau, then click NEXT ITERATION button.\nOutput Summary cannot be used to view alternative optima solution"
+  },
+  {
+    "case": "slack-unrestricted",
+    "problem": {
+      "title": "slack-unrestricted",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-infinity",
+          "upper": "inf",
+          "unrestricted": true
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3",
+        "2"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4",
+          "coefficients": [
+            "1",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2",
+          "coefficients": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1+",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-3.00",
+              "-2.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1+",
+        "leaving": "sx4"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1+",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-2.00",
+              "0.00",
+              "3.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1+",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1+",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "2.00",
+              "1.00",
+              "0.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1+",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-unrestricted",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "slack-unrestricted-negative",
+    "problem": {
+      "title": "slack-unrestricted-negative",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-infinity",
+          "upper": "inf",
+          "unrestricted": true
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "-3",
+        "2"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4",
+          "coefficients": [
+            "-1",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2",
+          "coefficients": [
+            "-1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1-",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-3.00",
+              "-2.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1-",
+        "leaving": "sx4"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1-",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-2.00",
+              "0.00",
+              "3.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1-",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1-",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "2.00",
+              "1.00",
+              "0.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "1.00",
+              "-1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "x1-",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "0.00",
+              "-1.00",
+              "1.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-unrestricted-negative",
+    "message": "Iteration 3 is optimal"
+  },
+  {
+    "case": "slack-complement-return",
+    "problem": {
+      "title": "slack-complement-return",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "1",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "4",
+        "3"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4",
+          "coefficients": [
+            "2",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5",
+          "coefficients": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "6",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "2.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "1.00",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1",
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "Ux1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "4.00",
+              "-3.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "-2.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "1.00",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "Ux1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-2.00",
+              "0.00",
+              "3.00",
+              "0.00",
+              "0.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "-2.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "2.00",
+              "0.00",
+              "-1.00",
+              "0.00",
+              "1.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "1.00",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "Ux1",
+        "leaving": null
+      },
+      {
+        "heading": "Iteration 4",
+        "columns": [
+          "x1",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "2.00",
+              "0.00",
+              "3.00",
+              "0.00",
+              "0.00",
+              "12.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "2.00",
+              "1.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "-2.00",
+              "0.00",
+              "-1.00",
+              "0.00",
+              "1.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "0.00",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "1.00",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "n",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-complement-return",
+    "message": "Iteration 4 is optimal"
+  },
+  {
+    "case": "slack-unrestricted-crossing",
+    "problem": {
+      "title": "slack-unrestricted-crossing",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-infinity",
+          "upper": "inf",
+          "unrestricted": true
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3",
+        "2"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2",
+          "coefficients": [
+            "1",
+            "0.5"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5",
+          "coefficients": [
+            "-1",
+            "1"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "10",
+          "coefficients": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    },
+    "requires_artificial": false,
+    "tables": [
+      {
+        "heading": "Iteration 1",
+        "columns": [
+          "x1+",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-3.00",
+              "-2.00",
+              "0.00",
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "sx3",
+            "values": [
+              "1.00",
+              "0.50",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "-1.00",
+              "1.00",
+              "0.00",
+              "1.00",
+              "0.00",
+              "5.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1+",
+        "leaving": "sx3"
+      },
+      {
+        "heading": "Iteration 2",
+        "columns": [
+          "x1+",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "-0.50",
+              "3.00",
+              "0.00",
+              "0.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "x1+",
+            "values": [
+              "1.00",
+              "0.50",
+              "1.00",
+              "0.00",
+              "0.00",
+              "2.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "0.00",
+              "1.50",
+              "1.00",
+              "1.00",
+              "0.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00",
+              "0.00",
+              "1.00",
+              "10.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x2",
+        "leaving": "x1+"
+      },
+      {
+        "heading": "Iteration 3",
+        "columns": [
+          "x1-",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "-1.00",
+              "0.00",
+              "4.00",
+              "0.00",
+              "0.00",
+              "8.00"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "-2.00",
+              "1.00",
+              "2.00",
+              "0.00",
+              "0.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "sx4",
+            "values": [
+              "3.00",
+              "0.00",
+              "-2.00",
+              "1.00",
+              "0.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "2.00",
+              "0.00",
+              "-2.00",
+              "0.00",
+              "1.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": "x1-",
+        "leaving": "sx4"
+      },
+      {
+        "heading": "Iteration 4",
+        "columns": [
+          "x1-",
+          "x2",
+          "sx3",
+          "sx4",
+          "sx5",
+          "Solution"
+        ],
+        "rows": [
+          {
+            "label": "z (max)",
+            "values": [
+              "0.00",
+              "0.00",
+              "3.33",
+              "0.33",
+              "0.00",
+              "8.33"
+            ]
+          },
+          {
+            "label": "x2",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.67",
+              "0.67",
+              "0.00",
+              "4.67"
+            ]
+          },
+          {
+            "label": "x1-",
+            "values": [
+              "1.00",
+              "-0.00",
+              "-0.67",
+              "0.33",
+              "0.00",
+              "0.33"
+            ]
+          },
+          {
+            "label": "sx5",
+            "values": [
+              "0.00",
+              "0.00",
+              "-0.67",
+              "-0.67",
+              "1.00",
+              "5.33"
+            ]
+          },
+          {
+            "label": "Lower Bound",
+            "values": [
+              "-infinity",
+              "0.00",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Upper Bound",
+            "values": [
+              "infinity",
+              "infinity",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "label": "Unrestr'd (y/n)?",
+            "values": [
+              "y",
+              "n",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "entering": null,
+        "leaving": null
+      }
+    ],
+    "capture": "reference/tora-captures/probes/phase2-all-slack/slack-unrestricted-crossing",
+    "message": "Iteration 4 is optimal",
+    "supplementary_displays": [
+      {
+        "format": [
+          0,
+          5,
+          12
+        ],
+        "table": 3,
+        "row": 2,
+        "column": 1,
+        "value": "-0.000000000000",
+        "capture": "reference/tora-captures/probes/phase2-all-slack/slack-unrestricted-crossing-precision/tableau-scroll-03.png"
+      },
+      {
+        "format": [
+          1,
+          5,
+          2
+        ],
+        "table": 3,
+        "row": 2,
+        "column": 1,
+        "value": "-5.55112e-17",
+        "capture": "reference/tora-captures/probes/phase2-all-slack/slack-unrestricted-crossing-scientific/tableau-scroll-03.png"
+      }
+    ]
+  }
+]

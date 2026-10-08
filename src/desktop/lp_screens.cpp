@@ -1,6 +1,7 @@
 #include "lp_screens.hpp"
 #include "screen_widgets.hpp"
 #include "lp_input_controller.hpp"
+#include "lp_simplex_controller.hpp"
 
 #include <QAction>
 #include <QFormLayout>
@@ -175,8 +176,12 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
     auto* iterations = algebraic->addMenu(QStringLiteral("Iterations"));
     for (const auto& label : {"All-slack starting solution", "M-method", "Two-phase method", "Bounded simplex", "Dual simplex"}) {
         auto* action = iterations->addAction(QString::fromLatin1(label));
-        action->setEnabled(false);
-        action->setToolTip(QString::fromLatin1(previewReason));
+        if(QString::fromLatin1(label)==QStringLiteral("All-slack starting solution")) {
+            action->setObjectName(QStringLiteral("solve-all-slack"));auto& input=inputController(shell);
+            const auto update=[action,&input]{action->setEnabled(input.document()!=nullptr);};
+            QObject::connect(&input,&LpInputController::changed,iterations,update);update();
+            QObject::connect(action,&QAction::triggered,&shell,[&shell]{simplexController(shell).requestAllSlack();});
+        }else {action->setEnabled(false);action->setToolTip(QString::fromLatin1(previewReason));}
     }
     menu.setToolTipsVisible(true);
     solve->setToolTipsVisible(true);
@@ -398,7 +403,6 @@ ModuleDescriptor lpModule()
         inner->addWidget(exitSeparator);
         button(QStringLiteral("Exit TORA"), QStringLiteral("solve-exit"), *inner, [&shell] { shell.close(); });
         centerPanel(*layout, panel);
-        previewNotice(*layout);
         return page;
     }, [](ApplicationShell& shell, QMenuBar& bar) {
         solveEntries(*bar.addMenu(QStringLiteral("SolveModify")), shell);
@@ -409,16 +413,22 @@ ModuleDescriptor lpModule()
     module.screens.append({QStringLiteral("lp/output-format"), heading, [](ApplicationShell& shell) {
         auto* page = new QWidget;
         auto* layout = new QVBoxLayout(page);
-        auto* format = formatPanel(QStringLiteral("Select Output Format"), QStringLiteral("output-format"));
+        auto& c=simplexController(shell);
+        auto* format = formatPanel(QStringLiteral("Select Output Format"), QStringLiteral("output-format"),true);
         auto* inner = qobject_cast<QVBoxLayout*>(format->layout());
-        auto* go = button(QStringLiteral("Go To Output Screen"), QStringLiteral("output-go"), *inner, [] {});
-        go->setEnabled(false);
-        go->setToolTip(QString::fromLatin1(previewReason));
+        auto* go = button(QStringLiteral("Go To Output Screen"), QStringLiteral("output-go"), *inner, [&c,format] {
+            bool nOk=false,dOk=false;const int n=format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->text().toInt(&nOk);
+            const int d=format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->text().toInt(&dOk);
+            if(!nOk || !dOk){c.notice(QStringLiteral("Output Format"),QStringLiteral("Enter whole numbers for N and D"));return;}
+            c.start({format->findChild<QRadioButton*>(QStringLiteral("output-format-scientific"))->isChecked()?tora::core::Notation::Scientific:tora::core::Notation::Decimal,n,d});
+        });
+        const auto update=[go,format,&c]{go->setEnabled(c.canStart());format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->setReadOnly(!c.canStart());format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->setReadOnly(!c.canStart());go->setToolTip(c.canStart()?QString():QString::fromLatin1(previewReason));};
+        QObject::connect(&c,&LpSimplexController::changed,page,update);update();
         centerPanel(*layout, format);
-        previewNotice(*layout);
         footer(*layout, shell, true);
         return page;
     }, {}});
+    module.screens.append({QStringLiteral("lp/simplex"),heading,[](ApplicationShell& shell){return simplexScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/m-value"), heading, [](ApplicationShell& shell) {
         auto* page = new QWidget;
         auto* layout = new QVBoxLayout(page);

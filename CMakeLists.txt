@@ -29,7 +29,7 @@ add_subdirectory(src/lp)
 add_subdirectory(src/compat)
 
 if(TORA_BUILD_DESKTOP)
-    find_package(Qt6 6.8 REQUIRED COMPONENTS Widgets)
+    find_package(Qt6 6.8 REQUIRED COMPONENTS Widgets PrintSupport)
     add_subdirectory(src/desktop)
 endif()
 

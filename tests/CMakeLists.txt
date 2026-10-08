@@ -4,6 +4,21 @@ target_link_libraries(core_smoke PRIVATE tora::core)
 add_test(NAME core.smoke COMMAND core_smoke)
 set_tests_properties(core.smoke PROPERTIES TIMEOUT 15)
 
+add_executable(all_slack_safety all_slack_safety.cpp)
+tora_target_defaults(all_slack_safety)
+target_link_libraries(all_slack_safety PRIVATE tora::lp)
+add_test(NAME lp.all-slack.safety COMMAND all_slack_safety)
+set_tests_properties(lp.all-slack.safety PROPERTIES TIMEOUT 15)
+
+add_executable(simplex_probe simplex_probe.cpp)
+tora_target_defaults(simplex_probe)
+target_link_libraries(simplex_probe PRIVATE tora::lp)
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_test(NAME lp.all-slack.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_all_slack.py" "$<TARGET_FILE:simplex_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/all-slack.json" "${CMAKE_CURRENT_BINARY_DIR}/all-slack-comparison.tsv")
+set_tests_properties(lp.all-slack.goldens PROPERTIES TIMEOUT 30)
+
 add_executable(core_numerics core_numerics.cpp)
 tora_target_defaults(core_numerics)
 target_link_libraries(core_numerics PRIVATE tora::core)
@@ -65,6 +80,17 @@ set_tests_properties(compat.grid PROPERTIES TIMEOUT 15)
 
 if(TORA_BUILD_DESKTOP)
     find_package(Qt6 6.8 REQUIRED COMPONENTS Test)
+    qt_add_executable(desktop_simplex_test desktop_simplex.cpp)
+    set_target_properties(desktop_simplex_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_simplex_test)
+    target_link_libraries(desktop_simplex_test PRIVATE desktop_shell Qt6::Test)
+    target_compile_definitions(desktop_simplex_test PRIVATE TORA_CODEC_GOLDENS="${CMAKE_CURRENT_BINARY_DIR}/codec-goldens" TORA_SIMPLEX_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/all-slack.json")
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.simplex.scale-${scale} COMMAND desktop_simplex_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-simplex-scale-${scale}.xml,junitxml" -o -,txt)
+        set_tests_properties(desktop.simplex.scale-${scale} PROPERTIES TIMEOUT 45 FIXTURES_REQUIRED codec_golden_files
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
+    endforeach()
     qt_add_executable(desktop_input_test desktop_input.cpp)
     set_target_properties(desktop_input_test PROPERTIES AUTOMOC ON)
     tora_target_defaults(desktop_input_test)

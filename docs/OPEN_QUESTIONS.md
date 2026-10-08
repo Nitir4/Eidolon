@@ -89,3 +89,20 @@ its own grid on reopen. The previously approved quoted-field data-recovery
 policy retains the model/alias. Windows-1252 native conversion and Unicode
 filenames are tested; additional code pages are not claimed. See the
 Phase 2 input specification/report for exact capture paths and limits.
+
+Phase 2 all-slack resolves the captured unrestricted positive/negative directions,
+nonbasic direction reversal and reverse bound complement portions of Q-06.
+It keeps one x1+/x1- column. The near entering tie resolves 3 versus
+3.0000000001 (x2 is selected despite equal displayed coefficients); the exact
+row tie chooses the topmost row. These observations do not establish a universal
+hidden tolerance or cycling policy (Q-01).
+
+The apparent crossing -0.00 mismatch is resolved by scientific -5.55112e-17;
+D=12 retains the negative rounded zero. The native basis reconstruction matches
+both observations. This is not proof of TORA's internal arithmetic. No asserted
+all-slack golden mismatch remains. Upper-bound-versus-row exact ties, additional
+ill-conditioned/free-zero-cost cases and hardware DPI moves remain unverified.
+Successful native PDF generation does not resolve Q-08's unavailable TORA print
+output. Seven artificial-method handoffs are classified and their setup routes
+are tested; actual M/Two-phase algorithms remain separate cycles with Go disabled
+for their pending sessions.
