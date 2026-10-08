@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: M-method",
+  "active_step": "Phase 2: M-method review gate",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Complete M-method gate; wait before Two-phase",
+  "next_step": "Wait for M-method approval before Two-phase",
   "foundation_order": [
     1,
     5,
@@ -105,7 +105,7 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "M-method",
-    "step": "Final native Basic-column freeze found in wide reference frames; revalidating UI/CI",
+    "step": "M-method gate ready for review",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -122,7 +122,7 @@
     "input_module_status": "approved",
     "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG; all deployed startup checks and uploads passed",
     "packages": "dist/phase2-all-slack/",
-    "remaining": "M-method three-OS gate/review; separate Two-phase/Bounded/Dual/graphical/final/sensitivity cycles",
+    "remaining": "M-method review approval; separate Two-phase/Bounded/Dual/graphical/final/sensitivity cycles",
     "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity passes; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-all-slack/packages-verified.json",
     "input_approval": "User: continue from where we left off (2026-10-08)",
     "all_slack": {
@@ -145,21 +145,28 @@
       "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity passes; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-all-slack/packages-verified.json"
     },
     "m_method": {
-      "status": "in_progress",
+      "status": "ready_for_review",
       "approval": "User: continue (2026-10-08)",
       "scope": "Finite M setup, shared primal session, native M screen and direct/fallback iteration comparisons",
-      "local_validation": "32/32 desktop; 14/14 explicit C++17 Qt-free; native M tests at four scales",
+      "local_validation": "32/32 desktop including pinned Basic labels, synchronized scrolling and leaving-row click at four scales; unchanged explicit C++17 Qt-free 14/14",
       "oracle": "15 direct M sessions/eight All-slack fallbacks; 78 complete tables, 4099 exact strings including four scientific cells",
       "comparison": "build/phase2-m-method/comparison.tsv",
       "report": "docs/PHASE2_M_METHOD_REPORT.md",
       "spec": "docs/tora-analysis/LP_M_METHOD_MODULE.md",
       "goldens": "tests/fixtures/m-method.json",
-      "source_commit": "28751d9fc294e77cae6976ddf14246e724650d5d",
+      "source_commit": "d334285a85cca0aa46b01ff709a92e0b2f4643e9",
       "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37781232812",
       "initial_ci_validation": "All three jobs completed successfully before strict LP compiler flags were added",
-      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37781978838",
-      "ci_validation": "Prior source 28751d9 passed 32/32 on each OS and all package checks; final fixed Basic-column change needs a fresh CI run",
-      "prior_verified_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37781978838"
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37785270579",
+      "ci_validation": "Windows/Linux/macOS each 32/32 CTest, zero failures/skips; four-scale Qt logs each 29 M/29 All-slack/43 input cases; all 5354 M and 3241 All-slack comparison fields match; all packaging/deployed startup/upload steps successful",
+      "prior_verified_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37781978838",
+      "test_reports": "build/phase2-m-method/ci-reviewed-final/",
+      "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG",
+      "packages": "dist/phase2-m-method/final/",
+      "gate": "Complete implementation cycle; stop for user review before Two-phase",
+      "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-m-method/packages-reviewed-verified.json and linux-reviewed-startup.json",
+      "completed_on": "2026-10-08",
+      "remaining": "User review; recorded legacy printing/physical mixed-DPI and unobserved numerical/parse limits remain explicit"
     }
   }
 }
