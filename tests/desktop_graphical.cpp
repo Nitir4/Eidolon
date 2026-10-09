@@ -19,6 +19,10 @@ using namespace tora::desktop;
 class DesktopGraphical:public QObject {
     Q_OBJECT
 private slots:
+    void initTestCase(){
+        const QFontMetrics metrics(QApplication::font());
+        for(const QChar ch:QStringLiteral("TORA Clone 0123456789"))QVERIFY2(metrics.inFont(ch),"The synthetic GUI backend must have a font that renders the application's labels");
+    }
     void unsupportedDimensionsAndBounds(){
         for(int kind=0;kind<5;++kind){
             const auto n=kind==0?1:kind==1?3:2;auto problem=tora::lp::LpProblem::blank(static_cast<std::size_t>(n),1);
@@ -87,5 +91,13 @@ private slots:
         }
     }
 };
-QTEST_MAIN(DesktopGraphical)
+int main(int argc,char** argv){
+#ifdef Q_OS_WIN
+    // Match the existing shell/input/simplex test bootstrap. Windows offscreen
+    // uses FreeType and cannot discover native system fonts by itself.
+    qputenv("QT_QPA_FONTDIR",qgetenv("SystemRoot")+"/Fonts");
+#endif
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+    QApplication application(argc,argv);DesktopGraphical test;return QTest::qExec(&test,argc,argv);
+}
 #include "desktop_graphical.moc"

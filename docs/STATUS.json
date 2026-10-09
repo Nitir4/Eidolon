@@ -105,7 +105,7 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "Graphical solution",
-    "step": "Local graphical verification complete; three-OS CI pending",
+    "step": "Windows graphical CI failure under investigation",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -254,7 +254,10 @@
       "remaining": "Three-OS CI/packages; successful original printer layout, physical mixed-DPI and outside-capture numerical/range behavior remain explicit",
       "goldens": "tests/fixtures/graphical.json",
       "comparison": "build/phase2-graphical/comparison.tsv",
-      "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_GRAPHICAL_REPORT.tex"
+      "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_GRAPHICAL_REPORT.tex",
+      "source_commit": "9c90d251e1809ca3ed863e9884b682ff5b2509cd",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37888462495",
+      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37888462495"
     }
   }
 }
