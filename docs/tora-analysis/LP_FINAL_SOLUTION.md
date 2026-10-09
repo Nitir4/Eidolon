@@ -22,7 +22,7 @@ The scrollable grid contains these sections in order:
 | Sensitivity, constraint | Constraint, Current RHS, Min RHS, Max RHS, Dual Price |
 
 Variable labels are x1:, x2:, etc. Constraint labels include their index and
-relation; binding inequalities display an equality label. Numeric slack/
+original relation marker (<, >, =); zero slack does not change that marker. Numeric slack/
 surplus suffixes are presentation characters (case 13 has `4.00-`), separate
 from leading negative signs. Open ranges use `infinity` or `-infinity`.
 `Next Iteration` and `All Iterations` are disabled in the completed normal
@@ -54,9 +54,27 @@ Scientific N=5 and decimal D=3 are independently captured in
 
 ## Unknowns / things I could not verify
 
-This is a separate automatic solving path. Its exact internal method and
-iteration accounting cannot be established solely from final values. Do not
-assign the interactive method's terminal count. Sensitivity ranges are observed
-numbers; hidden precision/tolerance choices, bound/unrestricted summary
-transformations, successful printing and all large-grid scrolling states remain
-unverified. The Wine printer error is recorded in `FILE_BEHAVIOR.md`.
+The automatic final path matches the verified Bounded/Two-phase terminal basis
+on the accepted corpus. Its count equals stored interactive tables plus one
+after a Phase 2 transition; no extra count is added for infeasible Phase 1.
+This is an observed display rule, not proof of TORA's internal implementation.
+Ten focused cases independently verify upper/lower/fixed/free variables,
+zero objective, aliases, redundant equality, scientific N=5 and decimal D=3.
+Explicit bound rows are appended (LB rows, then UB rows). The original fifteen
+plus ten focused results form tests/fixtures/final-solution.json.
+Hidden precision outside the captured profile, successful original printing
+and all large-grid scrolling states remain unverified. The Wine printer error is recorded in `FILE_BEHAVIOR.md`.
+
+
+## Native implementation and verification
+
+`FinalSolutionSession` automatically solves a validated LP through the shared
+bounded engine, reconstructs original variables, and formats final sections.
+`LpFinalController` routes the enabled solve action through Output Format into
+a native summary grid. A model change invalidates the prior output. Next/All
+Iteration controls are disabled on this screen. Printing uses native QPrinter.
+Tests were written before each implementation; failures are retained under
+`build/phase2-final/`. Twenty-five exact golden summaries and native cells are
+checked at 100%, 125%, 150% and 200%, with actual 1366x768, 1920x1080 and 4K
+window geometry. The full local suite passed 62/62 before Release validation.
+Sensitivity implementation remains its separate next cycle.

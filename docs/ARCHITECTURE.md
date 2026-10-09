@@ -381,3 +381,14 @@ Direct Dual alternatives use a capture-verified current-basis partial-pivoted LU
 `GraphicalSession` owns the validated two-variable model, output format, visible constraints, captured viewport/lattice profile and final result. It uses the approved `BoundedSession` for finite/status computation and exposes clipped segments/region membership without Qt. `LpGraphicalController` owns the session, handles eligibility/warnings/row commands and invalidates it on input changes. Shared output-format routing uses an explicit method property, set by every graphical/simplex request. `GraphPlot` maps mathematical coordinates into a square font-metric viewport and paints with QPainter; QPrinter uses the same draw routine. No browser, HTML, added GUI dependency in the numerical library or other TORA module is introduced.
 
 Flow: input document → Graphical request → common format → GraphicalSession → selected constraints/objective → native plot/result panel. Source-derived fixtures feed a separate Qt-free numerical probe and native GUI comparisons. Test-monitor configuration enables genuine requested-size verification and leaves normal multi-monitor reachability logic intact. The extension point for later OR modules remains ModuleDescriptor/screen factories.
+
+
+### Implemented automatic final output
+
+`FinalSolutionSession` owns a verified `BoundedSession`, solves automatically,
+reconstructs original variables and formats `SummaryDisplay` sections. The
+Qt-free output includes exact automatic count/terminal rules. `LpFinalController`
+invalidates its session on document changes and routes shared Output Format to
+`lp/final`. A native `SummaryModel`/`QTableView` presents the ordered sections;
+QPrinter prints the same display data. Future modules remain compiled module
+registrations in ApplicationShell; LP details do not enter the core shell.

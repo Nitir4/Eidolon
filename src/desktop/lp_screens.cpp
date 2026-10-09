@@ -1,3 +1,4 @@
+#include "lp_final_controller.hpp"
 #include "lp_screens.hpp"
 #include "screen_widgets.hpp"
 #include "lp_input_controller.hpp"
@@ -176,8 +177,10 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
     QObject::connect(graphical,&QAction::triggered,&shell,[&shell]{graphicalController(shell).request();});
     auto* algebraic = solve->addMenu(QStringLiteral("Algebraic"));
     auto* final = algebraic->addAction(QStringLiteral("Final solution"));
-    final->setEnabled(false);
-    final->setToolTip(QString::fromLatin1(previewReason));
+    final->setObjectName(QStringLiteral("solve-final"));
+    const auto finalEnabled=[final,&graphInput]{final->setEnabled(graphInput.document()!=nullptr);};
+    QObject::connect(&graphInput,&LpInputController::changed,algebraic,finalEnabled);finalEnabled();
+    QObject::connect(final,&QAction::triggered,&shell,[&shell]{finalController(shell).request();});
     auto* iterations = algebraic->addMenu(QStringLiteral("Iterations"));
     for (const auto& label : {"All-slack starting solution", "M-method", "Two-phase method", "Bounded simplex", "Dual simplex"}) {
         auto* action = iterations->addAction(QString::fromLatin1(label));
@@ -425,21 +428,23 @@ ModuleDescriptor lpModule()
         auto* layout = new QVBoxLayout(page);
         auto& c=simplexController(shell);
         auto& graph=graphicalController(shell);
+        auto& summary=finalController(shell);
         auto* format = formatPanel(QStringLiteral("Select Output Format"), QStringLiteral("output-format"),true);
         auto* inner = qobject_cast<QVBoxLayout*>(format->layout());
-        auto* go = button(QStringLiteral("Go To Output Screen"), QStringLiteral("output-go"), *inner, [&shell,&c,&graph,format] {
+        auto* go = button(QStringLiteral("Go To Output Screen"), QStringLiteral("output-go"), *inner, [&shell,&c,&graph,&summary,format] {
             bool nOk=false,dOk=false;const int n=format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->text().toInt(&nOk);
             const int d=format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->text().toInt(&dOk);
             if(!nOk || !dOk){c.notice(QStringLiteral("Output Format"),QStringLiteral("Enter whole numbers for N and D"));return;}
             const tora::core::NumberFormat settings{format->findChild<QRadioButton*>(QStringLiteral("output-format-scientific"))->isChecked()?tora::core::Notation::Scientific:tora::core::Notation::Decimal,n,d};
-            if(shell.property("lp-output-method").toString()==QStringLiteral("graphical"))graph.start(settings);else c.start(settings);
+            if(shell.property("lp-output-method").toString()==QStringLiteral("graphical"))graph.start(settings);else if(shell.property("lp-output-method").toString()==QStringLiteral("final"))summary.start(settings);else c.start(settings);
         });
-        const auto update=[go,format,&c,&graph,&shell]{const bool enabled=shell.property("lp-output-method").toString()==QStringLiteral("graphical")?graph.canStart():c.canStart();go->setEnabled(enabled);format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->setReadOnly(!enabled);format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->setReadOnly(!enabled);go->setToolTip(enabled?QString():QString::fromLatin1(previewReason));};
-        QObject::connect(&c,&LpSimplexController::changed,page,update);QObject::connect(&graph,&LpGraphicalController::changed,page,update);update();
+        const auto update=[go,format,&c,&graph,&summary,&shell]{const bool enabled=shell.property("lp-output-method").toString()==QStringLiteral("graphical")?graph.canStart():shell.property("lp-output-method").toString()==QStringLiteral("final")?summary.canStart():c.canStart();go->setEnabled(enabled);format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->setReadOnly(!enabled);format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->setReadOnly(!enabled);go->setToolTip(enabled?QString():QString::fromLatin1(previewReason));};
+        QObject::connect(&c,&LpSimplexController::changed,page,update);QObject::connect(&graph,&LpGraphicalController::changed,page,update);QObject::connect(&summary,&LpFinalController::changed,page,update);update();
         centerPanel(*layout, format);
         footer(*layout, shell, true);
         return page;
     }, {}});
+    module.screens.append({QStringLiteral("lp/final"),heading,[](ApplicationShell& shell){return finalScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/graphical"),heading,[](ApplicationShell& shell){return graphicalScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/simplex"),heading,[](ApplicationShell& shell){return simplexScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/m-value"), heading, [](ApplicationShell& shell) {

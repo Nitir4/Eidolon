@@ -85,6 +85,7 @@ jobs:
             build/ci/tests/bounded-comparison.tsv
             build/ci/tests/dual-comparison.tsv
             build/ci/tests/graphical-comparison.tsv
+            build/ci/tests/final-comparison.tsv
             build/ci/tests/desktop-input-scale-*.xml
             build/ci/tests/desktop-simplex-scale-*.xml
             build/ci/tests/desktop-m-method-scale-*.xml
@@ -92,5 +93,6 @@ jobs:
             build/ci/tests/desktop-bounded-scale-*.xml
             build/ci/tests/desktop-dual-scale-*.xml
             build/ci/tests/desktop-graphical-scale-*.xml
+            build/ci/tests/desktop-final-scale-*.xml
             build/ci/ui-captures/
           if-no-files-found: warn

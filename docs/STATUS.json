@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase2: Graphical solution ready for review",
+  "active_step": "Phase 2: Final solution verification; sensitivity next",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Review graphical gate; Final solution/sensitivity require their separate module cycles",
+  "next_step": "Finish final CI verification, then sensitivity in its own cycle",
   "foundation_order": [
     1,
     5,
@@ -245,7 +245,7 @@
       "review_approval": "User: cmontinue"
     },
     "graphical": {
-      "status": "ready_for_review",
+      "status": "approved",
       "approval": "User: cmontinue",
       "working_mode": "implementation",
       "spec": "docs/tora-analysis/LP_GRAPHICAL.md; external LP_GRAPHICAL_MODULE.md",
@@ -266,7 +266,18 @@
       "packages": "dist/phase2-graphical/final/",
       "downloaded_artifacts": "All three final SHA-256/manifests pass; Windows ZIP CRC/native EXE/Qt PrintSupport and every manifest file hash pass; Linux local offscreen extract-and-run startup passes with SDK paths removed. Evidence: packages-verified.json,linux-startup.json",
       "preview_validation": "Local and final Windows/macOS1920x1080 previews inspected; readable labels/full-window native graph. Exact requested logical sizes and36 captured physical previews audited, allowing fractional-DPR one-pixel raster rounding. Windows offscreen installed-font setup/glyph coverage is explicit.",
-      "tests_first": "Qt-free/native tests produced missing graphical.hpp/controller header failures before implementation; first failure messages were tool output, not fabricated saved log files"
+      "tests_first": "Qt-free/native tests produced missing graphical.hpp/controller header failures before implementation; first failure messages were tool output, not fabricated saved log files",
+      "review_approval": "User: go ahead and complete it"
+    },
+    "final_solution": {
+      "status": "verification_in_progress",
+      "working_mode": "implementation",
+      "authorization": "User: go ahead and complete it",
+      "spec": "docs/tora-analysis/LP_FINAL_SOLUTION.md",
+      "goldens": "tests/fixtures/final-solution.json",
+      "oracle": "15 original +10 focused, with actual TORA saved files and exact screenshot glyphs",
+      "local_validation": "62/62 desktop before final Release checks",
+      "remaining": "Qt-free Release and three-OS CI pending; sensitivity separate"
     }
   }
 }

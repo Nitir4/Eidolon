@@ -1,0 +1,2966 @@
+[
+  {
+    "case": "01_normal",
+    "problem": {
+      "title": "Normal",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/01_normal/final/final-output.png",
+    "source_sha256": "dcd1419ace2e1e08655f52acfb93e478713bfe869365816e4421dba5797db887",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "10.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "2.00",
+              "3.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00",
+              "2.00",
+              "4.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "1.00-"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "02_degenerate",
+    "problem": {
+      "title": "Degenerate",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/02_degenerate/final/final-output.png",
+    "source_sha256": "6a8253065a3e76d3a7aba98c5b8fa11029d1071bda84ed99efe34aa3175fd995",
+    "status": "alternative",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "2.00",
+    "message": "Alternative solution(s) detected (enter ITERATIONS mode to determine such solutions)",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "03_infeasible",
+    "problem": {
+      "title": "Infeasible",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/03_infeasible/final/final-output.png",
+    "source_sha256": "bbaaa51d2a5e9636adfca03f67a0bfa03f612c1af035ce6fad3afb971f06a511",
+    "status": "infeasible",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 2,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": null,
+    "message": "Problem has no feasible solution",
+    "sections": []
+  },
+  {
+    "case": "04_unbounded",
+    "problem": {
+      "title": "Unbounded",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "0.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "0.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/04_unbounded/final/final-output.png",
+    "source_sha256": "cfe904c6dbb143a2eb992dba0bc32e0898b5dc025debd41244d324f30bf57a53",
+    "status": "unbounded",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 6,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": null,
+    "message": "Optimum solution is unbounded",
+    "sections": []
+  },
+  {
+    "case": "05_alternative",
+    "problem": {
+      "title": "Alternative optima",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/05_alternative/final/final-output.png",
+    "source_sha256": "dc1851c9fef831cc1624591ce0263dfbe49e321d4ea7256da872a844daac49fd",
+    "status": "alternative",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 2,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "4.00",
+    "message": "Alternative solution(s) detected (enter ITERATIONS mode to determine such solutions)",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "4.00",
+              "1.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "4.00",
+              "4.00-"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "06_equality",
+    "problem": {
+      "title": "Equality",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/06_equality/final/final-output.png",
+    "source_sha256": "ac29284f9a96e736d18ec1af9f0453b3514b8ca9f8192837a143b3176691fd1a",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 6,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "11.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.00",
+              "3.00",
+              "9.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "1.00",
+              "2.00",
+              "2.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (=)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (>)",
+            "values": [
+              "1.00",
+              "2.00+"
+            ]
+          },
+          {
+            "label": "3 (>)",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "07_big_m",
+    "problem": {
+      "title": "Big M",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/07_big_m/final/final-output.png",
+    "source_sha256": "b2161e74dd94e6fc708d61ba324b3b1b3853f5bbc0ca7ed35d9186d159bc9979",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 6,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "6.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "3.00",
+              "1.00",
+              "3.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (>)",
+            "values": [
+              "4.00",
+              "2.00+"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "3.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "08_two_phase",
+    "problem": {
+      "title": "Two phase",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/08_two_phase/final/final-output.png",
+    "source_sha256": "e3a8a1449cd1a37dd769f334c07f7cbf12da8115ab589c6dfb7d5f26e96f53dc",
+    "status": "alternative",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 6,
+    "objective_label": "Objective Value (Min)",
+    "objective_value": "5.00",
+    "message": "Alternative solution(s) detected (enter ITERATIONS mode to determine such solutions)",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.00",
+              "1.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00",
+              "1.00",
+              "2.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (=)",
+            "values": [
+              "5.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (>)",
+            "values": [
+              "2.00",
+              "1.00+"
+            ]
+          },
+          {
+            "label": "3 (>)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "09_bounded",
+    "problem": {
+      "title": "Bounded variables",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "4.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "10.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "7.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/09_bounded/final/final-output.png",
+    "source_sha256": "eee89ddab9806edcd2a619c4d3e52f4c0d07fc5bf586258c4ca5bd0545b7a552",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "36.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "6.00",
+              "4.00",
+              "24.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "4.00",
+              "3.00",
+              "12.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "10.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "6.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "7.00",
+              "3.00-"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "10_dual",
+    "problem": {
+      "title": "Dual simplex seed",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "2.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "5.00",
+          "coefficients": [
+            "2.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/10_dual/final/final-output.png",
+    "source_sha256": "83068bebf9281cf4973a10f296e702d0248eddc8b9b5415a97f942283bc1f464",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 7,
+    "objective_label": "Objective Value (Min)",
+    "objective_value": "10.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "2.00",
+              "2.00",
+              "4.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00",
+              "3.00",
+              "6.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (>)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (>)",
+            "values": [
+              "6.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (>)",
+            "values": [
+              "5.00",
+              "1.00+"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "11_zero_rhs",
+    "problem": {
+      "title": "Zero RHS",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "0.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/11_zero_rhs/final/final-output.png",
+    "source_sha256": "d027971a488762e6fe536fd1e1ec62c19211798a7701044ac592a478a44e6e7f",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 2,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "0.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "0.00",
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "0.00",
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "2.00-"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "2.00",
+              "2.00-"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "12_negative_rhs",
+    "problem": {
+      "title": "Negative RHS",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "-1.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/12_negative_rhs/final/final-output.png",
+    "source_sha256": "4031270d20f23c17109dbb9cd2b01cec6c5f12e541b72c11da0a09d544c914e3",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "9.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.00",
+              "2.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "3.00",
+              "1.00",
+              "3.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (>)",
+            "values": [
+              "-1.00",
+              "7.00-"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "3.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "13_mixed_sign",
+    "problem": {
+      "title": "Mixed signs",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "-1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "-1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/13_mixed_sign/final/final-output.png",
+    "source_sha256": "18a8cb25f296c45b84169ffdb89a8d5740535ac5b4102dcbada9aa2f64cda5f8",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "5.50",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.50",
+              "2.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "1.50",
+              "-1.00",
+              "-1.50"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "4.00-"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "5.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "14_tight_bounds",
+    "problem": {
+      "title": "Tight bounds",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/14_tight_bounds/final/final-output.png",
+    "source_sha256": "f2f5920b55fadb8144ac54de894efc7385584418cc57662417c8e054a691ea65",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "5.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "1.00",
+              "1.00",
+              "1.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00",
+              "2.00",
+              "4.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "3.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "15_minimization",
+    "problem": {
+      "title": "Minimization",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/output-studies/15_minimization/final/final-output.png",
+    "source_sha256": "fc447a52d6d64923ef55c9664b5c5fb2a5a8249116a4d96868392b1660b5f5f9",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 6,
+    "objective_label": "Objective Value (Min)",
+    "objective_value": "9.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.00",
+              "2.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "1.00",
+              "3.00",
+              "3.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (>)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (>)",
+            "values": [
+              "1.00",
+              "2.00+"
+            ]
+          },
+          {
+            "label": "3 (>)",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-upper",
+    "problem": {
+      "title": "final-upper",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "1",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-upper/summary.png",
+    "source_sha256": "b75830b1a95b0e91aa0a2e96e6e1402fa895abea83c82e441b4ce18dfee02a23",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "9.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "1.00",
+              "3.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "3.00",
+              "2.00",
+              "6.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "1.00-"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "UB-x1",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-lower",
+    "problem": {
+      "title": "final-lower",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "1",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-lower/summary.png",
+    "source_sha256": "565b44bea41df82f2de1ddfaa2d9501725c8fe32a6188bafff8f85381cbc6244",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "10.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "2.00",
+              "3.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00",
+              "2.00",
+              "4.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "1.00-"
+            ]
+          },
+          {
+            "label": "LB-x1",
+            "values": [
+              "1.00",
+              "1.00+"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-fixed",
+    "problem": {
+      "title": "final-fixed",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "1",
+          "upper": "1",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-fixed/summary.png",
+    "source_sha256": "7e66dbd061cf1146306101dc31674542bd15dbf1334b2988c7b7e0934e41c07d",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "9.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "1.00",
+              "3.00",
+              "3.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "3.00",
+              "2.00",
+              "6.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "1.00-"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "LB-x1",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "UB-x1",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-free",
+    "problem": {
+      "title": "final-free",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-inf",
+          "upper": "inf",
+          "unrestricted": true
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-free/summary.png",
+    "source_sha256": "518d8e910d1adaf2765a96271011b322c249e9937244417fbd5ce1d43bd4d343",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "10.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "2.00",
+              "3.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00",
+              "2.00",
+              "4.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "1.00-"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-free-negative",
+    "problem": {
+      "title": "final-free-negative",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "-inf",
+          "upper": "inf",
+          "unrestricted": true
+        }
+      ],
+      "objective": [
+        "2.00",
+        "-1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "-1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-free-negative/summary.png",
+    "source_sha256": "76295cb0b48a9a1437868238d5ac33f0db5a59e046ec543fdb40ea70c0e31747",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "5.50",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.50",
+              "2.00",
+              "7.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "1.50",
+              "-1.00",
+              "-1.50"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "4.00-"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "5.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-alias",
+    "problem": {
+      "title": "final-alias",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "chairs",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-alias/summary.png",
+    "source_sha256": "77ec9f3c38358807a66d6114d2d0c4aaaa46071ee5279dcf3cc38dfe7cfb85ec",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "10.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "2.00",
+              "3.00",
+              "6.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00",
+              "2.00",
+              "4.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "1.00-"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-redundant",
+    "problem": {
+      "title": "final-redundant",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "=",
+          "rhs": "8",
+          "coefficients": [
+            "2",
+            "2"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-redundant/summary.png",
+    "source_sha256": "760d928724f507d042f724e376d27f836f14c7216c56ea65b3b7aee6002a30b5",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 5,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "11.00",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.00",
+              "3.00",
+              "9.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "1.00",
+              "2.00",
+              "2.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (=)",
+            "values": [
+              "4.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "2 (=)",
+            "values": [
+              "8.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "3 (>)",
+            "values": [
+              "1.00",
+              "0.00"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-scientific",
+    "problem": {
+      "title": "final-scientific",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "2.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "5.00",
+          "coefficients": [
+            "2.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      1,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-scientific/summary.png",
+    "source_sha256": "d6ba2f75f2b26bd0b5c4dc8042dc0f526bf7050bb916650788fe9af04709c0e5",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 7,
+    "objective_label": "Objective Value (Min)",
+    "objective_value": "1.00000e+01",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "2.00000e+00",
+              "2.00000e+00",
+              "4.00000e+00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "2.00000e+00",
+              "3.00000e+00",
+              "6.00000e+00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (>)",
+            "values": [
+              "4.00000e+00",
+              "0.00000e+00"
+            ]
+          },
+          {
+            "label": "2 (>)",
+            "values": [
+              "6.00000e+00",
+              "0.00000e+00"
+            ]
+          },
+          {
+            "label": "3 (>)",
+            "values": [
+              "5.00000e+00",
+              "1.00000e+00+"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-decimal-three",
+    "problem": {
+      "title": "final-decimal-three",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "-1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "-1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      3
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-decimal-three/summary.png",
+    "source_sha256": "0fa8e33696d8b518da080324210d17cb6727382980c41c5f934470d7a59c5722",
+    "status": "optimal",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 3,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "5.500",
+    "message": "",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "3.500",
+              "2.000",
+              "7.000"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "1.500",
+              "-1.000",
+              "-1.500"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "2.000",
+              "0.000"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.000",
+              "4.000-"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "5.000",
+              "0.000"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-zero-objective",
+    "problem": {
+      "title": "final-zero-objective",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "0",
+        "0"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "source": "reference/tora-captures/probes/phase2-final/final-zero-objective/summary.png",
+    "source_sha256": "e2b4e3a2f5f21d7357c792923fdf40c69430c3322b0bf508357c7d913facb55d",
+    "status": "alternative",
+    "heading": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+    "iteration": 1,
+    "objective_label": "Objective Value (Max)",
+    "objective_value": "0.00",
+    "message": "Alternative solution(s) detected (enter ITERATIONS mode to determine such solutions)",
+    "sections": [
+      {
+        "columns": [
+          "Variable",
+          "Value",
+          "Obj Coeff",
+          "Obj Val Contrib"
+        ],
+        "rows": [
+          {
+            "label": "x1:",
+            "values": [
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          },
+          {
+            "label": "x2:",
+            "values": [
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          }
+        ]
+      },
+      {
+        "columns": [
+          "Constraint",
+          "RHS",
+          "Slack-/Surplus+"
+        ],
+        "rows": [
+          {
+            "label": "1 (<)",
+            "values": [
+              "4.00",
+              "4.00-"
+            ]
+          },
+          {
+            "label": "2 (<)",
+            "values": [
+              "2.00",
+              "2.00-"
+            ]
+          },
+          {
+            "label": "3 (<)",
+            "values": [
+              "3.00",
+              "3.00-"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

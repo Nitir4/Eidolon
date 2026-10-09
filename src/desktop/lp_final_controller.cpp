@@ -1,0 +1,102 @@
+#include "lp_final_controller.hpp"
+#include "lp_input_controller.hpp"
+#include "ui_font.hpp"
+#include <QAbstractTableModel>
+#include <QApplication>
+#include <QHeaderView>
+#include <QTableView>
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QMessageBox>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPainter>
+#include <QResizeEvent>
+#include <algorithm>
+
+namespace tora::desktop {
+LpFinalController::LpFinalController(ApplicationShell& shell):QObject(&shell),shell_(shell) {
+    setObjectName(QStringLiteral("lp-final-controller"));
+    notice=[&shell](const QString& title,const QString& message){QMessageBox box(QMessageBox::Information,title,message,QMessageBox::Ok,&shell);polishUsableFonts(box);box.exec();};
+    connect(&inputController(shell),&LpInputController::changed,this,[this]{requested_=false;session_.reset();emit changed();});
+}
+bool LpFinalController::request() {
+    if(!inputController(shell_).document() || !inputController(shell_).validateForSolve())return false;
+    shell_.setProperty("lp-output-method",QStringLiteral("final"));requested_=true;session_.reset();emit changed();
+    return shell_.navigate(QStringLiteral("lp/output-format"));
+}
+bool LpFinalController::start(tora::core::NumberFormat format) {
+    if(!requested_ || !inputController(shell_).document())return false;
+    try {
+        (void)tora::core::NumberFormatter(format);
+        auto next=std::make_unique<tora::lp::FinalSolutionSession>(inputController(shell_).document()->problem);
+        format_=format;session_=std::move(next);emit changed();return shell_.navigate(QStringLiteral("lp/final"));
+    }catch(const std::exception& e){notice(QStringLiteral("Final solution"),QString::fromUtf8(e.what()));return false;}
+}
+LpFinalController& finalController(ApplicationShell& shell) {
+    if(auto* c=shell.findChild<LpFinalController*>(QStringLiteral("lp-final-controller")))return *c;
+    return *new LpFinalController(shell);
+}
+namespace {
+struct SummaryRow {QStringList cells;bool header=false;};
+class SummaryModel final:public QAbstractTableModel {
+public:
+    SummaryModel(LpFinalController& c,QObject* parent):QAbstractTableModel(parent),c_(c){connect(&c,&LpFinalController::changed,this,[this]{refresh();});refresh();}
+    int rowCount(const QModelIndex& parent={}) const override{return parent.isValid()?0:static_cast<int>(rows_.size());}
+    int columnCount(const QModelIndex& parent={}) const override{return parent.isValid()?0:5;}
+    QVariant data(const QModelIndex& index,int role=Qt::DisplayRole) const override {
+        if(!index.isValid() || index.row()>=rowCount() || index.column()>=columnCount())return {};
+        const auto& row=rows_[static_cast<std::size_t>(index.row())];
+        if(role==Qt::DisplayRole)return index.column()<row.cells.size()?row.cells[index.column()]:QString();
+        if(role==Qt::BackgroundRole)return QColor(row.header?Qt::cyan:Qt::blue);
+        if(role==Qt::ForegroundRole)return QColor(row.header?Qt::blue:Qt::white);
+        if(role==Qt::TextAlignmentRole)return int((index.column()==0?Qt::AlignLeft:Qt::AlignRight)|Qt::AlignVCenter);
+        if(role==Qt::FontRole){auto font=usableUiFont(QApplication::font());font.setBold(!row.header);return font;}
+        return {};
+    }
+    Qt::ItemFlags flags(const QModelIndex& index) const override{return index.isValid()?Qt::ItemIsEnabled:Qt::NoItemFlags;}
+    void refresh(){beginResetModel();rows_.clear();if(c_.session())for(const auto& s:c_.session()->display(c_.format()).sections){SummaryRow header;header.header=true;for(const auto& x:s.columns)header.cells<<QString::fromStdString(x);rows_.push_back(std::move(header));for(const auto& r:s.rows){SummaryRow row;row.cells<<QString::fromStdString(r.label);for(const auto& x:r.values)row.cells<<QString::fromStdString(x);rows_.push_back(std::move(row));}rows_.push_back({{},false});}endResetModel();}
+private:
+    LpFinalController& c_;std::vector<SummaryRow> rows_;
+};
+class SummaryView final:public QTableView {
+public:
+    void fit(){if(!model())return;const QFontMetrics metrics(usableUiFont(font()));std::vector<int> widths(5,0);int total=0;
+        for(int j=0;j<5;++j){for(int i=0;i<model()->rowCount();++i)widths[static_cast<std::size_t>(j)]=std::max(widths[static_cast<std::size_t>(j)],metrics.horizontalAdvance(model()->index(i,j).data().toString()));widths[static_cast<std::size_t>(j)]+=metrics.averageCharWidth()*3;total+=widths[static_cast<std::size_t>(j)];}
+        const int extra=std::max(0,viewport()->width()-total);for(int j=0;j<5;++j)setColumnWidth(j,widths[static_cast<std::size_t>(j)]+extra/5);
+        verticalHeader()->setDefaultSectionSize(metrics.height()+metrics.height()/2);
+    }
+protected:
+    void resizeEvent(QResizeEvent* e) override{QTableView::resizeEvent(e);fit();}
+};
+}
+bool printSummary(QPrinter& printer,const LpFinalController& c,const QFont& font) {
+    if(!c.session())return false;
+    try {
+        const auto summary=c.session()->display(c.format());QPainter painter;if(!painter.begin(&printer))return false;
+        painter.setFont(usableUiFont(font));const QFontMetrics metrics(painter.font(),&printer);const int line=metrics.height()+metrics.height()/2;
+        const auto page=printer.pageLayout().paintRectPixels(printer.resolution());int y=0;
+        const auto draw=[&](const QStringList& cells){if(y+line>page.height()){if(!printer.newPage())throw std::runtime_error("Printer rejected a page");y=0;}const int width=page.width()/std::max(1,static_cast<int>(cells.size()));for(int j=0;j<cells.size();++j)painter.drawText(QRect(j*width,y,width,line),Qt::AlignLeft|Qt::AlignVCenter,cells[j]);y+=line;};
+        draw({QString::fromStdString(summary.heading)});draw({QStringLiteral("Title: ")+legacyText(summary.title)});draw({QStringLiteral("Final Iteration No.: ")+QString::number(summary.iteration)});
+        if(summary.objectiveValue)draw({QString::fromStdString(summary.objectiveLabel)+QStringLiteral(" =")+QString::fromStdString(*summary.objectiveValue)});
+        if(!summary.message.empty())draw({QString::fromStdString(summary.message)});
+        for(const auto& s:summary.sections){QStringList headers;for(const auto& h:s.columns)headers<<QString::fromStdString(h);draw(headers);for(const auto& r:s.rows){QStringList cells{QString::fromStdString(r.label)};for(const auto& v:r.values)cells<<QString::fromStdString(v);draw(cells);}draw({});}
+        return painter.end();
+    }catch(const std::exception&){return false;}
+}
+QWidget* finalScreen(ApplicationShell& shell) {
+    auto& c=finalController(shell);auto* page=new QWidget;auto* outer=new QHBoxLayout(page);outer->addStretch();auto* body=new QWidget;outer->addWidget(body,8);outer->addStretch();auto* layout=new QVBoxLayout(body);
+    auto* heading=new QLabel(QStringLiteral("LINEAR PROGRAMMING OUTPUT SUMMARY"));heading->setAlignment(Qt::AlignCenter);auto bold=heading->font();bold.setBold(true);heading->setFont(bold);layout->addWidget(heading);
+    const auto label=[layout](const QString& id){auto* l=new QLabel;l->setObjectName(id);l->setWordWrap(true);layout->addWidget(l);return l;};
+    auto* title=label(QStringLiteral("summary-title"));auto* iteration=label(QStringLiteral("summary-iteration"));auto* objective=label(QStringLiteral("summary-objective"));auto* message=label(QStringLiteral("summary-message"));
+    const auto button=[page](const QString& text,const QString& id,QHBoxLayout* row){auto* b=new QPushButton(text,page);b->setObjectName(id);row->addWidget(b);return b;};
+    auto* commands=new QHBoxLayout;commands->addStretch();button(QStringLiteral("Next Iteration"),QStringLiteral("summary-next"),commands)->setEnabled(false);button(QStringLiteral("All Iterations"),QStringLiteral("summary-all"),commands)->setEnabled(false);auto* print=button(QStringLiteral("Write to Printer"),QStringLiteral("summary-print"),commands);commands->addStretch();layout->addLayout(commands);
+    auto* view=new SummaryView;view->setObjectName(QStringLiteral("summary-grid"));view->setModel(new SummaryModel(c,view));view->horizontalHeader()->hide();view->verticalHeader()->hide();view->setSelectionMode(QAbstractItemView::NoSelection);view->setShowGrid(false);view->setStyleSheet(QStringLiteral("QTableView {background: blue; border: 1px solid white;}"));layout->addWidget(view,1);
+    auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("summary-view-input"),footer);auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("summary-main"),footer);auto* exit=button(QStringLiteral("Exit TORA"),QStringLiteral("summary-exit"),footer);footer->addStretch();layout->addLayout(footer);
+    const auto update=[&c,title,iteration,objective,message,view,print]{tora::lp::SummaryDisplay d;if(c.session())d=c.session()->display(c.format());title->setText(QStringLiteral("Title: ")+legacyText(d.title));iteration->setText(QStringLiteral("Final Iteration No.: ")+QString::number(d.iteration));objective->setText(d.objectiveValue?QString::fromStdString(d.objectiveLabel)+QStringLiteral(" =")+QString::fromStdString(*d.objectiveValue):QString());message->setText(QString::fromStdString(d.message));message->setVisible(!d.message.empty());print->setEnabled(c.session()!=nullptr);view->fit();};
+    QObject::connect(&c,&LpFinalController::changed,page,update);QObject::connect(&shell,&ApplicationShell::displayMetricsChanged,page,update);update();
+    QObject::connect(print,&QPushButton::clicked,page,[&shell,&c]{QPrinter p(QPrinter::HighResolution);QPrintDialog dialog(&p,&shell);polishUsableFonts(dialog);if(dialog.exec()==QDialog::Accepted && !printSummary(p,c,shell.font()))c.notice(QStringLiteral("Printer"),QStringLiteral("Could not complete printing to the selected printer"));});
+    QObject::connect(input,&QPushButton::clicked,page,[&shell]{shell.navigate(QStringLiteral("lp/input"));});QObject::connect(main,&QPushButton::clicked,page,[&shell]{shell.navigate(QStringLiteral("main"));});QObject::connect(exit,&QPushButton::clicked,page,[&shell]{shell.close();});return page;
+}
+} // namespace tora::desktop

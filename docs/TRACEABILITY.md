@@ -233,3 +233,9 @@ Focused user-action observations and the final three-OS gate are complete: 32 se
 | LP-GR-08: native DPI layouts and PDF | Qt layouts/GraphPlot/QPrinter | actual 3 resolutions ×4 scales, PDF output/nonmutation | native-only previews; original successful printer output unverified Q-08 |
 
 Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free Release tests. Final CI run 37908644559 passes 56/56 per OS with all 350 graphical fields, all prior comparison reports and all deployment/package steps. STATUS.json records exact source/artifact evidence. Raw screenshots/files stay private; independent transcriptions alone are used in CI.
+
+
+| Requirement | Implementation | Tests | Capture |
+| --- | --- | --- | --- |
+| Final automatic counts, original values/contributions, terminal messages and bound rows | src/lp/final_solution.cpp | lp.final.goldens; lp.final.safety | output-studies/*/final; probes/phase2-final/* |
+| Final solve/format/native output/navigation/printing/HiDPI | src/desktop/lp_final_controller.cpp; lp_screens.cpp | desktop.final.scale-* | Original summary screens; build/phase2-final/ui-captures |
