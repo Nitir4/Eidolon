@@ -215,7 +215,6 @@ Raw reference screenshots/files/executables remain excluded from source and rele
 | LP-DU-04: direct infeasibility title/body | `assess`, `terminalTitle/Message` | core/native infeasible golden | `du-infeasible/terminal-message.png` |
 | LP-DU-05: native ordered tables, layout and lifecycle | shared trace view/controller | four-scale `desktop.dual`, history/layout/print/lifecycle checks | Original/focused tables, clone UI captures |
 | LP-DU-06: exact ties/manual alternative continuation | selection APIs and shared next | focused/manual golden + native workflow | `du-ratio-tie`, `du-ratio-manual`, `du-alternative-next` |
-
 | LP-DU-07: alternative continuation appends table without repeat notice | `LpSimplexController::next`, shared alternative pivot | `du-alternative-next`; native prior-notice/disabled-Next assertions | Focused alternative-selected/next and complete three-table trace |
 
-Focused user-action observations are complete. Final three-OS gate checks remain in progress until STATUS.json records verified completion.
+Focused user-action observations and the final three-OS gate are complete: 32 sessions, 106 tables, 5215 exact cell strings and 6872 matching fields. CI run 37882868062 passes 50/50 tests on each OS and all packages; STATUS.json records evidence paths. Dual is ready for review; later modules remain gated.

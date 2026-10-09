@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: Dual simplex",
+  "active_step": "Phase 2: Dual simplex review",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Complete the Dual simplex cycle and stop for review",
+  "next_step": "Review Dual simplex; begin another module only after approval",
   "foundation_order": [
     1,
     5,
@@ -105,7 +105,7 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "Dual simplex",
-    "step": "Three-OS CI and packaging verification",
+    "step": "Dual gate ready for review",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -117,13 +117,13 @@
       "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37658262696",
       "packages": "dist/phase2-input/final/"
     },
-    "source_commit": "e33b391ebc3a3fd1943e1faa081e218ff7b3855d",
-    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37828494270",
+    "source_commit": "bfd64f3545f7bf9dcf9383289ee2a3d4dfc66c4e",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37882868062",
     "input_module_status": "approved",
     "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG; all deployed startup checks and uploads passed",
-    "packages": "dist/phase2-bounded/final/",
+    "packages": "dist/phase2-dual/final/",
     "remaining": "Dual review; separate graphical/final/sensitivity cycles",
-    "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-bounded/packages-verified.json and linux-startup.json",
+    "downloaded_artifacts": "All three package SHA-256/manifest checks pass; Windows archive and every manifest file hash pass; local Linux AppImage offscreen extract-and-run startup passes. Evidence: build/phase2-dual/packages-verified.json and linux-startup.json",
     "input_approval": "User: continue from where we left off (2026-10-08)",
     "all_slack": {
       "status": "approved",
@@ -200,7 +200,7 @@
       "goldens": "tests/fixtures/bounded.json",
       "oracle": "24 accepted sessions, 85 tables, 4186 exact cell strings; 18 original sessions reused; six valid focused traces plus separate initial-notice capture",
       "tests_first": "Numerical missing bounded.hpp and native missing requestBounded failures recorded before implementation in build/phase2-bounded/",
-      "remaining": "User review; recorded physical mixed-DPI, original printer layout and outside-corpus numerical limits remain explicit",
+      "remaining": "Recorded physical mixed-DPI, original printer layout and outside-corpus numerical limits remain explicit",
       "local_validation": "44/44 full desktop; subsequent final safety-test recheck 1/1; 18/18 explicit C++17 Qt-free in Debug and Release; four scales \u00d7 28 Bounded Qt cases; zero failures/skips",
       "comparison": "build/phase2-bounded/comparison.tsv",
       "comparison_fields": 5512,
@@ -219,19 +219,29 @@
       "review_approval": "User: continue"
     },
     "dual": {
-      "status": "in_progress",
+      "status": "ready_for_review",
       "approval": "User: continue",
       "working_mode": "implementation",
       "spec": "docs/tora-analysis/LP_DUAL_SIMPLEX.md; external LP_DUAL_MODULE.md",
       "goldens": "tests/fixtures/dual.json",
       "tests_first": "Missing dual.hpp and requestDual failures saved in build/phase2-dual/",
       "oracle": "32 accepted sessions, 106 tables, 5215 exact cell strings; original 15 selections reused including two equality errors; 19 focused additions including scientific alternative",
-      "remaining": "Three-OS CI/packages and review gate",
+      "remaining": "User review; recorded physical mixed-DPI, original printer layout and outside-corpus numerical limits remain explicit",
       "local_validation": "50/50 desktop; 20/20 explicit C++17 Qt-free Release; four scales each with 36 Dual Qt cases; zero failures/skips",
       "comparison": "build/phase2-dual/comparison.tsv",
       "comparison_fields": 6872,
       "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_DUAL_REPORT.tex",
-      "preview_validation": "Native 1920x1080 preview visually inspected: full native window/readable text/ordered tables and scrolling"
+      "preview_validation": "Local 1920x1080 and final Windows/macOS CI previews visually inspected: full native window/readable text/ordered tables and scrolling",
+      "scope": "Direct Dual start, pivots, manual/automatic and alternative iteration views; captured equality and All-slack/Two-phase/M routing",
+      "source_commit": "bfd64f3545f7bf9dcf9383289ee2a3d4dfc66c4e",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37882868062",
+      "ci_validation": "Windows/Linux/macOS each 50/50 CTest (150/150 overall), zero failures/skips; four scales each 36 Dual/28 Bounded/29 Two-phase/29 M/29 All-slack/43 input Qt cases; all 6872 Dual, 5512 Bounded, 6872 Two-phase, 5354 M and 3241 All-slack fields match; packaging/deployed startup/upload successful on all OSes",
+      "test_reports": "build/phase2-dual/ci-final/",
+      "ci_verified": "build/phase2-dual/ci-verified.json",
+      "packages": "dist/phase2-dual/final/",
+      "downloaded_artifacts": "All three package SHA-256/manifest checks pass; Windows archive and every manifest file hash pass; local Linux AppImage offscreen extract-and-run startup passes. Evidence: build/phase2-dual/packages-verified.json and linux-startup.json",
+      "gate": "Complete; stopped for user review before another LP method",
+      "completed_on": "2026-10-09"
     }
   }
 }
