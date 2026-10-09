@@ -7,12 +7,15 @@ preview. Foundation 2 supplies Qt-free matrix/tableau arithmetic, explicit
 tolerances and observed decimal/scientific formatting. Foundation 3 adds the
 Qt-free LP model and validation against observed input fields. Foundation 4 adds
 the Qt-free TORA LP document, codec and binary file store. All foundations are
-complete in the approved order **1 → 5 → 2 → 3 → 4**. Phase 2 is authorized;
+complete in the approved order **1 → 5 → 2 → 3 → 4**. Phase 2 is implemented
+and verified for the captured LP profile;
 its input module supplies native LP data entry, row/column editing and Open/Save.
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-the latest verification and packages are recorded in docs/STATUS.json.
+all three OS builds pass 68 tests each. The latest verification and packages
+are recorded in [current status](docs/STATUS.json). Recorded original-printer,
+physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
 See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_REPORT.md)

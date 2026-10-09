@@ -23,7 +23,7 @@ implementation or comparisons.
 | Q-06 | Unrestricted expansion, reverse bound complements, redundant equality/artificial-basic cleanup | Preprocessing and affected solver gates |
 | Q-07 | Resolved: direct Dual infeasibility title and message captured in du-infeasible | Dual-simplex module evidence |
 | Q-08 | Successful table/graph printing, pagination and print dialog defaults | Printing/output module gate |
-| Q-09 | Automatic Final solution's internal method/iteration accounting; bound/unrestricted sensitivity transformations | Final/sensitivity module gates |
+| Q-09 | Resolved for35 captured summaries:automatic counts,bounds,free orientation,negative RHS and signed prices. Hidden arithmetic/transformations outside this profile remain unverified. | Future profile expansion |
 | Q-10 | Complete independently reviewed golden labels/messages and every transcribed table, beyond automated coverage and reviewed glyph seeds | Tests-first step of each numerical/UI module |
 
 Q-08 has an environment blocker: Write to Printer produced Run-time error
@@ -152,3 +152,17 @@ The accepted corpus is 35 graphical result/geometry cases, with manual/eligibili
 The original internal graphical solver/range thresholds outside sampled inputs remain unknown. Native viewport/lattice safety policies are explicitly engineering limits. Graph printing also raises error 482 in Wine; native PDF success does not establish original printer parity. Physical mixed-DPI handoff and successful original printing remain open. Final/sensitivity are not implemented by this cycle.
 
 Final graphical CI run 37908644559 also passes 56/56 tests on each OS and all package/deployment checks. The initial Windows synthetic-font failure was resolved by reusing the established installed-font bootstrap; no golden/drawing tolerance was weakened. All original-print/physical-DPI/outside-profile limits above remain explicit.
+
+
+## Final solution and sensitivity closeout
+
+The separate final checkpoint passes62/62 per OS at41c5017. Its sensitivity
+extension atf18eaf9 passes68/68 per OS,204 overall, with all deployed-package
+startup checks successful. Exact expanded comparisons include1116 final fields
+and2337 sensitivity fields. All35 actual saved-file round trips and source hashes
+pass;1124 fixture numeric strings match independent private glyph transcriptions.
+The observed automatic iteration accounting, interleaved bound rows, signed
+minimization costs, negative-RHS/free orientation and negative-lower/upper quirk
+are resolved. See LP_SENSITIVITY_PARAMETRIC.md for compatibility exceptions.
+There is no known mismatch in the accepted corpus. Original printer output,
+physical mixed-DPI handoff and behavior outside captured profiles remain limits.
