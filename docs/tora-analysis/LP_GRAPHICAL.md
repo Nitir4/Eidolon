@@ -43,3 +43,7 @@ The numerical viewport safety limit is 1e12 and zoom limits the lattice span to 
 ## Unknowns / things I could not verify
 
 Successful original printer output, pagination and print-dialog defaults remain Q-08. Physical mixed-DPI monitor moves/hotplug still require hardware acceptance. Hidden graphical solver implementation, tie choices outside the captured cases, internal range/tick thresholds outside the sampled intercepts, extreme/ill-conditioned numerical cases and unobserved shortcuts are not claimed as verified. Final solution/sensitivity remain separate implementation gates. No asserted comparison is knowingly accepted with a mismatch.
+
+## Verified graphical gate
+
+Source `10fb07e5053c770955cf02b34b28d631b0b3f6a3` passes [CI run 37908644559](https://github.com/Nitir4/TORA-Clone/actions/runs/37908644559):56/56 tests on each OS, four 39-case graphical Qt runs per OS, all 350 graph fields and all previous method comparisons match. All three downloaded package hashes/manifests pass, Windows archive/all file hashes pass, and the final Linux AppImage starts locally with SDK paths removed. Native Windows/macOS previews are readable. Exact logical window dimensions are asserted; fractional raster rounding produces 1367 physical pixels for the1366-wide 150% case (911 logical pixels ×1.5). There is no accepted golden mismatch. The module is ready for review; Final/sensitivity are not started.

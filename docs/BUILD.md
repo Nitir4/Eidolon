@@ -115,3 +115,5 @@ TORA_UI_CAPTURES="$PWD/build/phase2-graphical/ui-captures" ctest --preset dev
 Graphical expected values are independent capture transcriptions in `tests/fixtures/graphical.json`. The private-source audit can be run with `python3 tools/audit_tora_graphical_geometry.py`; `--transcribe` changes only the source-derived pixel annotations and must accompany direct review, never native-output golden generation.
 
 Graphical native tests use the same pre-QApplication Windows FreeType font-directory bootstrap as the established shell/input/simplex tests. An explicit Latin/digit glyph check rejects unreadable offscreen evidence. Normal product rendering still uses the native OS font backend; no font file is bundled or added to the application.
+
+Final graphical packages are under `dist/phase2-graphical/final/`, with downloaded reports/previews under `build/phase2-graphical/ci-final/`. The Linux AppImage can be launched directly after setting its executable bit; the development command remains `build/dev/src/desktop/ToraClone`. At fractional scale, PNG raster dimensions may round by one physical pixel; requested logical dimensions are asserted exactly.

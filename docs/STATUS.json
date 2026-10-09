@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: Graphical solution",
+  "active_step": "Phase2: Graphical solution ready for review",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Complete graphical cycle, then stop for review",
+  "next_step": "Review graphical gate; Final solution/sensitivity require their separate module cycles",
   "foundation_order": [
     1,
     5,
@@ -105,7 +105,7 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "Graphical solution",
-    "step": "Windows graphical CI failure under investigation",
+    "step": "Graphical gate verified; stopped for review",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -117,13 +117,13 @@
       "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37658262696",
       "packages": "dist/phase2-input/final/"
     },
-    "source_commit": "bfd64f3545f7bf9dcf9383289ee2a3d4dfc66c4e",
-    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37882868062",
+    "source_commit": "10fb07e5053c770955cf02b34b28d631b0b3f6a3",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37908644559",
     "input_module_status": "approved",
-    "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG; all deployed startup checks and uploads passed",
-    "packages": "dist/phase2-dual/final/",
-    "remaining": "Graphical cycle; separate final/sensitivity cycles",
-    "downloaded_artifacts": "All three package SHA-256/manifest checks pass; Windows archive and every manifest file hash pass; local Linux AppImage offscreen extract-and-run startup passes. Evidence: build/phase2-dual/packages-verified.json and linux-startup.json",
+    "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage and universal arm64+x86_64 macOS app-in-DMG; all deployment/upload steps verified",
+    "packages": "dist/phase2-graphical/final/",
+    "remaining": "Graphical review; separate Final solution/sensitivity cycles",
+    "downloaded_artifacts": "All three final SHA-256/manifests pass; Windows ZIP CRC/native EXE/Qt PrintSupport and every manifest file hash pass; Linux local offscreen extract-and-run startup passes with SDK paths removed. Evidence: packages-verified.json,linux-startup.json",
     "input_approval": "User: continue from where we left off (2026-10-08)",
     "all_slack": {
       "status": "approved",
@@ -245,19 +245,28 @@
       "review_approval": "User: cmontinue"
     },
     "graphical": {
-      "status": "in_progress",
+      "status": "ready_for_review",
       "approval": "User: cmontinue",
       "working_mode": "implementation",
       "spec": "docs/tora-analysis/LP_GRAPHICAL.md; external LP_GRAPHICAL_MODULE.md",
       "oracle": "35 accepted graphical cases: original15 reused +20 focused; 350 independent numerical/display fields, 755 source-color pixels; 35 private byte-identical saved-file round trips",
       "local_validation": "56/56 desktop; 22/22 explicit C++17 Qt-free Release; actual 3 resolutions x4 scales; 39 native Qt cases per scale",
-      "remaining": "Three-OS CI/packages; successful original printer layout, physical mixed-DPI and outside-capture numerical/range behavior remain explicit",
+      "remaining": "Successful original printer layout, physical mixed-DPI hardware acceptance, hidden arithmetic/range behavior outside the captured profile; separate Final/sensitivity cycles",
       "goldens": "tests/fixtures/graphical.json",
       "comparison": "build/phase2-graphical/comparison.tsv",
       "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_GRAPHICAL_REPORT.tex",
-      "source_commit": "9c90d251e1809ca3ed863e9884b682ff5b2509cd",
-      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37888462495",
-      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37888462495"
+      "source_commit": "10fb07e5053c770955cf02b34b28d631b0b3f6a3",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37908644559",
+      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37888462495",
+      "gate": "Implemented and verified; stop at graphical review gate before Final/sensitivity",
+      "completed_on": "2026-10-09",
+      "ci_validation": "Windows/Linux/macOS each56/56 CTest (168/168 overall), zero failures/skips; four scales each with39 graphical/36 Dual/28 Bounded/29 Two-phase/29 M/29 All-slack/43 input Qt cases; all350 Graphical,6872 Dual,5512 Bounded,6872 Two-phase,5354 M and3241 All-slack fields match; all build/package/deployed startup/uploads successful",
+      "test_reports": "build/phase2-graphical/ci-final/",
+      "ci_verified": "build/phase2-graphical/ci-verified.json",
+      "packages": "dist/phase2-graphical/final/",
+      "downloaded_artifacts": "All three final SHA-256/manifests pass; Windows ZIP CRC/native EXE/Qt PrintSupport and every manifest file hash pass; Linux local offscreen extract-and-run startup passes with SDK paths removed. Evidence: packages-verified.json,linux-startup.json",
+      "preview_validation": "Local and final Windows/macOS1920x1080 previews inspected; readable labels/full-window native graph. Exact requested logical sizes and36 captured physical previews audited, allowing fractional-DPR one-pixel raster rounding. Windows offscreen installed-font setup/glyph coverage is explicit.",
+      "tests_first": "Qt-free/native tests produced missing graphical.hpp/controller header failures before implementation; first failure messages were tool output, not fabricated saved log files"
     }
   }
 }

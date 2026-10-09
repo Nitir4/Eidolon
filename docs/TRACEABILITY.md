@@ -225,11 +225,11 @@ Focused user-action observations and the final three-OS gate are complete: 32 se
 | --- | --- | --- | --- |
 | LP-GR-01: two-variable eligibility and bound/free warning | GraphicalSession::eligible/boundsSupported; controller request | DesktopGraphical::unsupportedDimensionsAndBounds; graphical.safety | graph-one-variable, graph-upper/free/lower-stable; original three-variable probe |
 | LP-GR-02: manual constraint/objective/sign/one-stroke flow | selectConstraint/drawObjective/resetSignRestrictions; selectRow | menuManualZoomPrintingAndLifecycle; graphical.safety | graph-manual-stable intermediate screenshots |
-| LP-GR-03: exact finite/alternative/terminal result strings | GraphicalSession::solve; common formatter | lp.graphical.goldens; 35 native data rows | original15 plus20 focused graphical captures |
+| LP-GR-03: exact finite/alternative/terminal result strings | GraphicalSession::solve; common formatter | lp.graphical.goldens; 35 native data rows | original 15 plus20 focused graphical captures |
 | LP-GR-04: captured ranges, ticks, lattice and zoom | constructor/tickStep/zoom | 350 golden fields; native map/scale checks | fractions, 15/19/20/25/30/40/50/60/80/100/200/1000 and original zoom states |
 | LP-GR-05: native geometry/color and terminal line omission | GraphPlot/drawPlot; objectiveSegment | 755 source-color samples ×4 scales; terminal safety assertions | source-hashed one-stroke screenshots; red-axis occlusion recorded |
 | LP-GR-06: format dispatch and document lifecycle | lp-output-method; graphical controller changed signal | graph→simplex routing and reopen invalidation | shared captured output-format/input flow |
 | LP-GR-07: existing-file integrity | unchanged ToraLpCodec | 35 private byte-identical codec round trips | canonical roundtrips saves and focused tora-saved.txt |
 | LP-GR-08: native DPI layouts and PDF | Qt layouts/GraphPlot/QPrinter | actual 3 resolutions ×4 scales, PDF output/nonmutation | native-only previews; original successful printer output unverified Q-08 |
 
-Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free Release tests. The three-OS graphical gate is recorded in STATUS.json after CI verification. Raw screenshots/files stay private; independent transcriptions alone are used in CI.
+Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free Release tests. Final CI run 37908644559 passes 56/56 per OS with all 350 graphical fields, all prior comparison reports and all deployment/package steps. STATUS.json records exact source/artifact evidence. Raw screenshots/files stay private; independent transcriptions alone are used in CI.
