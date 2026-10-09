@@ -18,7 +18,7 @@ The desktop executable is `build/dev/src/desktop/ToraClone` on Linux,
 The Foundation 5 shell launches maximized on its first interactive run;
 normal window geometry is then remembered. `--no-settings` bypasses preferences
 and `--screen lp/output-format` (or another registered route) previews one
-layout. Editing, files and solving are disabled at this gate.
+layout. Native LP editing/files and the approved All-slack/M/Two-phase/Bounded/Dual/Graphical methods are functional. Final/sensitivity remain gated.
 
 The numerical, LP model and compatibility targets are Qt-free static C++17 libraries.
 Tests also require Python 3 for comparison with recorded file SHA-256 values.
@@ -48,9 +48,7 @@ build/headless/tests/codec_roundtrip tests/fixtures/lp-models.txt tests/fixtures
 
 `codec_probe --roundtrip input output`, `--edit input output`, or
 `--new decimal|scientific output` writes files for live reference checks.
-It is a test tool and is not installed. The F4 library is ready for the later
-data-entry controller; the existing navigation preview still has no enabled
-file/edit/solve actions.
+It is a test tool and is not installed. The codec is integrated with the native data-entry controller and the implemented LP methods.
 
 Release build and packaging:
 
@@ -78,7 +76,7 @@ The single [workflow](../.github/workflows/build.yml) uses `windows-latest`,
 
 Each artifact has accompanying SHA-256 and dependency-manifest files.
 Qt notices are included; SDK license files are copied when supplied. These are
-development navigation-preview packages. Installers, macOS signing/notarization and a
+development LP packages. Installers, macOS signing/notarization and a
 production release license review are later release work. Windows uses a
 portable folder; a single-file executable is not supplied.
 
@@ -105,3 +103,13 @@ TORA_UI_CAPTURES="$PWD/build/foundation5/screens" ctest --preset dev
 
 Physical mixed-monitor handoff and OS-version acceptance still need hardware
 review. Offscreen startup does not establish numerical TORA compatibility.
+
+## Actual-resolution graphical verification
+
+The native scale tests use `tests/fixtures/offscreen-display.json`, copied to the build test directory. It configures a test monitor large enough for 4K; product sizing remains layout/font driven. This prevents Qt's default small offscreen display from silently clamping windows. Relative configfile paths avoid Windows drive-letter parsing. Graphical tests assert real requested window sizes and save native-only previews with `TORA_UI_CAPTURES`. Qt's supported configuration is documented by its [official offscreen implementation](https://github.com/qt/qtbase/blob/v6.10.3/src/plugins/platforms/offscreen/qoffscreenintegration.cpp).
+
+```sh
+TORA_UI_CAPTURES="$PWD/build/phase2-graphical/ui-captures" ctest --preset dev
+```
+
+Graphical expected values are independent capture transcriptions in `tests/fixtures/graphical.json`. The private-source audit can be run with `python3 tools/audit_tora_graphical_geometry.py`; `--transcribe` changes only the source-derived pixel annotations and must accompany direct review, never native-output golden generation.

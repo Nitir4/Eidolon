@@ -218,3 +218,18 @@ Raw reference screenshots/files/executables remain excluded from source and rele
 | LP-DU-07: alternative continuation appends table without repeat notice | `LpSimplexController::next`, shared alternative pivot | `du-alternative-next`; native prior-notice/disabled-Next assertions | Focused alternative-selected/next and complete three-table trace |
 
 Focused user-action observations and the final three-OS gate are complete: 32 sessions, 106 tables, 5215 exact cell strings and 6872 matching fields. CI run 37882868062 passes 50/50 tests on each OS and all packages; STATUS.json records evidence paths. Dual is ready for review; later modules remain gated.
+
+## Graphical implementation cycle
+
+| Requirement | Code | Tests | Private capture |
+| --- | --- | --- | --- |
+| LP-GR-01: two-variable eligibility and bound/free warning | GraphicalSession::eligible/boundsSupported; controller request | DesktopGraphical::unsupportedDimensionsAndBounds; graphical.safety | graph-one-variable, graph-upper/free/lower-stable; original three-variable probe |
+| LP-GR-02: manual constraint/objective/sign/one-stroke flow | selectConstraint/drawObjective/resetSignRestrictions; selectRow | menuManualZoomPrintingAndLifecycle; graphical.safety | graph-manual-stable intermediate screenshots |
+| LP-GR-03: exact finite/alternative/terminal result strings | GraphicalSession::solve; common formatter | lp.graphical.goldens; 35 native data rows | original15 plus20 focused graphical captures |
+| LP-GR-04: captured ranges, ticks, lattice and zoom | constructor/tickStep/zoom | 350 golden fields; native map/scale checks | fractions, 15/19/20/25/30/40/50/60/80/100/200/1000 and original zoom states |
+| LP-GR-05: native geometry/color and terminal line omission | GraphPlot/drawPlot; objectiveSegment | 755 source-color samples ×4 scales; terminal safety assertions | source-hashed one-stroke screenshots; red-axis occlusion recorded |
+| LP-GR-06: format dispatch and document lifecycle | lp-output-method; graphical controller changed signal | graph→simplex routing and reopen invalidation | shared captured output-format/input flow |
+| LP-GR-07: existing-file integrity | unchanged ToraLpCodec | 35 private byte-identical codec round trips | canonical roundtrips saves and focused tora-saved.txt |
+| LP-GR-08: native DPI layouts and PDF | Qt layouts/GraphPlot/QPrinter | actual 3 resolutions ×4 scales, PDF output/nonmutation | native-only previews; original successful printer output unverified Q-08 |
+
+Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free Release tests. The three-OS graphical gate is recorded in STATUS.json after CI verification. Raw screenshots/files stay private; independent transcriptions alone are used in CI.

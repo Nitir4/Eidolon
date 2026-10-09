@@ -16,6 +16,7 @@
 #include <QPrintDialog>
 #include <QStyle>
 #include <QLocale>
+#include <QVariant>
 #include <cmath>
 #include <algorithm>
 
@@ -35,6 +36,7 @@ LpSimplexController::LpSimplexController(ApplicationShell& shell):QObject(&shell
 bool LpSimplexController::requestAllSlack() {
     const auto* doc=inputController(shell_).document();if(!doc)return false;
     if(!inputController(shell_).validateForSolve())return false;
+    shell_.setProperty("lp-output-method",QStringLiteral("simplex"));
     timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
     requestedMethod_=tora::lp::PrimalMethod::AllSlack;
     try {
@@ -49,6 +51,7 @@ bool LpSimplexController::requestAllSlack() {
 }
 bool LpSimplexController::requestMMethod() {
     const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    shell_.setProperty("lp-output-method",QStringLiteral("simplex"));
     timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
     requestedMethod_=tora::lp::PrimalMethod::MMethod;penalty_=100;
     try {
@@ -68,6 +71,7 @@ bool LpSimplexController::setPenalty(const QString& text) {
 }
 bool LpSimplexController::requestTwoPhase() {
     const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    shell_.setProperty("lp-output-method",QStringLiteral("simplex"));
     timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
     requestedMethod_=tora::lp::PrimalMethod::TwoPhase;
     try {
@@ -80,6 +84,7 @@ bool LpSimplexController::requestTwoPhase() {
 }
 bool LpSimplexController::requestBounded() {
     const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    shell_.setProperty("lp-output-method",QStringLiteral("simplex"));
     timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
     try {
         // Bounded reaches output formatting directly, without either shared
@@ -91,6 +96,7 @@ bool LpSimplexController::requestBounded() {
 }
 bool LpSimplexController::requestDual() {
     const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    shell_.setProperty("lp-output-method",QStringLiteral("simplex"));
     timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
     try {
         requestedMethod_=tora::lp::PrimalSimplexSession::dualSetup(doc->problem);

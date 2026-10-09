@@ -1,4 +1,4 @@
-add_library(or_lp STATIC problem.cpp validation.cpp primal_simplex.cpp)
+add_library(or_lp STATIC problem.cpp validation.cpp primal_simplex.cpp graphical.cpp)
 add_library(tora::lp ALIAS or_lp)
 tora_target_defaults(or_lp)
 target_compile_features(or_lp PUBLIC cxx_std_17)

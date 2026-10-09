@@ -19,7 +19,7 @@ implementation or comparisons.
 | Q-02 | N/D allowed extrema, invalid notation-field messages, large-width/exponent overflow, scientific formatting beyond N=5/D=2 | Formatter/input/output module gates |
 | Q-03 | Undo enablement/restoration; column insert/delete/copy/paste; all advertised shortcuts, objective-cell editing, invalid relation/name/cell messages | Data-entry module gate |
 | Q-04 | Quoted-alias input commitment, other text code pages and arbitrary malformed records; basic read-only flow, suffix, Save target, comma/quoted/non-ASCII titles resolved | Phase 2 input controller and any newly supported encoding/profile |
-| Q-05 | Graph eligibility for one-variable, finite-bound/unrestricted inputs; individual-constraint click states; general range/tick/dot/zoom rules | Graphical module gate |
+| Q-05 | Resolved for captured inputs: one/two/three-variable eligibility, explicit bound/free rejection, manual states and sampled range/tick/dot/zoom profile. Hidden rules outside the captured profile remain unverified. | Graphical module evidence / future profile expansion |
 | Q-06 | Unrestricted expansion, reverse bound complements, redundant equality/artificial-basic cleanup | Preprocessing and affected solver gates |
 | Q-07 | Resolved: direct Dual infeasibility title and message captured in du-infeasible | Dual-simplex module evidence |
 | Q-08 | Successful table/graph printing, pagination and print dialog defaults | Printing/output module gate |
@@ -144,3 +144,9 @@ decimal trace agreement did not establish identical floating-point output.
 ## Dual cycle update
 
 Focused direct captures now resolve exact RHS/ratio ties, scientific basic-cost canonicalization and direct no-entering infeasibility. Bounds or unrestricted variables cause a specific Two-phase/M warning rather than direct bounded Dual. Initially feasible objective-compatible starts remain Dual and stop at Iteration 1. Manual row/column, Cancel-to-M and alternative continuation probes are now accepted. Final verification passed: 50/50 desktop tests per OS, 20/20 local C++17 Qt-free Release checks and all package/startup checks. The scientific alternative repeat also resolved three small residuals and the no-repeat-notice behavior. Near-tie thresholds, hidden cycling/precision, outside-corpus arithmetic, physical mixed-DPI moves and original printer layout remain unverified.
+
+## Graphical cycle update
+
+The accepted corpus is 35 graphical result/geometry cases, with manual/eligibility observations and 755 independently identified source pixels. It resolves small/fractional/scientific ranges, sampled large lattice/tick changes, ties-to-even zoom and non-returning small zoom pairs. Source inspection confirms that infeasible/unbounded states keep an origin marker without a finite objective contour. Occluded axes are recorded rather than inferred from nearby text. Local full native 56/56 and C++17 Qt-free Release 22/22 checks pass.
+
+The original internal graphical solver/range thresholds outside sampled inputs remain unknown. Native viewport/lattice safety policies are explicitly engineering limits. Graph printing also raises error 482 in Wine; native PDF success does not establish original printer parity. Physical mixed-DPI handoff and successful original printing remain open. Final/sensitivity are not implemented by this cycle.

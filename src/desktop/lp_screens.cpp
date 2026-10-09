@@ -2,6 +2,8 @@
 #include "screen_widgets.hpp"
 #include "lp_input_controller.hpp"
 #include "lp_simplex_controller.hpp"
+#include "lp_graphical_controller.hpp"
+#include <QVariant>
 
 #include <QAction>
 #include <QFormLayout>
@@ -167,8 +169,11 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
 {
     auto* solve = menu.addMenu(QStringLiteral("Solve Problem"));
     auto* graphical = solve->addAction(QStringLiteral("Graphical"));
-    graphical->setEnabled(false);
-    graphical->setToolTip(QString::fromLatin1(previewReason));
+    graphical->setObjectName(QStringLiteral("solve-graphical"));
+    auto& graphInput=inputController(shell);
+    const auto graphEnabled=[graphical,&graphInput]{graphical->setEnabled(graphInput.document() && tora::lp::GraphicalSession::eligible(graphInput.document()->problem));};
+    QObject::connect(&graphInput,&LpInputController::changed,solve,graphEnabled);graphEnabled();
+    QObject::connect(graphical,&QAction::triggered,&shell,[&shell]{graphicalController(shell).request();});
     auto* algebraic = solve->addMenu(QStringLiteral("Algebraic"));
     auto* final = algebraic->addAction(QStringLiteral("Final solution"));
     final->setEnabled(false);
@@ -419,20 +424,23 @@ ModuleDescriptor lpModule()
         auto* page = new QWidget;
         auto* layout = new QVBoxLayout(page);
         auto& c=simplexController(shell);
+        auto& graph=graphicalController(shell);
         auto* format = formatPanel(QStringLiteral("Select Output Format"), QStringLiteral("output-format"),true);
         auto* inner = qobject_cast<QVBoxLayout*>(format->layout());
-        auto* go = button(QStringLiteral("Go To Output Screen"), QStringLiteral("output-go"), *inner, [&c,format] {
+        auto* go = button(QStringLiteral("Go To Output Screen"), QStringLiteral("output-go"), *inner, [&shell,&c,&graph,format] {
             bool nOk=false,dOk=false;const int n=format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->text().toInt(&nOk);
             const int d=format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->text().toInt(&dOk);
             if(!nOk || !dOk){c.notice(QStringLiteral("Output Format"),QStringLiteral("Enter whole numbers for N and D"));return;}
-            c.start({format->findChild<QRadioButton*>(QStringLiteral("output-format-scientific"))->isChecked()?tora::core::Notation::Scientific:tora::core::Notation::Decimal,n,d});
+            const tora::core::NumberFormat settings{format->findChild<QRadioButton*>(QStringLiteral("output-format-scientific"))->isChecked()?tora::core::Notation::Scientific:tora::core::Notation::Decimal,n,d};
+            if(shell.property("lp-output-method").toString()==QStringLiteral("graphical"))graph.start(settings);else c.start(settings);
         });
-        const auto update=[go,format,&c]{go->setEnabled(c.canStart());format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->setReadOnly(!c.canStart());format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->setReadOnly(!c.canStart());go->setToolTip(c.canStart()?QString():QString::fromLatin1(previewReason));};
-        QObject::connect(&c,&LpSimplexController::changed,page,update);update();
+        const auto update=[go,format,&c,&graph,&shell]{const bool enabled=shell.property("lp-output-method").toString()==QStringLiteral("graphical")?graph.canStart():c.canStart();go->setEnabled(enabled);format->findChild<QLineEdit*>(QStringLiteral("output-format-N"))->setReadOnly(!enabled);format->findChild<QLineEdit*>(QStringLiteral("output-format-D"))->setReadOnly(!enabled);go->setToolTip(enabled?QString():QString::fromLatin1(previewReason));};
+        QObject::connect(&c,&LpSimplexController::changed,page,update);QObject::connect(&graph,&LpGraphicalController::changed,page,update);update();
         centerPanel(*layout, format);
         footer(*layout, shell, true);
         return page;
     }, {}});
+    module.screens.append({QStringLiteral("lp/graphical"),heading,[](ApplicationShell& shell){return graphicalScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/simplex"),heading,[](ApplicationShell& shell){return simplexScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/m-value"), heading, [](ApplicationShell& shell) {
         auto* page = new QWidget;

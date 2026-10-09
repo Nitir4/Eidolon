@@ -84,11 +84,13 @@ jobs:
             build/ci/tests/two-phase-comparison.tsv
             build/ci/tests/bounded-comparison.tsv
             build/ci/tests/dual-comparison.tsv
+            build/ci/tests/graphical-comparison.tsv
             build/ci/tests/desktop-input-scale-*.xml
             build/ci/tests/desktop-simplex-scale-*.xml
             build/ci/tests/desktop-m-method-scale-*.xml
             build/ci/tests/desktop-two-phase-scale-*.xml
             build/ci/tests/desktop-bounded-scale-*.xml
             build/ci/tests/desktop-dual-scale-*.xml
+            build/ci/tests/desktop-graphical-scale-*.xml
             build/ci/ui-captures/
           if-no-files-found: warn

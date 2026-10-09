@@ -127,3 +127,7 @@ Quoted aliases use the same doubled-quote grammar as titles. TORA's reader
 corrupts its own quoted-alias grid on reopen; the approved recovery policy
 retains the original alias/model. Sources and 22 exact hashes are in
 LP_DATA_ENTRY_MODULE.md and tests/fixtures/tora-input-edits.tsv.
+
+## Graphical module file behavior
+
+Graphical reads the same LP document and does not change the `.txt` grammar or saved coefficients. Selected display notation and viewport changes are session state; graph pixels are never written into the problem file. Finite bounds/free variables remain readable/editable but are rejected by the Graphical menu with the observed warning. Thirty-five canonical private TORA saves pass byte-identical codec round trips for this module. Invalid historical scratch saves are not substituted for previously reviewed canonical files.

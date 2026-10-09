@@ -10,7 +10,8 @@ the Qt-free TORA LP document, codec and binary file store. All foundations are
 complete in the approved order **1 → 5 → 2 → 3 → 4**. Phase 2 is authorized;
 its input module supplies native LP data entry, row/column editing and Open/Save.
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
-other numerical methods retain their separate implementation gates.
+Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
+Final solution and sensitivity retain their separate implementation gates.
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
 See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_REPORT.md)
@@ -48,8 +49,11 @@ feasibility and original-objective phases. Bounded goes directly to output forma
 and uses All-slack or Two-phase after lower-bound/RHS normalization.
 Dual rejects equations, uses a direct negative-RHS iteration path when applicable,
 and preserves the observed warnings and All-slack/Two-phase/M fallbacks.
-These methods support Next/All
-Iterations and native printing. Other solver
+These iteration methods support Next/All Iterations and native printing.
+For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
+select the output format, then click each constraint and the objective or
+**Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
+Other solver
 leaf commands remain disabled until their separate gates. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).

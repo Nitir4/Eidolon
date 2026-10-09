@@ -1,0 +1,14 @@
+{
+  "screens": [
+    {
+      "name": "DesktopLayoutTest",
+      "x": 0,
+      "y": 0,
+      "width": 7680,
+      "height": 4320,
+      "logicalDpi": 96,
+      "logicalBaseDpi": 96,
+      "dpr": 1
+    }
+  ]
+}
