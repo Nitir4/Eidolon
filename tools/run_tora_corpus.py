@@ -637,7 +637,7 @@ class ToraDriver:
         self.capture_all_iterations('all_slack',dest)
         self.recover_main_menu()
 
-    def capture_all_iterations(self, method: str, dest: Path) -> dict:
+    def capture_all_iterations(self, method: str, dest: Path, return_to_input: bool = True) -> dict:
         self.click(955, 432)
         self.pause(self.timeout)
         self.capture(dest / "terminal-message.png")
@@ -683,8 +683,9 @@ class ToraDriver:
                 break
         if stable < 2:
             raise RuntimeError(f"Tableau scrolling did not reach a stable bottom view: {dest}")
-        self.click(835, 800)  # View/Modify Input Data
-        self.pause(self.timeout)
+        if return_to_input:
+            self.click(835, 800)  # View/Modify Input Data
+            self.pause(self.timeout)
         return {"status": "captured-all-iterations", "captures": pages + 4,
                 "scroll_pages": pages, "scroll_bottom_stable": stable >= 2,
                 "grid_bounds": [left, right, bottom],

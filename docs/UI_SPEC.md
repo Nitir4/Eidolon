@@ -238,3 +238,10 @@ lower-bound/RHS normalization its heading is Starting All-Slack Method or
 Two-Phase Method. The shared native bound/sign rows, complements, phase controls,
 blocked artificial columns, printing and navigation apply. A captured initial
 shifted-start infeasibility shows the Phase 1 modal immediately on output.
+
+
+## Dual menu and iterations
+
+`Solve Problem → Algebraic → Iterations → Dual simplex` is enabled with an input document. Equality rejection uses `Dual Simplex Error`. Direct eligibility goes to output format and the `SIMPLEX TABLEAU - (Dual Simplex Method)` view; user instructions stay the same as captured primal instructions. All-slack fallback has one OK acknowledgment. Artificial or bound/free fallbacks offer OK for Two-phase and Cancel for M value entry. Finite-bound warning explains that condition explicitly. Actual method determines heading and inverse-block coloring; direct Dual Sx inverse cells are white. Direct infeasibility uses `Entering Var` and `Problem has no feasible solution--Iterations stopped`. Other terminal and alternative notices use the shared captured wording.
+
+For direct Dual, clicking a valid leaving row highlights only that row; a later entering click preserves it. After an alternative Next action, the new table appears without another optimum notice. Next stays disabled until a valid entering column is selected; All Iterations remains disabled at an optimum.

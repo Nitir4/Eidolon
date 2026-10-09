@@ -25,8 +25,9 @@ LpSimplexController::LpSimplexController(ApplicationShell& shell):QObject(&shell
     setObjectName(QStringLiteral("lp-simplex-controller"));
     notice=[&shell](const QString& title,const QString& body){
         QMessageBox box(QMessageBox::Information,title,body,QMessageBox::Ok,&shell);polishUsableFonts(box);box.exec();};
-    redirect=[&shell](const QString& body){QMessageBox box(QMessageBox::Warning,QStringLiteral("Warning"),body,QMessageBox::Ok|QMessageBox::Cancel,&shell);
+    redirect=[&shell](const QString& body){QMessageBox box(body.startsWith(QStringLiteral("Dual "))?QMessageBox::Critical:QMessageBox::Warning,QStringLiteral("Warning"),body,QMessageBox::Ok|QMessageBox::Cancel,&shell);
         polishUsableFonts(box);return box.exec()==QMessageBox::Ok;};
+    singleWarning=[&shell](const QString& body){QMessageBox box(QMessageBox::Critical,QStringLiteral("Warning"),body,QMessageBox::Ok,&shell);polishUsableFonts(box);box.exec();};
     connect(&inputController(shell),&LpInputController::changed,this,[this]{timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();emit changed();});
     connect(&shell,&ApplicationShell::screenChanged,this,[this](const QString& screen){if(screen!=QStringLiteral("lp/simplex") && busy_){timer_.stop();busy_=false;emit changed();}});
     timer_.setInterval(0);connect(&timer_,&QTimer::timeout,this,&LpSimplexController::runOne);
@@ -88,12 +89,29 @@ bool LpSimplexController::requestBounded() {
         requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
     }catch(const std::exception& e){notice(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));return false;}
 }
+bool LpSimplexController::requestDual() {
+    const auto* doc=inputController(shell_).document();if(!doc || !inputController(shell_).validateForSolve())return false;
+    timer_.stop();busy_=false;requested_=false;mPending_=false;session_.reset();
+    try {
+        requestedMethod_=tora::lp::PrimalSimplexSession::dualSetup(doc->problem);
+        if(requestedMethod_==tora::lp::PrimalMethod::AllSlack)
+            singleWarning(QStringLiteral("Dual Simplex not applicable directly. All-slack will be used"));
+        else if(requestedMethod_==tora::lp::PrimalMethod::TwoPhase){
+            const auto warning=tora::lp::PrimalSimplexSession::dualBoundsFallback(doc->problem)
+                ?QStringLiteral("Dual simplex not applicable because a var has upper/lower bound or is unrestricted. Two-phase method will be used; else click CANCEL to use M-method")
+                :QStringLiteral("Dual simplex not applicable directly. Two-phase method will be used; else click CANCEL to use M-method");
+            if(!redirect(warning)){requestedMethod_=tora::lp::PrimalMethod::MMethod;penalty_=100;mPending_=true;emit changed();shell_.navigate(QStringLiteral("lp/m-value"));return true;}
+        }
+        requested_=true;emit changed();shell_.navigate(QStringLiteral("lp/output-format"));return true;
+    }catch(const std::exception& e){notice(QStringLiteral("Dual Simplex Error"),QString::fromUtf8(e.what()));emit changed();return false;}
+}
 bool LpSimplexController::start(tora::core::NumberFormat format) {
     if(!requested_ || !inputController(shell_).document())return false;
     try {
         (void)tora::core::NumberFormatter(format);
         std::unique_ptr<tora::lp::PrimalSimplexSession> next;
-        if(requestedMethod_==tora::lp::PrimalMethod::Bounded)next=std::make_unique<tora::lp::BoundedSession>(inputController(shell_).document()->problem);
+        if(requestedMethod_==tora::lp::PrimalMethod::Dual)next=std::make_unique<tora::lp::DualSession>(inputController(shell_).document()->problem);
+        else if(requestedMethod_==tora::lp::PrimalMethod::Bounded)next=std::make_unique<tora::lp::BoundedSession>(inputController(shell_).document()->problem);
         else if(requestedMethod_==tora::lp::PrimalMethod::MMethod)next=std::make_unique<tora::lp::MMethodSession>(inputController(shell_).document()->problem,penalty_);
         else if(requestedMethod_==tora::lp::PrimalMethod::TwoPhase)next=std::make_unique<tora::lp::TwoPhaseSession>(inputController(shell_).document()->problem);
         else next=std::make_unique<tora::lp::AllSlackSession>(inputController(shell_).document()->problem);
@@ -118,12 +136,14 @@ void LpSimplexController::selectCell(int row,int col) {
     }catch(const std::invalid_argument& e){notice(relative==1?QStringLiteral("Entering Variable"):QStringLiteral("Leaving Variable"),QString::fromUtf8(e.what()));}
 }
 void LpSimplexController::terminal() {
-    if(session_ && session_->status()!=SimplexStatus::Running)notice(session_->status()==SimplexStatus::Infeasible?QStringLiteral("Phase 1"):QStringLiteral("Optimal Tableau"),QString::fromStdString(session_->terminalMessage()));
+    if(session_ && session_->status()!=SimplexStatus::Running)notice(QString::fromStdString(session_->terminalTitle()),QString::fromStdString(session_->terminalMessage()));
 }
 void LpSimplexController::next() {
     if(!canNext())return;
     try {
+        const bool dualAlternative=session_->method()==tora::lp::PrimalMethod::Dual && session_->status()==SimplexStatus::Alternative;
         session_->next();emit changed();
+        if(dualAlternative)return; // TORA appends the alternative table without another notice.
         if(session_ && session_->phaseOneComplete())notice(QStringLiteral("Phase 1"),QStringLiteral("End of Phase 1: Feasible solution found--initiating Phase 2"));
         else terminal();
     }
@@ -201,7 +221,7 @@ public:
         bool inverseCell=false;
         if(row>=3 && row<block_-4 && col>0) {
             const auto& name=table.columns[static_cast<std::size_t>(col-1)];
-            inverseCell=name.rfind("sx",0)==0 || name.rfind("Rx",0)==0;
+            inverseCell=name.rfind("sx",0)==0 || name.rfind("Rx",0)==0 || (c_.session()->method()==tora::lp::PrimalMethod::Dual && name.rfind("Sx",0)==0);
         }
         if(role==Qt::DisplayRole) {
             if(row==0)return col==0?QString::fromStdString(table.heading):QString();
@@ -282,7 +302,7 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("simplex-main"),footer);auto* exit=button(QStringLiteral("Exit TORA"),QStringLiteral("simplex-exit"),footer);footer->addStretch();layout->addLayout(footer);
     const auto update=[&c,heading,title,next,all,print,view] {
         const auto method=c.session()?c.session()->method():tora::lp::PrimalMethod::AllSlack;
-        heading->setText(method==tora::lp::PrimalMethod::MMethod?QStringLiteral("SIMPLEX TABLEAU - (M-Method)"):method==tora::lp::PrimalMethod::TwoPhase?QStringLiteral("SIMPLEX TABLEAU - (Two-Phase Method)"):QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));
+        heading->setText(method==tora::lp::PrimalMethod::Dual?QStringLiteral("SIMPLEX TABLEAU - (Dual Simplex Method)"):method==tora::lp::PrimalMethod::MMethod?QStringLiteral("SIMPLEX TABLEAU - (M-Method)"):method==tora::lp::PrimalMethod::TwoPhase?QStringLiteral("SIMPLEX TABLEAU - (Two-Phase Method)"):QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));
         title->setText(c.session()?QStringLiteral("Title: ")+legacyText(c.session()->problem().title)+(c.session()->problem().sense==tora::lp::ObjectiveSense::Maximize?QStringLiteral(" (Maximize)"):QStringLiteral(" (Minimize)")):QString());
         next->setEnabled(c.canNext());all->setEnabled(c.session() && !c.busy() && c.session()->status()==SimplexStatus::Running);print->setEnabled(c.session() && !c.busy());
         const QFontMetrics fm(view->font());view->verticalHeader()->setDefaultSectionSize(fm.height()+fm.height()/2);

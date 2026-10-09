@@ -8,6 +8,11 @@
 #ifdef TORA_BOUNDED_PROBE
 #include <tora/lp/bounded.hpp>
 #endif
+#ifdef TORA_DUAL_PROBE
+#include <tora/lp/dual.hpp>
+#include <tora/lp/m_method.hpp>
+#include <memory>
+#endif
 #include <iomanip>
 #include <iostream>
 #include <locale>
@@ -34,14 +39,21 @@ int main() {
         for(auto& cost:p.objective)cost=number(std::cin);
         for(auto& r:p.constraints){std::string relation;std::cin>>relation;r.relation=relation=="<="?Relation::LessEqual:relation==">="?Relation::GreaterEqual:Relation::Equal;
             r.rhs=number(std::cin);for(auto& a:r.coefficients)a=number(std::cin);}
-#if !defined(TORA_M_METHOD_PROBE) && !defined(TORA_TWO_PHASE_PROBE) && !defined(TORA_BOUNDED_PROBE)
+#if !defined(TORA_M_METHOD_PROBE) && !defined(TORA_TWO_PHASE_PROBE) && !defined(TORA_BOUNDED_PROBE) && !defined(TORA_DUAL_PROBE)
         if(AllSlackSession::requiresArtificial(p)){std::cout<<"{\"requires_artificial\":true}";return 0;}
+#elif defined(TORA_DUAL_PROBE)
+        std::string route;std::cin>>route;const double penalty=number(std::cin);
 #elif defined(TORA_M_METHOD_PROBE)
         const double penalty=number(std::cin);
 #endif
         int scientific,nDigits,dDigits;std::cin>>scientific>>nDigits>>dDigits;
         std::string operation;std::cin>>operation;
-#ifdef TORA_M_METHOD_PROBE
+#ifdef TORA_DUAL_PROBE
+        std::unique_ptr<PrimalSimplexSession> selected;
+        if(route=="m")selected=std::make_unique<MMethodSession>(p,penalty);
+        else selected=std::make_unique<DualSession>(p);
+        auto& solver=*selected;
+#elif defined(TORA_M_METHOD_PROBE)
         MMethodSession solver(p,penalty);
 #elif defined(TORA_TWO_PHASE_PROBE)
         TwoPhaseSession solver(p);
@@ -51,6 +63,7 @@ int main() {
         AllSlackSession solver(p);
 #endif
         if(operation!="initial")solver.solveAll();
+        const auto noticeBeforeAlternative=solver.terminalMessage();
         if(operation=="alternative"){std::size_t column;std::cin>>column;solver.selectEntering(column);solver.next();}
         std::cout<<"{\"requires_artificial\":"<<(AllSlackSession::requiresArtificial(p)?"true":"false")<<",\"tables\":[";
         const auto format=tora::core::NumberFormat{scientific?tora::core::Notation::Scientific:tora::core::Notation::Decimal,nDigits,dDigits};
@@ -61,6 +74,12 @@ int main() {
                 for(std::size_t j=0;j<table.rows[i].values.size();++j){if(j)std::cout<<',';quoted(table.rows[i].values[j]);}std::cout<<"]}";}
             std::cout<<"],\"entering\":";if(table.entering)quoted(*table.entering);else std::cout<<"null";
             std::cout<<",\"leaving\":";if(table.leaving)quoted(*table.leaving);else std::cout<<"null";std::cout<<'}';}
-        std::cout<<"],\"message\":";quoted(solver.terminalMessage());std::cout<<'}';
+        std::cout<<"],\"message\":";
+#ifdef TORA_DUAL_PROBE
+        quoted(operation=="alternative" && solver.method()==PrimalMethod::Dual?noticeBeforeAlternative:solver.terminalMessage());
+#else
+        (void)noticeBeforeAlternative;quoted(solver.terminalMessage());
+#endif
+        std::cout<<'}';
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

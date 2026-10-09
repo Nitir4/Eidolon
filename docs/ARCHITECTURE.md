@@ -368,3 +368,10 @@ Bounded profile, which writes basic objective costs as exact zero while retainin
 constraint residuals. The controller
 keeps the distinct no-warning Bounded setup path while displaying the actual
 method. No file fields, pivot rules or new numerical engine are added.
+
+
+## Dual iteration module
+
+`DualSession` selects a direct Dual branch in the shared `PrimalSimplexSession` history/display framework, whose name predates this method. Setup validates equality, bounds/free variables and objective signs; warning routing stays in `LpSimplexController::requestDual`. Direct tableaux use constraint-order signed slack columns, negative-RHS leaving choices and minimum eligible entering ratios. Ordered-basis reconstruction uses canonical basic objective costs and preserves observed constraint residuals. Earlier primal numerical profiles are unchanged. The Qt view, history, formatting, printing and file lifecycle remain shared; neither core LP nor its tests depend on Qt.
+
+Direct Dual alternatives use a capture-verified current-basis partial-pivoted LU reconstruction profile, distinct from automatic Dual cross-product reconstruction. Scientific probes verify the residuals; TORA's internal factorization remains unknown. No GUI or new dependency is introduced.

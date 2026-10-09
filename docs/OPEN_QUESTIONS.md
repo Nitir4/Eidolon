@@ -21,7 +21,7 @@ implementation or comparisons.
 | Q-04 | Quoted-alias input commitment, other text code pages and arbitrary malformed records; basic read-only flow, suffix, Save target, comma/quoted/non-ASCII titles resolved | Phase 2 input controller and any newly supported encoding/profile |
 | Q-05 | Graph eligibility for one-variable, finite-bound/unrestricted inputs; individual-constraint click states; general range/tick/dot/zoom rules | Graphical module gate |
 | Q-06 | Unrestricted expansion, reverse bound complements, redundant equality/artificial-basic cleanup | Preprocessing and affected solver gates |
-| Q-07 | Direct applicable Dual infeasibility with no eligible entering column | Dual-simplex module gate |
+| Q-07 | Resolved: direct Dual infeasibility title and message captured in du-infeasible | Dual-simplex module evidence |
 | Q-08 | Successful table/graph printing, pagination and print dialog defaults | Printing/output module gate |
 | Q-09 | Automatic Final solution's internal method/iteration accounting; bound/unrestricted sensitivity transformations | Final/sensitivity module gates |
 | Q-10 | Complete independently reviewed golden labels/messages and every transcribed table, beyond automated coverage and reviewed glyph seeds | Tests-first step of each numerical/UI module |
@@ -139,3 +139,8 @@ Bounded scientific output distinguishes its canonical basic objective costs
 (exact zero) from the earlier All-slack residual display (1.67e-16). Constraint
 residuals remain unchanged. The implementation retains separate profiles;
 decimal trace agreement did not establish identical floating-point output.
+
+
+## Dual cycle update
+
+Focused direct captures now resolve exact RHS/ratio ties, scientific basic-cost canonicalization and direct no-entering infeasibility. Bounds or unrestricted variables cause a specific Two-phase/M warning rather than direct bounded Dual. Initially feasible objective-compatible starts remain Dual and stop at Iteration 1. Manual row/column, Cancel-to-M and alternative continuation probes are now accepted. Final local/CI verification is in progress. Near-tie thresholds, hidden cycling/precision, outside-corpus arithmetic, physical mixed-DPI moves and original printer layout remain unverified.

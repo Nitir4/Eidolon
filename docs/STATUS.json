@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: Bounded simplex review gate",
+  "active_step": "Phase 2: Dual simplex",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Await Bounded review before starting Dual or another module",
+  "next_step": "Complete the Dual simplex cycle and stop for review",
   "foundation_order": [
     1,
     5,
@@ -104,8 +104,8 @@
     "status": "in_progress",
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
-    "current_module": "Bounded simplex",
-    "step": "Bounded ready for review; stop before the next module",
+    "current_module": "Dual simplex",
+    "step": "Three-OS CI and packaging verification",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -122,7 +122,7 @@
     "input_module_status": "approved",
     "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage, universal arm64+x86_64 macOS app-in-DMG; all deployed startup checks and uploads passed",
     "packages": "dist/phase2-bounded/final/",
-    "remaining": "Bounded review; separate Dual/graphical/final/sensitivity cycles",
+    "remaining": "Dual review; separate graphical/final/sensitivity cycles",
     "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-bounded/packages-verified.json and linux-startup.json",
     "input_approval": "User: continue from where we left off (2026-10-08)",
     "all_slack": {
@@ -192,7 +192,7 @@
       "review_approval": "User: go ahead"
     },
     "bounded": {
-      "status": "ready_for_review",
+      "status": "approved",
       "approval": "User: go ahead; Implement and test it for me",
       "working_mode": "implementation",
       "scope": "Direct Bounded setup using the shared bound-aware All-slack/Two-phase engine",
@@ -208,14 +208,30 @@
       "source_commit": "e33b391ebc3a3fd1943e1faa081e218ff7b3855d",
       "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37828079323",
       "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37828494270",
-      "gate": "Implementation and verification complete; awaiting user review before another module",
+      "gate": "Approved; user continued to Dual simplex",
       "completed_on": "2026-10-09",
       "ci_validation": "Windows/Linux/macOS each 44/44 CTest (132/132 overall), zero failures/skips; four scales each with 28 Bounded/29 Two-phase/29 M/29 All-slack/43 input Qt cases; all 5512 Bounded, 6872 Two-phase, 5354 M and 3241 All-slack fields match; packaging/deployed startup/upload successful on all OSes",
       "test_reports": "build/phase2-bounded/ci-final/",
       "packages": "dist/phase2-bounded/final/",
       "downloaded_artifacts": "All three final package SHA-256 values match; Windows ZIP integrity/native EXE/Qt PrintSupport checks pass; Linux AppImage offscreen extract-and-run startup passes locally. Evidence: build/phase2-bounded/packages-verified.json and linux-startup.json",
       "ci_verified": "build/phase2-bounded/ci-verified.json",
-      "preview_validation": "Local 1920x1080 and final Windows/macOS CI previews visually inspected; readable text/full native window; platform font differences handled by scrolling"
+      "preview_validation": "Local 1920x1080 and final Windows/macOS CI previews visually inspected; readable text/full native window; platform font differences handled by scrolling",
+      "review_approval": "User: continue"
+    },
+    "dual": {
+      "status": "in_progress",
+      "approval": "User: continue",
+      "working_mode": "implementation",
+      "spec": "docs/tora-analysis/LP_DUAL_SIMPLEX.md; external LP_DUAL_MODULE.md",
+      "goldens": "tests/fixtures/dual.json",
+      "tests_first": "Missing dual.hpp and requestDual failures saved in build/phase2-dual/",
+      "oracle": "32 accepted sessions, 106 tables, 5215 exact cell strings; original 15 selections reused including two equality errors; 19 focused additions including scientific alternative",
+      "remaining": "Three-OS CI/packages and review gate",
+      "local_validation": "50/50 desktop; 20/20 explicit C++17 Qt-free Release; four scales each with 36 Dual Qt cases; zero failures/skips",
+      "comparison": "build/phase2-dual/comparison.tsv",
+      "comparison_fields": 6872,
+      "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_DUAL_REPORT.tex",
+      "preview_validation": "Native 1920x1080 preview visually inspected: full native window/readable text/ordered tables and scrolling"
     }
   }
 }

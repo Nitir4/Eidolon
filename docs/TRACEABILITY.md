@@ -203,3 +203,19 @@ Raw reference screenshots/files/executables remain excluded from source and rele
 | LP-BD-04 | Exact labels/numbers/scientific output | shared display/formatter/model | lp.bounded.goldens; four native scale tests | 24 source-hashed traces; bd-free-crossing-scientific |
 | LP-BD-05 | Artificial phase and initial infeasibility | shared Two-phase state; controller terminal | bounded goldens; native menu/cell tests | bd-artificial-bounds; bd-shift-start; bd-shift-start-notice |
 | LP-BD-06 | Shared files/lifecycle/native layout/printing | input/simplex controllers; Qt layouts | native lifecycle/PDF and full suite | clone UI captures; original print remains unverified |
+
+
+## Dual simplex implementation cycle
+
+| Requirement | Code | Tests | Capture |
+|---|---|---|---|
+| LP-DU-01: equality rejection and warning/Cancel routing | `dualSetup`, `requestDual` | `DesktopDual::menuWarningsAndEquality`, golden routes | Original corpus `*/dual_simplex`; focused bound/free/Cancel cases |
+| LP-DU-02: direct signed-slack start and iteration pivots | `DualSession`, `dualChoice` | `lp.dual.goldens`, `lp.dual.safety` | Original 10/15; focused ties/max/negative RHS |
+| LP-DU-03: exact scientific costs and residuals | `reconstructed`, Dual profile | `du-seed-scientific` golden | Focused scientific four-table run |
+| LP-DU-04: direct infeasibility title/body | `assess`, `terminalTitle/Message` | core/native infeasible golden | `du-infeasible/terminal-message.png` |
+| LP-DU-05: native ordered tables, layout and lifecycle | shared trace view/controller | four-scale `desktop.dual`, history/layout/print/lifecycle checks | Original/focused tables, clone UI captures |
+| LP-DU-06: exact ties/manual alternative continuation | selection APIs and shared next | focused/manual golden + native workflow | `du-ratio-tie`, `du-ratio-manual`, `du-alternative-next` |
+
+| LP-DU-07: alternative continuation appends table without repeat notice | `LpSimplexController::next`, shared alternative pivot | `du-alternative-next`; native prior-notice/disabled-Next assertions | Focused alternative-selected/next and complete three-table trace |
+
+Focused user-action observations are complete. Final three-OS gate checks remain in progress until STATUS.json records verified completion.

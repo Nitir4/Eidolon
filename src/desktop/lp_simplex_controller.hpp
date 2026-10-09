@@ -4,6 +4,7 @@
 #include <tora/lp/m_method.hpp>
 #include <tora/lp/two_phase.hpp>
 #include <tora/lp/bounded.hpp>
+#include <tora/lp/dual.hpp>
 #include <QObject>
 #include <QTimer>
 #include <functional>
@@ -17,10 +18,12 @@ public:
     explicit LpSimplexController(ApplicationShell& shell);
     std::function<void(const QString&,const QString&)> notice;
     std::function<bool(const QString&)> redirect; // true = OK, false = Cancel; each method preserves its captured handoff
+    std::function<void(const QString&)> singleWarning;
     bool requestAllSlack();
     bool requestMMethod();
     bool requestTwoPhase();
     bool requestBounded();
+    bool requestDual();
     bool canEnterM() const {return mPending_;}
     bool setPenalty(const QString& text);
     bool canStart() const {return requested_;}

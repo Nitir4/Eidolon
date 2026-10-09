@@ -180,11 +180,12 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
         const bool mMethod=QString::fromLatin1(label)==QStringLiteral("M-method");
         const bool twoPhase=QString::fromLatin1(label)==QStringLiteral("Two-phase method");
         const bool bounded=QString::fromLatin1(label)==QStringLiteral("Bounded simplex");
-        if(slack || mMethod || twoPhase || bounded) {
-            action->setObjectName(slack?QStringLiteral("solve-all-slack"):mMethod?QStringLiteral("solve-m-method"):twoPhase?QStringLiteral("solve-two-phase"):QStringLiteral("solve-bounded"));auto& input=inputController(shell);
+        const bool dual=QString::fromLatin1(label)==QStringLiteral("Dual simplex");
+        if(slack || mMethod || twoPhase || bounded || dual) {
+            action->setObjectName(slack?QStringLiteral("solve-all-slack"):mMethod?QStringLiteral("solve-m-method"):twoPhase?QStringLiteral("solve-two-phase"):bounded?QStringLiteral("solve-bounded"):QStringLiteral("solve-dual"));auto& input=inputController(shell);
             const auto update=[action,&input]{action->setEnabled(input.document()!=nullptr);};
             QObject::connect(&input,&LpInputController::changed,iterations,update);update();
-            QObject::connect(action,&QAction::triggered,&shell,[&shell,slack,mMethod,twoPhase]{if(slack)simplexController(shell).requestAllSlack();else if(mMethod)simplexController(shell).requestMMethod();else if(twoPhase)simplexController(shell).requestTwoPhase();else simplexController(shell).requestBounded();});
+            QObject::connect(action,&QAction::triggered,&shell,[&shell,slack,mMethod,twoPhase,bounded]{if(slack)simplexController(shell).requestAllSlack();else if(mMethod)simplexController(shell).requestMMethod();else if(twoPhase)simplexController(shell).requestTwoPhase();else if(bounded)simplexController(shell).requestBounded();else simplexController(shell).requestDual();});
         }else {action->setEnabled(false);action->setToolTip(QString::fromLatin1(previewReason));}
     }
     menu.setToolTipsVisible(true);

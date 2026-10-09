@@ -30,12 +30,14 @@ struct SimplexChoice {
 // No GUI/file dependency. Each numerical snapshot remains independently owned.
 // Strict binary64 comparisons match the captured policy; hidden TORA tolerances
 // are not claimed. Presentation precision never changes arithmetic.
-enum class PrimalMethod { AllSlack, MMethod, TwoPhase, Bounded }; // Bounded selects a captured shared method/profile.
+enum class PrimalMethod { AllSlack, MMethod, TwoPhase, Bounded, Dual };
 class PrimalSimplexSession {
 public:
     virtual ~PrimalSimplexSession()=default;
     PrimalMethod method() const noexcept {return method_;}
     static bool requiresArtificial(const LpProblem& problem);
+    static PrimalMethod dualSetup(const LpProblem& problem);
+    static bool dualBoundsFallback(const LpProblem& problem);
     const std::vector<SimplexStep>& history() const noexcept {return history_;}
     const LpProblem& problem() const noexcept {return problem_;}
     SimplexStatus status() const noexcept {return status_;}
@@ -47,6 +49,7 @@ public:
     void solveAll(std::size_t iterationLimit=1024);
     SimplexDisplay display(std::size_t iteration,core::NumberFormat format={}) const;
     std::string terminalMessage() const;
+    std::string terminalTitle() const;
     static const char* enteringError();
     static const char* leavingError();
     static const char* redirectWarning();
@@ -54,11 +57,12 @@ protected:
     PrimalSimplexSession(LpProblem problem,PrimalMethod method,Scalar penalty);
 private:
     std::optional<SimplexChoice> choice(std::size_t column) const;
+    std::optional<SimplexChoice> dualChoice() const;
     bool basic(std::size_t column) const;
     void assess();
     ObjectiveSense objectiveSense() const;
     core::Tableau complemented(core::Tableau table,std::size_t column) const;
-    core::Tableau reconstructed(const core::Tableau& table,bool restoreObjective=false) const;
+    core::Tableau reconstructed(const core::Tableau& table,bool restoreObjective=false,bool dualAlternative=false) const;
     PrimalMethod method_;
     LpProblem problem_;
     std::vector<Scalar> ranges_;
