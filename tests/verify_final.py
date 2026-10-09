@@ -17,10 +17,12 @@ for r in records:
  for field in ['heading','iteration','objective_label','objective_value','message']:compare(field,r[field],actual[field])
  compare('section-count',len(r['sections']),len(actual['sections']))
  for i,(expected,got) in enumerate(zip(r['sections'],actual['sections'])):
+  if 'heading' in expected:compare(f'section-{i}-heading',expected['heading'],got.get('heading'))
   compare(f'section-{i}-columns',expected['columns'],got['columns'])
   compare(f'section-{i}-rows',len(expected['rows']),len(got['rows']))
   for j,(a,b) in enumerate(zip(expected['rows'],got['rows'])):
    compare(f'section-{i}-row-{j}-label',a['label'],b['label'])
+   compare(f'section-{i}-row-{j}-cell-count',len(a['values']),len(b['values']))
    for k,(x,y) in enumerate(zip(a['values'],b['values'])):compare(f'section-{i}-row-{j}-cell-{k}',x,y)
  target=Path(sys.argv[3]);target.parent.mkdir(parents=True,exist_ok=True)
  with target.open('w',newline='',encoding='utf-8') as f:

@@ -11,7 +11,8 @@ complete in the approved order **1 → 5 → 2 → 3 → 4**. Phase 2 is authori
 its input module supplies native LP data entry, row/column editing and Open/Save.
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
-Final solution and sensitivity retain their separate implementation gates.
+Final solution and sensitivity are implemented in the native output summary;
+the latest verification and packages are recorded in docs/STATUS.json.
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
 See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_REPORT.md)

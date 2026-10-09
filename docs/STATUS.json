@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2: Final solution verification; sensitivity next",
+  "active_step": "Phase 2: Sensitivity tests/spec",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Finish final CI verification, then sensitivity in its own cycle",
+  "next_step": "Complete sensitivity cycle and final native artifacts",
   "foundation_order": [
     1,
     5,
@@ -270,14 +270,32 @@
       "review_approval": "User: go ahead and complete it"
     },
     "final_solution": {
-      "status": "verification_in_progress",
+      "status": "verified",
       "working_mode": "implementation",
       "authorization": "User: go ahead and complete it",
       "spec": "docs/tora-analysis/LP_FINAL_SOLUTION.md",
       "goldens": "tests/fixtures/final-solution.json",
       "oracle": "15 original +10 focused, with actual TORA saved files and exact screenshot glyphs",
-      "local_validation": "62/62 desktop before final Release checks",
-      "remaining": "Qt-free Release and three-OS CI pending; sensitivity separate"
+      "local_validation": "62/62 desktop; 24/24 explicit C++17 Qt-free Release; 645 exact fields; four scales x28 native Qt cases",
+      "remaining": "Recorded hidden arithmetic/original printing/physical DPI limits",
+      "source_commit": "41c5017953f0e9400d5261bddcc7a9d750fc57b6",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37913619430",
+      "ci_validation": "Windows/Linux/macOS each62/62 CTest,186 overall; zero failures/skips;645 exact fields perOS; all package/startup/uploads passed",
+      "gate": "Verified; sensitivity authorized by user complete-it instruction",
+      "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_FINAL_REPORT.tex"
+    },
+    "sensitivity": {
+      "status": "verified-local-ci-pending",
+      "working_mode": "implementation",
+      "authorization": "User: go ahead and complete it; continue",
+      "spec": "docs/tora-analysis/LP_SENSITIVITY_PARAMETRIC.md",
+      "goldens": "tests/fixtures/sensitivity.json",
+      "oracle": "35 independently captured summaries:15 original+20 focused;35 byte-identical actual-saved-file round trips;scrolled-cell hashes verified",
+      "comparison_fields": 2337,
+      "expanded_final_fields": 1116,
+      "remaining": "Three-OS CI/packages pending;physical mixed-DPI/original printer/unobserved numerical limits recorded",
+      "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_SENSITIVITY_REPORT.tex",
+      "local_validation": "68/68 desktop;26/26 explicit C++17 Qt-free Release;four scales x38 native sensitivity and38 expanded final cases;zero failures/skips"
     }
   }
 }

@@ -239,3 +239,13 @@ Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free R
 | --- | --- | --- | --- |
 | Final automatic counts, original values/contributions, terminal messages and bound rows | src/lp/final_solution.cpp | lp.final.goldens; lp.final.safety | output-studies/*/final; probes/phase2-final/* |
 | Final solve/format/native output/navigation/printing/HiDPI | src/desktop/lp_final_controller.cpp; lp_screens.cpp | desktop.final.scale-* | Original summary screens; build/phase2-final/ui-captures |
+
+
+## Sensitivity implemented mappings
+
+| Requirement | Code | Verification | Independent capture |
+| --- | --- | --- | --- |
+| Coefficient/RHS ranges and signed prices | `src/lp/sensitivity.cpp`, `include/tora/lp/sensitivity.hpp` | `verify_final.py`, `fixtures/sensitivity.json`, `sensitivity_safety.cpp` | 35 summaries in `sensitivity/<case>/`; cell/source hashes |
+| Bound/sign/negative-RHS legacy conventions | `final_solution.cpp`, `sensitivity.cpp` | 10 additional focused final/sensitivity regressions; combined-bound before-fix log | `probes/phase2-final/sens-*/` top and scrolled screens |
+| Same labels/format in native view and printer | `lp_final_controller.cpp` | `desktop_sensitivity.cpp`, four scales, three actual window sizes, PDF/nonmutation and lifecycle | Summary heading/tables and final output controls |
+| Terminal output excludes sensitivity | `FinalSolutionSession::display`, `sensitivity` | Captured infeasible/unbounded goldens and safety tests | Original cases03/04 |

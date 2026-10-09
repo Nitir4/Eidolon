@@ -33,6 +33,84 @@ TORA pixels, not a recomputed inverse basis.
 
 ## Unknowns / things I could not verify
 
-Sensitivity for bound/unrestricted-variable transformations beyond the main
-corpus, internal tolerance conventions, and any parametric-analysis path outside
+Bound/unrestricted transformations outside the 35 captured summaries, internal
+tolerance conventions, and any parametric-analysis path outside
 the observed complete LP hierarchy remain unverified.
+
+
+## Accepted module contract and tests-first evidence
+
+The original fifteen independent summaries plus ten focused final summaries
+provide the initial sensitivity golden corpus. Two terminal summaries have no
+numerical sensitivity section. Exact cells, including scrolled LB/UB ranges,
+come from private pixel transcriptions with source hashes, not recomputation.
+
+The native screen places `***Sensitivity Analysis***` between the constraint
+summary and variable coefficient table. Coefficient/RHS headers and row labels
+follow the original ordering. NumberFormatter supplies the selected decimal or
+scientific display; open endpoints are literal infinity/-infinity.
+
+The implemented Qt-free calculator consumes the retained final basis. It intersects
+linear reduced-cost inequalities for coefficient changes and basic-feasibility
+inequalities for RHS changes, including finite variable ranges. Artificial
+columns blocked in Phase 2 do not constrain coefficient optimality. These are
+one-at-a-time intervals, not a simultaneous-change guarantee. MIT's primary
+[Lecture 7](https://live.ocw.mit.edu/courses/15-093j-optimization-methods-fall-2009/bd61ce1f4f56a5010cd7b1d9ab90ea8c_MIT15_093J_F09_lec07.pdf)
+supports the standard derivation; actual TORA determines compatibility.
+
+Native tests fail before UI changes on the missing sensitivity heading (23
+numeric cases); terminal-only cases still pass. Numerical API and safety tests
+fail on the missing sensitivity interface. Evidence is retained in
+build/phase2-sensitivity/. Additional targeted bound/orientation cases are
+being transcribed to resolve legacy conventions before accepting this module.
+
+
+## Completed captured compatibility profile
+
+The accepted corpus contains 35 summaries: the original 15, ten final-output
+probes and ten sensitivity probes. The two terminal summaries contain no
+numeric sections. New tests preserve signed minimization reduced costs,
+active/inactive bounds, negative lower bounds, oriented negative free variables,
+active negative RHS, multiple bound ordering and mixed lower/upper behavior.
+The case paths and source hashes are in `tests/fixtures/sensitivity.json`.
+All 35 actual saved-file round trips are byte-identical; scrolled cells retain
+separate screenshot hashes. Private module directories link existing captures.
+
+The calculator intersects reduced-cost optimality inequalities for each
+objective coefficient, excluding basic and blocked artificial columns. RHS
+changes use the final transformed identity column and intersect basic lower
+and finite upper feasibility limits. Bounds follow the retained basis, with
+LB and UB rows interleaved per variable. These intervals preserve the current
+basis one parameter at a time; they do not promise simultaneous feasibility
+or uniqueness at endpoints. The native screen and printer consume the same
+ordered, formatted `SummaryDisplay`.
+
+The following conventions are observed compatibility rules, including legacy
+results that differ from mathematically corrected original-model sensitivity:
+
+- Current coefficient/RHS entries are the originally entered values. A negative
+  free-variable coefficient stays negative; its interval follows the oriented
+  tableau (captured current -3.00, interval -6.00 to infinity).
+- Reduced cost is signed zj-cj. The minimization nonbasic example displays
+  -3.00. Dual prices retain normalized tableau signs.
+- A negated negative RHS anchors the normalized delta at the entered RHS.
+  The active -1.00 row has range -1.00 to 2.00 and dual price -5.00.
+- Positive lower rows display their original bound, with a zero lower endpoint
+  where captured. Bound rows follow each variable's LB then UB order.
+- A nonbasic upper-complement variable does not impose a separate nonnegative
+  bound-width floor on the displayed interval: the minimization upper case
+  shows -infinity to 3.00.
+- In automatic final solving, a negative lower bound is treated as zero without
+  increasing a finite upper bound. Original lower shifts are restored to values
+  and objective but not constraint slack calculations. The combined -1/1 case
+  shows x1=0.00, x2=3.00, objective 6.00 and UB slack 1.00-. Its UB row appears
+  in the final constraint summary but is absent from sensitivity. Original
+  input/file data and interactive simplex methods are preserved.
+
+Tests first recorded missing API/heading failures. The expanded combined-bound
+regression recorded objective 7.00 versus TORA 6.00 before the final correction;
+all captured strings now match. Safety tests independently re-solve inside and
+outside normal coefficient/RHS intervals. Native tests verify model invalidation,
+PDF nonmutation, actual window geometry and exact cells at four DPI scales.
+Successful original printer output and physical mixed-DPI monitor handoff remain
+unverified. No parametric or revised-simplex method was invented from menu absence.

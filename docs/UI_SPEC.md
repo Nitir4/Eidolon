@@ -251,3 +251,16 @@ For direct Dual, clicking a valid leaving row highlights only that row; a later 
 Graphical is enabled for exactly two variables; upper/lower/free restrictions use the captured `Graphical LP` warning before format selection. The native screen retains model/results left, a square cyan graph right, zoom/print above and input/main/exit below. Row clicks add constraints, objective requires all constraints, the sign row resets and one stroke completes. Source colors are gray feasibility dots, blue axes/objective/status marker, red constraints and yellow labels. Terminal states omit the finite objective line.
 
 Actual window dimensions are asserted for 1366×768, 1920×1080 and 3840×2160 at four scaling factors. Layouts expand to available space; the shell scrolls at small logical viewports. Number fields use the selected output notation while ticks remain integers. The exact text/zoom profile and native printing limitation are in LP_GRAPHICAL.md. Four native scale runs check all 35 result panels and 755 captured color positions each.
+
+
+## Implemented final and sensitivity screen
+
+Algebraic → Final solution → common Output Format opens the native output
+summary. The grid presents variable values/contributions, original relation
+labels and slack/surplus, then the spanned `***Sensitivity Analysis***` heading,
+coefficient ranges/reduced costs and RHS ranges/dual prices. Blue/cyan colors,
+ordered labels, selected number format and exact terminal messages follow
+captures. Font metrics size rows and columns; the layout fills the window and
+scrolls when content exceeds the viewport. Next/All Iterations remain disabled;
+Write to Printer, View/Modify Input Data, MAIN Menu and Exit TORA are native
+controls. Changes to input invalidate the completed numerical session.

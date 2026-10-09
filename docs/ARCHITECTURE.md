@@ -392,3 +392,15 @@ invalidates its session on document changes and routes shared Output Format to
 `lp/final`. A native `SummaryModel`/`QTableView` presents the ordered sections;
 QPrinter prints the same display data. Future modules remain compiled module
 registrations in ApplicationShell; LP details do not enter the core shell.
+
+
+## Implemented sensitivity boundary
+
+The Qt-free `sensitivity(FinalSolutionSession)` reads the retained basis and
+original input model. It intersects affine optimality and feasibility limits,
+then returns current values, intervals and signed reduced costs/dual prices.
+`FinalSolutionSession::display(format, true)` adds the two sensitivity sections;
+`LpFinalController` uses that display for both QTableView and QPrinter. The
+normal final-only probe keeps the two primary sections. Legacy automatic bound
+and sign conventions are isolated here; original input/file data and interactive
+solver behavior are preserved. Terminal infeasible/unbounded output has no ranges.

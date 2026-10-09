@@ -15,11 +15,15 @@ int main(){try{std::cin.imbue(std::locale::classic());std::cout.imbue(std::local
 
         int scientific,nDigits,dDigits;std::cin>>scientific>>nDigits>>dDigits;
         FinalSolutionSession session(p);
-        const auto d=session.display({scientific?tora::core::Notation::Scientific:tora::core::Notation::Decimal,nDigits,dDigits});
+        const auto d=session.display({scientific?tora::core::Notation::Scientific:tora::core::Notation::Decimal,nDigits,dDigits}
+#ifdef TORA_SENSITIVITY_PROBE
+        ,true
+#endif
+        );
         std::cout<<"{\"heading\":";quoted(d.heading);std::cout<<",\"iteration\":"<<d.iteration<<",\"objective_label\":";quoted(d.objectiveLabel);
         std::cout<<",\"objective_value\":";if(d.objectiveValue)quoted(*d.objectiveValue);else std::cout<<"null";
         std::cout<<",\"message\":";quoted(d.message);std::cout<<",\"sections\":[";
-        for(std::size_t k=0;k<d.sections.size();++k){if(k)std::cout<<',';const auto& section=d.sections[k];std::cout<<"{\"columns\":[";
+        for(std::size_t k=0;k<d.sections.size();++k){if(k)std::cout<<',';const auto& section=d.sections[k];std::cout<<"{";if(!section.heading.empty()){std::cout<<"\"heading\":";quoted(section.heading);std::cout<<',';}std::cout<<"\"columns\":[";
             for(std::size_t j=0;j<section.columns.size();++j){if(j)std::cout<<',';quoted(section.columns[j]);}std::cout<<"],\"rows\":[";
             for(std::size_t i=0;i<section.rows.size();++i){if(i)std::cout<<',';std::cout<<"{\"label\":";quoted(section.rows[i].label);std::cout<<",\"values\":[";
                 for(std::size_t j=0;j<section.rows[i].values.size();++j){if(j)std::cout<<',';quoted(section.rows[i].values[j]);}std::cout<<"]}";}

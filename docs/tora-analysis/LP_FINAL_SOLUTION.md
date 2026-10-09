@@ -60,7 +60,7 @@ after a Phase 2 transition; no extra count is added for infeasible Phase 1.
 This is an observed display rule, not proof of TORA's internal implementation.
 Ten focused cases independently verify upper/lower/fixed/free variables,
 zero objective, aliases, redundant equality, scientific N=5 and decimal D=3.
-Explicit bound rows are appended (LB rows, then UB rows). The original fifteen
+Explicit bound rows are appended per variable (LB then UB). The original fifteen
 plus ten focused results form tests/fixtures/final-solution.json.
 Hidden precision outside the captured profile, successful original printing
 and all large-grid scrolling states remain unverified. The Wine printer error is recorded in `FILE_BEHAVIOR.md`.
@@ -78,3 +78,13 @@ Tests were written before each implementation; failures are retained under
 checked at 100%, 125%, 150% and 200%, with actual 1366x768, 1920x1080 and 4K
 window geometry. The full local suite passed 62/62 before Release validation.
 Sensitivity implementation remains its separate next cycle.
+
+
+## Sensitivity-cycle extensions to the final checkpoint
+
+Ten further targeted summaries extend the original 25-case final checkpoint to
+35 cases. Negative-lower automatic transforms, interleaved bound rows and signed
+minimization coefficients now have independent screen regressions. See
+`LP_SENSITIVITY_PARAMETRIC.md` for their exact legacy conventions. Sensitivity is
+implemented in the same native final view; the earlier 62-test/645-field gate
+remains a historical checkpoint, not the final expanded validation total.
