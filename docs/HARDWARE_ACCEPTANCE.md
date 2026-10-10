@@ -1,10 +1,10 @@
 # Hardware acceptance still requiring real devices
 
 The completed offscreen tests and synthetic screen changes are SDK regression
-evidence. They do not establish physical hotplug, OS printer-panel interaction
+evidence. They do not establish physical hotplug, native panels on every OS,
 or acceptance on every supported OS version. On this laptop, actual Wayland
-fullscreen rendering at1920×1080 and the real Linux Qt print dialog
-(cancel/PDF selection) have now passed; the PDF matches139 original normal
+fullscreen rendering at 1920×1080 and the real Linux Qt print dialog
+(cancel/PDF selection) have now passed; the PDF matches 139 original normal
 print tokens and page count. One display is connected and Qt lists no configured
 printer. Physical mixed-monitor/hotplug and printer checks remain outstanding.
 

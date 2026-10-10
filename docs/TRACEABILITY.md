@@ -274,8 +274,8 @@ Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free R
 
 | Requirement | Implementation | Verification | Evidence |
 |---|---|---|---|
-| Native Linux Wayland and X11 startup | tools/linux_runtime.py; tools/package_desktop.py | tests/test_linux_runtime.py; tools/verify_linux_desktop.py; OS matrix | build/release-readiness/local-live-wayland; fresh CI pending |
-| Matching Qt runtime legal texts/provenance | tools/runtime_notices.py; packaging/licenses/Qt-6.10.3 | tests/test_runtime_notices.py |130 upstream URL/SHA records; final manifests pending |
+| Native Linux Wayland and X11 startup | tools/linux_runtime.py; tools/package_desktop.py | tests/test_linux_runtime.py; tools/verify_linux_desktop.py; OS matrix | build/release-readiness/local-live-wayland; CI 38062462111; final-live-wayland |
+| Matching Qt runtime legal texts/provenance | tools/runtime_notices.py; packaging/licenses/Qt-6.10.3 | tests/test_runtime_notices.py |130 upstream URL/SHA records; all three final manifests/hash audits passed |
 | Actual Linux panel cancel/PDF and fullscreen views | tests/desktop_native_acceptance.cpp | Manual existing compositor; independent PDF reader | build/release-readiness/native-desktop; native-pdf-audit/result-final.log |
 | Welcome reflects completed LP methods | src/desktop/application_shell.cpp | tests/desktop_shell.cpp methodHierarchy | Tests-first failure then pass; welcome.png |
 

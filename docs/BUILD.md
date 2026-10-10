@@ -179,11 +179,13 @@ and manifests were independently checked. Final packages are under
 `dist/phase2-installer/final/`; reports/audits are under
 `build/installer-delivery/`. Earlier accepted packages remain preserved.
 
-On this Linux laptop, launch the final downloaded build with:
+The earlier accepted installer delivery above remains preserved. For the latest
+Wayland-enabled delivery, see `docs/RELEASE_READINESS.md`. Launch it on this
+Linux laptop with:
 
 ```sh
-chmod +x dist/phase2-installer/final/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_64.AppImage
-dist/phase2-installer/final/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_64.AppImage
+chmod +x dist/release-readiness/final/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_64.AppImage
+dist/release-readiness/final/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_64.AppImage
 ```
 
 If FUSE is unavailable, set `APPIMAGE_EXTRACT_AND_RUN=1` for the launch.
@@ -211,3 +213,14 @@ and SHA-256 values; integrity/path tests run on all three OSes. Distribution
 notices already produced by deployment are retained. The upstream index is
 not a build SBOM or final legal approval. See `THIRD_PARTY_NOTICES.md` in each
 package and `docs/RELEASE_READINESS.md` for remaining release resources.
+
+
+Latest source `19463eb` passed 74/74 tests on each OS (222 total) in
+[run 38062462111](https://github.com/Nitir4/TORA-Clone/actions/runs/38062462111). Six downloaded archives, all LP/PDF/display reports,
+package hashes, 130 matching Qt legal documents and Windows installer checks
+were independently verified. The final Linux AppImage passed both CI desktop
+protocol backends and actual laptop Wayland startup; all 281 extracted payload
+hashes match. Windows setup verifies 163 installed files. Latest packages are
+under `dist/release-readiness/final/`, with private audits in
+`build/release-readiness/`. These unsigned builds retain the hardware/signing
+and owner production-release decisions documented in `RELEASE_READINESS.md`.

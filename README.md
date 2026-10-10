@@ -96,8 +96,11 @@ in the Windows CI packaging step. Physical acceptance steps are in
 recorded as untested.
 
 
-The final delivery at source `9ac8204` passes 72/72 tests per OS (216 total)
-in [CI run 38059265577](https://github.com/Nitir4/TORA-Clone/actions/runs/38059265577).
-Downloaded packages, including the verified Windows installer, are
-under `dist/phase2-installer/final/` in this workspace. See
-[build and launch instructions](docs/BUILD.md#windows-installer-verification).
+The latest delivery at source `19463eb` passes 74/74 tests per OS (222 total)
+in [CI run 38062462111](https://github.com/Nitir4/TORA-Clone/actions/runs/38062462111). Downloaded packages, including the verified Windows
+installer, are under `dist/release-readiness/final/` in this workspace. The
+Linux AppImage supports Wayland and X11 and starts on this laptop's Wayland
+desktop with SDK paths removed. Matching Qt legal documents are included.
+See [the delivery verification](docs/RELEASE_READINESS.md) and
+[build and launch instructions](docs/BUILD.md). Physical mixed-monitor/printer
+acceptance and trusted production signing remain resource-dependent.

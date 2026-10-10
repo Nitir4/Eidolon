@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2 native deployment follow-up; fresh CI pending",
+  "active_step": "Phase 2 captured LP profile delivered; native deployment follow-up complete",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Review delivered native app; physical monitor/printer acceptance and signing remain unverified",
+  "next_step": "Use latest packages; remaining physical devices, trusted signing credentials and owner production licensing decisions are recorded without starting another OR phase",
   "foundation_order": [
     1,
     5,
@@ -375,11 +375,19 @@
     "installer_sha256": "d1191d346bbf0b7141f35cf0129d0d2e2bd35ce36c2cd1463e5ca31f21db626e",
     "installed_manifest_files": 32,
     "completed_on": "2026-10-10",
-    "report": "/home/nitir505/Ritin/docs/TORA-clone/WINDOWS_INSTALLER_REPORT.tex"
+    "report": "/home/nitir505/Ritin/docs/TORA-clone/WINDOWS_INSTALLER_REPORT.tex",
+    "latest_delivery": {
+      "source_commit": "19463eba2ccb3cd094843afbc81cfa77d99d0908",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38062462111",
+      "installer": "dist/release-readiness/final/TORA-Clone-windows-latest/TORA-Clone-0.1.0-windows-x86_64-setup.exe",
+      "sha256": "0ab832708d2a2a3a94cbd0298ef079398bf7f5730a78be510fba4a4ddbacc991",
+      "installed_payload_files": 163,
+      "status": "all six native installer checks passed"
+    }
   },
   "hardware_acceptance_protocol": "docs/HARDWARE_ACCEPTANCE.md",
   "release_readiness": {
-    "status": "locally verified; CI pending",
+    "status": "verified and delivered for captured profile",
     "local_tests": "74/74, no failures,90.55 seconds",
     "native_desktop": "Wayland/eDP-1,1920x1080, six route-checked fullscreen views; actual print dialog cancel/PDF; model preserved",
     "native_pdf": "1 page-count-matched observed state,139 exact tokens",
@@ -387,6 +395,18 @@
     "report": "docs/RELEASE_READINESS.md",
     "remaining": "Trusted signing credentials; physical mixed-monitor/printer and Windows/macOS panel review; owner application/vendor licensing release decision",
     "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38062038002",
-    "initial_ci_result": "macOS74/74 and package passed; Windows73/74 (upstream line endings), Linux74/74 then missing QtSvg deployment dependency. Corrected exact-byte Git attributes and Linux SDK SVG archive; fresh run pending."
+    "initial_ci_result": "macOS74/74 and package passed; Windows73/74 (upstream line endings), Linux74/74 then missing QtSvg deployment dependency. Corrected exact-byte Git attributes and Linux SDK SVG archive; fresh run pending.",
+    "source_commit": "19463eba2ccb3cd094843afbc81cfa77d99d0908",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38062462111",
+    "ci_validation": "74/74 CTest on each OS (222 overall), no failures/skips;31,654 observed LP fields and4259 PDF tokens/page counts per OS; all native/display/package/startup/upload checks pass",
+    "packages": "dist/release-readiness/final/",
+    "test_reports": "build/release-readiness/ci-final/",
+    "delivery_audit": "build/release-readiness/ci-verified.json; packages-verified.json; linux-payload-verified.json; final-live-wayland/verification.json",
+    "linux_payload_files": 281,
+    "windows_installed_files": 163,
+    "completed_on": "2026-10-10",
+    "deployed_visual": "Actual final6.10.3 Wayland LP input-mode/format view readable;956x1046 compositor tile; own window closed normally",
+    "native_source_sdk": "Qt6.11.2",
+    "package_sdk": "Qt6.10.3"
   }
 }
