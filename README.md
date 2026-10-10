@@ -94,3 +94,10 @@ portable ZIP. Install/reinstall, installed startup and safe removal are checked
 in the Windows CI packaging step. Physical acceptance steps are in
 [the hardware protocol](docs/HARDWARE_ACCEPTANCE.md); unavailable devices are
 recorded as untested.
+
+
+The final delivery at source `9ac8204` passes 72/72 tests per OS (216 total)
+in [CI run 38059265577](https://github.com/Nitir4/TORA-Clone/actions/runs/38059265577).
+Downloaded packages, including the verified Windows installer, are
+under `dist/phase2-installer/final/` in this workspace. See
+[build and launch instructions](docs/BUILD.md#windows-installer-verification).

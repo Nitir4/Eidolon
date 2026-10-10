@@ -168,3 +168,23 @@ and nonrecursive removal on all OSes. Installer hash/manifest/verification JSON
 accompany the setup EXE in the Windows artifact.
 
 Primary behavior reference: [NSIS scripting manual](https://nsis.sourceforge.io/Docs/Chapter4.html).
+
+
+Final installer source `9ac8204` passed 72/72 tests on each OS (216 total) in
+[run 38059265577](https://github.com/Nitir4/TORA-Clone/actions/runs/38059265577).
+The Windows setup installed and reinstalled into a Unicode path with spaces,
+verified 32 manifested payload files, started without SDK paths, and removed
+its files/entries while preserving student files. Downloaded package hashes
+and manifests were independently checked. Final packages are under
+`dist/phase2-installer/final/`; reports/audits are under
+`build/installer-delivery/`. Earlier accepted packages remain preserved.
+
+On this Linux laptop, launch the final downloaded build with:
+
+```sh
+chmod +x dist/phase2-installer/final/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_64.AppImage
+dist/phase2-installer/final/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_64.AppImage
+```
+
+If FUSE is unavailable, set `APPIMAGE_EXTRACT_AND_RUN=1` for the launch.
+The same final AppImage passed local startup with Qt SDK paths removed.

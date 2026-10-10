@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Remaining requested deliverable: Windows per-user installer",
+  "active_step": "Phase 2 delivered for the captured LP profile, including Windows installer",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Verify installer in the existing three-OS CI matrix; physical hardware/signing limits remain",
+  "next_step": "Review delivered native app; physical monitor/printer acceptance and signing remain unverified",
   "foundation_order": [
     1,
     5,
@@ -351,10 +351,10 @@
     "delivery_audit": "build/acceptance/ci-verified.json; build/acceptance/packages-verified.json; build/acceptance/linux-startup-final.json"
   },
   "windows_installer": {
-    "status": "implemented; local safety/full regression passed; native CI pending",
+    "status": "verified and delivered",
     "scope": "Per-user setup EXE alongside existing portable ZIP; no file associations or admin requirement",
     "tests_first": "Missing windows_installer module failure recorded in build/installer-delivery/tests-before.log",
-    "local_validation": "5 portable safety tests and full desktop 72/72 pass; native Windows install/uninstall pending",
+    "local_validation": "Full local desktop 72/72 before packaging-only corrections; 5/5 updated portable safety tests and focused packaging CTest 1/1 pass after both fixes. Final downloaded Linux AppImage startup returns 0 without SDK paths.",
     "code": [
       "tools/windows_installer.py",
       "packaging/windows/installer.nsi.in"
@@ -364,7 +364,18 @@
     "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38045960305",
     "initial_ci_validation": "Linux/macOS 72/72 passed; Windows 71/72 passed. Installer safety assertion assumed Unix path separators; corrected to exercise native, PurePosixPath and PureWindowsPath commands. Packaging had not started on Windows.",
     "compiler_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38058864062",
-    "compiler_ci_validation": "72/72 common tests pass on all OSes. Windows packaging rejected File /oname=\"name\"; corrected to quote the complete \"/oname=name\" argument, as required by NSIS. Added spaced-filename regression: failed before change, passes after."
+    "compiler_ci_validation": "72/72 common tests pass on all OSes. Windows packaging rejected File /oname=\"name\"; corrected to quote the complete \"/oname=name\" argument, as required by NSIS. Added spaced-filename regression: failed before change, passes after.",
+    "source_commit": "9ac8204410ec017e4d70ab265abbeff16c2b6fa9",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38059265577",
+    "ci_validation": "Windows/Linux/macOS each 72/72 (216 overall); all package/startup/upload steps passed. Downloaded numerical/UI/printing reports and package manifests/hashes audited. Native installer install/reinstall, Unicode/spaced path, Start menu/registry, clean-runtime startup, and removal preserving unrelated files passed.",
+    "packages": "dist/phase2-installer/final/",
+    "test_reports": "build/installer-delivery/ci-final/",
+    "delivery_audit": "build/installer-delivery/ci-verified.json; build/installer-delivery/packages-verified.json; build/installer-delivery/linux-startup-final.json",
+    "installer": "dist/phase2-installer/final/TORA-Clone-windows-latest/TORA-Clone-0.1.0-windows-x86_64-setup.exe",
+    "installer_sha256": "d1191d346bbf0b7141f35cf0129d0d2e2bd35ce36c2cd1463e5ca31f21db626e",
+    "installed_manifest_files": 32,
+    "completed_on": "2026-10-10",
+    "report": "/home/nitir505/Ritin/docs/TORA-clone/WINDOWS_INSTALLER_REPORT.tex"
   },
   "hardware_acceptance_protocol": "docs/HARDWARE_ACCEPTANCE.md"
 }
