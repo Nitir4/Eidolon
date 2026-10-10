@@ -37,7 +37,7 @@ def payload_commands(stage):
         parent = '' if relative.parent == Path('.') else '\\' + relative.parent.as_posix().replace('/', '\\')
         filename = relative.as_posix().replace('/', '\\')
         install += [f'SetOutPath "$INSTDIR{nsis_literal(parent)}"',
-                    f'File /oname="{nsis_literal(path.name)}" "{nsis_literal(str(path.resolve()))}"']
+                    f'File "/oname={nsis_literal(path.name)}" "{nsis_literal(str(path.resolve()))}"']
         remove.append(f'Delete "$INSTDIR\\{nsis_literal(filename)}"')
     for directory in sorted(directories, key=lambda p: (-len(p.parts), str(p))):
         remove.append('RMDir "$INSTDIR\\' + nsis_literal(directory.as_posix().replace('/', '\\')) + '"')

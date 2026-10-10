@@ -362,7 +362,9 @@
     "verification": "Initial install/reinstall, owned-file hashes, Unicode/spaced path, Start menu/registry, installed startup without SDK and uninstall preserving unrelated files",
     "limits": "Unsigned development installer; physical Windows10/11 review and signing not verified",
     "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38045960305",
-    "initial_ci_validation": "Linux/macOS 72/72 passed; Windows 71/72 passed. Installer safety assertion assumed Unix path separators; corrected to exercise native, PurePosixPath and PureWindowsPath commands. Packaging had not started on Windows."
+    "initial_ci_validation": "Linux/macOS 72/72 passed; Windows 71/72 passed. Installer safety assertion assumed Unix path separators; corrected to exercise native, PurePosixPath and PureWindowsPath commands. Packaging had not started on Windows.",
+    "compiler_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38058864062",
+    "compiler_ci_validation": "72/72 common tests pass on all OSes. Windows packaging rejected File /oname=\"name\"; corrected to quote the complete \"/oname=name\" argument, as required by NSIS. Added spaced-filename regression: failed before change, passes after."
   },
   "hardware_acceptance_protocol": "docs/HARDWARE_ACCEPTANCE.md"
 }
