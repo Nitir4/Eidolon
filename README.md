@@ -13,9 +13,8 @@ its input module supplies native LP data entry, row/column editing and Open/Save
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-the previous three-OS checkpoint passed 68 tests each. Printing and live
-display regression now extend the suite to 71 checks; current validation is
-recorded below. The latest verification and packages
+all three OS builds pass 71 tests each, including independent printer PDF
+comparison and live synthetic display changes. The latest verification and packages
 are recorded in [current status](docs/STATUS.json). Recorded physical-printer/driver,
 physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
 One source tree and the `main` branch serve Windows, macOS and Linux.
@@ -60,8 +59,7 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
-Other solver
-leaf commands remain disabled until their separate gates. Review layouts with, for
+Other OR modules remain outside this LP project. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal

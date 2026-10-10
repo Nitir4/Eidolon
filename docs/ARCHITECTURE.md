@@ -390,7 +390,8 @@ reconstructs original variables and formats `SummaryDisplay` sections. The
 Qt-free output includes exact automatic count/terminal rules. `LpFinalController`
 invalidates its session on document changes and routes shared Output Format to
 `lp/final`. A native `SummaryModel`/`QTableView` presents the ordered sections;
-QPrinter prints the same display data. Future modules remain compiled module
+The shared desktop printer adapter consumes the session and original model.
+Future modules remain compiled module
 registrations in ApplicationShell; LP details do not enter the core shell.
 
 
@@ -400,7 +401,25 @@ The Qt-free `sensitivity(FinalSolutionSession)` reads the retained basis and
 original input model. It intersects affine optimality and feasibility limits,
 then returns current values, intervals and signed reduced costs/dual prices.
 `FinalSolutionSession::display(format, true)` adds the two sensitivity sections;
-`LpFinalController` uses that display for both QTableView and QPrinter. The
+`LpFinalController` uses that display for QTableView. The printer adapter adds
+original-data pages and the captured printer-specific slack conventions. The
 normal final-only probe keeps the two primary sections. Legacy automatic bound
 and sign conventions are isolated here; original input/file data and interactive
 solver behavior are preserved. Terminal infeasible/unbounded output has no ranges.
+
+
+## Shared LP printer boundary
+
+`lp_printing.hpp/.cpp` keeps printer selection separate from LP sessions and
+page composition. Controllers call `requestLpPrint`, which uses the default
+printer directly or opens a native Qt chooser when none exists. Its optional
+selector boundary lets offscreen tests exercise cancellation without opening
+uncontrollable OS modal panels. Interactive calls always use the default
+native path; the selector does not change numerical or file behavior.
+
+`printLpTrace`, `printLpSummary` and `printLpGraph` read immutable session data
+and the original problem. Summary printing derives captured original-model
+slack separately from TORA's screen quirk; it never edits solver history or
+input. QPainter/QPrinter draw the pages with installed fonts. PDF verification
+is test-only Python; Qt GuiPrivate is test-only display configuration. Neither
+dependency enters the Qt-free mathematical library.

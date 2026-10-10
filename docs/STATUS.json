@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase2 printing and live synthetic DPI acceptance extension",
+  "active_step": "Phase2 LP and captured printing profile implemented and verified",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Verify full local suite and refreshed three-OS CI/packages; no new phase",
+  "next_step": "Review delivered native app; physical monitor/printer acceptance when hardware is available; no further phase started",
   "foundation_order": [
     1,
     5,
@@ -105,7 +105,7 @@
     "approval": "User: start phase 2",
     "approved_on": "2026-10-07",
     "current_module": "Complete observed LP profile",
-    "step": "Acceptance extension: local verification and CI refresh",
+    "step": "Captured LP and printing profile delivered; hardware limits recorded",
     "input_validation": {
       "local": "20/20 desktop checks, including 43 input cases at each of four scales; 10/10 Qt-free C++17 checks",
       "oracle": "22 exact input-edit saved-file hashes; all 27 earlier imported-file bindings; existing 15-case corpus reused; three clone-written edited-file TORA bridges preserve exact bytes",
@@ -117,13 +117,13 @@
       "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37658262696",
       "packages": "dist/phase2-input/final/"
     },
-    "source_commit": "f18eaf9a98e12de051f8d1e176362b4ec5850814",
-    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37955242692",
+    "source_commit": "bf5bb1af61e4d4056da401510c80dbf77afc5e18",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38042603342",
     "input_module_status": "approved",
     "artifacts": "Portable Windows EXE ZIP, Linux x86_64 AppImage and universal arm64+x86_64 macOS app-in-DMG; all deployment/upload steps verified",
-    "packages": "dist/phase2-sensitivity/final/",
+    "packages": "dist/phase2-acceptance/final/",
     "remaining": "Physical mixed-DPI handoff, physical printers/other drivers, font-dependent row page breaks and behavior outside captured profiles remain unverified.",
-    "downloaded_artifacts": "All three package SHA/manifest checks pass;Windows ZIP CRC,native EXE,PrintSupport and every manifest file hash pass;Linux AppImage starts locally with SDK paths removed",
+    "downloaded_artifacts": "All three package SHA-256/manifest checks pass; Windows ZIP CRC/native EXE/PrintSupport and every manifest file hash pass. Downloaded Linux AppImage starts locally with Qt SDK paths removed.",
     "input_approval": "User: continue from where we left off (2026-10-08)",
     "all_slack": {
       "status": "approved",
@@ -312,7 +312,7 @@
     "input_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37908644559",
     "completed_on": "2026-10-09",
     "printing_acceptance": {
-      "status": "portable cancellation fix locally verified; final CI pending",
+      "status": "verified for captured profile",
       "spec": "docs/tora-analysis/LP_PRINTING.md",
       "goldens": "tests/fixtures/printing.json",
       "observations": 25,
@@ -321,10 +321,14 @@
       "local_validation": "Rebuilt fixed source: full native 71/71, 57.59 seconds; earlier unchanged explicit C++17 Qt-free 26/26; 25 print states/23 PDFs and 4259 tokens; 28 printing and 14 display-change Qt cases",
       "limits": "Physical printers, other drivers/paper sizes, exact row page boundaries and graph pixel identity unverified",
       "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38042008154",
-      "initial_ci_validation": "Linux 71/71 and PDF comparison passed; Windows/macOS timed out in native print-panel cancellation before PDF export. Fixed through a portable selector boundary; goldens unchanged."
+      "initial_ci_validation": "Linux 71/71 and PDF comparison passed; Windows/macOS timed out in native print-panel cancellation before PDF export. Fixed through a portable selector boundary; goldens unchanged.",
+      "source_commit": "bf5bb1af61e4d4056da401510c80dbf77afc5e18",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38042603342",
+      "ci_validation": "25 states, 23 PDFs and 4259 content tokens per OS; 28 Qt printing cases pass on each; all PDF page counts/content match",
+      "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_ACCEPTANCE_REPORT.tex"
     },
     "display_changes": {
-      "status": "local full-suite passed; CI pending",
+      "status": "verified synthetically on all three OSes",
       "test": "desktop.display-changes",
       "scenarios": 12,
       "routes": [
@@ -339,7 +343,11 @@
         2
       ],
       "captures": 48,
-      "limit": "Synthetic Qt offscreen screens; physical handoff/hotplug remain unverified"
-    }
+      "limit": "Synthetic Qt offscreen screens; physical handoff/hotplug remain unverified",
+      "ci_validation": "14 Qt cases per OS, 12 populated route/scale scenarios and 48 captures each; no failures/skips"
+    },
+    "ci_validation": "Windows/Linux/macOS each 71/71 (213 total), no failed or skipped checks; package/deployed startup/upload passed. Downloaded XML, exact numerical comparisons, 25 print states/4259 tokens and 48 display-change captures per OS independently verified.",
+    "test_reports": "build/acceptance/ci-final/",
+    "delivery_audit": "build/acceptance/ci-verified.json; build/acceptance/packages-verified.json; build/acceptance/linux-startup-final.json"
   }
 }

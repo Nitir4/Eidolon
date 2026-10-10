@@ -188,3 +188,11 @@ offscreen printer suite. Cancellation routing is tested through an injected
 selector; interactive application calls retain Qt's native panel. The first
 macOS CI attempt timed out in a QWidget-driven cancellation test, before any
 PDF exports; it is a test-platform limitation, not an accepted numerical mismatch.
+
+
+Final acceptance CI at bf5bb1a (run 38042603342) passes 71/71 checks on each
+OS, with all native packages and deployed startup checks successful. Downloaded
+reports confirm 25 print states/23 PDFs/4259 content tokens and 48 live-display
+captures per OS. The original printer environment blocker is resolved for the
+captured profile. Physical printer/monitor, other-driver/font layout and
+outside-profile limits remain; no known captured-content mismatch is accepted.
