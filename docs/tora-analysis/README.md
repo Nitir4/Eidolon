@@ -40,3 +40,6 @@ Foundation 3 input-model decisions and targeted validation capture provenance:
 
 Foundation 4 document/file decisions and targeted compatibility provenance:
 [LP_FILE_IO.md](LP_FILE_IO.md).
+
+Printer acceptance extension: [LP printing](LP_PRINTING.md) covers 25 actual
+print observations and the independent native-PDF verification contract.

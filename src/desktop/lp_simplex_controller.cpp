@@ -1,4 +1,5 @@
 #include "lp_simplex_controller.hpp"
+#include "lp_printing.hpp"
 #include "lp_input_controller.hpp"
 #include "ui_font.hpp"
 #include <QAbstractTableModel>
@@ -262,29 +263,12 @@ private:
 };
 void printTrace(ApplicationShell& shell,LpSimplexController& c) {
     if(!c.session())return;
-    QPrinter printer(QPrinter::HighResolution);QPrintDialog dialog(&printer,&shell);polishUsableFonts(dialog);if(dialog.exec()!=QDialog::Accepted)return;
-    if(!printSimplexTrace(printer,c,shell.font()))c.notice(QStringLiteral("Printer"),QStringLiteral("Could not complete printing to the selected printer"));
+    if(requestLpPrint(&shell,[&](QPrinter& printer){return printSimplexTrace(printer,c,shell.font());})==PrintOutcome::Failed)
+        c.notice(QStringLiteral("Printer"),QStringLiteral("Could not complete printing to the selected printer"));
 }
 }
 bool printSimplexTrace(QPrinter& printer,const LpSimplexController& c,const QFont& font) {
-    try {
-    if(!c.session())return false;
-    QPainter painter;if(!painter.begin(&printer))return false;
-    const auto page=printer.pageLayout().paintRectPixels(printer.resolution());painter.setFont(usableUiFont(font));
-    QFontMetrics fm(painter.font(),&printer);const int line=fm.height()+fm.height()/2;int y=line;
-    for(std::size_t k=0;k<c.session()->history().size();++k) {
-        const auto table=c.session()->display(k,c.format());const int cols=static_cast<int>(table.columns.size())+1;
-        std::vector<int> widths(static_cast<std::size_t>(cols),0);
-        for(const auto& r:table.rows){widths[0]=std::max(widths[0],fm.horizontalAdvance(QString::fromStdString(r.label)));for(int j=1;j<cols;++j)widths[static_cast<std::size_t>(j)]=std::max(widths[static_cast<std::size_t>(j)],fm.horizontalAdvance(QString::fromStdString(r.values[static_cast<std::size_t>(j-1)])));}
-        for(int j=1;j<cols;++j)widths[static_cast<std::size_t>(j)]=std::max(widths[static_cast<std::size_t>(j)],fm.horizontalAdvance(QString::fromStdString(table.columns[static_cast<std::size_t>(j-1)])));
-        int total=0;for(auto& width:widths){width+=2*fm.averageCharWidth();total+=width;}
-        const double factor=std::min(1.0,static_cast<double>(page.width())/total);painter.save();painter.scale(factor,factor);
-        const auto draw=[&](const QStringList& texts){if((y+line)*factor>page.height()){painter.restore();if(!printer.newPage())throw std::runtime_error("Printer rejected a new page");painter.save();painter.scale(factor,factor);y=line;}int x=0;for(int j=0;j<texts.size();++j){painter.drawText(QRect(x,y-line,widths[static_cast<std::size_t>(j)],line),Qt::AlignLeft|Qt::AlignVCenter,texts[j]);x+=widths[static_cast<std::size_t>(j)];}y+=line;};
-        draw({QString::fromStdString(table.heading)});QStringList header{QStringLiteral("Basic")};for(const auto& col:table.columns)header<<QString::fromStdString(col);draw(header);
-        for(const auto& row:table.rows){QStringList texts{QString::fromStdString(row.label)};for(const auto& value:row.values)texts<<QString::fromStdString(value);draw(texts);}y+=line;painter.restore();
-    }
-    return painter.end();
-    }catch(const std::exception&){return false;}
+    return c.session() && printLpTrace(printer,*c.session(),c.format(),font);
 }
 QWidget* simplexScreen(ApplicationShell& shell) {
     auto& c=simplexController(shell);auto* page=new QWidget;auto* outer=new QHBoxLayout(page);

@@ -264,3 +264,19 @@ captures. Font metrics size rows and columns; the layout fills the window and
 scrolls when content exceeds the viewport. Next/All Iterations remain disabled;
 Write to Printer, View/Modify Input Data, MAIN Menu and Exit TORA are native
 controls. Changes to input invalidate the completed numerical session.
+
+
+## Verified printer controls and display-change acceptance
+
+Printing is specified in `tora-analysis/LP_PRINTING.md`. Successful jobs start
+with original data; trace printing repeats Basic in horizontal bands, while
+final printing includes sensitivity. Infeasible/unbounded final states hide
+Write to Printer. Existing default printers receive jobs directly. With no
+default, Qt's native printer/PDF selection is an explicit usability improvement.
+Cancellation does not modify input or solver state. Graph prints use monochrome
+strokes/yellow labels while the native screen retains the captured TORA colors.
+
+The live display regression covers four populated routes at three secondary
+DPIs, a live scale change and display removal. Fonts, raster DPR, reachable
+window geometry and model/session state are asserted. Test-only offscreen
+monitor changes are distinguished from still-pending physical monitor acceptance.

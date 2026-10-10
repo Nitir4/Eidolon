@@ -1,0 +1,1775 @@
+[
+  {
+    "case": "final-alias",
+    "method": "final",
+    "problem": {
+      "title": "final-alias",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "chairs",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: final-alias x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: final-alias Final Iteration No.: 3 Objective Value = 10 Variable Value Obj Coeff Obj Val Contrib x1: 2.00 3.00 6.00 x2: 2.00 2.00 4.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) 2.00 0.00 3 (<) 3.00 1.00- ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 0.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 2.00 5.00 2.00 2 (<) 2.00 1.00 4.00 1.00 3 (<) 3.00 2.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/final-alias"
+  },
+  {
+    "case": "final-decimal-three",
+    "method": "final",
+    "problem": {
+      "title": "final-decimal-three",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "-1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "-1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      3
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: final-decimal-three x1 x2 Maximize 2.000 -1.000 Subject to ( 1) 1.000 -1.000 <= 2.000 ( 2) -1.000 1.000 <= 2.000 ( 3) 1.000 1.000 <= 5.000 Lower Bound 0.000 0.000 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: final-decimal-three Final Iteration No.: 3 Objective Value = 5.5 Variable Value Obj Coeff Obj Val Contrib x1: 3.500 2.000 7.000 x2: 1.500 -1.000 -1.500 Constraint RHS Slack-/Surplus+ 1 (<) 2.000 0.000 2 (<) 2.000 4.000- 3 (<) 5.000 0.000 ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 2.000 1.000 infinity 0.000 x2: -1.000 -2.000 2.000 0.000 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 2.000 -2.000 5.000 1.500 2 (<) 2.000 -2.000 infinity 0.000 3 (<) 5.000 2.000 infinity 0.500"
+      }
+    ],
+    "capture": "probes/printing/final-decimal-three"
+  },
+  {
+    "case": "final-fixed",
+    "method": "final",
+    "problem": {
+      "title": "final-fixed",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "1",
+          "upper": "1",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: final-fixed x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 1.00 0.00 Upper Bound 1.00 infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: final-fixed Final Iteration No.: 3 Objective Value = 9 Variable Value Obj Coeff Obj Val Contrib x1: 1.00 3.00 3.00 x2: 3.00 2.00 6.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) 2.00 1.00- 3 (<) 3.00 0.00 LB-x1 1.00 0.00 UB-x1 1.00 0.00 ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 1.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 1.00 4.00 2.00 2 (<) 2.00 1.00 infinity 0.00 3 (<) 3.00 3.00 infinity 0.00 LB-x1 1.00 0.00 1.00 -1.00 UB-x1 1.00 1.00 2.00 1.00"
+      }
+    ],
+    "capture": "probes/printing/final-fixed"
+  },
+  {
+    "case": "final-free",
+    "method": "final",
+    "problem": {
+      "title": "final-free",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-inf",
+          "upper": "inf",
+          "unrestricted": true
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: final-free x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound -infinity 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? y n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: final-free Final Iteration No.: 3 Objective Value = 10 Variable Value Obj Coeff Obj Val Contrib x1: 2.00 3.00 6.00 x2: 2.00 2.00 4.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) 2.00 0.00 3 (<) 3.00 1.00- ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 0.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 2.00 5.00 2.00 2 (<) 2.00 1.00 4.00 1.00 3 (<) 3.00 2.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/final-free"
+  },
+  {
+    "case": "final-scientific",
+    "method": "final",
+    "problem": {
+      "title": "final-scientific",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "2.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "5.00",
+          "coefficients": [
+            "2.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      1,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: final-scientific x1 x2 Minimize 2.00000e+00 3.00000e+00 Subject to ( 1) 1.00000e+00 1.00000e+00 >= 4.00000e+00 ( 2) 1.00000e+00 2.00000e+00 >= 6.00000e+00 ( 3) 2.00000e+00 1.00000e+00 >= 5.00000e+00 Lower Bound 0.00000e+00 0.00000e+00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: final-scientific Final Iteration No.: 7 Objective Value = 10 Variable Value Obj Coeff Obj Val Contrib x1: 2.00000e+00 2.00000e+00 4.00000e+00 x2: 2.00000e+00 3.00000e+00 6.00000e+00 Constraint RHS Slack-/Surplus+ 1 (>) 4.00000e+00 0.00000e+00 2 (>) 6.00000e+00 0.00000e+00 3 (>) 5.00000e+00 1.00000e+00+ ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 2.00000e+00 1.50000e+00 3.00000e+00 0.00000e+00 x2: 3.00000e+00 2.00000e+00 4.00000e+00 0.00000e+00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (>) 4.00000e+00 3.66667e+00 6.00000e+00 1.00000e+00 2 (>) 6.00000e+00 4.00000e+00 7.00000e+00 1.00000e+00 3 (>) 5.00000e+00 -infinity 6.00000e+00 0.00000e+00"
+      }
+    ],
+    "capture": "probes/printing/final-scientific"
+  },
+  {
+    "case": "final-upper",
+    "method": "final",
+    "problem": {
+      "title": "final-upper",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "1",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: final-upper x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 0.00 0.00 Upper Bound 1.00 infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: final-upper Final Iteration No.: 3 Objective Value = 9 Variable Value Obj Coeff Obj Val Contrib x1: 1.00 3.00 3.00 x2: 3.00 2.00 6.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) 2.00 1.00- 3 (<) 3.00 0.00 UB-x1 1.00 0.00 ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 1.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 1.00 4.00 2.00 2 (<) 2.00 1.00 infinity 0.00 3 (<) 3.00 3.00 infinity 0.00 UB-x1 1.00 1.00 2.00 1.00"
+      }
+    ],
+    "capture": "probes/printing/final-upper"
+  },
+  {
+    "case": "graph-normal",
+    "method": "graphical",
+    "problem": {
+      "title": "Normal",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Normal x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING -- GRAPHICAL SOLUTION",
+        "text": "LINEAR PROGRAMMING -- GRAPHICAL SOLUTION Title: Normal Summary of Optimal Solution: Objective Value = 10.00 x1 = 2.00 x2 = 2.00",
+        "plot_labels": [
+          "5",
+          "Obj",
+          "(",
+          "1)",
+          "x2",
+          "4",
+          "(",
+          "3)",
+          "3",
+          "Optimum",
+          "2",
+          "1",
+          "-1",
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "x1",
+          "5",
+          "(",
+          "2)",
+          "-1"
+        ]
+      }
+    ],
+    "capture": "probes/printing/graph-normal"
+  },
+  {
+    "case": "graph-scientific",
+    "method": "graphical",
+    "problem": {
+      "title": "Normal",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      1,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Normal x1 x2 Maximize 3.00000e+00 2.00000e+00 Subject to ( 1) 1.00000e+00 1.00000e+00 <= 4.00000e+00 ( 2) 1.00000e+00 0.00000e+00 <= 2.00000e+00 ( 3) 0.00000e+00 1.00000e+00 <= 3.00000e+00 Lower Bound 0.00000e+00 0.00000e+00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING -- GRAPHICAL SOLUTION",
+        "text": "LINEAR PROGRAMMING -- GRAPHICAL SOLUTION Title: Normal Summary of Optimal Solution: Objective Value = 1.00000e+01 x1 = 2.00000e+00 x2 = 2.00000e+00",
+        "plot_labels": [
+          "5",
+          "Obj",
+          "(",
+          "1)",
+          "x2",
+          "4",
+          "(",
+          "3)",
+          "3",
+          "Optimum",
+          "2",
+          "1",
+          "-1",
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "x1",
+          "5",
+          "(",
+          "2)",
+          "-1"
+        ]
+      }
+    ],
+    "capture": "probes/printing/graph-scientific"
+  },
+  {
+    "case": "sens-both-bounds",
+    "method": "final",
+    "problem": {
+      "title": "sens-both-bounds",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "1",
+          "upper": "2",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "1",
+          "upper": "2",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: sens-both-bounds x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 1.00 1.00 Upper Bound 2.00 2.00 Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: sens-both-bounds Final Iteration No.: 3 Objective Value = 10 Variable Value Obj Coeff Obj Val Contrib x1: 2.00 3.00 6.00 x2: 2.00 2.00 4.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) 2.00 0.00 3 (<) 3.00 1.00- LB-x1 1.00 1.00+ UB-x1 2.00 0.00 LB-x2 1.00 1.00+ UB-x2 2.00 0.00 ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 0.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 3.00 4.00 2.00 2 (<) 2.00 2.00 2.00 1.00 3 (<) 3.00 2.00 infinity 0.00 LB-x1 1.00 0.00 2.00 0.00 UB-x1 2.00 2.00 infinity 0.00 LB-x2 1.00 0.00 2.00 0.00 UB-x2 2.00 2.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/sens-both-bounds"
+  },
+  {
+    "case": "sens-min-reduced",
+    "method": "final",
+    "problem": {
+      "title": "sens-min-reduced",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1",
+        "3"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "1",
+          "coefficients": [
+            "1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: sens-min-reduced x1 x2 Minimize 1.00 3.00 Subject to ( 1) 1.00 0.00 >= 1.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: sens-min-reduced Final Iteration No.: 4 Objective Value = 1 Variable Value Obj Coeff Obj Val Contrib x1: 1.00 1.00 1.00 x2: 0.00 3.00 0.00 Constraint RHS Slack-/Surplus+ 1 (>) 1.00 0.00 2 (<) 2.00 1.00- 3 (<) 3.00 3.00- ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 1.00 0.00 infinity 0.00 x2: 3.00 0.00 infinity -3.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (>) 1.00 0.00 2.00 1.00 2 (<) 2.00 1.00 infinity 0.00 3 (<) 3.00 0.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/sens-min-reduced"
+  },
+  {
+    "case": "sens-negative-lower",
+    "method": "final",
+    "problem": {
+      "title": "sens-negative-lower",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-1",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "-3",
+        "2"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: sens-negative-lower x1 x2 Maximize -3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound -1.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: sens-negative-lower Final Iteration No.: 2 Objective Value = 9 Variable Value Obj Coeff Obj Val Contrib x1: -1.00 -3.00 3.00 x2: 3.00 2.00 6.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 2.00- 2 (<) 2.00 3.00- 3 (<) 3.00 0.00 ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: -3.00 -infinity 0.00 3.00 x2: 2.00 0.00 infinity 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 3.00 infinity 0.00 2 (<) 2.00 0.00 infinity 0.00 3 (<) 3.00 0.00 4.00 2.00"
+      }
+    ],
+    "capture": "probes/printing/sens-negative-lower"
+  },
+  {
+    "case": "sens-negative-lower-positive-cost",
+    "method": "final",
+    "problem": {
+      "title": "sens-negative-lower-positive-cost",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-1",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: sens-negative-lower-positive-cost x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound -1.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: sens-negative-lower-positive-cost Final Iteration No.: 3 Objective Value = 7 Variable Value Obj Coeff Obj Val Contrib x1: 1.00 3.00 3.00 x2: 2.00 2.00 4.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 1.00- 2 (<) 2.00 1.00- 3 (<) 3.00 1.00- ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 0.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 2.00 5.00 2.00 2 (<) 2.00 1.00 4.00 1.00 3 (<) 3.00 2.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/sens-negative-lower-positive-cost"
+  },
+  {
+    "case": "sens-negative-lower-upper",
+    "method": "final",
+    "problem": {
+      "title": "sens-negative-lower-upper",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "-1",
+          "upper": "1",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: sens-negative-lower-upper x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound -1.00 0.00 Upper Bound 1.00 infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: sens-negative-lower-upper Final Iteration No.: 3 Objective Value = 6 Variable Value Obj Coeff Obj Val Contrib x1: 0.00 3.00 0.00 x2: 3.00 2.00 6.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 1.00- 2 (<) 2.00 2.00- 3 (<) 3.00 0.00 UB-x1 1.00 1.00- ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 1.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 1.00 4.00 2.00 2 (<) 2.00 1.00 infinity 0.00 3 (<) 3.00 3.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/sens-negative-lower-upper"
+  },
+  {
+    "case": "sens-negative-rhs-active",
+    "method": "final",
+    "problem": {
+      "title": "sens-negative-rhs-active",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "-3",
+        "2"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "-1",
+          "coefficients": [
+            "-1",
+            "0"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: sens-negative-rhs-active x1 x2 Maximize -3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) -1.00 0.00 <= -1.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: sens-negative-rhs-active Final Iteration No.: 5 Objective Value = 3 Variable Value Obj Coeff Obj Val Contrib x1: 1.00 -3.00 -3.00 x2: 3.00 2.00 6.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) -1.00 0.00 3 (<) 3.00 0.00 ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: -3.00 -infinity 2.00 0.00 x2: 2.00 0.00 infinity 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 1.00 4.00 2.00 2 (<) -1.00 -1.00 2.00 -5.00 3 (<) 3.00 3.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/sens-negative-rhs-active"
+  },
+  {
+    "case": "summary-03_infeasible",
+    "method": "final",
+    "problem": {
+      "title": "Infeasible",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "3.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "5.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": false,
+    "pages": [],
+    "capture": "probes/printing/summary-03_infeasible"
+  },
+  {
+    "case": "summary-04_unbounded",
+    "method": "final",
+    "problem": {
+      "title": "Unbounded",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "-1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "0.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "0.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": false,
+    "pages": [],
+    "capture": "probes/printing/summary-04_unbounded"
+  },
+  {
+    "case": "summary-05_alternative",
+    "method": "final",
+    "problem": {
+      "title": "Alternative optima",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Alternative optima x1 x2 Maximize 1.00 1.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 4.00 ( 3) 0.00 1.00 <= 4.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: Alternative optima Final Iteration No.: 2 Objective Value = 4 Variable Value Obj Coeff Obj Val Contrib x1: 4.00 1.00 4.00 x2: 0.00 1.00 0.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) 4.00 0.00 3 (<) 4.00 4.00- ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 1.00 1.00 infinity 0.00 x2: 1.00 -infinity 1.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 0.00 4.00 1.00 2 (<) 4.00 4.00 infinity 0.00 3 (<) 4.00 0.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/summary-05_alternative"
+  },
+  {
+    "case": "summary-normal",
+    "method": "final",
+    "problem": {
+      "title": "Normal",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Normal x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "LINEAR PROGRAMMING OUTPUT SUMMARY",
+        "text": "LINEAR PROGRAMMING OUTPUT SUMMARY Title: Normal Final Iteration No.: 3 Objective Value = 10 Variable Value Obj Coeff Obj Val Contrib x1: 2.00 3.00 6.00 x2: 2.00 2.00 4.00 Constraint RHS Slack-/Surplus+ 1 (<) 4.00 0.00 2 (<) 2.00 0.00 3 (<) 3.00 1.00- ***Sensitivity Analysis*** Variable Current Obj Coeff Min Obj Coeff Max Obj Coeff Reduced Cost x1: 3.00 2.00 infinity 0.00 x2: 2.00 0.00 3.00 0.00 Constraint Current RHS Min RHS Max RHS Dual Price 1 (<) 4.00 2.00 5.00 2.00 2 (<) 2.00 1.00 4.00 1.00 3 (<) 3.00 2.00 infinity 0.00"
+      }
+    ],
+    "capture": "probes/printing/summary-normal"
+  },
+  {
+    "case": "trace-all_slack",
+    "method": "all_slack",
+    "problem": {
+      "title": "Normal",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "3.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Normal x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 <= 4.00 ( 2) 1.00 0.00 <= 2.00 ( 3) 0.00 1.00 <= 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "SIMPLEX TABLEAUS",
+        "text": "SIMPLEX TABLEAUS -- (Starting All-Slack Method) Title: Normal Iteration 1 Basic x1 x2 sx3 sx4 sx5 Solution z (max) -3.00 -2.00 0.00 0.00 0.00 0.00 sx3 1.00 1.00 1.00 0.00 0.00 4.00 sx4 1.00 0.00 0.00 1.00 0.00 2.00 sx5 0.00 1.00 0.00 0.00 1.00 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Iteration 2 Basic x1 x2 sx3 sx4 sx5 Solution z (max) 0.00 -2.00 0.00 3.00 0.00 6.00 sx3 0.00 1.00 1.00 -1.00 0.00 2.00 x1 1.00 0.00 0.00 1.00 0.00 2.00 sx5 0.00 1.00 0.00 0.00 1.00 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Iteration 3 Basic x1 x2 sx3 sx4 sx5 Solution z (max) 0.00 0.00 2.00 1.00 0.00 10.00 x2 0.00 1.00 1.00 -1.00 0.00 2.00 x1 1.00 0.00 0.00 1.00 0.00 2.00 sx5 0.00 0.00 -1.00 1.00 1.00 1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      }
+    ],
+    "capture": "probes/printing/trace-all_slack"
+  },
+  {
+    "case": "trace-bounded",
+    "method": "bounded",
+    "problem": {
+      "title": "Bounded variables",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "4.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": "<=",
+          "rhs": "10.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": "<=",
+          "rhs": "7.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Bounded variables x1 x2 Maximize 4.00 3.00 Subject to ( 1) 1.00 1.00 <= 10.00 ( 2) 1.00 0.00 <= 6.00 ( 3) 0.00 1.00 <= 7.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "SIMPLEX TABLEAUS",
+        "text": "SIMPLEX TABLEAUS -- (Starting All-Slack Method) Title: Bounded variables Iteration 1 Basic x1 x2 sx3 sx4 sx5 Solution z (max) -4.00 -3.00 0.00 0.00 0.00 0.00 sx3 1.00 1.00 1.00 0.00 0.00 10.00 sx4 1.00 0.00 0.00 1.00 0.00 6.00 sx5 0.00 1.00 0.00 0.00 1.00 7.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Iteration 2 Basic x1 x2 sx3 sx4 sx5 Solution z (max) 0.00 -3.00 0.00 4.00 0.00 24.00 sx3 0.00 1.00 1.00 -1.00 0.00 4.00 x1 1.00 0.00 0.00 1.00 0.00 6.00 sx5 0.00 1.00 0.00 0.00 1.00 7.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Iteration 3 Basic x1 x2 sx3 sx4 sx5 Solution z (max) 0.00 0.00 3.00 1.00 0.00 36.00 x2 0.00 1.00 1.00 -1.00 0.00 4.00 x1 1.00 0.00 0.00 1.00 0.00 6.00 sx5 0.00 0.00 -1.00 1.00 1.00 3.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      }
+    ],
+    "capture": "probes/printing/trace-bounded"
+  },
+  {
+    "case": "trace-dual_simplex",
+    "method": "dual_simplex",
+    "problem": {
+      "title": "Dual simplex seed",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2.00",
+        "3.00"
+      ],
+      "constraints": [
+        {
+          "relation": ">=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "6.00",
+          "coefficients": [
+            "1.00",
+            "2.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "5.00",
+          "coefficients": [
+            "2.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Dual simplex seed x1 x2 Minimize 2.00 3.00 Subject to ( 1) 1.00 1.00 >= 4.00 ( 2) 1.00 2.00 >= 6.00 ( 3) 2.00 1.00 >= 5.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "SIMPLEX TABLEAUS",
+        "text": "SIMPLEX TABLEAUS -- (Dual Simplex Method) Title: Dual simplex seed Iteration 1 Basic x1 x2 Sx3 Sx4 Sx5 Solution z (min) -2.00 -3.00 0.00 0.00 0.00 0.00 Sx3 -1.00 -1.00 1.00 0.00 0.00 -4.00 Sx4 -1.00 -2.00 0.00 1.00 0.00 -6.00 Sx5 -2.00 -1.00 0.00 0.00 1.00 -5.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Iteration 2 Basic x1 x2 Sx3 Sx4 Sx5 Solution z (min) -0.50 0.00 0.00 -1.50 0.00 9.00 Sx3 -0.50 0.00 1.00 -0.50 0.00 -1.00 x2 0.50 1.00 0.00 -0.50 0.00 3.00 Sx5 -1.50 0.00 0.00 -0.50 1.00 -2.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Iteration 3 Basic x1 x2 Sx3 Sx4 Sx5 Solution z (min) 0.00 0.00 0.00 -1.33 -0.33 9.67 Sx3 -0.00 -0.00 1.00 -0.33 -0.33 -0.33 x2 0.00 1.00 0.00 -0.67 0.33 2.33 x1 1.00 0.00 0.00 0.33 -0.67 1.33 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Iteration 4 Basic x1 x2 Sx3 Sx4 Sx5 Solution z (min) 0.00 0.00 -1.00 -1.00 0.00 10.00 Sx5 0.00 0.00 -3.00 1.00 1.00 1.00 x2 0.00 1.00 1.00 -1.00 0.00 2.00 x1 1.00 0.00 -2.00 1.00 0.00 2.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      }
+    ],
+    "capture": "probes/printing/trace-dual_simplex"
+  },
+  {
+    "case": "trace-m-same-input",
+    "method": "m_method",
+    "problem": {
+      "title": "Two phase",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Two phase x1 x2 Minimize 1.00 1.00 Subject to ( 1) 1.00 1.00 = 5.00 ( 2) 1.00 0.00 >= 2.00 ( 3) 0.00 1.00 >= 2.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "SIMPLEX TABLEAUS",
+        "text": "SIMPLEX TABLEAUS -- (M-Method) Title: Two phase Iteration 1 Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (min) 199.00 199.00 -100.00 -100.00 0.00 0.00 Rx5 1.00 1.00 0.00 0.00 1.00 0.00 Rx6 1.00 0.00 -1.00 0.00 0.00 1.00 Rx7 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (min) 0.00 900.00 Rx5 0.00 5.00 Rx6 0.00 2.00 Rx7 1.00 2.00 Iteration 2 Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (min) 0.00 199.00 99.00 -100.00 0.00 -199.00 Rx5 0.00 1.00 1.00 0.00 1.00 -1.00 x1 1.00 0.00 -1.00 0.00 0.00 1.00 Rx7 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (min) 0.00 502.00 Rx5 0.00 3.00 x1 0.00 2.00 Rx7 1.00 2.00 Iteration 3 Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (min) 0.00 0.00 99.00 99.00 0.00 -199.00 Rx5 0.00 0.00 1.00 1.00 1.00 -1.00 x1 1.00 0.00 -1.00 0.00 0.00 1.00 x2 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (min) -199.00 104.00 Rx5 -1.00 1.00 x1 0.00 2.00 x2 1.00 2.00 Iteration 4"
+      },
+      {
+        "start": "",
+        "text": "Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (min) 0.00 0.00 0.00 0.00 -99.00 -100.00 Sx3 0.00 0.00 1.00 1.00 1.00 -1.00 x1 1.00 0.00 0.00 1.00 1.00 0.00 x2 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (min) -100.00 5.00 Sx3 -1.00 1.00 x1 -1.00 3.00 x2 1.00 2.00"
+      }
+    ],
+    "capture": "probes/printing/trace-m-same-input"
+  },
+  {
+    "case": "trace-m_method",
+    "method": "m_method",
+    "problem": {
+      "title": "Equality",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Equality x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 = 4.00 ( 2) 1.00 0.00 >= 1.00 ( 3) 0.00 1.00 >= 1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "SIMPLEX TABLEAUS",
+        "text": "SIMPLEX TABLEAUS -- (M-Method) Title: Equality Iteration 1 Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (max) -203.00 -202.00 100.00 100.00 0.00 0.00 Rx5 1.00 1.00 0.00 0.00 1.00 0.00 Rx6 1.00 0.00 -1.00 0.00 0.00 1.00 Rx7 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (max) 0.00 -600.00 Rx5 0.00 4.00 Rx6 0.00 1.00 Rx7 1.00 1.00 Iteration 2 Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (max) 0.00 -202.00 -103.00 100.00 0.00 203.00 Rx5 0.00 1.00 1.00 0.00 1.00 -1.00 x1 1.00 0.00 -1.00 0.00 0.00 1.00 Rx7 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (max) 0.00 -397.00 Rx5 0.00 3.00 x1 0.00 1.00 Rx7 1.00 1.00 Iteration 3 Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (max) 0.00 0.00 -103.00 -102.00 0.00 203.00 Rx5 0.00 0.00 1.00 1.00 1.00 -1.00 x1 1.00 0.00 -1.00 0.00 0.00 1.00 x2 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (max) 202.00 -195.00 Rx5 -1.00 2.00 x1 0.00 1.00 x2 1.00 1.00 Iteration 4"
+      },
+      {
+        "start": "",
+        "text": "Basic x1 x2 Sx3 Sx4 Rx5 Rx6 z (max) 0.00 0.00 0.00 1.00 103.00 100.00 Sx3 0.00 0.00 1.00 1.00 1.00 -1.00 x1 1.00 0.00 0.00 1.00 1.00 0.00 x2 0.00 1.00 0.00 -1.00 0.00 0.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx7 Solution z (max) 99.00 11.00 Sx3 -1.00 2.00 x1 -1.00 3.00 x2 1.00 1.00"
+      }
+    ],
+    "capture": "probes/printing/trace-m_method"
+  },
+  {
+    "case": "trace-two-phase-same-input",
+    "method": "two_phase",
+    "problem": {
+      "title": "Equality",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3.00",
+        "2.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "4.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "1.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Equality x1 x2 Maximize 3.00 2.00 Subject to ( 1) 1.00 1.00 = 4.00 ( 2) 1.00 0.00 >= 1.00 ( 3) 0.00 1.00 >= 1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "SIMPLEX TABLEAUS",
+        "text": "SIMPLEX TABLEAUS -- (Two-Phase Method) Title: Equality Phase 1 (Iter 1 Basic x1 x2 Sx3 Sx4 z (min) 2.00 2.00 -1.00 -1.00 Rx5 1.00 1.00 0.00 0.00 Rx6 1.00 0.00 -1.00 0.00 Rx7 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) 0.00 0.00 0.00 6.00 Rx5 1.00 0.00 0.00 4.00 Rx6 0.00 1.00 0.00 1.00 Rx7 0.00 0.00 1.00 1.00 Phase 1 (Iter 2 Basic x1 x2 Sx3 Sx4 z (min) 0.00 2.00 1.00 -1.00 Rx5 0.00 1.00 1.00 0.00 x1 1.00 0.00 -1.00 0.00 Rx7 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) 0.00 -2.00 0.00 4.00 Rx5 1.00 -1.00 0.00 3.00 x1 0.00 1.00 0.00 1.00 Rx7 0.00 0.00 1.00 1.00 Phase 1 (Iter 3 Basic x1 x2 Sx3 Sx4 z (min) 0.00 0.00 1.00 1.00 Rx5 0.00 0.00 1.00 1.00 x1 1.00 0.00 -1.00 0.00 x2 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) 0.00 -2.00 -2.00 2.00 Rx5 1.00 -1.00 -1.00 2.00 x1 0.00 1.00 0.00 1.00 x2 0.00 0.00 1.00 1.00 Phase 1 (Iter 4"
+      },
+      {
+        "start": "",
+        "text": "Basic x1 x2 Sx3 Sx4 z (min) 0.00 0.00 0.00 0.00 Sx3 0.00 0.00 1.00 1.00 x1 1.00 0.00 0.00 1.00 x2 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) -1.00 -1.00 -1.00 0.00 Sx3 1.00 -1.00 -1.00 2.00 x1 1.00 0.00 -1.00 3.00 x2 0.00 0.00 1.00 1.00 Phase 2 (Iter 5 Basic x1 x2 Sx3 Sx4 z (max) 0.00 0.00 0.00 1.00 Sx3 0.00 0.00 1.00 1.00 x1 1.00 0.00 0.00 1.00 x2 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (max) blocked blocked blocked 11.00 Sx3 1.00 -1.00 -1.00 2.00 x1 1.00 0.00 -1.00 3.00 x2 0.00 0.00 1.00 1.00"
+      }
+    ],
+    "capture": "probes/printing/trace-two-phase-same-input"
+  },
+  {
+    "case": "trace-two_phase",
+    "method": "two_phase",
+    "problem": {
+      "title": "Two phase",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0.00",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "1.00",
+        "1.00"
+      ],
+      "constraints": [
+        {
+          "relation": "=",
+          "rhs": "5.00",
+          "coefficients": [
+            "1.00",
+            "1.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "1.00",
+            "0.00"
+          ]
+        },
+        {
+          "relation": ">=",
+          "rhs": "2.00",
+          "coefficients": [
+            "0.00",
+            "1.00"
+          ]
+        }
+      ]
+    },
+    "format": [
+      0,
+      5,
+      2
+    ],
+    "print_available": true,
+    "pages": [
+      {
+        "start": "LINEAR PROGRAM -- ORIGINAL DATA",
+        "text": "LINEAR PROGRAM -- ORIGINAL DATA Title: Two phase x1 x2 Minimize 1.00 1.00 Subject to ( 1) 1.00 1.00 = 5.00 ( 2) 1.00 0.00 >= 2.00 ( 3) 0.00 1.00 >= 2.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n"
+      },
+      {
+        "start": "SIMPLEX TABLEAUS",
+        "text": "SIMPLEX TABLEAUS -- (Two-Phase Method) Title: Two phase Phase 1 (Iter 1 Basic x1 x2 Sx3 Sx4 z (min) 2.00 2.00 -1.00 -1.00 Rx5 1.00 1.00 0.00 0.00 Rx6 1.00 0.00 -1.00 0.00 Rx7 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) 0.00 0.00 0.00 9.00 Rx5 1.00 0.00 0.00 5.00 Rx6 0.00 1.00 0.00 2.00 Rx7 0.00 0.00 1.00 2.00 Phase 1 (Iter 2 Basic x1 x2 Sx3 Sx4 z (min) 0.00 2.00 1.00 -1.00 Rx5 0.00 1.00 1.00 0.00 x1 1.00 0.00 -1.00 0.00 Rx7 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) 0.00 -2.00 0.00 5.00 Rx5 1.00 -1.00 0.00 3.00 x1 0.00 1.00 0.00 2.00 Rx7 0.00 0.00 1.00 2.00 Phase 1 (Iter 3 Basic x1 x2 Sx3 Sx4 z (min) 0.00 0.00 1.00 1.00 Rx5 0.00 0.00 1.00 1.00 x1 1.00 0.00 -1.00 0.00 x2 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) 0.00 -2.00 -2.00 1.00 Rx5 1.00 -1.00 -1.00 1.00 x1 0.00 1.00 0.00 2.00 x2 0.00 0.00 1.00 2.00 Phase 1 (Iter 4"
+      },
+      {
+        "start": "",
+        "text": "Basic x1 x2 Sx3 Sx4 z (min) 0.00 0.00 0.00 0.00 Sx3 0.00 0.00 1.00 1.00 x1 1.00 0.00 0.00 1.00 x2 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) -1.00 -1.00 -1.00 0.00 Sx3 1.00 -1.00 -1.00 1.00 x1 1.00 0.00 -1.00 3.00 x2 0.00 0.00 1.00 2.00 Phase 2 (Iter 5 Basic x1 x2 Sx3 Sx4 z (min) 0.00 0.00 0.00 0.00 Sx3 0.00 0.00 1.00 1.00 x1 1.00 0.00 0.00 1.00 x2 0.00 1.00 0.00 -1.00 Lower Bound 0.00 0.00 Upper Bound infinity infinity Unrestr'd (y/n)? n n Basic Rx5 Rx6 Rx7 Solution z (min) blocked blocked blocked 5.00 Sx3 1.00 -1.00 -1.00 1.00 x1 1.00 0.00 -1.00 3.00 x2 0.00 0.00 1.00 2.00"
+      }
+    ],
+    "capture": "probes/printing/trace-two_phase"
+  }
+]

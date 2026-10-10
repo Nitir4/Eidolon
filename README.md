@@ -13,8 +13,10 @@ its input module supplies native LP data entry, row/column editing and Open/Save
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-all three OS builds pass 68 tests each. The latest verification and packages
-are recorded in [current status](docs/STATUS.json). Recorded original-printer,
+the previous three-OS checkpoint passed 68 tests each. Printing and live
+display regression now extend the suite to 71 checks; current validation is
+recorded below. The latest verification and packages
+are recorded in [current status](docs/STATUS.json). Recorded physical-printer/driver,
 physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
 One source tree and the `main` branch serve Windows, macOS and Linux.
 
@@ -28,7 +30,8 @@ See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_R
 [M-method report](docs/PHASE2_M_METHOD_REPORT.md),
 [Two-phase report](docs/PHASE2_TWO_PHASE_REPORT.md), plus
 [build instructions](docs/BUILD.md). With CMake 3.24+, Ninja, a C++17 compiler
-and Qt 6.8+ Widgets/PrintSupport installed:
+and Qt 6.8+ Widgets/PrintSupport installed (plus Qt Test/GuiPrivate and the
+Python PDF reader when running tests; see the build instructions):
 
 ```sh
 cmake --preset dev
@@ -78,3 +81,12 @@ explicit approval.
 Run `python3 tools/audit_phase0.py` to validate the saved local evidence without
 launching TORA or repeating any completed cases. It requires the private
 reference corpus; its pass is an evidence audit, not Gate 0 approval.
+
+
+Printing now follows 25 observed original print states: input pages, final
+summary/sensitivity, method-specific trace bands and graphical output. Public
+independent text fixtures are checked against native PDFs. See the
+[printer specification](docs/tora-analysis/LP_PRINTING.md) for coverage and
+font/driver limits. Live synthetic display-change tests cover four populated
+views at 125%, 150% and 200%, including scale changes and display removal;
+physical mixed-monitor handoff still needs hardware acceptance.

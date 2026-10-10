@@ -249,3 +249,16 @@ Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free R
 | Bound/sign/negative-RHS legacy conventions | `final_solution.cpp`, `sensitivity.cpp` | 10 additional focused final/sensitivity regressions; combined-bound before-fix log | `probes/phase2-final/sens-*/` top and scrolled screens |
 | Same labels/format in native view and printer | `lp_final_controller.cpp` | `desktop_sensitivity.cpp`, four scales, three actual window sizes, PDF/nonmutation and lifecycle | Summary heading/tables and final output controls |
 | Terminal output excludes sensitivity | `FinalSolutionSession::display`, `sensitivity` | Captured infeasible/unbounded goldens and safety tests | Original cases03/04 |
+
+
+## Printing and live display acceptance
+
+| Requirement | Implementation | Verification | Capture / limitation |
+| --- | --- | --- | --- |
+| LP-PR-01: original-data page and summary/sensitivity content | lp_printing.cpp::PrintPage::original / printLpSummary | desktop.printing.export / desktop.printing.pdf; printing.json | probes/printing summary/scientific/D3/free/alias/bound/RHS cases |
+| LP-PR-02: printer-specific slack, compact objective, omitted alternative notice | printLpSummary | Exact independent output text and controller non-mutation | negative-lower, positive-cost, upper, both-bounds, alternative |
+| LP-PR-03: ordered trace bands and method-specific width | printLpTrace | Exact content/band order and page counts | five trace methods and two same-input M/Two-phase probes |
+| LP-PR-04: graph summary, labels and monochrome native plot | printLpGraph; drawPlot(printing) | PDF summary/label comparison; rendered page review; existing graph goldens | graph-normal/scientific; pixel identity remains unverified |
+| LP-PR-05: direct default printer, native fallback and terminal availability | requestLpPrint; finalScreen | OraclePS callback; cancelWithoutDefault; two no-print assertions | Actual successful jobs and infeasible/unbounded screens |
+| DPI-02: live secondary-display/DPI changes and disconnect recovery | Existing ApplicationShell display handling | desktop.display-changes; 12 populated route/scale scenarios, 48 screenshots | Test-only Qt offscreen hooks; physical mixed-DPI still open |
+| BUILD-02: independent PDF acceptance on all OSes | Single existing CI matrix; test-only pypdf/GuiPrivate | Full CTest suite, reports/PDF artifacts and deployed startup | Raw reference assets excluded from source/packages |

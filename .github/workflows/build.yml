@@ -38,6 +38,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install PDF test reader
+        run: python -m pip install --disable-pip-version-check pypdf==6.20.0
       - name: Prepare MSVC toolchain
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
@@ -96,5 +98,8 @@ jobs:
             build/ci/tests/desktop-graphical-scale-*.xml
             build/ci/tests/desktop-final-scale-*.xml
             build/ci/tests/desktop-sensitivity-scale-*.xml
+            build/ci/tests/desktop-display-changes.xml
+            build/ci/tests/desktop-printing.xml
+            build/ci/tests/printing-pdfs/
             build/ci/ui-captures/
           if-no-files-found: warn

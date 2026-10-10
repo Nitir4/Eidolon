@@ -22,16 +22,16 @@ implementation or comparisons.
 | Q-05 | Resolved for captured inputs: one/two/three-variable eligibility, explicit bound/free rejection, manual states and sampled range/tick/dot/zoom profile. Hidden rules outside the captured profile remain unverified. | Graphical module evidence / future profile expansion |
 | Q-06 | Unrestricted expansion, reverse bound complements, redundant equality/artificial-basic cleanup | Preprocessing and affected solver gates |
 | Q-07 | Resolved: direct Dual infeasibility title and message captured in du-infeasible | Dual-simplex module evidence |
-| Q-08 | Successful table/graph printing, pagination and print dialog defaults | Printing/output module gate |
+| Q-08 | Resolved for 25 observed print states: original data, summary/sensitivity, all five trace methods, graph, page counts, direct default printer and unavailable terminal controls. Physical printers, other drivers/fonts and exact row-level pagination remain unverified. | Future print-profile expansion |
 | Q-09 | Resolved for35 captured summaries:automatic counts,bounds,free orientation,negative RHS and signed prices. Hidden arithmetic/transformations outside this profile remain unverified. | Future profile expansion |
 | Q-10 | Complete independently reviewed golden labels/messages and every transcribed table, beyond automated coverage and reviewed glyph seeds | Tests-first step of each numerical/UI module |
 
-Q-08 has an environment blocker: Write to Printer produced Run-time error
-'482': Printer error under Wine, and acknowledging the dialog ended TORA.
-A working printer configuration or Windows reference is required to observe
-successful printing. The requested fallback is to generate a precise test
-packet for the user to run if that reference remains unavailable. No successful
-print behavior has been guessed.
+Q-08's original environment blocker is resolved. A private Wine prefix and
+user-owned loopback CUPS queue produced 23 actual TORA PostScript jobs; two
+terminal summaries were captured with no print control. Native PDFs match the
+independent transcription for the accepted profile. See
+`tora-analysis/LP_PRINTING.md` for exact coverage and remaining limits. Earlier
+module entries below describe the evidence available at those checkpoints.
 
 Specific file errors are now observed: wrong marker 9999 produces the exact
 module-format Retry warning, 15-record truncation leaves a blank grid, an
@@ -166,3 +166,19 @@ minimization costs, negative-RHS/free orientation and negative-lower/upper quirk
 are resolved. See LP_SENSITIVITY_PARAMETRIC.md for compatibility exceptions.
 There is no known mismatch in the accepted corpus. Original printer output,
 physical mixed-DPI handoff and behavior outside captured profiles remain limits.
+
+
+## Printing and live display acceptance extension
+
+The expanded printer corpus resolves direct-default routing, original-data pages,
+method-dependent horizontal bands and printer-specific negative-lower-bound
+slack values. The native PDF comparison checks exact numbers, labels, content
+order and page counts; font-dependent row page boundaries and graph pixel
+identity are not claimed. Physical printer/driver acceptance remains unverified.
+
+A separate Qt offscreen regression moves populated input, simplex, graphical
+and final/sensitivity views to synthetic 125%, 150% and 200% secondary displays,
+changes DPI live and removes the secondary display. It verifies readable glyphs,
+button sizes, raster DPR, window recovery and preserved document/session state.
+These tests do not replace physical mixed-DPI handoff/hotplug tests. The laptop
+currently exposes one physical display, so that hardware acceptance remains open.

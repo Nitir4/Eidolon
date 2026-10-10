@@ -1,4 +1,5 @@
 #include "lp_graphical_controller.hpp"
+#include "lp_printing.hpp"
 #include "lp_input_controller.hpp"
 #include "ui_font.hpp"
 #include <QApplication>
@@ -50,22 +51,34 @@ void LpGraphicalController::selectRow(int row){
 void LpGraphicalController::zoom(int direction){if(session_ && session_->zoom(direction))emit changed();}
 LpGraphicalController& graphicalController(ApplicationShell& shell){if(auto* c=shell.findChild<LpGraphicalController*>(QStringLiteral("lp-graphical-controller")))return *c;return *new LpGraphicalController(shell);}
 namespace {
-QPointF mapped(tora::lp::GraphPoint point,const QRectF& area,double maximum,double minimum){const auto unit=area.width()/(maximum-minimum);return {area.left()+(point.x-minimum)*unit,area.bottom()-(point.y-minimum)*unit};}
-void drawPlot(QPainter& painter,const QRectF& area,const tora::lp::GraphicalSession& graph,const QFont& font){
-    painter.save();painter.setClipRect(area);painter.fillRect(area,Qt::cyan);painter.setFont(usableUiFont(font));const QFontMetricsF metrics(painter.font(),painter.device());
+QPointF mapped(tora::lp::GraphPoint point,const QRectF& area,double maximum,double minimum){const auto unit=area.width()/(maximum-minimum);return {area.left()+(point.x-minimum)*unit,area.bottom()-(point.y-minimum)*area.height()/(maximum-minimum)};}
+void drawPlot(QPainter& painter,const QRectF& area,const tora::lp::GraphicalSession& graph,const QFont& font,bool printing=false){
+    painter.save();painter.setFont(usableUiFont(font));
+    if(printing){auto paperFont=painter.font();paperFont.setBold(true);painter.setFont(paperFont);}
+    const QFontMetricsF metrics(painter.font(),painter.device());
+    painter.setClipRect(printing?area.adjusted(-metrics.height(),-metrics.height(),metrics.height()*2,metrics.height()*2):area);
+    painter.fillRect(area,printing?Qt::white:Qt::cyan);
     const double maximum=graph.rangeMax();const auto origin=mapped({0,0},area,maximum,graph.rangeMin());
-    const auto sample=graph.gridStep();painter.setPen(Qt::NoPen);painter.setBrush(QColor(128,128,128));
+    const auto sample=graph.gridStep();painter.setPen(Qt::NoPen);painter.setBrush(printing?QColor(Qt::black):QColor(128,128,128));
     const auto dotWidth=metrics.height()*2/13,dotHeight=metrics.height()*3/13;
     for(double x=sample;x<maximum;x+=sample)for(double y=sample;y<maximum;y+=sample)if(graph.contains({x,y})){
         const auto point=mapped({x,y},area,maximum,graph.rangeMin());painter.drawRect(QRectF(point.x()-dotWidth/2,point.y()-dotHeight/2,dotWidth,dotHeight));
     }
     painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(Qt::blue,std::max(1.0,metrics.height()/20)));painter.drawLine(QPointF(area.left(),origin.y()),QPointF(area.right(),origin.y()));painter.drawLine(QPointF(origin.x(),area.top()),QPointF(origin.x(),area.bottom()));
+    painter.setPen(QPen(printing?Qt::black:Qt::blue,std::max(1.0,metrics.height()/20)));painter.drawLine(QPointF(area.left(),origin.y()),QPointF(area.right(),origin.y()));painter.drawLine(QPointF(origin.x(),area.top()),QPointF(origin.x(),area.bottom()));
     const auto label=[&](const QString& text,QPointF at){painter.drawText(at+QPointF(metrics.averageCharWidth()/3,metrics.ascent()),text);};
     label(QString::number(graph.rangeMin(),'g',12),{area.left(),origin.y()});label(QStringLiteral("0"),origin);
+    if(printing){
+        painter.setBrush(Qt::black);
+        const auto radius=metrics.height()/8;
+        for(const auto& point:{QPointF(area.left(),origin.y()),origin,QPointF(origin.x(),area.bottom())})painter.drawEllipse(point,radius,radius);
+        label(QString::number(graph.rangeMin(),'g',12),{origin.x(),area.bottom()});
+    }
     for(double v=graph.tickStep();v<=maximum;v+=graph.tickStep()){
         const auto point=mapped({v,v},area,maximum,graph.rangeMin());label(QString::number(v,'g',12),{point.x(),origin.y()});label(QString::number(v,'g',12),{origin.x(),point.y()});
+        if(printing){const auto radius=metrics.height()/8;painter.drawEllipse(QPointF(point.x(),origin.y()),radius,radius);painter.drawEllipse(QPointF(origin.x(),point.y()),radius,radius);}
     }
+    painter.setBrush(Qt::NoBrush);
     label(QStringLiteral("x1"),{area.left()+area.width()*0.75,origin.y()+metrics.height()});label(QStringLiteral("x2"),{origin.x()-metrics.horizontalAdvance(QStringLiteral("x2"))-metrics.averageCharWidth(),area.top()+metrics.height()*2});
     const auto line=[&](const tora::lp::GraphSegment& segment,QColor color,double width,const QString& name){
         const auto a=mapped(segment.first,area,maximum,graph.rangeMin()),b=mapped(segment.second,area,maximum,graph.rangeMin());painter.setPen(QPen(color,width));painter.drawLine(a,b);
@@ -79,15 +92,15 @@ void drawPlot(QPainter& painter,const QRectF& area,const tora::lp::GraphicalSess
         if(std::abs(segment.first.x-segment.second.x)<1e-10)anchor=mapped({segment.first.x,graph.rangeMin()*0.6},area,maximum,graph.rangeMin());
         else if(std::abs(segment.first.y-segment.second.y)<1e-10)anchor={area.left()+metrics.averageCharWidth()/2,a.y()};
         anchor.setX(std::clamp(anchor.x(),area.left()+metrics.averageCharWidth(),area.right()-metrics.horizontalAdvance(name)));anchor.setY(std::clamp(anchor.y(),area.top(),area.bottom()-metrics.height()));
-        const QRectF tag(anchor,QSizeF(metrics.horizontalAdvance(name),metrics.height()));painter.fillRect(tag,Qt::yellow);painter.setPen(Qt::blue);painter.drawText(tag,Qt::AlignLeft|Qt::AlignVCenter,name);
+        const QRectF tag(anchor,QSizeF(metrics.horizontalAdvance(name),metrics.height()));painter.fillRect(tag,Qt::yellow);painter.setPen(printing?Qt::black:Qt::blue);painter.drawText(tag,Qt::AlignLeft|Qt::AlignVCenter,name);
     };
     if(graph.objectiveVisible()){
-        if(auto segment=graph.objectiveSegment())line(*segment,Qt::blue,std::max(3.0,metrics.height()/2),QStringLiteral("Obj"));
+        if(auto segment=graph.objectiveSegment())line(*segment,printing?Qt::black:Qt::blue,printing?metrics.height()/10:std::max(3.0,metrics.height()/2),QStringLiteral("Obj"));
     }
-    for(std::size_t i=0;i<graph.visibleConstraints().size();++i)if(graph.visibleConstraints()[i])if(auto segment=graph.constraintSegment(i))line(*segment,Qt::red,std::max(2.0,metrics.height()/8),QStringLiteral("( %1)").arg(i+1));
+    for(std::size_t i=0;i<graph.visibleConstraints().size();++i)if(graph.visibleConstraints()[i])if(auto segment=graph.constraintSegment(i))line(*segment,printing?Qt::black:Qt::red,printing?metrics.height()/40:std::max(2.0,metrics.height()/8),QStringLiteral("( %1)").arg(i+1));
     if(graph.objectiveVisible()){
 
-        const auto point=mapped(graph.result().point,area,maximum,graph.rangeMin());painter.setPen(Qt::blue);painter.setBrush(Qt::blue);const auto radius=metrics.height()/1.8;painter.drawEllipse(point,radius,radius);
+        const auto point=mapped(graph.result().point,area,maximum,graph.rangeMin());painter.setPen(printing?Qt::black:Qt::blue);painter.setBrush(printing?Qt::black:Qt::blue);const auto radius=metrics.height()/(printing?2.5:1.8);painter.drawEllipse(point,radius,radius);
         painter.drawText(point+QPointF(metrics.height()*1.5,-metrics.height()/3),QString::fromStdString(graph.result().markerLabel));
     }
     painter.restore();painter.save();painter.setPen(Qt::white);painter.drawRect(area);painter.restore();
@@ -103,12 +116,9 @@ QRectF GraphPlot::plotRect() const {const auto margin=QFontMetricsF(font()).heig
 QPointF GraphPlot::mapPoint(tora::lp::GraphPoint p) const {return mapped(p,plotRect(),controller_.session()?controller_.session()->rangeMax():6,controller_.session()?controller_.session()->rangeMin():-1);}
 void GraphPlot::paintEvent(QPaintEvent*){QPainter p(this);if(controller_.session())drawPlot(p,plotRect(),*controller_.session(),font());}
 bool printGraph(QPrinter& printer,const LpGraphicalController& c,const QFont& font){
-    if(!c.session())return false;
-    QPainter p;if(!p.begin(&printer))return false;
-    p.setFont(usableUiFont(font));const auto page=printer.pageLayout().paintRectPixels(printer.resolution());
-    const auto margin=page.width()/30.0;const auto textWidth=page.width()*0.34;const auto plotSide=std::min(page.width()-textWidth-3*margin,page.height()-2*margin);
-    p.setPen(Qt::black);p.drawText(QRectF(page.left()+margin,page.top()+margin,textWidth,page.height()-2*margin),Qt::TextWordWrap,[&]{QStringList lines;for(const auto& row:c.session()->expressionLines())lines.append(legacyText(row));lines.removeLast();return lines.join(QLatin1Char('\n'))+QStringLiteral("\n\n")+resultText(c.session());}());
-    drawPlot(p,{page.left()+textWidth+2*margin,page.top()+margin,plotSide,plotSide},*c.session(),font);return p.end();
+    return c.session() && printLpGraph(printer,*c.session(),font,[&](QPainter& painter,const QRectF& area,const QFont& paperFont){
+        drawPlot(painter,area,*c.session(),paperFont,true);
+    });
 }
 QWidget* graphicalScreen(ApplicationShell& shell){
     auto* page=new QWidget;auto* outer=new QVBoxLayout(page);auto* heading=new QLabel(QStringLiteral("GRAPHICAL LINEAR PROGRAMMING SOLUTION"));heading->setObjectName(QStringLiteral("graph-heading"));heading->setAlignment(Qt::AlignCenter);outer->addWidget(heading);
@@ -120,7 +130,7 @@ QWidget* graphicalScreen(ApplicationShell& shell){
     QObject::connect(input,&QPushButton::clicked,&shell,[&shell]{shell.navigate(QStringLiteral("lp/input"));});QObject::connect(main,&QPushButton::clicked,&shell,[&shell]{shell.navigate(QStringLiteral("main"));});QObject::connect(exit,&QPushButton::clicked,&shell,&QWidget::close);
     QObject::connect(rows,&QListWidget::itemClicked,page,[&c,rows](QListWidgetItem* item){c.selectRow(rows->row(item));});QObject::connect(rows,&QListWidget::itemActivated,page,[&c,rows](QListWidgetItem* item){c.selectRow(rows->row(item));});
     QObject::connect(zoomIn,&QPushButton::clicked,page,[&c]{c.zoom(1);});QObject::connect(zoomOut,&QPushButton::clicked,page,[&c]{c.zoom(-1);});
-    QObject::connect(print,&QPushButton::clicked,page,[&c,&shell]{QPrinter printer(QPrinter::HighResolution);QPrintDialog dialog(&printer,&shell);polishUsableFonts(dialog);if(dialog.exec()==QDialog::Accepted && !printGraph(printer,c,shell.font()))c.notice(QStringLiteral("Print Graph"),QStringLiteral("The graph could not be printed"));});
+    QObject::connect(print,&QPushButton::clicked,page,[&c,&shell]{if(requestLpPrint(&shell,[&](QPrinter& printer){return printGraph(printer,c,shell.font());})==PrintOutcome::Failed)c.notice(QStringLiteral("Print Graph"),QStringLiteral("The graph could not be printed"));});
     const auto refresh=[&c,rows,result,zoomIn,zoomOut,print]{
         const auto* graph=c.session();QStringList values;if(graph)for(const auto& row:graph->expressionLines())values.append(legacyText(row));
         bool same=rows->count()==values.size();if(same)for(int i=0;i<rows->count();++i)if(rows->item(i)->text()!=values[i]){same=false;break;}if(!same){rows->clear();rows->addItems(values);const auto h=QFontMetrics(rows->font()).height();for(int i=0;i<rows->count();++i)rows->item(i)->setSizeHint(QSize(0,(i==0 || i==1 || i==rows->count()-2)?2*h:h));if(graph)rows->setCurrentRow(static_cast<int>(graph->problem().constraints.size())+3);}result->setText(resultText(graph));

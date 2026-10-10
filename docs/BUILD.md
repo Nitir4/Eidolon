@@ -1,7 +1,9 @@
 # Build and package
 
 The desktop build requires CMake 3.24+, Ninja, a C++17 compiler and Qt 6.8+
-Widgets (plus Qt Test when BUILD_TESTING is enabled).
+Widgets and PrintSupport (plus Qt Test and GuiPrivate development headers
+when BUILD_TESTING is enabled). GuiPrivate is used only by the synthetic
+display-change test; application code uses public Qt APIs.
 Use MSVC on Windows, Apple Clang on macOS, and GCC or Clang on Linux.
 Qt discovery uses `CMAKE_PREFIX_PATH`; Qt deployment uses `QT_ROOT_DIR`.
 No browser engine or HTML UI is used.
@@ -18,10 +20,22 @@ The desktop executable is `build/dev/src/desktop/ToraClone` on Linux,
 The Foundation 5 shell launches maximized on its first interactive run;
 normal window geometry is then remembered. `--no-settings` bypasses preferences
 and `--screen lp/output-format` (or another registered route) previews one
-layout. Native LP editing/files and the approved All-slack/M/Two-phase/Bounded/Dual/Graphical methods are functional. Final/sensitivity remain gated.
+layout. Native LP editing/files and the approved All-slack/M/Two-phase/Bounded/Dual/Graphical methods are functional. Final solution and sensitivity are also functional.
 
 The numerical, LP model and compatibility targets are Qt-free static C++17 libraries.
-Tests also require Python 3 for comparison with recorded file SHA-256 values.
+Tests also require Python 3 for comparison with recorded file SHA-256 values
+and pypdf 6.20.0 for independent printer PDF verification. Install the reader
+in your development virtual environment and select that interpreter at configure:
+
+```sh
+python3 -m venv build/test-python
+build/test-python/bin/python -m pip install pypdf==6.20.0
+cmake --preset dev -DPython3_EXECUTABLE="$PWD/build/test-python/bin/python"
+```
+
+On Windows use the corresponding `Scripts/python.exe` path. The reader is a
+test dependency only and is not bundled in the application. Headless tests do
+not need pypdf or Qt.
 `compat.roundtrip` checks ordered fields and exact bytes for 27 actual TORA
 saves reconstructed from original transcriptions. `compat.hashes` compares
 every generated file with its actual TORA byte count and SHA-256. `compat.errors`
@@ -117,3 +131,18 @@ Graphical expected values are independent capture transcriptions in `tests/fixtu
 Graphical native tests use the same pre-QApplication Windows FreeType font-directory bootstrap as the established shell/input/simplex tests. An explicit Latin/digit glyph check rejects unreadable offscreen evidence. Normal product rendering still uses the native OS font backend; no font file is bundled or added to the application.
 
 Final graphical packages are under `dist/phase2-graphical/final/`, with downloaded reports/previews under `build/phase2-graphical/ci-final/`. The Linux AppImage can be launched directly after setting its executable bit; the development command remains `build/dev/src/desktop/ToraClone`. At fractional scale, PNG raster dimensions may round by one physical pixel; requested logical dimensions are asserted exactly.
+
+
+## Printer and live display tests
+
+```sh
+ctest --preset dev -R 'desktop\.(printing|display-changes)'
+```
+
+The exporter writes PDFs under the build test directory. An independent reader
+compares them against actual TORA print transcriptions, with exact numbers and
+labels. CI uploads PDFs and test XML for inspection. Live display testing uses
+Qt offscreen monitor add/remove/configuration hooks through test-only private
+headers. It verifies current SDK behavior without altering the user's display.
+Neither test requires a host printer or second monitor. Physical acceptance is
+separate and remains recorded in OPEN_QUESTIONS.md.
