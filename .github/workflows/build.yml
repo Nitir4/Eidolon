@@ -45,6 +45,9 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
+      - name: Install Windows installer compiler
+        if: runner.os == 'Windows'
+        run: choco install nsis --version=3.13.0 --yes --no-progress
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:

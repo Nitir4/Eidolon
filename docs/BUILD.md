@@ -84,15 +84,17 @@ The single [workflow](../.github/workflows/build.yml) uses `windows-latest`,
 
 | OS | Payload | Deployment check |
 | --- | --- | --- |
-| Windows x86_64 | ZIP containing portable EXE folder | windeployqt, app-local MSVC CRT, startup with SDK paths removed |
+| Windows x86_64 | Portable ZIP and per-user setup EXE | windeployqt, app-local CRT, installed startup, safe removal |
 | Linux x86_64 | AppImage | linuxdeploy Qt plugin, extract-and-run startup without FUSE |
 | macOS | DMG containing universal APP | macdeployqt, lipo verifies both architectures, deployed startup |
 
 Each artifact has accompanying SHA-256 and dependency-manifest files.
 Qt notices are included; SDK license files are copied when supplied. These are
-development LP packages. Installers, macOS signing/notarization and a
-production release license review are later release work. Windows uses a
-portable folder; a single-file executable is not supplied.
+development LP packages. Windows packaging also builds an NSIS per-user setup
+EXE and verifies installation/reinstallation, deployed startup, uninstall and
+preservation of unrelated files. macOS signing/notarization and a production
+release license review remain later release work. The portable folder remains
+available; a single-file portable application is not supplied.
 
 The CI SDK's supported floors are Windows 10 1809, macOS 13 and Linux with
 glibc 2.39. The AppImage does not bundle glibc; older Linux distributions need
@@ -146,3 +148,23 @@ Qt offscreen monitor add/remove/configuration hooks through test-only private
 headers. It verifies current SDK behavior without altering the user's display.
 Neither test requires a host printer or second monitor. Physical acceptance is
 separate and remains recorded in OPEN_QUESTIONS.md.
+
+
+## Windows installer verification
+
+The Windows job installs pinned NSIS 3.13.0 and wraps the existing deployed
+payload. Setup defaults to `%LOCALAPPDATA%\Programs\TORA Clone`, requires no
+administrator access, and creates current-user Start menu/uninstall entries.
+It does not take over `.txt` file associations. This is an unsigned development
+installer. User preferences and unrelated files are preserved on removal.
+
+`tools/windows_installer.py` generates exact owned-file commands from the
+staged payload. Its verifier refuses existing installation/shortcut entries,
+uses a temporary path with spaces and Unicode, installs twice, checks payload
+hashes, launches the installed app without SDK paths, and uninstalls. Student
+files placed in both the root and a runtime subdirectory must remain.
+`tests/test_windows_installer.py` checks escaping, reference/symlink rejection
+and nonrecursive removal on all OSes. Installer hash/manifest/verification JSON
+accompany the setup EXE in the Windows artifact.
+
+Primary behavior reference: [NSIS scripting manual](https://nsis.sourceforge.io/Docs/Chapter4.html).

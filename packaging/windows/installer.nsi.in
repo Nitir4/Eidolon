@@ -1,0 +1,66 @@
+; -*- coding: utf-8 -*-
+; Native per-user installer for the already deployed application payload.
+Unicode true
+ManifestDPIAware true
+RequestExecutionLevel user
+SetCompressor /SOLID lzma
+Name "TORA Clone"
+OutFile "@OUTPUT@"
+InstallDir "$LOCALAPPDATA\Programs\TORA Clone"
+InstallDirRegKey HKCU "Software\TORA Clone\Installer" "InstallLocation"
+VIProductVersion "@VERSION@.0"
+VIAddVersionKey "ProductName" "TORA Clone"
+VIAddVersionKey "FileDescription" "TORA Clone per-user setup"
+VIAddVersionKey "FileVersion" "@VERSION@"
+!include "MUI2.nsh"
+!include "x64.nsh"
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_LANGUAGE "English"
+
+Function .onInit
+  ${IfNot} ${RunningX64}
+    MessageBox MB_OK|MB_ICONSTOP "TORA Clone requires 64-bit Windows." /SD IDOK
+    SetErrorLevel 1
+    Abort
+  ${EndIf}
+  SetRegView 64
+FunctionEnd
+
+Section "Install"
+  SetRegView 64
+  SetShellVarContext current
+@INSTALL_FILES@
+  SetOutPath "$INSTDIR"
+  WriteUninstaller "$INSTDIR\Uninstall.exe"
+  CreateDirectory "$SMPROGRAMS\TORA Clone"
+  CreateShortcut "$SMPROGRAMS\TORA Clone\TORA Clone.lnk" "$INSTDIR\ToraClone.exe"
+  CreateShortcut "$SMPROGRAMS\TORA Clone\Uninstall TORA Clone.lnk" "$INSTDIR\Uninstall.exe"
+  WriteRegStr HKCU "Software\TORA Clone\Installer" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "DisplayName" "TORA Clone"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "DisplayVersion" "@VERSION@"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "UninstallString" '$\"$INSTDIR\Uninstall.exe$\"'
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "QuietUninstallString" '$\"$INSTDIR\Uninstall.exe$\" /S'
+  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "NoModify" 1
+  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "NoRepair" 1
+SectionEnd
+
+Section "Uninstall"
+  SetRegView 64
+  SetShellVarContext current
+  SetOutPath "$TEMP"
+@REMOVE_FILES@
+  Delete "$INSTDIR\Uninstall.exe"
+  RMDir "$INSTDIR"
+  Delete "$SMPROGRAMS\TORA Clone\TORA Clone.lnk"
+  Delete "$SMPROGRAMS\TORA Clone\Uninstall TORA Clone.lnk"
+  RMDir "$SMPROGRAMS\TORA Clone"
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone"
+  DeleteRegKey HKCU "Software\TORA Clone\Installer"
+  DeleteRegKey /ifempty HKCU "Software\TORA Clone"
+SectionEnd

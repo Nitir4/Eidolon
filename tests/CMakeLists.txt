@@ -320,6 +320,8 @@ add_test(NAME lp.sensitivity.safety COMMAND sensitivity_safety)
 set_tests_properties(lp.sensitivity.safety PROPERTIES TIMEOUT 15)
 
 if(TORA_BUILD_DESKTOP)
+ add_test(NAME packaging.windows.safety COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/test_windows_installer.py")
+ set_tests_properties(packaging.windows.safety PROPERTIES TIMEOUT 15)
  find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
  qt_add_executable(desktop_display_changes_test desktop_display_changes.cpp)
  set_target_properties(desktop_display_changes_test PROPERTIES AUTOMOC ON)

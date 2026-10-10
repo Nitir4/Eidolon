@@ -18,6 +18,7 @@ import subprocess
 import sys
 import tempfile
 import urllib.request
+from windows_installer import build_installer, verify_installer
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -126,6 +127,11 @@ def windows_package(build, stage, qt_root, config, output, version):
     run([executable, '--smoke-test'], env=env, timeout=30, cwd=stage)
     name = f'TORA-Clone-{version}-windows-x86_64'
     archive = Path(shutil.make_archive(str(output / name), 'zip', root_dir=stage))
+    installer = build_installer(stage, output, version)
+    verification = verify_installer(installer, data, env, output / (installer.name + '.verification.json'))
+    installer_data = {**data, 'kind': 'per-user-installer', 'verification': verification}
+    output.joinpath(installer.name + '.sha256').write_text(f'{digest(installer)}  {installer.name}\n')
+    output.joinpath(installer.name + '.manifest.json').write_text(json.dumps(installer_data, indent=2) + '\n')
     return archive, data
 
 

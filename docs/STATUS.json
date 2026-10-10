@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase2 LP and captured printing profile implemented and verified",
+  "active_step": "Remaining requested deliverable: Windows per-user installer",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Review delivered native app; physical monitor/printer acceptance when hardware is available; no further phase started",
+  "next_step": "Verify installer in the existing three-OS CI matrix; physical hardware/signing limits remain",
   "foundation_order": [
     1,
     5,
@@ -349,5 +349,18 @@
     "ci_validation": "Windows/Linux/macOS each 71/71 (213 total), no failed or skipped checks; package/deployed startup/upload passed. Downloaded XML, exact numerical comparisons, 25 print states/4259 tokens and 48 display-change captures per OS independently verified.",
     "test_reports": "build/acceptance/ci-final/",
     "delivery_audit": "build/acceptance/ci-verified.json; build/acceptance/packages-verified.json; build/acceptance/linux-startup-final.json"
-  }
+  },
+  "windows_installer": {
+    "status": "implemented; local safety/full regression passed; native CI pending",
+    "scope": "Per-user setup EXE alongside existing portable ZIP; no file associations or admin requirement",
+    "tests_first": "Missing windows_installer module failure recorded in build/installer-delivery/tests-before.log",
+    "local_validation": "5 portable safety tests and full desktop 72/72 pass; native Windows install/uninstall pending",
+    "code": [
+      "tools/windows_installer.py",
+      "packaging/windows/installer.nsi.in"
+    ],
+    "verification": "Initial install/reinstall, owned-file hashes, Unicode/spaced path, Start menu/registry, installed startup without SDK and uninstall preserving unrelated files",
+    "limits": "Unsigned development installer; physical Windows10/11 review and signing not verified"
+  },
+  "hardware_acceptance_protocol": "docs/HARDWARE_ACCEPTANCE.md"
 }

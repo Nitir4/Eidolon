@@ -262,3 +262,9 @@ Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free R
 | LP-PR-05: direct default printer, native fallback and terminal availability | requestLpPrint; finalScreen | OraclePS callback; cancelWithoutDefault; two no-print assertions | Actual successful jobs and infeasible/unbounded screens |
 | DPI-02: live secondary-display/DPI changes and disconnect recovery | Existing ApplicationShell display handling | desktop.display-changes; 12 populated route/scale scenarios, 48 screenshots | Test-only Qt offscreen hooks; physical mixed-DPI still open |
 | BUILD-02: independent PDF acceptance on all OSes | Single existing CI matrix; test-only pypdf/GuiPrivate | Full CTest suite, reports/PDF artifacts and deployed startup | Raw reference assets excluded from source/packages |
+
+
+| Requirement | Implementation | Verification | Evidence |
+| --- | --- | --- | --- |
+| PKG-WIN-01: optional native Windows installer | windows_installer.py; installer.nsi.in; Windows packaging step | packaging.windows.safety; native install/reinstall/hash/startup/uninstall preservation checks | Setup EXE verification JSON in CI artifact |
+| HW-01: physical monitor/printer acceptance | Existing native app; hardware protocol | Actual devices required; no synthetic substitution | HARDWARE_ACCEPTANCE.md; unavailable configurations remain not tested |

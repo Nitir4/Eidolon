@@ -88,3 +88,9 @@ independent text fixtures are checked against native PDFs. See the
 font/driver limits. Live synthetic display-change tests cover four populated
 views at 125%, 150% and 200%, including scale changes and display removal;
 physical mixed-monitor handoff still needs hardware acceptance.
+
+Windows packaging now also generates a per-user setup EXE alongside the
+portable ZIP. Install/reinstall, installed startup and safe removal are checked
+in the Windows CI packaging step. Physical acceptance steps are in
+[the hardware protocol](docs/HARDWARE_ACCEPTANCE.md); unavailable devices are
+recorded as untested.
