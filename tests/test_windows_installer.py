@@ -1,6 +1,6 @@
 """Portable checks for package-owned installation/removal commands."""
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -47,10 +47,14 @@ class InstallerSafety(unittest.TestCase):
                     payload_commands(stage)
 
     def test_silent_install_destination_is_last_and_unquoted(self):
-        command = install_command(Path('C:/build/setup.exe'), Path('C:/Native install café'))
-        self.assertTrue(command.endswith(' /D=C:/Native install café'))
-        self.assertIn('/S', command)
-        self.assertNotIn('"/D=', command)
+        for path_type in [Path, PurePosixPath, PureWindowsPath]:
+            with self.subTest(path_type=path_type.__name__):
+                target = path_type('C:/Native install café')
+                command = install_command(path_type('C:/build/setup.exe'), target)
+                self.assertTrue(command.endswith(' /D=' + str(target)))
+                self.assertIn('/S', command)
+                self.assertNotIn('"/D=', command)
+                self.assertNotIn('/D="', command)
 
 
 if __name__ == '__main__':
