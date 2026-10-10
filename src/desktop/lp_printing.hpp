@@ -10,8 +10,10 @@ class QPainter;
 class QWidget;
 namespace tora::desktop {
 enum class PrintOutcome {Cancelled,Complete,Failed};
+using PrintSelector = std::function<bool(QPrinter&,QWidget*)>;
 PrintOutcome requestLpPrint(QWidget*,const std::function<bool(QPrinter&)>&,
-                            const QPrinterInfo& = QPrinterInfo::defaultPrinter());
+                            const QPrinterInfo& = QPrinterInfo::defaultPrinter(),
+                            const PrintSelector& = {});
 bool printLpSummary(QPrinter&,const tora::lp::FinalSolutionSession&,
                     tora::core::NumberFormat,const QFont&);
 bool printLpTrace(QPrinter&,const tora::lp::PrimalSimplexSession&,

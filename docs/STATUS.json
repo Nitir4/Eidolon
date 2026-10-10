@@ -312,14 +312,16 @@
     "input_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37908644559",
     "completed_on": "2026-10-09",
     "printing_acceptance": {
-      "status": "local verification complete; three-OS CI pending",
+      "status": "portable cancellation fix locally verified; final CI pending",
       "spec": "docs/tora-analysis/LP_PRINTING.md",
       "goldens": "tests/fixtures/printing.json",
       "observations": 25,
       "successful_jobs": 23,
       "unavailable_terminal_states": 2,
-      "local_validation": "Full native 71/71 and explicit C++17 Qt-free 26/26; 25 print states (23 PDFs), 4259 content tokens; 28 printing Qt cases and 14 display-change Qt cases; private capture provenance checked",
-      "limits": "Physical printers, other drivers/paper sizes, exact row page boundaries and graph pixel identity unverified"
+      "local_validation": "Rebuilt fixed source: full native 71/71, 57.59 seconds; earlier unchanged explicit C++17 Qt-free 26/26; 25 print states/23 PDFs and 4259 tokens; 28 printing and 14 display-change Qt cases",
+      "limits": "Physical printers, other drivers/paper sizes, exact row page boundaries and graph pixel identity unverified",
+      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38042008154",
+      "initial_ci_validation": "Linux 71/71 and PDF comparison passed; Windows/macOS timed out in native print-panel cancellation before PDF export. Fixed through a portable selector boundary; goldens unchanged."
     },
     "display_changes": {
       "status": "local full-suite passed; CI pending",

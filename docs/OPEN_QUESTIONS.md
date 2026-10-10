@@ -182,3 +182,9 @@ changes DPI live and removes the secondary display. It verifies readable glyphs,
 button sizes, raster DPR, window recovery and preserved document/session state.
 These tests do not replace physical mixed-DPI handoff/hotplug tests. The laptop
 currently exposes one physical display, so that hardware acceptance remains open.
+
+Native OS print-panel interaction on Windows/macOS is not automated by the
+offscreen printer suite. Cancellation routing is tested through an injected
+selector; interactive application calls retain Qt's native panel. The first
+macOS CI attempt timed out in a QWidget-driven cancellation test, before any
+PDF exports; it is a test-platform limitation, not an accepted numerical mismatch.

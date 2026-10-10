@@ -15,8 +15,6 @@
 #include <QPushButton>
 #include <QTemporaryDir>
 #include <QTest>
-#include <QPrintDialog>
-#include <QTimer>
 #include <cstdio>
 
 using namespace tora::desktop;
@@ -24,12 +22,11 @@ class DesktopPrinting final : public QObject {
     Q_OBJECT
 private slots:
     void cancelWithoutDefault() {
-        bool seen=false,rendered=false;QTimer timer;timer.setInterval(10);
-        connect(&timer,&QTimer::timeout,[&]{
-            if(auto* dialog=qobject_cast<QPrintDialog*>(QApplication::activeModalWidget())){seen=true;dialog->reject();}
-        });
-        timer.start();
-        QCOMPARE(requestLpPrint(nullptr,[&](QPrinter&){rendered=true;return true;},QPrinterInfo()),PrintOutcome::Cancelled);
+        // Native OS panels cannot be driven through QWidget on offscreen CI.
+        // Exercise the same cancellation branch through the selector boundary.
+        bool seen=false,rendered=false;
+        QCOMPARE(requestLpPrint(nullptr,[&](QPrinter&){rendered=true;return true;},QPrinterInfo(),
+                               [&](QPrinter&,QWidget* owner){seen=true;return owner!=nullptr;}),PrintOutcome::Cancelled);
         QVERIFY(seen);QVERIFY(!rendered);
     }
     void documents_data() {

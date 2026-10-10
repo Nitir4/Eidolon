@@ -13,13 +13,17 @@
 
 namespace tora::desktop {
 PrintOutcome requestLpPrint(QWidget* owner,const std::function<bool(QPrinter&)>& render,
-                            const QPrinterInfo& defaultPrinter) {
+                            const QPrinterInfo& defaultPrinter,const PrintSelector& select) {
     QPrinter printer(defaultPrinter,QPrinter::HighResolution);
     // TORA writes directly to its default printer. If this machine has no
     // default, offer native selection/PDF output instead of a legacy crash.
     if(defaultPrinter.isNull()) {
-        QPrintDialog dialog(&printer,owner);polishUsableFonts(dialog);
-        if(dialog.exec()!=QDialog::Accepted)return PrintOutcome::Cancelled;
+        if(select) {
+            if(!select(printer,owner))return PrintOutcome::Cancelled;
+        } else {
+            QPrintDialog dialog(&printer,owner);polishUsableFonts(dialog);
+            if(dialog.exec()!=QDialog::Accepted)return PrintOutcome::Cancelled;
+        }
     }
     return render(printer)?PrintOutcome::Complete:PrintOutcome::Failed;
 }

@@ -66,7 +66,12 @@ missing default printer opens Qt's native printer/PDF selection dialog rather
 than reproducing the original crash. Cancellation leaves the document unchanged.
 
 `tests/desktop_printing.cpp` exports native PDFs and checks controller/model
-non-mutation, terminal print availability and cancellation.
+non-mutation, terminal print availability and cancellation. The cancellation
+branch uses an injected selector in offscreen CI: Qt's macOS print panel enters
+a native Cocoa modal loop, which cannot be driven by a QWidget timer on that
+platform. Interactive application calls still use the actual native dialog.
+The original local Linux dialog cancellation was also observed before this
+portable test boundary was introduced.
 `tests/verify_printing_pdf.py` independently checks exact page counts and
 content against the transcription. It normalizes whitespace and equivalent
 font ligatures only, never numeric values. Original-data text and output/band
