@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2 delivered for the captured LP profile, including Windows installer",
+  "active_step": "Phase 2 native deployment follow-up; fresh CI pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -377,5 +377,14 @@
     "completed_on": "2026-10-10",
     "report": "/home/nitir505/Ritin/docs/TORA-clone/WINDOWS_INSTALLER_REPORT.tex"
   },
-  "hardware_acceptance_protocol": "docs/HARDWARE_ACCEPTANCE.md"
+  "hardware_acceptance_protocol": "docs/HARDWARE_ACCEPTANCE.md",
+  "release_readiness": {
+    "status": "locally verified; CI pending",
+    "local_tests": "74/74, no failures,90.55 seconds",
+    "native_desktop": "Wayland/eDP-1,1920x1080, six route-checked fullscreen views; actual print dialog cancel/PDF; model preserved",
+    "native_pdf": "1 page-count-matched observed state,139 exact tokens",
+    "qt_legal_files": 122,
+    "report": "docs/RELEASE_READINESS.md",
+    "remaining": "Trusted signing credentials; physical mixed-monitor/printer and Windows/macOS panel review; owner application/vendor licensing release decision"
+  }
 }

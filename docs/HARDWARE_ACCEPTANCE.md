@@ -2,8 +2,11 @@
 
 The completed offscreen tests and synthetic screen changes are SDK regression
 evidence. They do not establish physical hotplug, OS printer-panel interaction
-or acceptance on every supported OS version. On the current laptop only one
-1920×1080 display is connected; no physical printer was available.
+or acceptance on every supported OS version. On this laptop, actual Wayland
+fullscreen rendering at1920×1080 and the real Linux Qt print dialog
+(cancel/PDF selection) have now passed; the PDF matches139 original normal
+print tokens and page count. One display is connected and Qt lists no configured
+printer. Physical mixed-monitor/hotplug and printer checks remain outstanding.
 
 Use a verified package from the CI run recorded in STATUS.json. Record the
 package SHA, OS/version, GPU/compositor, monitor model, native resolution, scale
@@ -51,3 +54,20 @@ Record case ID, environment, steps, expected result, actual result, pass/fail/no
 tested, private evidence path and any mismatch. A desktop screenshot alone does
 not establish a printed numeric comparison or a successful monitor transition.
 These checks require devices; they are not outstanding solver implementation.
+
+
+## Repeat the real-desktop Linux check
+
+```sh
+cmake --build --preset dev --target desktop_native_acceptance
+QT_QPA_PLATFORM=wayland build/dev/tests/desktop_native_acceptance \
+  --problem build/dev/tests/codec-goldens/01_normal.txt \
+  --output build/manual-native-check --fullscreen --print-dialog
+```
+
+Use a fresh output directory. This manual tool opens only its own window,
+cancels the real dialog, and chooses its private PDF path. It refuses a physical
+print job. It does not change monitor settings or terminate existing TORA
+processes. It is intentionally outside offscreen CTest. Inspect all six images
+and `verification.json`; this SDK source check is separate from deployed-package
+startup. See `RELEASE_READINESS.md` for evidence and limits.

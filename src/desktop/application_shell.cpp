@@ -92,16 +92,6 @@ QPushButton* button(const QString& text, const QString& id, QVBoxLayout& layout,
     return control;
 }
 
-QLabel* previewNotice(QVBoxLayout& layout)
-{
-    auto* notice = new QLabel(QStringLiteral("LP data entry and files are available. Solution methods are under development."));
-    notice->setObjectName(QStringLiteral("preview-notice"));
-    notice->setWordWrap(true);
-    notice->setAlignment(Qt::AlignCenter);
-    layout.addWidget(notice);
-    return notice;
-}
-
 void centerPanel(QVBoxLayout& layout, QWidget* panel)
 {
     panel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
@@ -369,7 +359,6 @@ ModuleDescriptor shellModule()
         button(QStringLiteral("Click Here"), QStringLiteral("welcome-enter"), *inner,
             [&shell] { shell.navigate(QStringLiteral("main")); });
         centerPanel(*layout, panel);
-        previewNotice(*layout);
         return page;
     }, {}});
     const auto mainMenus = [](ApplicationShell& shell, QMenuBar& bar) {

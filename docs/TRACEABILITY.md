@@ -268,3 +268,17 @@ Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free R
 | --- | --- | --- | --- |
 | PKG-WIN-01: optional native Windows installer | windows_installer.py; installer.nsi.in; Windows packaging step | packaging.windows.safety; native install/reinstall/hash/startup/uninstall preservation checks | Setup EXE verification JSON in CI artifact |
 | HW-01: physical monitor/printer acceptance | Existing native app; hardware protocol | Actual devices required; no synthetic substitution | HARDWARE_ACCEPTANCE.md; unavailable configurations remain not tested |
+
+
+## Native deployment follow-up
+
+| Requirement | Implementation | Verification | Evidence |
+|---|---|---|---|
+| Native Linux Wayland and X11 startup | tools/linux_runtime.py; tools/package_desktop.py | tests/test_linux_runtime.py; tools/verify_linux_desktop.py; OS matrix | build/release-readiness/local-live-wayland; fresh CI pending |
+| Matching Qt runtime legal texts/provenance | tools/runtime_notices.py; packaging/licenses/Qt-6.10.3 | tests/test_runtime_notices.py |122 upstream URL/SHA records; final manifests pending |
+| Actual Linux panel cancel/PDF and fullscreen views | tests/desktop_native_acceptance.cpp | Manual existing compositor; independent PDF reader | build/release-readiness/native-desktop; native-pdf-audit/result-final.log |
+| Welcome reflects completed LP methods | src/desktop/application_shell.cpp | tests/desktop_shell.cpp methodHierarchy | Tests-first failure then pass; welcome.png |
+
+Raw Oracle captures remain private. Native screenshots in this follow-up depict
+our application. Physical printing, mixed-monitor hardware and trusted signing
+are not claimed by these checks.

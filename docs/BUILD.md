@@ -188,3 +188,26 @@ dist/phase2-installer/final/TORA-Clone-ubuntu-latest/TORA-Clone-0.1.0-linux-x86_
 
 If FUSE is unavailable, set `APPIMAGE_EXTRACT_AND_RUN=1` for the launch.
 The same final AppImage passed local startup with Qt SDK paths removed.
+
+
+## Linux desktop protocols and runtime notices
+
+The Linux Qt SDK must include the `qtwayland` archive alongside `qtbase` and
+`icu`. Packaging fails if the Wayland platform or xdg-shell client integration
+is missing. CI verifies the deployed AppImage using both Weston and Xvfb:
+
+```sh
+python tools/verify_linux_desktop.py dist/TORA-Clone-0.1.0-linux-x86_64.AppImage \
+  --output build/desktop-runtime
+```
+
+On a running Wayland desktop, add `--live-wayland` to check the existing
+compositor without changing display settings. SDK search paths are removed.
+Headless protocol servers do not establish physical mixed-monitor acceptance.
+
+The pinned Qt6.10.3 legal documents in `packaging/licenses/Qt-6.10.3/` are copied
+only for the matching SDK version. `SOURCES.json` records122 upstream file URLs
+and SHA-256 values; integrity/path tests run on all three OSes. Distribution
+notices already produced by deployment are retained. The upstream index is
+not a build SBOM or final legal approval. See `THIRD_PARTY_NOTICES.md` in each
+package and `docs/RELEASE_READINESS.md` for remaining release resources.

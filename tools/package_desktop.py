@@ -19,6 +19,8 @@ import sys
 import tempfile
 import urllib.request
 from windows_installer import build_installer, verify_installer
+from linux_runtime import stage_wayland_plugins
+from runtime_notices import copy_qt_notices
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -67,6 +69,9 @@ def linux_tools(directory):
 
 def notices(stage, qt_root):
     shutil.copy2(ROOT / 'packaging/THIRD_PARTY_NOTICES.md', stage)
+    version = subprocess.check_output([str(sdk_tool(qt_root, 'qmake')),
+                                       '-query', 'QT_VERSION'], text=True).strip()
+    copy_qt_notices(stage, version)
     for name in ('Licenses', 'LICENSES'):
         source = qt_root / name
         if source.is_dir():
@@ -82,6 +87,8 @@ def manifest(stage, qt_root, version, target):
     qmake = sdk_tool(qt_root, 'qmake')
     qt_version = subprocess.check_output([str(qmake), '-query', 'QT_VERSION'], text=True).strip()
     data = {'application': 'ToraClone', 'version': version, 'qt_version': qt_version,
+            'qt_legal_bundle': 'licenses/Qt-' + qt_version
+                               if (stage / 'licenses' / ('Qt-' + qt_version) / 'SOURCES.json').is_file() else None,
             'platform': target, 'stage': 'Phase 2: LP input, All-slack, M-method, Two-phase, Bounded, Dual, Graphical, Final solution and Sensitivity',
             'files': {str(p.relative_to(stage)).replace('\\', '/'): digest(p)
                       for p in sorted(stage.rglob('*')) if p.is_file()}}
@@ -165,15 +172,20 @@ def linux_package(build, stage, qt_root, config, output, version, tool_dir):
     appdir = stage / 'AppDir'
     run(['cmake', '--install', build, '--config', config, '--prefix', appdir / 'usr'])
     executable = appdir / 'usr/bin/ToraClone'
+    plugins = Path(subprocess.check_output([str(sdk_tool(qt_root, 'qmake')),
+                                           '-query', 'QT_INSTALL_PLUGINS'], text=True).strip())
+    platforms, integrations = stage_wayland_plugins(plugins, appdir)
     env = os.environ.copy()
     env.update({'APPIMAGE_EXTRACT_AND_RUN': '1', 'QMAKE': str(sdk_tool(qt_root, 'qmake')),
                 'OUTPUT': str(output / f'TORA-Clone-{version}-linux-x86_64.AppImage'),
-                'EXTRA_PLATFORM_PLUGINS': 'libqoffscreen.so',
+                'EXTRA_PLATFORM_PLUGINS': platforms,
                 # linuxdeploy's bundled strip predates modern RELR sections.
                 # Preserve symbols instead of modifying incompatible files.
                 'NO_STRIP': '1', 'ARCH': 'x86_64', 'VERSION': version})
     notices(appdir, qt_root)
-    run([linux_tools(tool_dir), '--appdir', appdir, '--executable', executable,
+    dependencies = [argument for plugin in integrations
+                    for argument in ['--deploy-deps-only', plugin]]
+    run([linux_tools(tool_dir), '--appdir', appdir, '--executable', executable, *dependencies,
          '--desktop-file', ROOT / 'packaging/resources/tora-clone.desktop',
          '--icon-file', ROOT / 'packaging/resources/tora-clone.svg',
          '--plugin', 'qt', '--output', 'appimage'], env=env, cwd=stage)

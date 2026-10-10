@@ -107,6 +107,7 @@ private slots:
     {
         ApplicationShell shell;
         shell.registerModule(lpModule());
+        QVERIFY(!shell.currentContent()->findChild<QLabel*>(QStringLiteral("preview-notice")));
         QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
         QCOMPARE(shell.menuBar()->actions().front()->text(), QStringLiteral("SolveModify"));
         const auto* menu = shell.menuBar()->actions().front()->menu();

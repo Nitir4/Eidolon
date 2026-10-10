@@ -27,7 +27,7 @@ jobs:
             qt_arch: win64_msvc2022_64
           - os: ubuntu-latest
             qt_arch: linux_gcc_64
-            qt_archives: qtbase icu
+            qt_archives: qtbase icu qtwayland
           - os: macos-latest
             qt_arch: clang_64
     defaults:
@@ -69,8 +69,17 @@ jobs:
         env:
           TORA_UI_CAPTURES: ${{ github.workspace }}/build/ci/ui-captures
         run: ctest --preset ci --output-junit "${{ github.workspace }}/build/ci/test-results.xml"
+      - name: Install Linux desktop check servers
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --yes --no-install-recommends weston xvfb xauth
       - name: Package and verify deployed startup
         run: python tools/package_desktop.py --build-dir build/ci --output-dir dist
+      - name: Verify Linux desktop protocol startup
+        if: runner.os == 'Linux'
+        run: |
+          python tools/verify_linux_desktop.py dist/TORA-Clone-0.1.0-linux-x86_64.AppImage --output build/ci/desktop-runtime
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
         with:
@@ -105,4 +114,5 @@ jobs:
             build/ci/tests/desktop-printing.xml
             build/ci/tests/printing-pdfs/
             build/ci/ui-captures/
+            build/ci/desktop-runtime/
           if-no-files-found: warn
