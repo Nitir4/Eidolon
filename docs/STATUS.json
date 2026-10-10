@@ -383,8 +383,10 @@
     "local_tests": "74/74, no failures,90.55 seconds",
     "native_desktop": "Wayland/eDP-1,1920x1080, six route-checked fullscreen views; actual print dialog cancel/PDF; model preserved",
     "native_pdf": "1 page-count-matched observed state,139 exact tokens",
-    "qt_legal_files": 122,
+    "qt_legal_files": 130,
     "report": "docs/RELEASE_READINESS.md",
-    "remaining": "Trusted signing credentials; physical mixed-monitor/printer and Windows/macOS panel review; owner application/vendor licensing release decision"
+    "remaining": "Trusted signing credentials; physical mixed-monitor/printer and Windows/macOS panel review; owner application/vendor licensing release decision",
+    "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38062038002",
+    "initial_ci_result": "macOS74/74 and package passed; Windows73/74 (upstream line endings), Linux74/74 then missing QtSvg deployment dependency. Corrected exact-byte Git attributes and Linux SDK SVG archive; fresh run pending."
   }
 }

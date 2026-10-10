@@ -1,0 +1,2 @@
+# Preserve upstream legal documents exactly; provenance hashes cover raw bytes.
+packaging/licenses/** -text

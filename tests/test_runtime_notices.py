@@ -17,6 +17,7 @@ class RuntimeNotices(unittest.TestCase):
         names = {r['path'] for r in data['files']}
         self.assertIn('qtbase/LICENSES/LGPL-3.0-only.txt', names)
         self.assertIn('qtbase/LICENSES/GPL-3.0-only.txt', names)
+        self.assertIn('qtsvg/LICENSES/LGPL-3.0-only.txt', names)
         self.assertTrue(any(n.endswith('/qt_attribution.json') for n in names))
 
     def test_corruption_is_rejected(self):

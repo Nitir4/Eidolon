@@ -16,7 +16,7 @@ installer delivery is preserved in `docs/STATUS.json`.
 - Real Linux Qt print dialog opened/cancelled, then its PDF controls selected
   an owned temporary file. Independent PDF reader confirms original normal
   print's page count and139 tokens. No physical print job was sent.
-- Qt6.10.3 upstream legal bundle contains122 legal/attribution files with
+- Qt6.10.3 upstream legal bundle contains130 legal/attribution files with
   source URLs and SHA-256. Tests reject corruption and unsafe paths. A different
   local SDK6.11.2 does not receive mislabeled6.10.3 notices.
 

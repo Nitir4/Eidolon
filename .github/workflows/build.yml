@@ -27,7 +27,7 @@ jobs:
             qt_arch: win64_msvc2022_64
           - os: ubuntu-latest
             qt_arch: linux_gcc_64
-            qt_archives: qtbase icu qtwayland
+            qt_archives: qtbase icu qtwayland qtsvg
           - os: macos-latest
             qt_arch: clang_64
     defaults:
