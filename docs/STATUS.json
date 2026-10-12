@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation Least-cost captured-profile gate complete; native package installed and open",
+  "active_step": "future-scope: Transportation Vogel captured-profile verification in progress",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Review Least-cost gate; Vogel is the next separate Transportation method cycle",
+  "next_step": "Complete Vogel native, full-suite, three-OS and deployment gate",
   "foundation_order": [
     1,
     5,
@@ -503,6 +503,18 @@
       "macos-universal": "24749803244ec930823f5b86f4bd35f74bd190470fdac193e1db01b0f5971eab",
       "linux-x86_64": "c7f5606fae29f4dd6e1eb36e8c381e889f255cdac0ea8f1bbc30c08880f9e755",
       "windows-x86_64": "8c45b73b808cda8078a1f0d4a09405332964e33bd8d70f96aaeca4a10a4b9f15"
+    },
+    "vogel": {
+      "status": "local gate passed; three-OS CI/package gate pending",
+      "spec": "docs/tora-analysis/TRANSPORTATION_VOGEL.md",
+      "evidence": "build/transportation-vogel/",
+      "remaining": "three-OS CI and verified deployment",
+      "local_tests": "82/82 CTest,110.15 seconds; Qt-free30/30; focused8/8",
+      "native_acceptance": "14 actual1920x1080 Wayland views; model preserved; small200% view reviewed",
+      "cases": 18,
+      "tableaus": 19,
+      "exact_fields": 625,
+      "native_checks_per_scale": 71
     }
   }
 }

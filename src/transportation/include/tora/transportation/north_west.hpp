@@ -16,7 +16,7 @@ struct Problem {
 // General model validation is distinct from the captured numerical profile.
 // The size bound is a native allocation safeguard, not a claimed TORA limit.
 void validate(const Problem& problem);
-enum class StartMethod { NorthWest, LeastCost };
+enum class StartMethod { NorthWest, LeastCost, Vogel };
 struct Cell {
     std::size_t source, destination;
 };
@@ -42,6 +42,7 @@ struct Display {
 std::vector<Tableau> solve(const Problem& problem, StartMethod method);
 std::vector<Tableau> solveNorthWest(const Problem& problem);
 std::vector<Tableau> solveLeastCost(const Problem& problem);
+std::vector<Tableau> solveVogel(const Problem& problem);
 Display display(const Problem& problem, const Tableau& tableau, std::size_t iteration);
 std::string quantity(double value);
 } // namespace tora::transportation

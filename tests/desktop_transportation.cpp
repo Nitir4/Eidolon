@@ -21,8 +21,8 @@ class DesktopTransportation: public QObject {
 private slots:
     void goldenNativeTableaus_data() {
         QTest::addColumn<QByteArray>("record");
-        for(const auto& method:{QStringLiteral("northwest"),QStringLiteral("leastcost")}) {
-            QFile file(method==QStringLiteral("northwest")?QStringLiteral(TORA_TRANSPORT_GOLDENS):QStringLiteral(TORA_LEASTCOST_GOLDENS));
+        for(const auto& method:{QStringLiteral("northwest"),QStringLiteral("leastcost"),QStringLiteral("vogel")}) {
+            QFile file(method==QStringLiteral("northwest")?QStringLiteral(TORA_TRANSPORT_GOLDENS):(method==QStringLiteral("leastcost")?QStringLiteral(TORA_LEASTCOST_GOLDENS):QStringLiteral(TORA_VOGEL_GOLDENS)));
             QVERIFY(file.open(QIODevice::ReadOnly));
             for(const auto& value:QJsonDocument::fromJson(file.readAll()).array()) {
                 auto object=value.toObject();object["method"]=method;
@@ -46,10 +46,10 @@ private slots:
         auto* inputGrid=shell.findChild<QTableWidget*>(QStringLiteral("transport-input-grid"));QVERIFY(inputGrid);
         QCOMPARE(inputGrid->editTriggers(),QAbstractItemView::NoEditTriggers);
         const auto method=object["method"].toString();
-        QString error;QVERIFY2(controller.solve(error,method==QStringLiteral("leastcost")?tora::transportation::StartMethod::LeastCost:tora::transportation::StartMethod::NorthWest),qPrintable(error));
+        QString error;QVERIFY2(controller.solve(error,method==QStringLiteral("vogel")?tora::transportation::StartMethod::Vogel:method==QStringLiteral("leastcost")?tora::transportation::StartMethod::LeastCost:tora::transportation::StartMethod::NorthWest),qPrintable(error));
         QVERIFY(shell.navigate(QStringLiteral("transportation/")+method));shell.show();
         auto* heading=shell.currentContent()->findChild<QLabel*>(QStringLiteral("transport-method-heading"));QVERIFY(heading);
-        QCOMPARE(heading->text(),method==QStringLiteral("leastcost")?QStringLiteral("TRANSPORTATION TABLEAU - (Least Cost Method)"):QStringLiteral("TRANSPORTATION TABLEAU - (North-West Corner Method)"));
+        QCOMPARE(heading->text(),method==QStringLiteral("vogel")?QStringLiteral("TRANSPORTATION TABLEAU - (Vogel's Method)"):method==QStringLiteral("leastcost")?QStringLiteral("TRANSPORTATION TABLEAU - (Least Cost Method)"):QStringLiteral("TRANSPORTATION TABLEAU - (North-West Corner Method)"));
         auto* all=shell.findChild<QPushButton*>(QStringLiteral("transport-all"));QVERIFY(all);
         auto* next=shell.findChild<QPushButton*>(QStringLiteral("transport-next"));QVERIFY(next);
         if(expected.size()>1) {
@@ -146,17 +146,24 @@ private slots:
         QCOMPARE(shell.currentScreen(),QStringLiteral("transportation/northwest"));
         QCOMPARE(c.method(),tora::transportation::StartMethod::NorthWest);QCOMPARE(c.trace().size(),std::size_t(3));
         QCOMPARE(c.trace().front().objective,230.0);
+        QVERIFY(shell.navigate(QStringLiteral("transportation/solve-menu")));
+        auto* vogel=shell.findChild<QPushButton*>(QStringLiteral("transport-vogel-start"));QVERIFY(vogel);
+        QTimer::singleShot(0,[]{for(auto* w:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(w))box->accept();});
+        vogel->click();
+        QCOMPARE(shell.currentScreen(),QStringLiteral("transportation/vogel"));
+        QCOMPARE(c.method(),tora::transportation::StartMethod::Vogel);QCOMPARE(c.trace().size(),std::size_t(1));
         QString error;QVERIFY(!c.solve(error,static_cast<tora::transportation::StartMethod>(999)));
-        QCOMPARE(c.method(),tora::transportation::StartMethod::NorthWest);QCOMPARE(c.trace().size(),std::size_t(3));
+        QCOMPARE(c.method(),tora::transportation::StartMethod::Vogel);QCOMPARE(c.trace().size(),std::size_t(1));
     }
     void initialOptimalNotice_data() {
-        QTest::addColumn<bool>("leastcost");
-        QTest::newRow("leastcost")<<true;QTest::newRow("northwest")<<false;
+        QTest::addColumn<QString>("method");
+        for(const auto& method:{QStringLiteral("northwest"),QStringLiteral("leastcost"),QStringLiteral("vogel")})
+            QTest::newRow(qPrintable(method))<<method;
     }
     void initialOptimalNotice() {
-        QFETCH(bool,leastcost);ApplicationShell shell;shell.registerModule(transportationModule());
+        QFETCH(QString,method);ApplicationShell shell;shell.registerModule(transportationModule());
         auto& c=transportationController(shell);c.loadExample();
-        if(!leastcost) {auto p=c.problem();p.costs={{1,1,1},{1,1,1}};c.load(std::move(p));}
+        if(method==QStringLiteral("northwest")) {auto p=c.problem();p.costs={{1,1,1},{1,1,1}};c.load(std::move(p));}
         QVERIFY(shell.navigate(QStringLiteral("transportation/solve-menu")));shell.show();
         bool seen=false;QString title,message;QMessageBox::Icon icon=QMessageBox::NoIcon;
         QMessageBox::StandardButtons buttons=QMessageBox::NoButton;
@@ -166,7 +173,7 @@ private slots:
                 seen=true;title=box->windowTitle();message=box->text();icon=box->icon();buttons=box->standardButtons();box->accept();
             }
         });
-        auto* start=shell.findChild<QPushButton*>(leastcost?QStringLiteral("transport-leastcost-start"):QStringLiteral("transport-northwest-start"));
+        auto* start=shell.findChild<QPushButton*>(QStringLiteral("transport-")+method+QStringLiteral("-start"));
         QVERIFY(start);notice.start(0);start->click();notice.stop();
         QVERIFY2(seen,"Missing observed initial optimal-tableau notice");
 #ifdef Q_OS_MACOS
@@ -182,14 +189,14 @@ private slots:
     }
     void resolutionPreview_data() {
         QTest::addColumn<QSize>("physical");QTest::addColumn<QString>("method");
-        for(const auto& method:{QStringLiteral("northwest"),QStringLiteral("leastcost")})
+        for(const auto& method:{QStringLiteral("northwest"),QStringLiteral("leastcost"),QStringLiteral("vogel")})
             for(const auto& physical:{QSize(1366,768),QSize(1920,1080),QSize(3840,2160)})
                 QTest::newRow(QStringLiteral("%1-%2x%3").arg(method).arg(physical.width()).arg(physical.height()).toUtf8().constData())<<physical<<method;
     }
     void resolutionPreview() {
         QFETCH(QSize,physical);QFETCH(QString,method);ApplicationShell shell;shell.registerModule(transportationModule());
         auto& c=transportationController(shell);c.loadExample();QString error;
-        QVERIFY(c.solve(error,method==QStringLiteral("leastcost")?tora::transportation::StartMethod::LeastCost:tora::transportation::StartMethod::NorthWest));
+        QVERIFY(c.solve(error,method==QStringLiteral("vogel")?tora::transportation::StartMethod::Vogel:method==QStringLiteral("leastcost")?tora::transportation::StartMethod::LeastCost:tora::transportation::StartMethod::NorthWest));
         const auto scale=shell.devicePixelRatioF();const QSize logical(qRound(physical.width()/scale),qRound(physical.height()/scale));
         shell.resize(logical);QVERIFY(shell.navigate(QStringLiteral("transportation/")+method));shell.show();QTest::qWait(30);
         QCOMPARE(shell.size(),logical);

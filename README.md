@@ -59,7 +59,7 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
-Transportation is an authorized extension with read-only North-west and Least-cost starts. Other OR modules remain outside this project. Review layouts with, for
+Transportation is an authorized extension with read-only North-west, Least-cost and Vogel starts on `future-scope`. Other OR modules remain outside this project. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal
@@ -157,3 +157,7 @@ Transportation printing remain future work. See the
 [Least-cost specification](docs/tora-analysis/TRANSPORTATION_LEAST_COST.md)
 for evidence and profile limits. The main-branch delivery above is historical;
 all additional feature commits remain on `future-scope`.
+
+## Vogel method cycle on future-scope
+
+Vogel start adds penalty-based initialization to the shared Transportation improvement/tableau workflow. All18 captured cases/19 tableaus/625 fields match locally, including a new live TORA axis-tie probe. Local full82/82, focused8/8, Qt-free30/30 and actual Wayland14-view checks pass; three-OS matrix/package verification is pending. See [Vogel analysis](docs/tora-analysis/TRANSPORTATION_VOGEL.md).

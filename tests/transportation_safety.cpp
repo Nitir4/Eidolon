@@ -31,6 +31,15 @@ int main() {
         if(zeros.size()!=1 || zeros[0].objective!=0)throw std::runtime_error("Zero-quantity Least-cost model failed");
         auto single=Problem::blank(1,1);single.costs={{-2}};single.supply={4};single.demand={4};
         if(solveLeastCost(single).back().objective!=-8)throw std::runtime_error("Single-cell Least-cost model failed");
+        changed=p;changed.demand[0]=11;rejects([&]{solveVogel(changed);});
+        changed=p;changed.supply[0]=20.1;rejects([&]{solveVogel(changed);});
+        const auto vogel=solveVogel(p),vogelAgain=solveVogel(p);
+        if(vogel.size()!=1 || vogelAgain.size()!=1 || vogel.front().objective!=150 || p.supply!=std::vector<double>{20,30})
+            throw std::runtime_error("Vogel solver mutated input or is nondeterministic");
+        if(solveVogel(zero).back().objective!=0 || solveVogel(single).back().objective!=-8)
+            throw std::runtime_error("Zero/single-cell Vogel model failed");
+        auto extreme=Problem::blank(2,2);extreme.costs={{-1e308,1e308},{0,0}};
+        rejects([&]{solveVogel(extreme);});
         const auto first=solveNorthWest(p),second=solveNorthWest(p);
         if(first.size()!=3 || second.size()!=3 || first.back().objective!=150 || p.supply!=std::vector<double>{20,30})
             throw std::runtime_error("Solver mutated the input or is nondeterministic");

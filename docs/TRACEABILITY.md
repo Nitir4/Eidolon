@@ -357,3 +357,8 @@ TR-UI-OPT also verifies Information icon/OK button; macOS expects an empty
 native title per Qt 6.10 documentation, while Windows/Linux require the original
 caption. All numeric strings and message text remain exact. Independent package
 and installed-window evidence is recorded in STATUS.json. main is unchanged.
+
+| ID | Observed behavior | Requirement/spec | Implementation | Tests | Private capture |
+|---|---|---|---|---|---|
+| TR-VG | Penalty start, row-first penalty ties, first minimum cell, basic zeros and MODI trace | TRANSPORTATION_VOGEL.md | transportation/north_west.cpp StartMethod::Vogel | transportation.vogel.goldens; transportation.safety | corpus/*/vogel; vogel-probes/19-axis-penalty-tie/vogel |
+| TR-VG-UI | Exact heading, method route, optimal notices and scaled tables | UI_SPEC.md | desktop/transportation_screens.cpp | desktop.transportation.scale-*; desktop_native_acceptance --transportation | same Vogel screens |

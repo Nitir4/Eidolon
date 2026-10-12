@@ -33,6 +33,7 @@ int main(int argc,char** argv) {
             else if(arg=="--method" && i+1<argc) {
                 const std::string name=argv[++i];
                 if(name=="leastcost")method=tora::transportation::StartMethod::LeastCost;
+                else if(name=="vogel")method=tora::transportation::StartMethod::Vogel;
                 else if(name!="northwest")throw std::invalid_argument("Unknown method");
             } else throw std::invalid_argument("Unknown or incomplete probe option");
         }

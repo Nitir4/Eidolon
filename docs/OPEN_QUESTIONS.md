@@ -227,3 +227,5 @@ macOS deliberately omits QMessageBox titles as documented by Qt; the exact
 message/Information icon/OK button remain tested. This native-platform caption
 difference is documented, rather than an unresolved numerical mismatch.
 Vogel and the remaining Transportation features/profile limits are still open.
+
+Vogel starting-basis investigation: all18 captured profiles match the implemented row-first penalty policy, including a new targeted axis-tie probe. Delivery verification is in progress. Internal singleton penalty/sentinel remains unobservable; nonbinary fractions, unbalanced input, editing/writing, manual loops, multiplier choices, final summary and Transportation printing are still outside this cycle.

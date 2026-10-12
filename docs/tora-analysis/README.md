@@ -51,3 +51,5 @@ and [final output observations](TRANSPORTATION_FINAL.md). The first native
 slice is read-only default-file opening and automatic North-west iterations.
 The feature branch adds [Least-cost start](TRANSPORTATION_LEAST_COST.md), using
 17 independent profiles/20 tableaus and the shared MODI improvement loop.
+
+- [Transportation Vogel start](TRANSPORTATION_VOGEL.md): captured penalty/tie rules,18 test problems, native method integration and explicit unknowns.

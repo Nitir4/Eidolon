@@ -94,3 +94,7 @@ A Windows-only event ordering in the first matrix run exposed a native column
 resize bug on model reload. A deterministic viewport-event regression now
 checks it on every OS; distribution is bounded by the columns currently
 present. This is a presentation fix and does not alter numerical traces.
+
+## Vogel start integration
+
+See TRANSPORTATION_VOGEL.md for the penalty-start contract. It feeds the existing MODI trace and native table renderer. Source rows take precedence on tied penalties (probe19); case14 rejects cheapest-cell secondary ties. Singleton internal penalties remain unverified because the remaining allocations are forced.

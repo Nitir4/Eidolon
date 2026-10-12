@@ -328,3 +328,7 @@ have 17 independent golden profiles and three resolution checks at four scales.
 The preview exposes only supported automatic behavior. New/edit/save, Vogel's
 start, manual loop selection, multiplier changes, final summary and printing
 remain outside this slice. Read-only input uses normal arrow-key selection.
+
+## Future-scope Vogel preview
+
+The Transportation Solve Problem menu and iterations chooser add Vogel start. Its output heading is `TRANSPORTATION TABLEAU - (Vogel's Method)`, verified from the reference. The shared Next/All, optimal notices, font-metric column sizing, scrolling and HiDPI behavior apply. Input remains read-only in this slice. Three methods are rendered at1366×768,1920×1080 and3840×2160 at100/125/150/200% scale. Final acceptance is recorded in STATUS.json.

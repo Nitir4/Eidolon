@@ -457,3 +457,7 @@ initialization, final summary and printing are separate future slices. The
 profile rejects unbalanced/non-exact-single-precision quantities and unknown
 format headers; original error/threshold behavior is not inferred. Numerical
 size/cycle/iteration guards are explicit native engineering policies.
+
+## Future-scope Vogel start
+
+`StartMethod::Vogel` extends the Qt-free Transportation initial-basis selection. Active-line penalties choose the allocation cell; exhausted-line handling, MODI snapshots/pivots, formatting and compatibility reader remain shared. The controller commits a method/trace only after success. Native `transportation/vogel` reuses the same iteration-page factory as the other starts. No operating-system-specific solver or browser component is introduced.

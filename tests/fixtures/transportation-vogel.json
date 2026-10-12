@@ -1,0 +1,1863 @@
+[
+  {
+    "case": "01-normal",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "150.00",
+        "v": [
+          "v1=2.00",
+          "v2=1.00",
+          "v3=1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=3.00"
+        ],
+        "costs": [
+          [
+            "2.00",
+            "3.00",
+            "1.00"
+          ],
+          [
+            "5.00",
+            "4.00",
+            "8.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "5",
+            "",
+            "15"
+          ],
+          [
+            "5",
+            "25",
+            ""
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "-2.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "-4.00"
+          ]
+        ],
+        "supply": [
+          "20",
+          "30"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "eb462b2a1089783c1241ddca5e2689fa03397bb0e1851812ea91550afcff6bd8",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/01-normal/vogel/numbers-draft.json",
+      "sha256": "946b2e842a1caf7a07c9ec362d7f994e69946917deebf0c7468fb99130027e68",
+      "screenshots": {
+        "trace-000.png": "28c9bca89f353e66dbeaeabf44b91f1812f14e8acea743c1c22d57aeaf7a2a8a"
+      }
+    }
+  },
+  {
+    "case": "02-reverse-costs",
+    "problem": {
+      "costs": [
+        [
+          8,
+          4,
+          5
+        ],
+        [
+          1,
+          3,
+          2
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "135.00",
+        "v": [
+          "v1=2.00",
+          "v2=4.00",
+          "v3=3.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=-1.00"
+        ],
+        "costs": [
+          [
+            "8.00",
+            "4.00",
+            "5.00"
+          ],
+          [
+            "1.00",
+            "3.00",
+            "2.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "20",
+            ""
+          ],
+          [
+            "10",
+            "5",
+            "15"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "-6.00",
+            "0.00",
+            "-2.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "20",
+          "30"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "f731047f8bda0925e3dd87a9a656941916a88a3c0c0789178d88409fd05783c9",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/02-reverse-costs/vogel/numbers-draft.json",
+      "sha256": "5bd6b6642687d668c54c7322b58d6eb02a76366a82daddd5c152b85f57af6802",
+      "screenshots": {
+        "trace-000.png": "37c7c2a273652455896d0c33e527b15646447f0dd947e233817e4f4f0713b25e"
+      }
+    }
+  },
+  {
+    "case": "03-all-ties",
+    "problem": {
+      "costs": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "50.00",
+        "v": [
+          "v1=1.00",
+          "v2=1.00",
+          "v3=1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=0.00"
+        ],
+        "costs": [
+          [
+            "1.00",
+            "1.00",
+            "1.00"
+          ],
+          [
+            "1.00",
+            "1.00",
+            "1.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "10",
+            "10",
+            ""
+          ],
+          [
+            "",
+            "15",
+            "15"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "20",
+          "30"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "4e3f43e76bdbdeb8b89f9015b06c515ad29466d97ac98810873e0e3f098fd109",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/03-all-ties/vogel/numbers-draft.json",
+      "sha256": "402a2daca115008b2fe581ca17ec8c93f538452815032cbe2bbfbb67352b66f1",
+      "screenshots": {
+        "trace-000.png": "d542b4c8c9c9525933402ff45457fb8bad9036b56212566f82daac6726d54d13"
+      }
+    }
+  },
+  {
+    "case": "04-degenerate",
+    "problem": {
+      "costs": [
+        [
+          4,
+          1,
+          5
+        ],
+        [
+          2,
+          6,
+          3
+        ]
+      ],
+      "supply": [
+        10,
+        40
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "165.00",
+        "v": [
+          "v1=-3.00",
+          "v2=1.00",
+          "v3=-2.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=5.00"
+        ],
+        "costs": [
+          [
+            "4.00",
+            "1.00",
+            "5.00"
+          ],
+          [
+            "2.00",
+            "6.00",
+            "3.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "10",
+            ""
+          ],
+          [
+            "10",
+            "15",
+            "15"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "-7.00",
+            "0.00",
+            "-7.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "10",
+          "40"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "ce87b7d93843fffd59973bb9a198beea3107f2305498aa0e3abba366e7c60e32",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/04-degenerate/vogel/numbers-draft.json",
+      "sha256": "b27c9c9471ac7090f3d22c3f8d1ba7d82d7c5ac0093acf6594bf3497453a7218",
+      "screenshots": {
+        "trace-000.png": "d335351f4a0b141a6c59b8cfc8f27eaecb0cbc90e65270046986a20eac06c647"
+      }
+    }
+  },
+  {
+    "case": "05-zero-source",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        0,
+        50
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "270.00",
+        "v": [
+          "v1=-2.00",
+          "v2=-3.00",
+          "v3=1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=7.00"
+        ],
+        "costs": [
+          [
+            "2.00",
+            "3.00",
+            "1.00"
+          ],
+          [
+            "5.00",
+            "4.00",
+            "8.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "",
+            "0"
+          ],
+          [
+            "10",
+            "25",
+            "15"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "-4.00",
+            "-6.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "0",
+          "50"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "ca3959d4c61ecaecdb51b9c1a3435da02037823229357ab5346106cf92d8cede",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/05-zero-source/vogel/numbers-draft.json",
+      "sha256": "4279e9640cb7e602c2acd2be5689a808c552d337839f85d2dd00345773ae6f5f",
+      "screenshots": {
+        "trace-000.png": "d3f789654a2ab7fd52c6c0646739352f2558964e548fea7d84f9f1646dca4c84"
+      }
+    }
+  },
+  {
+    "case": "06-zero-destination",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        0,
+        35,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "150.00",
+        "v": [
+          "v1=2.00",
+          "v2=3.00",
+          "v3=1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=1.00"
+        ],
+        "costs": [
+          [
+            "2.00",
+            "3.00",
+            "1.00"
+          ],
+          [
+            "5.00",
+            "4.00",
+            "8.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "0",
+            "5",
+            "15"
+          ],
+          [
+            "",
+            "30",
+            ""
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ],
+          [
+            "-2.00",
+            "0.00",
+            "-6.00"
+          ]
+        ],
+        "supply": [
+          "20",
+          "30"
+        ],
+        "demand": [
+          "0",
+          "35",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "53044ea4f690499f6e5f99a2e2e1f3d64eac9acd91334183aabaa88cd84d1ecd",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/06-zero-destination/vogel/numbers-draft.json",
+      "sha256": "fb44f1f37e1c2cbe8c454199a4488d848f39dde4266462c1d0cabdbdc28f9e20",
+      "screenshots": {
+        "trace-000.png": "40973a45894f0bc068562355255636b8413e616d72c494e9087d445bff464ec2"
+      }
+    }
+  },
+  {
+    "case": "07-zero-costs",
+    "problem": {
+      "costs": [
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          5,
+          0,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "25.00",
+        "v": [
+          "v1=0.00",
+          "v2=-5.00",
+          "v3=0.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=5.00"
+        ],
+        "costs": [
+          [
+            "0.00",
+            "3.00",
+            "0.00"
+          ],
+          [
+            "5.00",
+            "0.00",
+            "8.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "5",
+            "",
+            "15"
+          ],
+          [
+            "5",
+            "25",
+            ""
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "-8.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "-3.00"
+          ]
+        ],
+        "supply": [
+          "20",
+          "30"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "aca5a7ad55c6411725d323b663097c319562a16c5e19bb7907985bbb991d191a",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/07-zero-costs/vogel/numbers-draft.json",
+      "sha256": "d22e3c27aa8211d3f9d4348fc420f35a26db240030ebf617690d5d5d84d1a5fb",
+      "screenshots": {
+        "trace-000.png": "2eeea9b6bf62200bfb73a98f4d3c0727124b0eb3cd0af1c841f904b95389111f"
+      }
+    }
+  },
+  {
+    "case": "08-decimal-quantities",
+    "problem": {
+      "costs": [
+        [
+          2.25,
+          3.5,
+          1.75
+        ],
+        [
+          5.5,
+          4.25,
+          8.5
+        ]
+      ],
+      "supply": [
+        2.5,
+        3.5
+      ],
+      "demand": [
+        1.5,
+        2.75,
+        1.75
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "20.56",
+        "v": [
+          "v1=2.25",
+          "v2=1.00",
+          "v3=1.75"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=3.25"
+        ],
+        "costs": [
+          [
+            "2.25",
+            "3.50",
+            "1.75"
+          ],
+          [
+            "5.50",
+            "4.25",
+            "8.50"
+          ]
+        ],
+        "shipments": [
+          [
+            "0.75",
+            "",
+            "1.75"
+          ],
+          [
+            "0.75",
+            "2.75",
+            ""
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "-2.50",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "-3.50"
+          ]
+        ],
+        "supply": [
+          "2.5",
+          "3.5"
+        ],
+        "demand": [
+          "1.5",
+          "2.75",
+          "1.75"
+        ]
+      }
+    ],
+    "file_sha256": "dfd978a9ec5328f872165ec355ec41f7c7308499b0cb1032df7c7b24be8da826",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/08-decimal-quantities/vogel/numbers-draft.json",
+      "sha256": "ce4d4f3070a0256d76f64c03d6482a9d8b72b12754f1aaa1a78d1df9f7935c97",
+      "screenshots": {
+        "trace-000.png": "29fbb044945a406febedd75f4899c661e86cae7bf91f7d04f2338672ad4f98d1"
+      }
+    }
+  },
+  {
+    "case": "09-negative-costs",
+    "problem": {
+      "costs": [
+        [
+          -2,
+          3,
+          1
+        ],
+        [
+          5,
+          -4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "-70.00",
+        "v": [
+          "v1=-2.00",
+          "v2=-11.00",
+          "v3=1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=7.00"
+        ],
+        "costs": [
+          [
+            "-2.00",
+            "3.00",
+            "1.00"
+          ],
+          [
+            "5.00",
+            "-4.00",
+            "8.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "10",
+            "",
+            "10"
+          ],
+          [
+            "",
+            "25",
+            "5"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "-14.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "20",
+          "30"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "15"
+        ]
+      }
+    ],
+    "file_sha256": "a748aca308fa0bfb28e4e19be1a7b09b94cdfb98f8966995dbfd7547e0fc1a6e",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/09-negative-costs/vogel/numbers-draft.json",
+      "sha256": "3ffeb9065aa473cdb68e7740960e66c311e8323f7465bfe0d3e2cd555878c594",
+      "screenshots": {
+        "trace-000.png": "ea782e7fbad55b81ac83a794f8426f16aa66de66822b220a2ed5ca5271f23c0c"
+      }
+    }
+  },
+  {
+    "case": "10-cost-ties",
+    "problem": {
+      "costs": [
+        [
+          2,
+          2,
+          5
+        ],
+        [
+          2,
+          4,
+          1
+        ]
+      ],
+      "supply": [
+        17,
+        23
+      ],
+      "demand": [
+        11,
+        13,
+        16
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "64.00",
+        "v": [
+          "v1=2.00",
+          "v2=2.00",
+          "v3=1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=0.00"
+        ],
+        "costs": [
+          [
+            "2.00",
+            "2.00",
+            "5.00"
+          ],
+          [
+            "2.00",
+            "4.00",
+            "1.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "4",
+            "13",
+            ""
+          ],
+          [
+            "7",
+            "",
+            "16"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "0.00",
+            "-4.00"
+          ],
+          [
+            "0.00",
+            "-2.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "17",
+          "23"
+        ],
+        "demand": [
+          "11",
+          "13",
+          "16"
+        ]
+      }
+    ],
+    "file_sha256": "79a3ed571dccdbe0e7f94a5f0ae3bc69d109e72b63f7b3491467dca298ec2b08",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/10-cost-ties/vogel/numbers-draft.json",
+      "sha256": "fa614e0f302d7dbd85006fcca49dc77aab4f2d8802999fb533a367a9edcfaa7e",
+      "screenshots": {
+        "trace-000.png": "01bd1f72a80cc839fa3d0b733e01987cea3a2196cf874dfd7e8ee1f0e3eac996"
+      }
+    }
+  },
+  {
+    "case": "11-larger-quantities",
+    "problem": {
+      "costs": [
+        [
+          12,
+          7,
+          9
+        ],
+        [
+          8,
+          11,
+          4
+        ]
+      ],
+      "supply": [
+        120,
+        180
+      ],
+      "demand": [
+        70,
+        130,
+        100
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "1910.00",
+        "v": [
+          "v1=4.00",
+          "v2=7.00",
+          "v3=0.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=4.00"
+        ],
+        "costs": [
+          [
+            "12.00",
+            "7.00",
+            "9.00"
+          ],
+          [
+            "8.00",
+            "11.00",
+            "4.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "120",
+            ""
+          ],
+          [
+            "70",
+            "10",
+            "100"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "-8.00",
+            "0.00",
+            "-9.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "120",
+          "180"
+        ],
+        "demand": [
+          "70",
+          "130",
+          "100"
+        ]
+      }
+    ],
+    "file_sha256": "5133e0a86431745ebad5c0d7cc820b1b040642bd025783fced5cf88313b1b803",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/11-larger-quantities/vogel/numbers-draft.json",
+      "sha256": "f6102fe4f303dfb9457c48b9374fa2c785dd34b46e64c2f41d5819d167f11c39",
+      "screenshots": {
+        "trace-000.png": "00e847b6a9e34b8e5baa0b6547d27823d307ae42283824a81ea3e0a8ad642797"
+      }
+    }
+  },
+  {
+    "case": "12-vogel-ties",
+    "problem": {
+      "costs": [
+        [
+          1,
+          3,
+          5
+        ],
+        [
+          3,
+          5,
+          1
+        ]
+      ],
+      "supply": [
+        26,
+        34
+      ],
+      "demand": [
+        12,
+        23,
+        25
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "124.00",
+        "v": [
+          "v1=1.00",
+          "v2=3.00",
+          "v3=-1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=2.00"
+        ],
+        "costs": [
+          [
+            "1.00",
+            "3.00",
+            "5.00"
+          ],
+          [
+            "3.00",
+            "5.00",
+            "1.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "12",
+            "14",
+            ""
+          ],
+          [
+            "",
+            "9",
+            "25"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "0.00",
+            "-6.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "26",
+          "34"
+        ],
+        "demand": [
+          "12",
+          "23",
+          "25"
+        ]
+      }
+    ],
+    "file_sha256": "74d652f74612b3e25f10a7911117e15f464a5dc01dce9257d4646fed058878f9",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/12-vogel-ties/vogel/numbers-draft.json",
+      "sha256": "6cc0746fe50d2644d32aa10cf04ede1b7fe6bffbd557e6e000464c37257d6015",
+      "screenshots": {
+        "trace-000.png": "62294a3e94609f98a3889c395f23d4400594bd3c3f0c61443340502434513c93"
+      }
+    }
+  },
+  {
+    "case": "13-three-sources",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ],
+        [
+          6,
+          2,
+          7
+        ]
+      ],
+      "supply": [
+        20,
+        30,
+        10
+      ],
+      "demand": [
+        10,
+        25,
+        25
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "190.00",
+        "v": [
+          "v1=-2.00",
+          "v2=-3.00",
+          "v3=1.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=7.00",
+          "u3=5.00"
+        ],
+        "costs": [
+          [
+            "2.00",
+            "3.00",
+            "1.00"
+          ],
+          [
+            "5.00",
+            "4.00",
+            "8.00"
+          ],
+          [
+            "6.00",
+            "2.00",
+            "7.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "",
+            "20"
+          ],
+          [
+            "10",
+            "15",
+            "5"
+          ],
+          [
+            "",
+            "10",
+            ""
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "-4.00",
+            "-6.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ],
+          [
+            "-3.00",
+            "0.00",
+            "-1.00"
+          ]
+        ],
+        "supply": [
+          "20",
+          "30",
+          "10"
+        ],
+        "demand": [
+          "10",
+          "25",
+          "25"
+        ]
+      }
+    ],
+    "file_sha256": "95aeb8b48cdf7241ef4d9d99f97791987fbc850b044cf38306b5972f7cf75b47",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/13-three-sources/vogel/numbers-draft.json",
+      "sha256": "52a945f99c3bf69265e65d6ac4663819630289f842c355442c105878058e3bc8",
+      "screenshots": {
+        "trace-000.png": "494f25e8314e88d11299782b8bb3744db1c5c90cec69f7fc50fd2d11a8c6cc80"
+      }
+    }
+  },
+  {
+    "case": "14-digits",
+    "problem": {
+      "costs": [
+        [
+          8,
+          7,
+          9
+        ],
+        [
+          6,
+          5,
+          4
+        ]
+      ],
+      "supply": [
+        37,
+        44
+      ],
+      "demand": [
+        17,
+        29,
+        35
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "461.00",
+        "v": [
+          "v1=8.00",
+          "v2=7.00",
+          "v3=6.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=-2.00"
+        ],
+        "costs": [
+          [
+            "8.00",
+            "7.00",
+            "9.00"
+          ],
+          [
+            "6.00",
+            "5.00",
+            "4.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "8",
+            "29",
+            ""
+          ],
+          [
+            "9",
+            "",
+            "35"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "0.00",
+            "-3.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "37",
+          "44"
+        ],
+        "demand": [
+          "17",
+          "29",
+          "35"
+        ]
+      }
+    ],
+    "file_sha256": "aabad5881604a187dc34d4b30d3adf9d38eb9056208de066120a930dca1f89c0",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/14-digits/vogel/numbers-draft.json",
+      "sha256": "b1677fdc8d974463346ecaaa14a3764f6f076ccdbf5c6f61aa4a6e2309d214c6",
+      "screenshots": {
+        "trace-000.png": "7268f6885c346ff501c88217fb743ff911a209fc62ef4499636129c348d4fe3f"
+      }
+    }
+  },
+  {
+    "case": "16-dyadic-fractions",
+    "problem": {
+      "costs": [
+        [
+          0.125,
+          0.25,
+          0.5
+        ],
+        [
+          0.75,
+          0.375,
+          0.625
+        ]
+      ],
+      "supply": [
+        0.375,
+        0.625
+      ],
+      "demand": [
+        0.25,
+        0.25,
+        0.5
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "0.42",
+        "v": [
+          "v1=0.13",
+          "v2=0.25",
+          "v3=0.50"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=0.13"
+        ],
+        "costs": [
+          [
+            "0.13",
+            "0.25",
+            "0.50"
+          ],
+          [
+            "0.75",
+            "0.38",
+            "0.63"
+          ]
+        ],
+        "shipments": [
+          [
+            "0.25",
+            "0.125",
+            ""
+          ],
+          [
+            "",
+            "0.125",
+            "0.5"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ],
+          [
+            "-0.50",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "0.375",
+          "0.625"
+        ],
+        "demand": [
+          "0.25",
+          "0.25",
+          "0.5"
+        ]
+      }
+    ],
+    "file_sha256": "b4c4019c95a86d1d112f2c61f1f34c9d092192903ff972c578832a3d88549482",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/16-dyadic-fractions/vogel/numbers-draft.json",
+      "sha256": "34cac4c237137ccc37029db10076d2ce1015d41ef25989eea4896c422d05a9f8",
+      "screenshots": {
+        "trace-000.png": "7dd2067ce81bd961e1ecc06a44518b6b529c3a38c54e02f699290156bf50bb9b"
+      }
+    }
+  },
+  {
+    "case": "17-leaving-tie",
+    "problem": {
+      "costs": [
+        [
+          7,
+          0,
+          8
+        ],
+        [
+          9,
+          5,
+          3
+        ],
+        [
+          9,
+          0,
+          5
+        ]
+      ],
+      "supply": [
+        2,
+        3,
+        8
+      ],
+      "demand": [
+        6,
+        4,
+        3
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "63.00",
+        "v": [
+          "v1=9.00",
+          "v2=0.00",
+          "v3=5.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=-2.00",
+          "u3=0.00"
+        ],
+        "costs": [
+          [
+            "7.00",
+            "0.00",
+            "8.00"
+          ],
+          [
+            "9.00",
+            "5.00",
+            "3.00"
+          ],
+          [
+            "9.00",
+            "0.00",
+            "5.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "2",
+            ""
+          ],
+          [
+            "",
+            "",
+            "3"
+          ],
+          [
+            "6",
+            "2",
+            "0"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "2.00",
+            "0.00",
+            "-3.00"
+          ],
+          [
+            "-2.00",
+            "-7.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "2",
+          "3",
+          "8"
+        ],
+        "demand": [
+          "6",
+          "4",
+          "3"
+        ]
+      },
+      {
+        "label": "Iter2",
+        "objective": "59.00",
+        "v": [
+          "v1=7.00",
+          "v2=-2.00",
+          "v3=3.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=0.00",
+          "u3=2.00"
+        ],
+        "costs": [
+          [
+            "7.00",
+            "0.00",
+            "8.00"
+          ],
+          [
+            "9.00",
+            "5.00",
+            "3.00"
+          ],
+          [
+            "9.00",
+            "0.00",
+            "5.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "2",
+            "",
+            ""
+          ],
+          [
+            "",
+            "",
+            "3"
+          ],
+          [
+            "4",
+            "4",
+            "0"
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "0.00",
+            "-2.00",
+            "-5.00"
+          ],
+          [
+            "-2.00",
+            "-7.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ]
+        ],
+        "supply": [
+          "2",
+          "3",
+          "8"
+        ],
+        "demand": [
+          "6",
+          "4",
+          "3"
+        ]
+      }
+    ],
+    "file_sha256": "924b363ed18b3473f9e0e794935eaa59db9abaf0ce2b65ad7a44f32081cf469e",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/17-leaving-tie/vogel/numbers-draft.json",
+      "sha256": "16885fd9c0d502733baed3d6584c94eee674296190dc03c3b588adc794e52a9d",
+      "screenshots": {
+        "trace-000.png": "5a181a9fd3422b1b6be47168e8e5b4174d205fb348b7d44d675aed5b7f80197f",
+        "trace-001.png": "95e0529bf5ae1d44c577546cc95bcb930b4613434fae6ce4431d2134c49e9f76",
+        "trace-002.png": "07491324903d3ab4471098658b0f2f29a6a9ae2ee433d72bd17b464d7b4a2ba2"
+      }
+    }
+  },
+  {
+    "case": "18-entering-tie",
+    "problem": {
+      "costs": [
+        [
+          6,
+          6,
+          2
+        ],
+        [
+          1,
+          5,
+          5
+        ],
+        [
+          7,
+          1,
+          3
+        ]
+      ],
+      "supply": [
+        2,
+        9,
+        3
+      ],
+      "demand": [
+        1,
+        8,
+        5
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "48.00",
+        "v": [
+          "v1=-2.00",
+          "v2=2.00",
+          "v3=2.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=3.00",
+          "u3=-1.00"
+        ],
+        "costs": [
+          [
+            "6.00",
+            "6.00",
+            "2.00"
+          ],
+          [
+            "1.00",
+            "5.00",
+            "5.00"
+          ],
+          [
+            "7.00",
+            "1.00",
+            "3.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "",
+            "2"
+          ],
+          [
+            "1",
+            "5",
+            "3"
+          ],
+          [
+            "",
+            "3",
+            ""
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "-8.00",
+            "-4.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ],
+          [
+            "-10.00",
+            "0.00",
+            "-2.00"
+          ]
+        ],
+        "supply": [
+          "2",
+          "9",
+          "3"
+        ],
+        "demand": [
+          "1",
+          "8",
+          "5"
+        ]
+      }
+    ],
+    "file_sha256": "4724de0ee23990723df06efeef4d50cfe51f96c04b897894fca7fd572b1ecb2f",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/corpus/18-entering-tie/vogel/numbers-draft.json",
+      "sha256": "d30ad8b2ea34fd31c2920f463fe19d295e0b93d6bb12bfd48bc9b5ec37855a4f",
+      "screenshots": {
+        "trace-000.png": "31daa136443390ccdc7a54419a6836c4b07f9fff637240fa1017d8605a011190"
+      }
+    }
+  },
+  {
+    "case": "19-axis-penalty-tie",
+    "problem": {
+      "costs": [
+        [
+          4,
+          0,
+          7
+        ],
+        [
+          6,
+          3,
+          5
+        ],
+        [
+          7,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        0,
+        4,
+        5
+      ],
+      "demand": [
+        3,
+        4,
+        2
+      ]
+    },
+    "tables": [
+      {
+        "label": "Iter1",
+        "objective": "45.00",
+        "v": [
+          "v1=3.00",
+          "v2=0.00",
+          "v3=2.00"
+        ],
+        "u": [
+          "u1=0.00",
+          "u2=3.00",
+          "u3=4.00"
+        ],
+        "costs": [
+          [
+            "4.00",
+            "0.00",
+            "7.00"
+          ],
+          [
+            "6.00",
+            "3.00",
+            "5.00"
+          ],
+          [
+            "7.00",
+            "4.00",
+            "8.00"
+          ]
+        ],
+        "shipments": [
+          [
+            "",
+            "0",
+            ""
+          ],
+          [
+            "2",
+            "",
+            "2"
+          ],
+          [
+            "1",
+            "4",
+            ""
+          ]
+        ],
+        "reduced_costs": [
+          [
+            "-1.00",
+            "0.00",
+            "-5.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "0.00",
+            "-2.00"
+          ]
+        ],
+        "supply": [
+          "0",
+          "4",
+          "5"
+        ],
+        "demand": [
+          "3",
+          "4",
+          "2"
+        ]
+      }
+    ],
+    "file_sha256": "3ad26e1ddf326a0da620abab78245d45cb1c5b181dc0a8e399b2c4fb559a0895",
+    "provenance": {
+      "transcription": "reference/tora-captures/transportation/vogel-probes/19-axis-penalty-tie/vogel/numbers-draft.json",
+      "sha256": "053705a98d4dacf29b7673a2e13316643cb25478eb58803a2c2f16a5660339a3",
+      "screenshots": {
+        "trace-000.png": "ad65d7c15ce32034f7f79edee19bb68d317fb60a4563b8048fbddcc6eb15957c"
+      }
+    }
+  }
+]

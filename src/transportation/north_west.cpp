@@ -107,7 +107,7 @@ void validate(const Problem& p) {
     }
 }
 std::vector<Tableau> solve(const Problem& p,StartMethod method) {
-    if(method!=StartMethod::NorthWest && method!=StartMethod::LeastCost)
+    if(method!=StartMethod::NorthWest && method!=StartMethod::LeastCost && method!=StartMethod::Vogel)
         throw std::invalid_argument("Unsupported Transportation starting method.");
     validate(p);
     for(const auto& values:{p.supply,p.demand})for(double value:values)
@@ -138,11 +138,36 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
         std::size_t sources=m,destinations=n;
         while(sources && destinations) {
             std::optional<Edge> selected;
-            double best=std::numeric_limits<double>::infinity();
-            for(std::size_t r=0;r<m;++r)for(std::size_t c=0;c<n;++c)
-                if(activeSources[r] && activeDestinations[c] && (!selected || p.costs[r][c]<best)) {
-                    selected=Edge{r,c};best=p.costs[r][c];
-                }
+            if(method==StartMethod::LeastCost) {
+                double best=std::numeric_limits<double>::infinity();
+                for(std::size_t r=0;r<m;++r)for(std::size_t c=0;c<n;++c)
+                    if(activeSources[r] && activeDestinations[c] && (!selected || p.costs[r][c]<best)) {
+                        selected=Edge{r,c};best=p.costs[r][c];
+                    }
+            } else {
+                double bestPenalty=-std::numeric_limits<double>::infinity();
+                // Source lines precede destination lines on equal penalties;
+                // equal minima retain the first cell in that line.
+                const auto consider=[&](bool source,std::size_t line) {
+                    double first=std::numeric_limits<double>::infinity(),second=first;
+                    std::optional<Edge> cell;
+                    std::size_t count=0;
+                    for(std::size_t k=0;k<(source?n:m);++k) {
+                        if(!(source?activeDestinations[k]:activeSources[k]))continue;
+                        const Edge edge=source?Edge{line,k}:Edge{k,line};
+                        const double cost=p.costs[edge.first][edge.second];++count;
+                        if(!cell || cost<first) {second=first;first=cost;cell=edge;}
+                        else if(cost<second)second=cost;
+                    }
+                    // A singleton's remaining allocation is forced. Its
+                    // internal TORA penalty sentinel is not observable.
+                    const double penalty=count>1?second-first:0;
+                    finite(penalty);
+                    if(cell && (!selected || penalty>bestPenalty)) {selected=cell;bestPenalty=penalty;}
+                };
+                for(std::size_t r=0;r<m;++r)if(activeSources[r])consider(true,r);
+                for(std::size_t c=0;c<n;++c)if(activeDestinations[c])consider(false,c);
+            }
             if(!selected)throw std::runtime_error("No active Transportation allocation cell.");
             const auto [r,c]=*selected;
             const double value=std::min(remainingSupply[r],remainingDemand[c]);
@@ -178,6 +203,7 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
 }
 std::vector<Tableau> solveNorthWest(const Problem& p) { return solve(p,StartMethod::NorthWest); }
 std::vector<Tableau> solveLeastCost(const Problem& p) { return solve(p,StartMethod::LeastCost); }
+std::vector<Tableau> solveVogel(const Problem& p) { return solve(p,StartMethod::Vogel); }
 std::string quantity(double value) {
     finite(value);if(value==0)return "0";
     char buffer[128];const auto result=std::to_chars(buffer,buffer+sizeof(buffer),value);

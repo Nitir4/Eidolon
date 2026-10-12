@@ -117,3 +117,7 @@ locally, along with the full 81/81 desktop and 29/29 Qt-free suites. See
 final CI/package status. The main-branch preview boundary above is historical;
 Vogel, editing/writing, manual loops, alternate multipliers, final-summary and
 Transportation printing remain future work.
+
+## Vogel method cycle
+
+The future-scope branch now implements Vogel start against the17 existing method captures plus one targeted axis-penalty tie probe. The original76-tableau corpus was preserved; the new probe is under `vogel-probes/19-axis-penalty-tie/`. See TRANSPORTATION_VOGEL.md for tested rules, limitations and delivery evidence. Other Transportation functionality remains a separate cycle.

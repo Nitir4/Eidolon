@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
     parser.addOption({QStringLiteral("output"), QStringLiteral("Private capture/report directory."), QStringLiteral("path")});
     parser.addOption({QStringLiteral("print-dialog"), QStringLiteral("Capture and cancel the real Linux Qt print dialog; sends no print job.")});
     parser.addOption({QStringLiteral("fullscreen"), QStringLiteral("Temporarily display each view fullscreen on the connected monitor.")});
-    parser.addOption({QStringLiteral("transportation"), QStringLiteral("Also check native Transportation North-west and Least-cost methods.")});
+    parser.addOption({QStringLiteral("transportation"), QStringLiteral("Also check native Transportation North-west, Least-cost and Vogel methods.")});
     parser.process(app);
     try {
         require(parser.isSet(QStringLiteral("problem")) && parser.isSet(QStringLiteral("output")), "--problem and --output are required");
@@ -118,6 +118,19 @@ int main(int argc, char** argv) {
             leastAll->click();require(!leastAll->isEnabled(),"Least-cost did not terminate");
             require(transport.trace().back().objective==64,"Least-cost terminal mismatch");
             capture(QStringLiteral("transportation-leastcost-optimal"),QStringLiteral("transportation/leastcost"));
+            auto vogel=tora::transportation::Problem::blank(3,3);
+            vogel.title="Vogel degenerate improvement example";
+            vogel.costs={{7,0,8},{9,5,3},{9,0,5}};vogel.supply={2,3,8};vogel.demand={6,4,3};
+            transport.load(std::move(vogel));require(transport.solve(error,tora::transportation::StartMethod::Vogel),"Vogel solve failed");
+            require(shell.navigate(QStringLiteral("transportation/vogel")),"Vogel route failed");
+            require(transport.trace().size()==2 && transport.trace().front().objective==63,"Vogel initial mismatch");
+            capture(QStringLiteral("transportation-vogel-initial"),QStringLiteral("transportation/vogel"));
+            auto* vogelAll=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-all"));
+            require(vogelAll && vogelAll->isEnabled(),"Vogel All missing");
+            QTimer::singleShot(0,[]{for(auto* widget:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(widget))box->accept();});
+            vogelAll->click();require(!vogelAll->isEnabled(),"Vogel did not terminate");
+            require(transport.trace().back().objective==59,"Vogel terminal mismatch");
+            capture(QStringLiteral("transportation-vogel-optimal"),QStringLiteral("transportation/vogel"));
         }
         QString panel=QStringLiteral("not requested");
         if(parser.isSet(QStringLiteral("print-dialog"))) {

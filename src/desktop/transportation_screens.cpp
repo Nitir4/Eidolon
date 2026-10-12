@@ -107,7 +107,7 @@ void solveProblem(ApplicationShell& shell, transportation::StartMethod method = 
         QMessageBox::warning(&shell, QStringLiteral("Cannot Solve Problem"), error);
         return;
     }
-    shell.navigate(id(method==transportation::StartMethod::LeastCost?"leastcost":"northwest"));
+    shell.navigate(id(method==transportation::StartMethod::Vogel?"vogel":method==transportation::StartMethod::LeastCost?"leastcost":"northwest"));
     if(transportationController(shell).trace().size()==1)
         QMessageBox::information(&shell,QStringLiteral("Optimal Tableau"),QStringLiteral("Iteration 1 is optimal"));
 }
@@ -221,6 +221,8 @@ QWidget* solveMenu(ApplicationShell& shell)
            [&shell] { solveProblem(shell); });
     button(QStringLiteral("Least-cost start"), QStringLiteral("transport-leastcost-start"), *choices,
            [&shell] { solveProblem(shell,transportation::StartMethod::LeastCost); });
+    button(QStringLiteral("Vogel start"), QStringLiteral("transport-vogel-start"), *choices,
+           [&shell] { solveProblem(shell,transportation::StartMethod::Vogel); });
     centerPanel(*layout, panel);
     footer(*layout, shell, true);
     return page;
@@ -246,7 +248,9 @@ QWidget* iterations(ApplicationShell& shell)
     auto* grid = table(page, "transport-tableau"); layout->addWidget(grid, 1);
     auto shown = std::make_shared<std::size_t>(1);
     const auto render = [&controller, grid, next, all, shown, title, heading] {
-        heading->setText(controller.method()==transportation::StartMethod::LeastCost?
+        heading->setText(controller.method()==transportation::StartMethod::Vogel?
+                         QStringLiteral("TRANSPORTATION TABLEAU - (Vogel's Method)"):
+                         controller.method()==transportation::StartMethod::LeastCost?
                          QStringLiteral("TRANSPORTATION TABLEAU - (Least Cost Method)"):
                          QStringLiteral("TRANSPORTATION TABLEAU - (North-West Corner Method)"));
         grid->clearSpans(); grid->clear();
@@ -320,6 +324,8 @@ void menus(ApplicationShell& shell, QMenuBar& bar)
     northwest->setEnabled(transportationController(shell).loaded());
     auto* leastcost=solve->addAction(QStringLiteral("Iterations — Least-cost start"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::LeastCost);});
     leastcost->setEnabled(transportationController(shell).loaded());
+    auto* vogel=solve->addAction(QStringLiteral("Iterations — Vogel start"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::Vogel);});
+    vogel->setEnabled(transportationController(shell).loaded());
     bar.addAction(QStringLiteral("MAIN Menu"),&shell,[&shell]{shell.navigate(QStringLiteral("main"));});
 }
 } // namespace
@@ -376,6 +382,7 @@ ModuleDescriptor transportationModule()
     module.screens.append({id("solve-menu"),QStringLiteral("TRANSPORTATION MODEL"),solveMenu,menus});
     module.screens.append({id("northwest"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
     module.screens.append({id("leastcost"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
+    module.screens.append({id("vogel"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
     return module;
 }
 } // namespace tora::desktop
