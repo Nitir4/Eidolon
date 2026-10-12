@@ -148,3 +148,8 @@ Default settings, ASCII corpus files and numeric grids are verified against
 Transportation writer or dirty-document lifecycle is provided in this preview.
 Native parsing limits and doubled-quote safety handling are documented
 engineering policies, not claims about all legacy reader behavior.
+
+
+## Transportation editing continuation
+
+The current future-scope source adds editable Transportation documents, native new/input initialization, aliases/costs/quantities/title editing, Open/read-only copies and atomic Save/Save As. Historical read-only descriptions above identify earlier deliveries. See [the editing contract](tora-analysis/TRANSPORTATION_EDITING.md) and STATUS.json for current verification. Unbalanced drafts are savable; solver profile restrictions remain. EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing remain separate cycles. New source has not yet passed a three-OS/package/install gate.

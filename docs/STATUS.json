@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation Vogel captured-profile gate complete; native build installed and open",
+  "active_step": "future-scope: Transportation editing/new/save locally verified; three-OS/package/install gate pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Review delivered Vogel method; Transportation editing/file writing is the next separate feature cycle",
+  "next_step": "Run source-pinned three-OS CI/package gate for Transportation editing; then continue the next separate Transportation feature cycle",
   "foundation_order": [
     1,
     5,
@@ -570,6 +570,25 @@
         "linux-x86_64": "5d5c7e1fc0cbd0c73f0d405462202c8350907e4374c58280b798d84db505cfa8",
         "windows-x86_64": "a6480f201748b38a46c186183875bc865919542b4aa0fb254aa00ecb3e202a49"
       }
+    },
+    "active_cycle": "Transportation editing/new/save",
+    "input_editing": {
+      "status": "locally verified; three-OS CI, package audit and installation pending",
+      "spec": "docs/tora-analysis/TRANSPORTATION_EDITING.md",
+      "working_mode": "implementation; reconfirmed by user",
+      "base_commit": "19b9ab1b592868a6442f1d42890cb6753859943a",
+      "product_test_source_sha256": "30c6a174783bdd8f56bbfd8d814b631f88f7909d10b9300ea40fee549bdd5e03",
+      "local_tests": "88/88 desktop in 173.88 s; 32/32 Qt-free in 4.12 s; 14/14 focused Transportation checks after keyboard correction",
+      "input_file_oracles": 3,
+      "writer_corpus_roundtrips": "52 method-case encodes against independently reconstructed authentic-hash inputs; 18 unique existing profiles",
+      "native_input_checks_per_scale": 8,
+      "input_resolution_renders": 12,
+      "native_acceptance": "17 actual Wayland views, LP model preserved; new/active-edit-save/reopen checked",
+      "oracle_bridge": "Clone-written balanced edited input opened/saved byte-identically by TORA, then TORA saved copy reopened; SHA256 5780c617030858c85a81f31cd55aa8b04bcfaa6a4fc5a467a7a6ba377236cd26",
+      "local_evidence": "build/transportation-input/",
+      "quantity_rule": "New UI quantities commit to nearest whole numbers with observed positive half ties away from zero; untouched imported fractions preserved",
+      "release_state": "Previous Vogel release remains installed; current feature is not installed yet",
+      "remaining": "EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing; other OR modules remain separate cycles"
     }
   }
 }

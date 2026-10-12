@@ -1,10 +1,16 @@
 #include <tora/transportation/north_west.hpp>
 #include <tora/compat/transportation_reader.hpp>
+#include <tora/compat/transportation_document.hpp>
 #include <iostream>
 #include <locale>
 #include <fstream>
 #include <iterator>
 #include <string>
+#include <tuple>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 
 static void quote(const std::string& value) {
     std::cout << '"';
@@ -27,9 +33,21 @@ int main(int argc,char** argv) {
         tora::transportation::Problem problem;
         auto method=tora::transportation::StartMethod::NorthWest;
         std::string filename;
+        bool roundtrip=false;
+        std::vector<std::tuple<int,int,std::string>> edits;
+        std::size_t newSources=0,newDestinations=0;std::string newTitle;
         for(int i=1;i<argc;++i) {
             const std::string arg=argv[i];
             if(arg=="--file" && i+1<argc)filename=argv[++i];
+            else if(arg=="--roundtrip")roundtrip=true;
+            else if(arg=="--new" && i+3<argc) {
+                newSources=static_cast<std::size_t>(std::stoul(argv[++i]));
+                newDestinations=static_cast<std::size_t>(std::stoul(argv[++i]));newTitle=argv[++i];
+            }
+            else if(arg=="--edit" && i+3<argc) {
+                const auto row=std::stoi(argv[++i]),column=std::stoi(argv[++i]);
+                edits.emplace_back(row,column,argv[++i]);
+            }
             else if(arg=="--method" && i+1<argc) {
                 const std::string name=argv[++i];
                 if(name=="leastcost")method=tora::transportation::StartMethod::LeastCost;
@@ -37,11 +55,27 @@ int main(int argc,char** argv) {
                 else if(name!="northwest")throw std::invalid_argument("Unknown method");
             } else throw std::invalid_argument("Unknown or incomplete probe option");
         }
-        if(!filename.empty()) {
+#ifdef _WIN32
+        if(roundtrip)_setmode(_fileno(stdout),_O_BINARY);
+#endif
+        const auto applyEdits=[&edits](tora::compat::TransportationDocument& document) {
+            for(const auto& [row,column,value]:edits)
+                document.setCell(static_cast<std::size_t>(row),static_cast<std::size_t>(column),value);
+        };
+        if(newSources) {
+            auto document=tora::compat::TransportationDocument::blank(newSources,newDestinations,newTitle);
+            applyEdits(document);
+            if(roundtrip) {std::cout<<document.encode();return 0;}
+            problem=document.problem();
+        }
+        else if(!filename.empty()) {
             std::ifstream file(filename,std::ios::binary);
             if(!file)throw std::runtime_error("Cannot open probe file");
             const std::string bytes{std::istreambuf_iterator<char>(file),{}};
-            problem=tora::compat::readTransportation(bytes);
+            auto document=tora::compat::TransportationDocument::decode(bytes);
+            applyEdits(document);
+            if(roundtrip) {std::cout<<document.encode();return 0;}
+            problem=document.problem();
         }else {
         std::size_t m=0,n=0;std::cin>>m>>n;
         problem=tora::transportation::Problem::blank(m,n);
@@ -49,6 +83,7 @@ int main(int argc,char** argv) {
         for(auto& value:problem.supply)std::cin>>value;
         for(auto& value:problem.demand)std::cin>>value;
         if(!std::cin)throw std::runtime_error("Invalid probe input");
+        if(roundtrip) {std::cout<<tora::compat::TransportationDocument::create(problem).encode();return 0;}
         }
         const auto trace=tora::transportation::solve(problem,method);
         std::cout<<'[';

@@ -1,0 +1,79 @@
+[
+  {
+    "case": "new-cost-rounding",
+    "sources": 2,
+    "destinations": 3,
+    "title": "Transportation edited input",
+    "edit": [
+      1,
+      1,
+      "1.234567"
+    ],
+    "file_sha256": "e214b88ad4a59cbb94d8e60144762ac16706e8e41c25a02f2ed77735be5a8338",
+    "provenance": {
+      "file": "reference/tora-captures/transportation/input-editing/actions-new-authentic/tora-saved.txt",
+      "commit_screen": "reference/tora-captures/transportation/input-editing/actions-new-grid/cost-committed.png",
+      "commit_screen_sha256": "ddce970fad33336b5618b4b4274d95dc907755722b166515ecc121a607ad27ca",
+      "save_evidence": "ev_4afe9a4bbe393cf7c4967b1f902adbf600f899ad29be6531c4a5b6c84aa00a66"
+    }
+  },
+  {
+    "case": "quantity-integer-commit",
+    "sources": 2,
+    "destinations": 3,
+    "title": "Transportation quantity input",
+    "edits": [
+      [
+        1,
+        4,
+        "20"
+      ],
+      [
+        2,
+        4,
+        "30.125"
+      ]
+    ],
+    "file_sha256": "68a1eb1ba5cd9610512b7c575fb905e97d3c8af431ad910bef20da79960b18b7",
+    "provenance": {
+      "file": "reference/tora-captures/transportation/input-editing/actions-quantity-new/tora-saved.txt",
+      "commit_screen_sha256": "6c5321961bab7b591235e7bedbcccf6c394604a74d330bcd9ad9d058894845df",
+      "save_evidence": "ev_1bddde0ef7333844fcbf8de8251e7aeb9e867d86edfd1348c5be9121b5376b6b"
+    }
+  },
+  {
+    "case": "quantity-nearest-half-away",
+    "sources": 2,
+    "destinations": 3,
+    "title": "Transportation quantity rounding",
+    "edits": [
+      [
+        1,
+        4,
+        "20.5"
+      ],
+      [
+        2,
+        4,
+        "21.5"
+      ],
+      [
+        3,
+        1,
+        "30.75"
+      ],
+      [
+        3,
+        2,
+        "30.125"
+      ]
+    ],
+    "file_sha256": "014cf7fa192dd985300b8985614858394b6268119625e92cab493b5c4f92b2be",
+    "provenance": {
+      "file": "reference/tora-captures/transportation/input-editing/actions-quantity-rounding/tora-saved.txt",
+      "commit_screen_sha256": "17aa9aa92b4d5d426c21610464e07649eb0e0e690a26fffe45d06dbf343104e2",
+      "save_evidence": "ev_179164935c2cdbe4e5a8e77fbf0e3b2107051bade4eb8236b979f55ef98c9fd6",
+      "limit": "The last 0.5 input remained in the editor and was not committed by TORA; the expected scenario includes only the four observed committed edits."
+    }
+  }
+]

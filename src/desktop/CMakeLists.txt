@@ -1,5 +1,5 @@
 qt_standard_project_setup(REQUIRES 6.8)
-qt_add_library(desktop_shell STATIC lp_printing.cpp lp_printing.hpp application_shell.cpp application_shell.hpp lp_screens.cpp lp_input_controller.cpp lp_input_controller.hpp lp_simplex_controller.cpp lp_simplex_controller.hpp lp_graphical_controller.cpp lp_graphical_controller.hpp lp_final_controller.cpp lp_final_controller.hpp transportation_screens.cpp transportation_screens.hpp)
+qt_add_library(desktop_shell STATIC lp_printing.cpp lp_printing.hpp application_shell.cpp application_shell.hpp lp_screens.cpp lp_input_controller.cpp lp_input_controller.hpp lp_simplex_controller.cpp lp_simplex_controller.hpp lp_graphical_controller.cpp lp_graphical_controller.hpp lp_final_controller.cpp lp_final_controller.hpp transportation_controller.cpp transportation_screens.cpp transportation_screens.hpp)
 tora_target_defaults(desktop_shell)
 target_include_directories(desktop_shell PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(desktop_shell PUBLIC Qt6::Widgets Qt6::PrintSupport tora::compat tora::transportation_compat)

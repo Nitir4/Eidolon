@@ -31,6 +31,9 @@ for record in records:
     assert hashlib.sha256(document).hexdigest()==record['file_sha256'],record['case']+' actual oracle file hash'
     with tempfile.TemporaryDirectory(prefix='tora-transportation-') as temporary:
         path=Path(temporary)/'independently-generated.txt';path.write_bytes(document)
+        encoded=subprocess.run([sys.argv[1],'--file',str(path),'--roundtrip'],capture_output=True)
+        assert encoded.returncode==0,record['case']+': '+encoded.stderr.decode()
+        assert encoded.stdout==document,record['case']+' exact writer round trip'
         from_file=subprocess.run([sys.argv[1],'--file',str(path)]+arguments,text=True,capture_output=True)
         assert from_file.returncode==0,record['case']+': '+from_file.stderr
         assert json.loads(from_file.stdout)==actual,record['case']+' file-backed trace'

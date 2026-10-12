@@ -461,3 +461,8 @@ size/cycle/iteration guards are explicit native engineering policies.
 ## Future-scope Vogel start
 
 `StartMethod::Vogel` extends the Qt-free Transportation initial-basis selection. Active-line penalties choose the allocation cell; exhausted-line handling, MODI snapshots/pivots, formatting and compatibility reader remain shared. The controller commits a method/trace only after success. Native `transportation/vogel` reuses the same iteration-page factory as the other starts. No operating-system-specific solver or browser component is introduced.
+
+
+## Transportation editing continuation
+
+The current future-scope source adds editable Transportation documents, native new/input initialization, aliases/costs/quantities/title editing, Open/read-only copies and atomic Save/Save As. Historical read-only descriptions above identify earlier deliveries. See [the editing contract](tora-analysis/TRANSPORTATION_EDITING.md) and STATUS.json for current verification. Unbalanced drafts are savable; solver profile restrictions remain. EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing remain separate cycles. New source has not yet passed a three-OS/package/install gate.

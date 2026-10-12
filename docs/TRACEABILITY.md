@@ -364,3 +364,8 @@ and installed-window evidence is recorded in STATUS.json. main is unchanged.
 | TR-VG-UI | Exact heading, method route, optimal notices and scaled tables | UI_SPEC.md | desktop/transportation_screens.cpp | desktop.transportation.scale-*; desktop_native_acceptance --transportation | same Vogel screens |
 
 Vogel final gate closes at source 6b01925, CI 38265173986: 82/82 per OS, 625 exact new-method fields, 71 Transportation checks/scale and 36 renders/OS. All-three-OS screenshots, package audits and actual installed Wayland identity pass. Evidence and retained limits are recorded in STATUS.json and TRANSPORTATION_VOGEL.md.
+
+
+## Transportation editing continuation
+
+The current future-scope source adds editable Transportation documents, native new/input initialization, aliases/costs/quantities/title editing, Open/read-only copies and atomic Save/Save As. Historical read-only descriptions above identify earlier deliveries. See [the editing contract](tora-analysis/TRANSPORTATION_EDITING.md) and STATUS.json for current verification. Unbalanced drafts are savable; solver profile restrictions remain. EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing remain separate cycles. New source has not yet passed a three-OS/package/install gate.

@@ -11,6 +11,11 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
+#include <QIntValidator>
+#include <QPointer>
+#include <QPersistentModelIndex>
+#include <QKeyEvent>
+#include <QScopedValueRollback>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -18,6 +23,9 @@
 #include <QResizeEvent>
 #include <QStyle>
 #include <QTableWidget>
+#include <QStyledItemDelegate>
+#include <QSignalBlocker>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <algorithm>
 #include <exception>
@@ -90,15 +98,13 @@ void footer(QVBoxLayout& layout, ApplicationShell& shell, bool viewInput)
 }
 void openProblem(ApplicationShell& shell)
 {
-    const auto filename = QFileDialog::getOpenFileName(&shell, QStringLiteral("Open Transportation Problem"), {},
-                                                      QStringLiteral("TORA files (*.txt);;All files (*)"));
-    if (filename.isEmpty()) return;
-    QString error;
-    if (!transportationController(shell).openFile(filename, error)) {
-        QMessageBox::warning(&shell, QStringLiteral("Cannot Open Problem"), error);
-        return;
-    }
-    shell.navigate(id("input"));
+    if (transportationController(shell).requestOpen()) shell.navigate(id("input"));
+}
+void newProblem(ApplicationShell& shell)
+{
+    auto& c = transportationController(shell);
+    if (!c.leaveInput()) return;
+    c.beginNew(); shell.navigate(id("input"));
 }
 void solveProblem(ApplicationShell& shell, transportation::StartMethod method = transportation::StartMethod::NorthWest)
 {
@@ -136,6 +142,59 @@ QTableWidgetItem* put(QTableWidget& grid, int row, int col, const QString& value
     grid.setItem(row, col, item);
     return item;
 }
+class TransportationInputDelegate final : public QStyledItemDelegate {
+public:
+    TransportationInputDelegate(TransportationController& controller, QTableWidget* grid)
+        : QStyledItemDelegate(grid), controller_(controller), grid_(grid) {}
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override {
+        auto* editor = QStyledItemDelegate::createEditor(parent, option, index);
+        editor_ = editor; index_ = index; return editor;
+    }
+    void destroyEditor(QWidget* editor, const QModelIndex& index) const override {
+        if (editor_ == editor) editor_.clear();
+        QStyledItemDelegate::destroyEditor(editor, index);
+    }
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override {
+        if (committing_) return;
+        const QScopedValueRollback<bool> committing(committing_, true);
+        auto* line = qobject_cast<QLineEdit*>(editor); if (!line) return;
+        QString error;
+        valid_ = controller_.editCell(index.row()-1, index.column()-1, line->text(), error);
+        if (!valid_) { controller_.dialogs().showError(QStringLiteral("Input Data Error"), error); return; }
+        const QSignalBlocker block(grid_);
+        model->setData(index, text(controller_.document()->cell(static_cast<std::size_t>(index.row()-1),
+                                                               static_cast<std::size_t>(index.column()-1))), Qt::EditRole);
+    }
+    bool eventFilter(QObject* object, QEvent* event) override {
+        if (committing_) return true;
+        if (event->type() == QEvent::KeyPress) {
+            const auto key = static_cast<QKeyEvent*>(event)->key();
+            if (key == Qt::Key_Return || key == Qt::Key_Enter || key == Qt::Key_Tab || key == Qt::Key_Backtab) {
+                auto* editor = qobject_cast<QWidget*>(object);
+                setModelData(editor, grid_->model(), index_);
+                if (valid_) {
+                    editor_.clear();
+                    emit closeEditor(editor, key == Qt::Key_Backtab ? QAbstractItemDelegate::EditPreviousItem : QAbstractItemDelegate::EditNextItem);
+                }
+                return true;
+            }
+        }
+        return QStyledItemDelegate::eventFilter(object, event);
+    }
+    bool hasEditor() const { return !editor_.isNull(); }
+    bool commitActiveEditor() {
+        if (!editor_) return true;
+        auto* editor = editor_.data(); setModelData(editor, grid_->model(), index_);
+        if (!valid_) return false;
+        emit closeEditor(editor, QAbstractItemDelegate::NoHint); editor_.clear(); return true;
+    }
+private:
+    TransportationController& controller_;
+    QTableWidget* grid_;
+    mutable QPointer<QWidget> editor_;
+    mutable QPersistentModelIndex index_;
+    mutable bool valid_ = true, committing_ = false;
+};
 QWidget* inputMode(ApplicationShell& shell)
 {
     auto* page = new QWidget;
@@ -145,11 +204,13 @@ QWidget* inputMode(ApplicationShell& shell)
     auto* title = new QLabel(QStringLiteral("TRANSPORTATION MODEL"));
     title->setAlignment(Qt::AlignCenter);
     choices->addWidget(title);
-    auto* description = new QLabel(QStringLiteral("Open an existing TORA problem or load the example.\nNorth-west / Least-cost / Vogel starts · automatic iterations\nSaved problems are opened read only."));
+    auto* description = new QLabel(QStringLiteral("Create or edit a Transportation problem, or load the example.\nNorth-west / Least-cost / Vogel starts · automatic iterations"));
     description->setAlignment(Qt::AlignCenter);
     choices->addWidget(description);
+    button(QStringLiteral("Enter New Problem"), QStringLiteral("transport-new"), *choices, [&shell] { newProblem(shell); });
     button(QStringLiteral("Enter/Edit Existing Problem"), QStringLiteral("transport-open"), *choices, [&shell] { openProblem(shell); });
     button(QStringLiteral("Load Example"), QStringLiteral("transport-example"), *choices, [&shell] {
+        if (!transportationController(shell).leaveInput()) return;
         transportationController(shell).loadExample();
         shell.navigate(id("input"));
     });
@@ -159,55 +220,96 @@ QWidget* inputMode(ApplicationShell& shell)
 }
 QWidget* input(ApplicationShell& shell)
 {
+    auto& controller = transportationController(shell);
     auto* page = new QWidget;
     auto* layout = new QVBoxLayout(page);
-    auto* title = new QLabel;
-    title->setWordWrap(true);
-    layout->addWidget(title);
-    auto* status = new QLabel(QStringLiteral("Saved problem · read only"));
-    layout->addWidget(status);
+    auto* form = new QFormLayout;
+    auto* title = new QLineEdit; title->setObjectName(QStringLiteral("transport-title"));
+    form->addRow(QStringLiteral("Problem Title:"), title);
+    auto* dimensions = new QHBoxLayout;
+    auto* sources = new QLineEdit; sources->setObjectName(QStringLiteral("transport-sources"));
+    auto* destinations = new QLineEdit; destinations->setObjectName(QStringLiteral("transport-destinations"));
+    for (auto* field : {sources, destinations}) {
+        field->setValidator(new QIntValidator(1, 100, field)); field->setMaximumWidth(field->fontMetrics().horizontalAdvance(QStringLiteral("000000")));
+    }
+    dimensions->addWidget(new QLabel(QStringLiteral("No. of Sources:"))); dimensions->addWidget(sources);
+    dimensions->addWidget(new QLabel(QStringLiteral("No. of Dest'ns:"))); dimensions->addWidget(destinations);
+    auto* initialize = new QPushButton(QStringLiteral("Initialize Grid")); initialize->setObjectName(QStringLiteral("transport-initialize"));
+    dimensions->addWidget(initialize); dimensions->addStretch();
+    layout->addLayout(form); layout->addLayout(dimensions);
+    auto* status = new QLabel; status->setObjectName(QStringLiteral("transport-input-status")); status->setWordWrap(true); layout->addWidget(status);
     auto* grid = table(page, "transport-input-grid");
+    auto* delegate = new TransportationInputDelegate(controller, grid); grid->setItemDelegate(delegate);
+    grid->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
     layout->addWidget(grid, 1);
-    auto& controller = transportationController(shell);
     auto* row = new QHBoxLayout;
+    addButton(*row, QStringLiteral("New Problem"), "transport-input-new", page, [&shell] { newProblem(shell); });
     addButton(*row, QStringLiteral("Open Problem"), "transport-input-open", page, [&shell] { openProblem(shell); });
+    auto* save = addButton(*row, QStringLiteral("Save As"), "transport-input-save", page, [&controller] { controller.requestSave(); });
     row->addStretch();
-    auto* solve = addButton(*row, QStringLiteral("SOLVE Menu"), "transport-solve-menu", page,
-                            [&shell] { shell.navigate(id("solve-menu")); });
+    auto* solve = addButton(*row, QStringLiteral("SOLVE Menu"), "transport-solve-menu", page, [&shell] { shell.navigate(id("solve-menu")); });
     layout->addLayout(row);
-    const auto refresh = [&controller, title, grid, solve] {
-        grid->clear();
-        solve->setEnabled(controller.loaded());
+    const auto refresh = [&controller, title, sources, destinations, initialize, status, grid, solve, save] {
+        const QSignalBlocker block(grid);
+        grid->clear(); solve->setEnabled(controller.loaded()); save->setEnabled(controller.loaded());
+        title->setReadOnly(controller.readOnly()); sources->setReadOnly(controller.readOnly()); destinations->setReadOnly(controller.readOnly());
+        initialize->setEnabled(!controller.readOnly());
         if (!controller.loaded()) {
-            title->setText(QStringLiteral("Open a Transportation problem to view its input data."));
+            title->clear(); sources->clear(); destinations->clear();
+            status->setText(QStringLiteral("Enter source and destination counts, then press Return or Initialize Grid."));
             grid->setRowCount(0); grid->setColumnCount(0); return;
         }
-        const auto& p = controller.problem();
+        const auto& p = controller.problem(); const auto& doc = *controller.document();
         const int m = static_cast<int>(p.supply.size()), n = static_cast<int>(p.demand.size());
-        title->setText(QStringLiteral("%1\nNo. Sources: %2     No. Dest'ns: %3").arg(text(p.title)).arg(m).arg(n));
+        title->setText(text(p.title)); sources->setText(QString::number(m)); destinations->setText(QString::number(n));
+        status->setText((controller.readOnly() ? QStringLiteral("Read-only") : controller.dirty() ? QStringLiteral("Unsaved changes") : QStringLiteral("Input data"))
+                       + (controller.sourcePath().isEmpty() ? QString() : QStringLiteral(" · ") + controller.sourcePath()));
         grid->setRowCount(m+3); grid->setColumnCount(n+3);
-        const core::NumberFormatter formatter({core::Notation::Decimal,5,2});
-        put(*grid, 1, 1, QStringLiteral("S/D Name"), true);
-        put(*grid, 0, n+2, QStringLiteral("Supply"), true);
-        for (int j=0; j<n; ++j) {
-            put(*grid, 0, j+2, QStringLiteral("D%1").arg(j+1), true);
-            put(*grid, 1, j+2, text(p.destinationNames[static_cast<std::size_t>(j)]));
-            put(*grid, m+2, j+2, text(transportation::quantity(p.demand[static_cast<std::size_t>(j)])), true);
-        }
-        for (int i=0; i<m; ++i) {
-            const auto r=static_cast<std::size_t>(i);
-            put(*grid, i+2, 0, QStringLiteral("S%1").arg(i+1), true);
-            put(*grid, i+2, 1, text(p.sourceNames[r]));
-            for (int j=0; j<n; ++j) put(*grid, i+2, j+2, text(formatter.format(p.costs[r][static_cast<std::size_t>(j)])));
-            put(*grid, i+2, n+2, text(transportation::quantity(p.supply[r])), true);
-        }
+        put(*grid, 1, 1, QStringLiteral("S/D Name"), true); put(*grid, 0, n+2, QStringLiteral("Supply"), true);
+        for (int j = 0; j < n; ++j) put(*grid, 0, j+2, QStringLiteral("D%1").arg(j+1), true);
+        for (int i = 0; i < m; ++i) put(*grid, i+2, 0, QStringLiteral("S%1").arg(i+1), true);
         put(*grid, m+2, 0, QStringLiteral("Demand"), true);
-        grid->fitColumns(2,n);
+        for (int r = 0; r < m+2; ++r) for (int c = 0; c < n+2; ++c) {
+            const bool alias = (r == 0 && c >= 1 && c <= n) || (c == 0 && r >= 1 && r <= m);
+            const bool cost = r >= 1 && r <= m && c >= 1 && c <= n;
+            const bool quantity = (r >= 1 && r <= m && c == n+1) || (r == m+1 && c >= 1 && c <= n);
+            if (!(alias || cost || quantity)) continue;
+            auto* item = put(*grid, r+1, c+1, text(doc.cell(static_cast<std::size_t>(r), static_cast<std::size_t>(c))), quantity);
+            if (!controller.readOnly()) item->setFlags(item->flags() | Qt::ItemIsEditable);
+        }
+        grid->fitColumns(2, n);
     };
-    QObject::connect(&controller, &TransportationController::changed, page, refresh);
-    refresh();
-    footer(*layout, shell, false);
-    return page;
+    // Cell commits update only their item. Rebuilding the whole grid here would
+    // destroy Qt's next editor after Return/Tab and lose keyboard continuity.
+    QObject::connect(&controller, &TransportationController::inputReset, page, refresh);
+    QObject::connect(&controller, &TransportationController::cellChanged, page, [&controller, grid, status](int r, int c) {
+        const QSignalBlocker block(grid);
+        if (auto* item = grid->item(r+1, c+1)) item->setText(text(controller.document()->cell(static_cast<std::size_t>(r), static_cast<std::size_t>(c))));
+        status->setText(QStringLiteral("Unsaved changes") + (controller.sourcePath().isEmpty() ? QString() : QStringLiteral(" · ") + controller.sourcePath()));
+    });
+    const auto updateTitle = [&controller, title] {
+        QString error;
+        if (!controller.setTitle(title->text(), error)) {
+            controller.dialogs().showError(QStringLiteral("Input Data Error"), error);
+            if (controller.loaded()) title->setText(text(controller.problem().title));
+        }
+    };
+    QObject::connect(title, &QLineEdit::editingFinished, page, updateTitle);
+    QObject::connect(&controller, &TransportationController::commitRequested, page, [delegate, updateTitle] {
+        if (delegate->commitActiveEditor()) updateTitle();
+    });
+    const auto initializeGrid = [&controller, title, sources, destinations] {
+        bool validSources = false, validDestinations = false;
+        const auto m = sources->text().toInt(&validSources), n = destinations->text().toInt(&validDestinations);
+        QString error;
+        if (!controller.commitInput()) return;
+        if (!controller.initialize(title->text(), validSources ? m : 0, validDestinations ? n : 0, error))
+            controller.dialogs().showError(QStringLiteral("Problem Size"), error);
+    };
+    QObject::connect(initialize, &QPushButton::clicked, page, initializeGrid);
+    QObject::connect(sources, &QLineEdit::returnPressed, page, initializeGrid);
+    QObject::connect(destinations, &QLineEdit::returnPressed, page, initializeGrid);
+    refresh(); footer(*layout, shell, false); return page;
 }
 QWidget* solveMenu(ApplicationShell& shell)
 {
@@ -317,8 +419,15 @@ QWidget* iterations(ApplicationShell& shell)
 void menus(ApplicationShell& shell, QMenuBar& bar)
 {
     auto* file=bar.addMenu(QStringLiteral("File"));
+    auto* create=file->addAction(QStringLiteral("New"),&shell,[&shell]{newProblem(shell);});
+    create->setShortcut(QKeySequence::New);
     auto* open=file->addAction(QStringLiteral("Open…"),&shell,[&shell]{openProblem(shell);});
     open->setShortcut(QKeySequence::Open);
+    auto& controller=transportationController(shell);
+    auto* save=file->addAction(QStringLiteral("Save"),&controller,[&controller]{controller.requestSave();});
+    save->setShortcut(QKeySequence::Save);
+    auto* saveAs=file->addAction(QStringLiteral("Save As…"),&controller,[&controller]{controller.requestSave();});
+    saveAs->setShortcut(QKeySequence::SaveAs);
     auto* solve=bar.addMenu(QStringLiteral("Solve Problem"));
     auto* northwest=solve->addAction(QStringLiteral("Iterations — North-west corner start"),&shell,[&shell]{solveProblem(shell);});
     northwest->setEnabled(transportationController(shell).loaded());
@@ -326,57 +435,22 @@ void menus(ApplicationShell& shell, QMenuBar& bar)
     leastcost->setEnabled(transportationController(shell).loaded());
     auto* vogel=solve->addAction(QStringLiteral("Iterations — Vogel start"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::Vogel);});
     vogel->setEnabled(transportationController(shell).loaded());
+    const auto update=[&controller,save,saveAs,northwest,leastcost,vogel] {
+        for (auto* action:{save,saveAs,northwest,leastcost,vogel}) action->setEnabled(controller.loaded());
+    };
+    QObject::connect(&controller,&TransportationController::changed,file,update); update();
     bar.addAction(QStringLiteral("MAIN Menu"),&shell,[&shell]{shell.navigate(QStringLiteral("main"));});
 }
 } // namespace
 
-TransportationController::TransportationController(QObject* parent):QObject(parent)
-{ setObjectName(QStringLiteral("transportation-controller")); }
-void TransportationController::load(transportation::Problem problem)
-{
-    transportation::validate(problem);
-    problem_=std::move(problem); trace_.clear(); method_=transportation::StartMethod::NorthWest; loaded_=true; emit changed();
-}
-void TransportationController::loadExample()
-{
-    auto p=transportation::Problem::blank(2,3);
-    p.title="Transportation example"; p.costs={{2,3,1},{5,4,8}}; p.supply={20,30}; p.demand={10,25,15}; load(std::move(p));
-}
-bool TransportationController::openFile(const QString& filename, QString& error)
-{
-    error.clear();
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly)) { error=file.errorString(); return false; }
-    if (file.size()>4*1024*1024) { error=QStringLiteral("Transportation file exceeds the 4 MiB limit."); return false; }
-    try {
-        const auto bytes=file.readAll();
-        if (file.error()!=QFileDevice::NoError) { error=file.errorString(); return false; }
-        load(compat::readTransportation(std::string_view(bytes.constData(),static_cast<std::size_t>(bytes.size()))));
-        return true;
-    } catch (const std::exception& e) { error=QString::fromUtf8(e.what()); return false; }
-}
-bool TransportationController::solve(QString& error, transportation::StartMethod method)
-{
-    error.clear();
-    if (!loaded_) { error=QStringLiteral("Open a Transportation problem first."); return false; }
-    try {
-        auto result=transportation::solve(problem_,method);
-        const auto cellsPerTable=(3*problem_.supply.size()+4)*(problem_.demand.size()+4);
-        if (result.size()>250000/cellsPerTable) {
-            error=QStringLiteral("This Transportation preview limits the displayed trace to 250,000 cells. The problem requires a larger trace.");
-            return false;
-        }
-        trace_=std::move(result); method_=method; emit changed(); return true;
-    } catch (const std::exception& e) { error=QString::fromUtf8(e.what()); return false; }
-}
-TransportationController& transportationController(ApplicationShell& shell)
-{
-    if (auto* existing=shell.findChild<TransportationController*>(QStringLiteral("transportation-controller"))) return *existing;
-    return *new TransportationController(&shell);
-}
 ModuleDescriptor transportationModule()
 {
     ModuleDescriptor module{QStringLiteral("transportation"),QStringLiteral("Transportation model"),id("input-mode"),{}, {}};
+    module.beforeLeave=[](ApplicationShell& shell,const QString& from,const QString& to) {
+        if (from==id("input") || !to.startsWith(QStringLiteral("transportation/")))
+            return transportationController(shell).leaveInput();
+        return true;
+    };
     module.screens.append({id("input-mode"),QStringLiteral("TRANSPORTATION MODEL"),inputMode,menus});
     module.screens.append({id("input"),QStringLiteral("TRANSPORTATION INPUT DATA"),input,menus});
     module.screens.append({id("solve-menu"),QStringLiteral("TRANSPORTATION MODEL"),solveMenu,menus});

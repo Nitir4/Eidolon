@@ -13,7 +13,7 @@ its input module supplies native LP data entry, row/column editing and Open/Save
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-all three OS builds pass 82 tests each, including independent printer PDF
+the published Vogel release passes 82 tests on each OS, including independent printer PDF
 comparison and live synthetic display changes. The latest verification and packages
 are recorded in [current status](docs/STATUS.json). Recorded physical-printer/driver,
 physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
@@ -59,7 +59,7 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
-Transportation is an authorized extension with read-only North-west, Least-cost and Vogel starts on `future-scope`. Other OR modules remain outside this project. Review layouts with, for
+Transportation is an authorized extension with North-west, Least-cost and Vogel starts on `future-scope`. The working source also adds editable input and file writing; the published Vogel binaries retain their earlier read-only input. Other OR modules remain outside this project. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal
@@ -172,3 +172,6 @@ The verified Linux AppImage from source `6b01925` is installed and open through
 8/8, the Qt-free suite passed 30/30, and actual Wayland acceptance passed all
 14 views. See [Vogel analysis](docs/tora-analysis/TRANSPORTATION_VOGEL.md) for
 evidence and the remaining Transportation scope.
+
+
+The current working source adds **Transportation model → Enter New Problem**. Enter source/destination counts and press Return or Initialize Grid. Edit aliases, costs, supplies and demands directly; Return/Tab commits and advances. File → Save/Save As writes a compatible default-format text file. Open includes a read-only option; Save As to another file creates an editable copy. A new file matches an authentic TORA save exactly, and a clone-written cost edit survives TORA open/save byte for byte. See [the editing specification](docs/tora-analysis/TRANSPORTATION_EDITING.md) and [current status](docs/STATUS.json) for verification and remaining work. Run `build/dev/src/desktop/ToraClone --no-settings --screen transportation/input-mode` to review the working build. Existing installed releases are unchanged until a new delivery gate is completed.

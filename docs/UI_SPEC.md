@@ -334,3 +334,8 @@ remain outside this slice. Read-only input uses normal arrow-key selection.
 The Transportation Solve Problem menu and iterations chooser add Vogel start. Its output heading is `TRANSPORTATION TABLEAU - (Vogel's Method)`, verified from the reference. The shared Next/All, optimal notices, font-metric column sizing, scrolling and HiDPI behavior apply. Input remains read-only in this slice. Three methods are rendered at1366×768,1920×1080 and3840×2160 at100/125/150/200% scale. Final acceptance is recorded in STATUS.json.
 
 Vogel final gate closes at source 6b01925, CI 38265173986: 82/82 per OS, 625 exact new-method fields, 71 Transportation checks/scale and 36 renders/OS. All-three-OS screenshots, package audits and actual installed Wayland identity pass. Evidence and retained limits are recorded in STATUS.json and TRANSPORTATION_VOGEL.md.
+
+
+## Transportation editing continuation
+
+The current future-scope source adds editable Transportation documents, native new/input initialization, aliases/costs/quantities/title editing, Open/read-only copies and atomic Save/Save As. Historical read-only descriptions above identify earlier deliveries. See [the editing contract](tora-analysis/TRANSPORTATION_EDITING.md) and STATUS.json for current verification. Unbalanced drafts are savable; solver profile restrictions remain. EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing remain separate cycles. New source has not yet passed a three-OS/package/install gate.

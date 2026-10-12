@@ -53,3 +53,5 @@ The feature branch adds [Least-cost start](TRANSPORTATION_LEAST_COST.md), using
 17 independent profiles/20 tableaus and the shared MODI improvement loop.
 
 - [Transportation Vogel start](TRANSPORTATION_VOGEL.md): captured penalty/tie rules,18 test problems, native method integration and explicit unknowns.
+
+Transportation editable document/file cycle: [TRANSPORTATION_EDITING.md](TRANSPORTATION_EDITING.md).

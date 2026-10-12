@@ -1,8 +1,6 @@
 # Transportation input and files
 
-Status: pilot plus eighteen saved corpus inputs. Default balanced-file opening
-is implemented as a read-only native preview. Broader validation and file
-semantics remain unverified. See TRANSPORTATION_OVERVIEW.md.
+Current working source: editable documents, new/default grid initialization and Open/Save/Save As are locally verified. See TRANSPORTATION_EDITING.md and ../STATUS.json for the current gate. Earlier read-only observations below describe the initial preview; unsupported formats, structural editing and broader original validation remain unverified.
 
 ## Input selection and grid
 
@@ -89,3 +87,8 @@ work; the native input grid is read only and retains arrow-key selection.
 The native preview explicitly rejects non-ASCII legacy text until its code page
 is verified, and caps a displayed trace at250,000 cells to bound widget allocation.
 These are preview safeguards, not original TORA limits.
+
+
+## Transportation editing continuation
+
+The current future-scope source adds editable Transportation documents, native new/input initialization, aliases/costs/quantities/title editing, Open/read-only copies and atomic Save/Save As. Historical read-only descriptions above identify earlier deliveries. See [the editing contract](TRANSPORTATION_EDITING.md) and STATUS.json for current verification. Unbalanced drafts are savable; solver profile restrictions remain. EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing remain separate cycles. New source has not yet passed a three-OS/package/install gate.

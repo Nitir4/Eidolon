@@ -53,7 +53,7 @@ private slots:
         auto& controller=transportationController(shell);controller.load(std::move(p));
         QVERIFY(shell.navigate(QStringLiteral("transportation/input")));
         auto* inputGrid=shell.findChild<QTableWidget*>(QStringLiteral("transport-input-grid"));QVERIFY(inputGrid);
-        QCOMPARE(inputGrid->editTriggers(),QAbstractItemView::NoEditTriggers);
+        QVERIFY(inputGrid->editTriggers().testFlag(QAbstractItemView::DoubleClicked));
         const auto method=object["method"].toString();
         QString error;QVERIFY2(controller.solve(error,method==QStringLiteral("vogel")?tora::transportation::StartMethod::Vogel:method==QStringLiteral("leastcost")?tora::transportation::StartMethod::LeastCost:tora::transportation::StartMethod::NorthWest),qPrintable(error));
         QVERIFY(shell.navigate(QStringLiteral("transportation/")+method));shell.show();
@@ -139,7 +139,7 @@ private slots:
         QResizeEvent event(grid->viewport()->size(),grid->viewport()->size());
         try {QApplication::sendEvent(grid->viewport(),&event);}catch(const std::exception& e){QFAIL(e.what());}
         auto p=tora::transportation::Problem::blank(1,1);p.supply={4};p.demand={4};p.costs={{3}};c.load(p);
-        QCOMPARE(grid->columnCount(),4);QCOMPARE(grid->item(2,2)->text(),QStringLiteral("3.00"));
+        QCOMPARE(grid->columnCount(),4);QCOMPARE(grid->item(2,2)->text(),QStringLiteral("3"));
     }
     void switchStartingMethods() {
         ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);

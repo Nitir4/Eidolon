@@ -30,6 +30,15 @@ add_executable(transportation_safety transportation_safety.cpp)
 tora_target_defaults(transportation_safety)
 target_link_libraries(transportation_safety PRIVATE tora::transportation_compat)
 add_test(NAME transportation.safety COMMAND transportation_safety)
+add_executable(transportation_document transportation_document.cpp)
+tora_target_defaults(transportation_document)
+target_link_libraries(transportation_document PRIVATE tora::transportation_compat)
+add_test(NAME transportation.document COMMAND transportation_document)
+set_tests_properties(transportation.document PROPERTIES TIMEOUT 15)
+add_test(NAME transportation.input.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation_input.py" "$<TARGET_FILE:transportation_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-input.json")
+set_tests_properties(transportation.input.goldens PROPERTIES TIMEOUT 15)
 add_test(NAME lp.graphical.goldens COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/verify_graphical.py"
     "$<TARGET_FILE:graphical_probe>" "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graphical.json" "${CMAKE_CURRENT_BINARY_DIR}/graphical-comparison.tsv")
 set_tests_properties(lp.graphical.goldens PROPERTIES TIMEOUT 30)
@@ -115,6 +124,16 @@ set_tests_properties(compat.grid PROPERTIES TIMEOUT 15)
 
 if(TORA_BUILD_DESKTOP)
     find_package(Qt6 6.8 REQUIRED COMPONENTS Test)
+    qt_add_executable(desktop_transportation_input_test desktop_transportation_input.cpp)
+    set_target_properties(desktop_transportation_input_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_transportation_input_test)
+    target_link_libraries(desktop_transportation_input_test PRIVATE desktop_shell Qt6::Test)
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.transportation-input.scale-${scale} COMMAND desktop_transportation_input_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-transportation-input-scale-${scale}.xml,junitxml" -o -,txt)
+        set_tests_properties(desktop.transportation-input.scale-${scale} PROPERTIES TIMEOUT 60
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen:configfile=offscreen-display.json;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
+    endforeach()
     qt_add_executable(desktop_transportation_test desktop_transportation.cpp)
     set_target_properties(desktop_transportation_test PROPERTIES AUTOMOC ON)
     tora_target_defaults(desktop_transportation_test)

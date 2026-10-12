@@ -233,3 +233,8 @@ Vogel starting-basis investigation: all18 captured profiles match the implemente
 Vogel first-matrix visual review found Windows offscreen missing glyphs despite passing numeric/text tests. The test runner now uses the established SystemRoot/Fonts bootstrap and glyph-coverage initialization. Final matrix/screens/package audit must pass before delivery; the first artifacts were withheld.
 
 Vogel final closure:source 6b01925/CI 38265173986 passes the numerical/native/package/install gate. Windows offscreen missing glyphs are resolved and regression-covered; no known accepted-profile mismatch remains. The documented internal singleton sentinel and outside-profile Transportation features remain separate work.
+
+
+## Transportation editing continuation
+
+The current future-scope source adds editable Transportation documents, native new/input initialization, aliases/costs/quantities/title editing, Open/read-only copies and atomic Save/Save As. Historical read-only descriptions above identify earlier deliveries. See [the editing contract](tora-analysis/TRANSPORTATION_EDITING.md) and STATUS.json for current verification. Unbalanced drafts are savable; solver profile restrictions remain. EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing remain separate cycles. New source has not yet passed a three-OS/package/install gate.

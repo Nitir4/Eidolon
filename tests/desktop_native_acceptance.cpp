@@ -23,6 +23,7 @@
 #include <QScreen>
 #include <QStyleFactory>
 #include <QTest>
+#include <QTableWidget>
 #include <QTimer>
 #include <stdexcept>
 using namespace tora::desktop;
@@ -131,6 +132,23 @@ int main(int argc, char** argv) {
             vogelAll->click();require(!vogelAll->isEnabled(),"Vogel did not terminate");
             require(transport.trace().back().objective==59,"Vogel terminal mismatch");
             capture(QStringLiteral("transportation-vogel-optimal"),QStringLiteral("transportation/vogel"));
+            require(shell.navigate(QStringLiteral("transportation/input")),"Editable input route failed");
+            require(transport.initialize(QStringLiteral("Native Transportation input"),2,3,error),"New Transportation grid failed");
+            capture(QStringLiteral("transportation-input-new"),QStringLiteral("transportation/input"));
+            auto* inputGrid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-input-grid"));
+            require(inputGrid && inputGrid->item(2,2),"Editable Transportation grid missing");
+            inputGrid->setCurrentCell(2,2);inputGrid->editItem(inputGrid->item(2,2));QTest::qWait(30);
+            auto* editor=inputGrid->findChild<QLineEdit*>();require(editor!=nullptr,"Native grid editor missing");
+            editor->setText(QStringLiteral("9.876"));
+            const auto savedPath=output+QStringLiteral("/transportation-native.txt");
+            transport.dialogs().chooseSave=[savedPath](const QString&)->std::optional<QString>{return savedPath;};
+            require(transport.requestSave(),"Native active-editor save failed");
+            require(transport.problem().costs[0][0]==9.88 && !transport.dirty(),"Native edit/save state mismatch");
+            capture(QStringLiteral("transportation-input-saved"),QStringLiteral("transportation/input"));
+            const auto savedDocument=transport.document()->encode();
+            require(transport.openFile(savedPath,error),"Native Transportation reopen failed");
+            require(transport.document()->encode()==savedDocument,"Native Transportation reopen changed saved bytes");
+            capture(QStringLiteral("transportation-input-reopened"),QStringLiteral("transportation/input"));
         }
         QString panel=QStringLiteral("not requested");
         if(parser.isSet(QStringLiteral("print-dialog"))) {
