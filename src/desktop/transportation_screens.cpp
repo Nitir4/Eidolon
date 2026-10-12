@@ -108,12 +108,15 @@ void newProblem(ApplicationShell& shell)
 }
 void solveProblem(ApplicationShell& shell, transportation::StartMethod method = transportation::StartMethod::NorthWest)
 {
+    // Direct menu actions must honor Save/Cancel before computing a trace or
+    // displaying a terminal notice, just like the SOLVE Menu button route.
+    if (shell.currentScreen()==id("input") && !shell.navigate(id("solve-menu"))) return;
     QString error;
     if (!transportationController(shell).solve(error,method)) {
         QMessageBox::warning(&shell, QStringLiteral("Cannot Solve Problem"), error);
         return;
     }
-    shell.navigate(id(method==transportation::StartMethod::Vogel?"vogel":method==transportation::StartMethod::LeastCost?"leastcost":"northwest"));
+    if (!shell.navigate(id(method==transportation::StartMethod::Vogel?"vogel":method==transportation::StartMethod::LeastCost?"leastcost":"northwest"))) return;
     if(transportationController(shell).trace().size()==1)
         QMessageBox::information(&shell,QStringLiteral("Optimal Tableau"),QStringLiteral("Iteration 1 is optimal"));
 }

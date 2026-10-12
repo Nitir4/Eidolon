@@ -126,3 +126,5 @@ Primary implementation references:
 [Qt item delegate commit/edit lifecycle](https://doc.qt.io/qt-6/qabstractitemdelegate.html).
 
 Local final product verification: 88/88 desktop CTests in 173.88 seconds; 32/32 Qt-free CTests in 4.12 seconds; three authentic input hashes; 52 existing method-case writer round trips; eight input Qt checks at each of four scales; twelve input resolution renders; seventeen actual Wayland views with LP model preserved. The saved TORA copy of the clone-written cost model was reopened successfully (REA ev_2afa299374889cf0c37ece3ae0869e55b67a6b025127528f7c19aad7eadc7338). Cross-OS CI/package/install are pending for this feature.
+
+Final direct-menu review added a regression for edited input → direct Least-cost action → Save? Cancel. The first published source computed a trace before checking cancellation. The corrected action enters the guarded solve-menu first and honors failed output navigation before showing a terminal notice. Tests reproduce the old nonempty-trace failure; the first CI artifacts are retained and withheld from installation. Current corrected-source gate is tracked in STATUS.json.

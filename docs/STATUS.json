@@ -588,7 +588,10 @@
       "local_evidence": "build/transportation-input/",
       "quantity_rule": "New UI quantities commit to nearest whole numbers with observed positive half ties away from zero; untouched imported fractions preserved",
       "release_state": "Previous Vogel release remains installed; current feature is not installed yet",
-      "remaining": "EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing; other OR modules remain separate cycles"
+      "remaining": "EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing; other OR modules remain separate cycles",
+      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38284239960",
+      "initial_source": "4527855f31f054b3291eaee93d85e351d179ebbf",
+      "initial_delivery": "Artifacts not installed: later direct-Solve cancellation regression exposed computing before the dirty-input guard. Corrected source requires a fresh gate."
     }
   }
 }

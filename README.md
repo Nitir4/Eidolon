@@ -175,3 +175,5 @@ evidence and the remaining Transportation scope.
 
 
 The current working source adds **Transportation model → Enter New Problem**. Enter source/destination counts and press Return or Initialize Grid. Edit aliases, costs, supplies and demands directly; Return/Tab commits and advances. File → Save/Save As writes a compatible default-format text file. Open includes a read-only option; Save As to another file creates an editable copy. A new file matches an authentic TORA save exactly, and a clone-written cost edit survives TORA open/save byte for byte. See [the editing specification](docs/tora-analysis/TRANSPORTATION_EDITING.md) and [current status](docs/STATUS.json) for verification and remaining work. Run `build/dev/src/desktop/ToraClone --no-settings --screen transportation/input-mode` to review the working build. Existing installed releases are unchanged until a new delivery gate is completed.
+
+Typed Transportation supplies/demands commit to whole numbers, matching the captured input workflow; untouched imported fractions retain their original text. Canceling the unsaved-data prompt blocks direct solver menu actions before a trace is computed.

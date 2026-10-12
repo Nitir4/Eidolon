@@ -4,10 +4,14 @@
 #include <QDir>
 #include <QFile>
 #include <QLineEdit>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTableWidget>
 #include <QTemporaryDir>
 #include <QTest>
+#include <QTimer>
 
 using namespace tora::desktop;
 class TransportationInputTest : public QObject {
@@ -46,7 +50,18 @@ private slots:
         QVERIFY(c.setTitle(QStringLiteral("Unsaved"), error));
         int prompts = 0;
         c.dialogs().askSave = [&] { ++prompts; return SaveChoice::Cancel; };
-        QVERIFY(!shell.navigate(QStringLiteral("main"))); QCOMPARE(prompts, 1);
+        QAction* least = nullptr;
+        for (auto* top : shell.menuBar()->actions()) if (top->menu())
+            for (auto* action : top->menu()->actions()) if (action->text().contains(QStringLiteral("Least-cost"))) least = action;
+        QVERIFY(least);
+        int notices = 0; QTimer dismiss;
+        QObject::connect(&dismiss, &QTimer::timeout, &shell, [&] {
+            for (auto* widget : QApplication::topLevelWidgets()) if (auto* box = qobject_cast<QMessageBox*>(widget)) { ++notices; box->accept(); }
+        });
+        dismiss.start(0); least->trigger(); dismiss.stop();
+        QCOMPARE(shell.currentScreen(), QStringLiteral("transportation/input"));
+        QVERIFY(c.trace().empty()); QCOMPARE(notices, 0); QCOMPARE(prompts, 1);
+        QVERIFY(!shell.navigate(QStringLiteral("main"))); QCOMPARE(prompts, 2);
         QCOMPARE(shell.currentScreen(), QStringLiteral("transportation/input")); QVERIFY(c.dirty());
         c.dialogs().askSave = [] { return SaveChoice::Yes; };
         c.dialogs().chooseSave = [](const QString&) -> std::optional<QString> { return {}; };
