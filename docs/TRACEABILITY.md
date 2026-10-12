@@ -310,3 +310,18 @@ numeric formatting and file compatibility remain unchanged.
 
 The corpus also observes Least-cost/Vogel and final output (76 tableaus total),
 but those native algorithms/screens are not implemented by this slice.
+
+
+Transportation delivery source `7e35986` passes 80/80 CTest per OS in run 38243044784.
+TR-NW-01/02 and TR-FILE-01 match 1,261 independent fields across 17 cases/38 tableaus.
+TR-UI-01/02 pass 26 Qt checks per scale and 12 resolution renders per OS; actual
+Wayland viewport-reload regression and ten 1920×1080 route views also pass.
+The column-shrink fix clamps destination-column distribution to the current
+viewport's column count; `nextAndReload` sends the resize event to the viewport.
+
+| Requirement | Code | Test/evidence |
+|---|---|---|
+| WIN-INSTALL-RETRY: retry a transient lock on the exact installed uninstaller; preserve registration on persistent failure | packaging/windows/installer.nsi.in | tools/windows_installer.py deliberately holds a non-delete-sharing CreateFileW handle; final Windows package reports uninstall_retry_under_file_lock=passed |
+
+Final source/run, packages and local audit paths are recorded in STATUS.json.
+Raw screenshots, authentic TORA files and executables remain private.

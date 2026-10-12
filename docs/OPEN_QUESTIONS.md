@@ -196,3 +196,18 @@ reports confirm 25 print states/23 PDFs/4259 content tokens and 48 live-display
 captures per OS. The original printer environment blocker is resolved for the
 captured profile. Physical printer/monitor, other-driver/font layout and
 outside-profile limits remain; no known captured-content mismatch is accepted.
+
+
+## Transportation preview delivery boundary (12 October 2026)
+
+The read-only North-west/MODI slice passes all captured comparisons and the
+three-OS package gate at `7e35986`. No known mismatch remains in its 17-case golden
+profile. It does not complete Transportation: new/edit/save, Least-cost/Vogel
+native algorithms, manual loop choice, alternate multiplier initialization,
+a separate final-summary screen and Transportation printing remain future work.
+Default header/ASCII, balanced totals and exactly representable single-precision
+quantities are the supported input profile. Other formats/code pages,
+unbalanced handling and nonbinary fractional inputs need further evidence.
+The 76-tableau observation corpus includes other starts but does not itself
+implement them or resolve every tie rule. The existing physical hardware and
+trusted signing limits also remain open.

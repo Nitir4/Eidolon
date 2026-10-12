@@ -13,7 +13,7 @@ its input module supplies native LP data entry, row/column editing and Open/Save
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-all three OS builds pass 74 tests each, including independent printer PDF
+all three OS builds pass 80 tests each, including independent printer PDF
 comparison and live synthetic display changes. The latest verification and packages
 are recorded in [current status](docs/STATUS.json). Recorded physical-printer/driver,
 physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
@@ -96,7 +96,7 @@ in the Windows CI packaging step. Physical acceptance steps are in
 recorded as untested.
 
 
-The latest delivery at source `19463eb` passes 74/74 tests per OS (222 total)
+The earlier release-readiness delivery at source `19463eb` passes 74/74 tests per OS (222 total)
 in [CI run 38062462111](https://github.com/Nitir4/TORA-Clone/actions/runs/38062462111). Downloaded packages, including the verified Windows
 installer, are under `dist/release-readiness/final/` in this workspace. The
 Linux AppImage supports Wayland and X11 and starts on this laptop's Wayland
@@ -119,8 +119,22 @@ version until closed. Algorithms, numeric displays and saved files are unchanged
 The Transportation preview is available from **MAIN Menu → Transportation
 model → Load Example → SOLVE Menu → North-west corner start**. It can also
 open existing default-format TORA Transportation files, show input read only,
-and step automatic iterations. Seventeen captured cases supply38 independently
+and step automatic iterations. Seventeen captured cases supply 38 independently
 transcribed North-west tableaus. New/edit/save, Least-cost/Vogel, manual loops,
 final summary and Transportation printing remain future work. Unbalanced or
 unsupported fractional/format inputs produce explicit errors. See the
 [Transportation scope and evidence](docs/tora-analysis/TRANSPORTATION_OVERVIEW.md).
+
+
+The current Transportation preview delivery at source `7e35986` passes **80/80
+tests on each OS (240 overall)** in
+[CI run 38243044784](https://github.com/Nitir4/TORA-Clone/actions/runs/38243044784).
+Independent downloaded-report checks confirm 1,261 Transportation fields across
+17 cases/38 tableaus, alongside the existing 31,654 LP fields per OS. All three
+native packages and the Windows installer passed their deployment checks;
+packages are in `dist/transportation/verified/`. The installed `tora-clone`
+launcher opens this release. Linux's headless Wayland check required an
+unchanged-source job rerun; final evidence uses the successful rerun, and the
+failed report is retained separately. Actual laptop Wayland and X11 packaged
+startup checks passed. The still-open previous window has the identical native
+application executable and need not be restarted to see this preview.

@@ -76,5 +76,32 @@ fractional final-summary amount discrepancy is documented separately; no
 uncaptured general rounding rule is asserted.
 
 The native preview explicitly rejects non-ASCII legacy text until its code page
-is verified, and caps a displayed trace at250,000 cells to bound widget allocation.
+is verified, and caps a displayed trace at 250,000 cells to bound widget allocation.
 These are preview safeguards, not original TORA limits.
+
+
+## Delivery verification (12 October 2026)
+
+Product source `7e35986686061ef3058bf2b4151d52fe7fd07f2e` is verified in
+[three-OS CI run 38243044784](https://github.com/Nitir4/TORA-Clone/actions/runs/38243044784):
+80/80 CTest checks per OS; 1,261 exact Transportation fields across all 17 cases
+and 38 North-west tableaus; 26 native Transportation checks at each of four
+scales and 12 resolution renders per OS. Existing LP comparisons and printer
+PDFs also pass. The downloaded package audit verifies manifests, SHA-256 and
+matching Qt legal files. Windows' installer additionally passes a deliberate
+file-lock uninstall retry check.
+
+An initial Windows viewport reload exception was reproduced and fixed; its
+regression targets the table viewport during column shrink. A later installer
+self-file deletion failure was fixed with bounded retries. The final Linux job
+needed one unchanged-source rerun after a headless Wayland startup timeout;
+its failed report remains separately archived. No golden tolerance was relaxed.
+
+Local packaged Wayland and X11 startup, all 281 Linux payload files, and ten
+actual 1920×1080 Wayland route views were verified. The installed desktop launcher
+is `~/.local/bin/tora-clone`; packages are in `dist/transportation/verified/`.
+Machine-readable evidence is under `build/transportation-release/` in
+`ci-verified.json`, `packages-verified.json`, `linux-payload-verified.json` and
+`installation.json`. These checks verify only the preview scope above; physical
+mixed-monitor handoff, trusted signing and other Transportation features remain
+outside this delivery.

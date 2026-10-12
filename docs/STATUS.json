@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "LP keyboard/readability repair delivered; REA-backed Transportation observation pilot started",
+  "active_step": "Native Transportation North-west preview verified and installed; captured LP delivery preserved",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Observe and specify Transportation using REA process evidence and the actual TORA UI; preserve module gates and existing LP delivery",
+  "next_step": "Review the delivered Transportation preview; remaining Transportation methods and editing are separate future slices",
   "foundation_order": [
     1,
     5,
@@ -296,7 +296,7 @@
       "expanded_final_fields": 1116,
       "remaining": "Recorded physical mixed-DPI,original printer and outside-profile numerical limits remain explicit",
       "report": "/home/nitir505/Ritin/docs/TORA-clone/PHASE2_SENSITIVITY_REPORT.tex",
-      "local_validation": "68/68 desktop;26/26 explicit C++17 Qt-free Release;four scales x38 native sensitivity and38 expanded final cases;zero failures/skips",
+      "local_validation": "68/68 desktop; 26/26 explicit C++17 Qt-free Release;four scales x38 native sensitivity and38 expanded final cases;zero failures/skips",
       "source_commit": "f18eaf9a98e12de051f8d1e176362b4ec5850814",
       "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/37955242692",
       "ci_validation": "Windows/Linux/macOS each68/68 CTest (204 overall),zero failures/skips;all31,654 comparison fields per OS match established rules;all packaging,deployed startup and uploads pass",
@@ -427,7 +427,7 @@
   },
   "next_module_pilot": {
     "candidate": "Transportation model",
-    "status": "native read-only North-west preview locally verified; fresh three-OS CI/package delivery pending",
+    "status": "verified and installed for the read-only North-west preview",
     "rea_checkout": "/home/nitir505/Ritin/rea",
     "rea_source": "4a5aec8ad6d54444b2a2c2313fbc506b17ff91aa",
     "rea_version": "6.4.0",
@@ -441,16 +441,31 @@
     "northwest_tableaus": 38,
     "excluded_probe": "15-small-fractions: clipped long fractional values",
     "scope": "Existing default-format file opening, example loading, read-only input, automatic North-west iterations; other Transportation functionality deferred",
-    "local_tests": "80/80 corrected-source desktop suite;26 Transportation Qt checks per scale; actual Wayland reload/event4/4; installer unit6/6",
+    "local_tests": "80/80 corrected-source desktop suite; 26 Transportation Qt checks per scale; actual Wayland reload/event4/4; installer unit6/6",
     "headless_tests": "28/28 full Qt-free C++17 suite; changed-reader focused checks rerun",
     "native_desktop": "Final Wayland/eDP-1,1920x1080,10 route-checked views; revised column layout reviewed; model preserved",
     "native_safeguards": "4 MiB,100 sources/destinations,250000 displayed cells; ASCII/default-header profile; balanced exact-single-precision quantities",
     "northwest_exact_fields": 1261,
     "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38239858897",
-    "initial_ci_result": "Linux/macOS80/80 and packages passed; Windows76/80: new Transportation reload viewport event exposed stale destination-count range error. Reproduced locally and corrected; fresh matrix pending.",
+    "initial_ci_result": "Linux/macOS80/80 and packages passed; Windows76/80: new Transportation reload viewport event exposed stale destination-count range error. Reproduced locally and corrected in 2c7f20f; final matrix passes.",
     "second_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38241406979",
-    "second_ci_result": "All80 tests pass per OS; Linux/macOS packages pass. Windows installer self-file removal failed; bounded retry and deterministic native lock probe added, fresh CI pending.",
-    "installed_linux_source": "2c7f20fb9803c7b3dfefc8b2e1e577e57b12cd4d",
-    "installed_linux_sha256": "36315275e1db391da17436752a5511a4a71be1dc1ce54b0e3ae44a4b13bed2b8"
+    "second_ci_result": "All 80 tests pass per OS; Linux/macOS packages pass. Windows installer self-file removal failed; bounded retry and deterministic native lock probe added in 7e35986; final Windows job passes.",
+    "installed_linux_source": "7e35986686061ef3058bf2b4151d52fe7fd07f2e",
+    "installed_linux_sha256": "567972c9239289da45e7f51fa8a2eca2bfa07eba7fc4d04a8c8ac73e3beabe55",
+    "source_commit": "7e35986686061ef3058bf2b4151d52fe7fd07f2e",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38243044784",
+    "ci_validation": "80/80 tests per OS (240 overall), no test failures/skips; 32915 exact comparison fields per OS; 26 Transportation Qt checks at each of four scales; 12 Transportation resolution renders per OS; package/deployed startup passed",
+    "ci_attempt_history": "Windows/macOS passed attempt1. Linux attempt1 passed 80 tests/package but timed out starting the headless Wayland check; unchanged-source Linux-only attempt2 passed. Failed report archived separately; final audit uses fresh attempt2 report.",
+    "packages": "dist/transportation/verified/",
+    "test_reports": "build/transportation-release/ci-final/",
+    "delivery_audit": "build/transportation-release/ci-verified.json; packages-verified.json; linux-payload-verified.json; installation.json",
+    "installed_launcher": "/home/nitir505/.local/bin/tora-clone",
+    "windows_installer": "All seven native checks passed, including forced-lock retry and preserving unrelated student files",
+    "completed_on": "2026-10-12",
+    "package_sha256": {
+      "macos-universal": "e3caea4995ccdd1fe989fb4ece5c27d2c37ca0531e7adf08688544ff436c9f4e",
+      "linux-x86_64": "567972c9239289da45e7f51fa8a2eca2bfa07eba7fc4d04a8c8ac73e3beabe55",
+      "windows-x86_64": "f807dcc934aa86a2449f6fed69ac3baecc2a676fb392958f8d0417e17f105d25"
+    }
   }
 }
