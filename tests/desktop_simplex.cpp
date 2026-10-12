@@ -1,4 +1,5 @@
 #include "lp_simplex_controller.hpp"
+#include "ui_colors.hpp"
 #include "lp_input_controller.hpp"
 #include "lp_screens.hpp"
 #include "application_shell.hpp"
@@ -36,13 +37,13 @@ private slots:
         QCOMPARE(view->model()->rowCount(),10);QCOMPARE(view->model()->data(view->model()->index(1,1)).toString(),QStringLiteral("x1"));
         c.selectCell(1,2);QCOMPARE(notices.takeFirst(),QStringLiteral("Entering Variable"));notices.clear();
         QCOMPARE(view->model()->data(view->model()->index(3,3),Qt::BackgroundRole).value<QColor>(),QColor(Qt::white));
-        c.selectCell(1,1);QCOMPARE(view->model()->data(view->model()->index(1,1),Qt::BackgroundRole).value<QColor>(),QColor(Qt::green));
+        c.selectCell(1,1);QCOMPARE(view->model()->data(view->model()->index(1,1),Qt::BackgroundRole).value<QColor>(),QColor(colors::entering));
         c.selectCell(5,0);QCOMPARE(notices.takeFirst(),QStringLiteral("Leaving Variable"));notices.clear();
-        c.selectCell(4,0);QCOMPARE(view->model()->data(view->model()->index(4,0),Qt::BackgroundRole).value<QColor>(),QColor(Qt::red));
+        c.selectCell(4,0);QCOMPARE(view->model()->data(view->model()->index(4,0),Qt::BackgroundRole).value<QColor>(),QColor(colors::leaving));
         c.next();QCOMPARE(c.session()->history().size(),std::size_t(2));QVERIFY(notices.empty());
         c.next();QCOMPARE(c.session()->history().size(),std::size_t(3));QCOMPARE(notices,QStringList({QStringLiteral("Optimal Tableau"),QStringLiteral("Iteration 3 is optimal")}));
         QCOMPARE(view->model()->data(view->model()->index(23,3),Qt::BackgroundRole).value<QColor>(),QColor(Qt::white));
-        QCOMPARE(view->model()->data(view->model()->index(25,4),Qt::ForegroundRole).value<QColor>(),QColor(Qt::blue));
+        QCOMPARE(view->model()->data(view->model()->index(25,4),Qt::ForegroundRole).value<QColor>(),QColor(colors::text));
         QCOMPARE(view->model()->rowCount(),30);QVERIFY(!shell.currentContent()->findChild<QPushButton*>(QStringLiteral("simplex-all"))->isEnabled());
         QVERIFY(shell.navigate(QStringLiteral("lp/input")));QCOMPARE(inputController(shell).document()->problem.objective[0],3.0);
     }

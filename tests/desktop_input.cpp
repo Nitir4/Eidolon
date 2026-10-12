@@ -20,6 +20,7 @@
 #include <QCheckBox>
 #include <QFontMetrics>
 #include <cmath>
+#include <QColor>
 
 using namespace tora::desktop;
 class InputTest final : public QObject {
@@ -158,6 +159,58 @@ private slots:
         QCOMPARE(c.lastError(),QStringLiteral("All Left-hand side coefficients of Constraint 3 are\nzero.  Reenter or delete constraint"));
         QVERIFY(!shell.navigate(QStringLiteral("lp/solve-menu")));QCOMPARE(shell.currentScreen(),QStringLiteral("lp/input"));
         QVERIFY(shell.navigate(QStringLiteral("main")));
+    }
+    void arrowNavigationCommitsAndSkipsLabels() {
+        ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
+        QVERIFY(QTest::qWaitForWindowActive(&shell));
+        QVERIFY(shell.navigate(QStringLiteral("lp/input")));auto& c=inputController(shell);silent(c);
+        QVERIFY(c.openFile(golden(QStringLiteral("01_normal"))));QApplication::processEvents();
+        auto* view=shell.currentContent()->findChild<QTableView*>(QStringLiteral("input-grid"));QVERIFY(view);
+        const auto begin=[&](int row,int column) {
+            view->setCurrentIndex(c.grid()->index(row,column));view->edit(view->currentIndex());QApplication::processEvents();
+            return qobject_cast<QLineEdit*>(QApplication::focusWidget());
+        };
+        auto* editor=begin(2,1);QVERIFY(editor);editor->selectAll();QTest::keyClicks(editor,"7.25");
+        QTest::keyClick(editor,Qt::Key_Down);QApplication::processEvents();
+        QCOMPARE(view->currentIndex(),c.grid()->index(3,1));QCOMPARE(c.document()->problem.constraints[0].coefficients[0],7.25);
+        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);editor->selectAll();
+        QTest::keyClick(editor,Qt::Key_Right);QApplication::processEvents();QCOMPARE(view->currentIndex(),c.grid()->index(3,2));
+        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);editor->selectAll();
+        QTest::keyClick(editor,Qt::Key_Left);QApplication::processEvents();QCOMPARE(view->currentIndex(),c.grid()->index(3,1));
+        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);
+        QTest::keyClick(editor,Qt::Key_Up);QApplication::processEvents();QCOMPARE(view->currentIndex(),c.grid()->index(2,1));
+        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Escape);
+        editor=begin(2,4);QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Up);QApplication::processEvents();
+        // Objective/name RHS cells are read-only; stay in the current editable cell.
+        QCOMPARE(view->currentIndex(),c.grid()->index(2,4));
+        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Escape);
+        editor=begin(1,1);QVERIFY(editor);editor->setText(QStringLiteral("1234"));editor->setCursorPosition(2);
+        QTest::keyClick(editor,Qt::Key_Left);QCOMPARE(editor->cursorPosition(),1);QCOMPARE(view->currentIndex(),c.grid()->index(1,1));
+        QTest::keyClick(editor,Qt::Key_Escape);view->setFocus();view->setCurrentIndex(c.grid()->index(1,1));
+        QTest::keyClick(view,Qt::Key_Left);QCOMPARE(view->currentIndex(),c.grid()->index(1,1));
+        editor=begin(6,1);QVERIFY(editor);const auto original=c.grid()->index(6,1).data().toString();
+        editor->selectAll();QTest::keyClicks(editor,"infin");QVERIFY(!editor->hasAcceptableInput());
+        QTest::keyClick(editor,Qt::Key_Down);QCOMPARE(view->currentIndex(),c.grid()->index(6,1));
+        QCOMPARE(c.grid()->index(6,1).data().toString(),original);QTest::keyClick(editor,Qt::Key_Escape);
+        editor=begin(1,2);QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Return,Qt::ShiftModifier);QApplication::processEvents();
+        QCOMPARE(view->currentIndex(),c.grid()->index(1,1));
+        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Escape);
+        QVERIFY(shell.navigate(QStringLiteral("main")));
+    }
+    void selectedInputRowsStayReadable() {
+        LpInputController c;silent(c);QVERIFY(c.openFile(golden(QStringLiteral("01_normal"))));
+        const auto luminance=[](QColor colour) {
+            const auto channel=[](double x){return x<=.04045?x/12.92:std::pow((x+.055)/1.055,2.4);};
+            return .2126*channel(colour.redF())+.7152*channel(colour.greenF())+.0722*channel(colour.blueF());
+        };
+        for(int selection:{0,1,2}) {
+            if(selection==1)c.selectRow(2);
+            if(selection==2)c.selectColumn(1);
+            for(int col=0;col<c.grid()->columnCount();++col) {
+                auto index=c.grid()->index(2,col);double a=luminance(index.data(Qt::ForegroundRole).value<QColor>()),b=luminance(index.data(Qt::BackgroundRole).value<QColor>());
+                QVERIFY2((std::max(a,b)+.05)/(std::min(a,b)+.05)>=4.5,"Input cell foreground/background contrast is insufficient");
+            }
+        }
     }
     void nativeTextAndUnicodeFilename() {
         LpInputController c;silent(c);QVERIFY(c.initialize(QString::fromUtf8("café €"),2,1));

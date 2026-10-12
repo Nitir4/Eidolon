@@ -1,6 +1,7 @@
 #include "application_shell.hpp"
 #include "lp_screens.hpp"
 #include "ui_font.hpp"
+#include "ui_colors.hpp"
 
 #include <QApplication>
 #include <QEvent>
@@ -256,7 +257,7 @@ private slots:
             }
             const auto image = page->grab().toImage();
             QVERIFY(!image.isNull());
-            QCOMPARE(image.pixelColor(qRound(factor), qRound(factor)), QColor(Qt::blue));
+            QCOMPARE(image.pixelColor(qRound(factor), qRound(factor)), QColor(colors::canvas));
             if (auto* notice = page->findChild<QLabel*>(QStringLiteral("preview-notice")))
                 QCOMPARE(notice->palette().color(QPalette::WindowText), QColor(Qt::white));
             QVERIFY(std::abs(image.devicePixelRatio() - factor) < 0.01);

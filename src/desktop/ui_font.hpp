@@ -26,6 +26,16 @@ inline QFont usableUiFont(const QFont& preferred)
     return fallback;
 }
 
+// Screen readability is separate from the reference printer's point size.
+inline QFont readableUiFont(const QFont& preferred)
+{
+    auto font = usableUiFont(preferred);
+    if ((font.pointSizeF() > 0 && font.pointSizeF() < 12)
+        || (font.pixelSize() > 0 && font.pixelSize() < 16))
+        font.setPointSizeF(12);
+    return font;
+}
+
 inline void polishUsableFonts(QWidget& root)
 {
     // Style-sheet polishing can select the application/theme font even when
@@ -35,7 +45,7 @@ inline void polishUsableFonts(QWidget& root)
     widgets.prepend(&root);
     for (auto* widget : widgets) {
         widget->ensurePolished();
-        const QFont font = usableUiFont(widget->font());
+        const QFont font = readableUiFont(widget->font());
         if (font != widget->font()) {
             widget->setProperty("toraRecoveredFont", true);
             widget->setFont(font);

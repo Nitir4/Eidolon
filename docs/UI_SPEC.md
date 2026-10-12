@@ -1,5 +1,27 @@
 # Native UI specification for Gate 0
 
+
+## Readability revision requested on 12 October 2026
+
+This section supersedes the historical blue/cyan screen-colour descriptions
+below. Following direct user feedback about invisible text and tiny fonts,
+keep TORA's workflow, wording and table order while using a light blue canvas,
+dark text, white editable cells and muted blue headers. Pair dark-blue
+selection with white text, including selected row labels. Entering/leaving
+highlights use pale green/red with dark text. Graphs use a white plotting area.
+Screen fonts have a 12pt minimum (larger preferences preserved), scale through
+Qt's native DPI handling and drive existing layout metrics. The original 9pt
+print face is independent of the screen minimum; numerical/file expectations
+remain unchanged. Small logical viewports retain scrolling.
+
+In the LP grid, Up/Down commit and open the next editable cell. Left/Right
+move the caret within a value, then navigate at its edge or when text is
+selected. Ctrl/Shift text navigation stays native. Arrow movement skips
+read-only cells and stops at the grid boundary. Return/Tab retain row-major
+movement; Shift+Return/Shift+Tab reverse it. Escape cancels an active edit.
+Tests exercise active editors, stored values, boundaries, caret movement,
+selected/unselected contrast and valid-but-tiny desktop fonts.
+
 This preserves observed TORA terminology, panel order and teaching workflow.
 Legacy screenshot coordinates are reference measurements, not Qt layout sizes.
 The proposed clone uses C++17+, CMake and Qt 6 Widgets, with QPainter or

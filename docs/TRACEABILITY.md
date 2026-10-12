@@ -282,3 +282,17 @@ Local final verification passes 56/56 desktop and 22/22 explicit C++17 Qt-free R
 Raw Oracle captures remain private. Native screenshots in this follow-up depict
 our application. Physical printing, mixed-monitor hardware and trusted signing
 are not claimed by these checks.
+
+
+## User-reported input accessibility repair (12 October 2026)
+
+| Behaviour | Code | Regression evidence |
+|---|---|---|
+| Continue editing after arrow navigation; skip read-only cells and preserve text caret movement | lp_screens.cpp InputDelegate/InputView | desktop_input.cpp arrowNavigationCommitsAndSkipsLabels; tests-first baseline fails, focused fixed test passes |
+| Legible selected row labels/numbers | ui_colors.hpp; lp_input_controller.cpp | selectedInputRowsStayReadable checks at least4.5:1 contrast; baseline fails, fixed passes |
+| Readable screen font without changing print size | ui_font.hpp readableUiFont; application_shell.cpp; main.cpp | desktop_font.cpp valid tiny font minimum; baseline fails, fixed passes; print goldens pending full suite |
+| Consistent readable tables/canvas/graph list | application_shell.cpp; lp_screens.cpp; lp_simplex_controller.cpp; lp_final_controller.cpp; lp_graphical_controller.cpp | full layout/scale tests and actual desktop image inspection pending |
+
+The user requested this screen-presentation change; exact original saturated
+colours are no longer the desired screen default. Algorithms, trace labels,
+numeric formatting and file compatibility remain unchanged.

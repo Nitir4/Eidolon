@@ -2,6 +2,7 @@
 #include "lp_printing.hpp"
 #include "lp_input_controller.hpp"
 #include "ui_font.hpp"
+#include "ui_colors.hpp"
 #include <QAbstractTableModel>
 #include <QApplication>
 #include <QColor>
@@ -178,7 +179,7 @@ public:
     TraceView():labelHost_(new QWidget),labels_(new QTableView(labelHost_)),labelLayout_(new QVBoxLayout(labelHost_)) {
         labelLayout_->setContentsMargins(0,0,0,0);labelLayout_->addWidget(labels_);
         labels_->setObjectName(QStringLiteral("simplex-basic-column"));
-        labels_->setFrameShape(QFrame::NoFrame);labels_->setStyleSheet(QStringLiteral("QTableView {border: none; background: #00ffff; gridline-color: white;}"));labels_->verticalHeader()->hide();labels_->horizontalHeader()->hide();
+        labels_->setFrameShape(QFrame::NoFrame);labels_->setStyleSheet(QStringLiteral("QTableView {border: none; background: white; gridline-color: #b7c6d8;}"));labels_->verticalHeader()->hide();labels_->horizontalHeader()->hide();
         labels_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);labels_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         labels_->setFocusPolicy(Qt::NoFocus);labels_->setSelectionMode(QAbstractItemView::NoSelection);
         connect(verticalScrollBar(),&QScrollBar::valueChanged,labels_->verticalScrollBar(),&QScrollBar::setValue);
@@ -236,8 +237,8 @@ public:
             if(row==block_-1)return QString();
             const auto& r=table.rows[static_cast<std::size_t>(row-2)];return QString::fromStdString(col==0?r.label:r.values[static_cast<std::size_t>(col-1)]);
         }
-        if(role==Qt::BackgroundRole)return leaving?QColor(Qt::red):entering?QColor(Qt::green):inverseCell?QColor(Qt::white):(col==0 || row<=1?QColor(Qt::cyan):QColor(Qt::blue));
-        if(role==Qt::ForegroundRole)return col==0 || row<=1 || inverseCell?QColor(Qt::blue):QColor(Qt::white);
+        if(role==Qt::BackgroundRole)return leaving?QColor(colors::leaving):entering?QColor(colors::entering):inverseCell?QColor(colors::surface):(col==0 || row<=1?QColor(colors::header):QColor(colors::surface));
+        if(role==Qt::ForegroundRole)return QColor(colors::text);
         if(role==Qt::TextAlignmentRole)return int((col==0?Qt::AlignLeft:Qt::AlignRight)|Qt::AlignVCenter);
         if(role==Qt::FontRole){auto font=usableUiFont(QApplication::font());font.setBold(col>0 && row>1);return font;}
         return {};
@@ -285,7 +286,7 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     auto* all=button(QStringLiteral("All Iterations"),QStringLiteral("simplex-all"),commands);
     auto* print=button(QStringLiteral("Write to Printer"),QStringLiteral("simplex-print"),commands);commands->addStretch();layout->addLayout(commands);
     auto* view=new TraceView;view->setObjectName(QStringLiteral("simplex-grid"));view->setModel(new TraceModel(c,view));view->verticalHeader()->hide();view->horizontalHeader()->hide();view->setSelectionMode(QAbstractItemView::NoSelection);
-    view->setStyleSheet(QStringLiteral("QTableView {background: #00ffff; gridline-color: white; border: 1px solid white;}"));
+    view->setStyleSheet(QStringLiteral("QTableView {background: white; gridline-color: #b7c6d8; border: 1px solid white;}"));
     auto* gridArea=new QWidget(page);auto* gridLayout=new QHBoxLayout(gridArea);gridLayout->setContentsMargins(0,0,0,0);gridLayout->setSpacing(0);
     gridLayout->addWidget(view->labelHost());gridLayout->addWidget(view,1);layout->addWidget(gridArea,1);
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("simplex-view-input"),footer);

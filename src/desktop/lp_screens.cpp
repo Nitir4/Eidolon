@@ -30,6 +30,16 @@
 namespace tora::desktop {
 namespace {
 constexpr auto previewReason = "This solution method is not available yet.";
+QModelIndex directionalCell(const QAbstractItemModel& model, const QModelIndex& current, int rowStep, int columnStep) {
+    int row=current.row()+rowStep,column=current.column()+columnStep;
+    while(row>=0 && row<model.rowCount() && column>=0 && column<model.columnCount()) {
+        const auto candidate=model.index(row,column);
+        if(model.flags(candidate)&Qt::ItemIsEditable)return candidate;
+        row+=rowStep;column+=columnStep;
+    }
+    return current;
+}
+
 class InputDelegate final : public QStyledItemDelegate {
 public:
     InputDelegate(LpInputController& c,QObject* parent):QStyledItemDelegate(parent),controller_(c) {}
@@ -55,9 +65,34 @@ public:
     bool eventFilter(QObject* object,QEvent* event) override {
         if(event->type()==QEvent::KeyPress) {
             auto* key=static_cast<QKeyEvent*>(event);
+            auto* editor=qobject_cast<QLineEdit*>(object);
+            if(!editor)return QStyledItemDelegate::eventFilter(object,event);
             if(key->key()==Qt::Key_Return || key->key()==Qt::Key_Enter) {
-                auto* editor=qobject_cast<QWidget*>(object);
-                emit commitData(editor);emit closeEditor(editor,QAbstractItemDelegate::EditNextItem);return true;
+                if(!editor->hasAcceptableInput())return true;
+                emit commitData(editor);
+                emit closeEditor(editor,key->modifiers().testFlag(Qt::ShiftModifier)?QAbstractItemDelegate::EditPreviousItem:QAbstractItemDelegate::EditNextItem);
+                return true;
+            }
+            if(key->modifiers()==Qt::NoModifier) {
+                int dr=0,dc=0;
+                if(key->key()==Qt::Key_Up)dr=-1;
+                else if(key->key()==Qt::Key_Down)dr=1;
+                else if(key->key()==Qt::Key_Left && (editor->hasSelectedText() || editor->cursorPosition()==0))dc=-1;
+                else if(key->key()==Qt::Key_Right && (editor->hasSelectedText() || editor->cursorPosition()==editor->text().size()))dc=1;
+                if(dr || dc) {
+                    if(!editor->hasAcceptableInput())return true;
+                    QWidget* parent=editor->parentWidget();
+                    auto* view=qobject_cast<QTableView*>(parent);
+                    while(parent && !view){parent=parent->parentWidget();view=qobject_cast<QTableView*>(parent);}
+                    if(view) {
+                        const auto next=directionalCell(*view->model(),view->currentIndex(),dr,dc);
+                        if(next!=view->currentIndex()) {
+                            emit commitData(editor);emit closeEditor(editor,QAbstractItemDelegate::NoHint);
+                            view->setCurrentIndex(next);view->scrollTo(next);view->edit(next);
+                        }
+                        return true;
+                    }
+                }
             }
         }
         return QStyledItemDelegate::eventFilter(object,event);
@@ -74,6 +109,8 @@ public:
     }
 protected:
     QModelIndex moveCursor(CursorAction action,Qt::KeyboardModifiers modifiers) override {
+        if(action==MoveUp || action==MoveDown || action==MoveLeft || action==MoveRight)
+            return directionalCell(*model(),currentIndex(),action==MoveUp?-1:action==MoveDown?1:0,action==MoveLeft?-1:action==MoveRight?1:0);
         if(action!=MoveNext && action!=MovePrevious)return QTableView::moveCursor(action,modifiers);
         const int count=model()->rowCount()*model()->columnCount();
         if(!count)return {};
@@ -286,7 +323,7 @@ ModuleDescriptor lpModule()
         view->verticalHeader()->hide();view->horizontalHeader()->setHighlightSections(false);
         view->setSelectionMode(QAbstractItemView::NoSelection);
         view->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::AnyKeyPressed);
-        view->setStyleSheet(QStringLiteral("QTableView {background: #00ffff; gridline-color: white; border: 1px solid white;} QHeaderView::section {background: #00ffff; color: blue; border: 1px solid white;} QTableView QLineEdit {background: white; color: black; selection-background-color: #000080; selection-color: white;}"));
+        view->setStyleSheet(QStringLiteral("QTableView {background: white; gridline-color: #b7c6d8; border: 1px solid #879bb5;} QHeaderView::section {background: #dce8f7; color: #172b4d; border: 1px solid #b7c6d8;} QTableView QLineEdit {background: white; color: black; selection-background-color: #000080; selection-color: white;}"));
         auto* gridRow=new QHBoxLayout;gridRow->addStretch();gridRow->addWidget(view,1);gridRow->addStretch();
         auto* gridArea=new QVBoxLayout;gridArea->addLayout(gridRow);gridArea->addStretch(1);
         layout->addLayout(gridArea,1);

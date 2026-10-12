@@ -1,5 +1,6 @@
 #include "lp_input_controller.hpp"
 #include "ui_font.hpp"
+#include "ui_colors.hpp"
 #include <QApplication>
 #include <QCheckBox>
 #include <QColor>
@@ -92,9 +93,13 @@ QVariant LpGridModel::data(const QModelIndex& index,int role) const {
     if(role==Qt::BackgroundRole) {
         const bool selected=(controller_.selectionAxis_==LpInputController::Axis::Row && r==controller_.selection_) ||
             (controller_.selectionAxis_==LpInputController::Axis::Column && c==controller_.selection_);
-        return QColor(selected?"#cc0000":(c==0?"#00ffff":"#0000ff"));
+        return QColor(selected?colors::selection:(c==0?colors::header:colors::surface));
     }
-    if(role==Qt::ForegroundRole) return QColor(c==0?"#0000ff":"#ffffff");
+    if(role==Qt::ForegroundRole) {
+        const bool selected=(controller_.selectionAxis_==LpInputController::Axis::Row && r==controller_.selection_) ||
+            (controller_.selectionAxis_==LpInputController::Axis::Column && c==controller_.selection_);
+        return QColor(selected?colors::selectedText:colors::text);
+    }
     if(role==Qt::FontRole && c>0) {auto font=usableUiFont(QApplication::font());font.setBold(true);return font;}
     if(role==Qt::TextAlignmentRole) return static_cast<int>((c==0?Qt::AlignLeft:Qt::AlignRight)|Qt::AlignVCenter);
     if(role!=Qt::DisplayRole && role!=Qt::EditRole && role!=Qt::ToolTipRole) return {};
@@ -119,7 +124,7 @@ bool LpGridModel::setData(const QModelIndex& index,const QVariant& value,int rol
 }
 void LpGridModel::refresh() { beginResetModel();endResetModel(); }
 void LpGridModel::valuesChanged() { if(rowCount()) emit dataChanged(index(0,0),index(rowCount()-1,columnCount()-1)); }
-void LpGridModel::selectionChanged() { if(rowCount()) emit dataChanged(index(0,0),index(rowCount()-1,columnCount()-1),{Qt::BackgroundRole}); }
+void LpGridModel::selectionChanged() { if(rowCount()) emit dataChanged(index(0,0),index(rowCount()-1,columnCount()-1),{Qt::BackgroundRole,Qt::ForegroundRole}); }
 
 LpInputController::LpInputController(QWidget* owner):QObject(owner),grid_(*this) {
     dialogs_.showError=[owner](const QString& title,const QString& body){message(owner,QMessageBox::Critical,title,body,QMessageBox::Ok);};

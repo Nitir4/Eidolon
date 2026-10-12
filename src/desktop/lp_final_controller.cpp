@@ -2,6 +2,7 @@
 #include "lp_printing.hpp"
 #include "lp_input_controller.hpp"
 #include "ui_font.hpp"
+#include "ui_colors.hpp"
 #include <QAbstractTableModel>
 #include <QApplication>
 #include <QHeaderView>
@@ -51,8 +52,8 @@ public:
         const auto& row=rows_[static_cast<std::size_t>(index.row())];
         if(role==Qt::UserRole)return row.title;
         if(role==Qt::DisplayRole)return index.column()<row.cells.size()?row.cells[index.column()]:QString();
-        if(role==Qt::BackgroundRole)return QColor(row.header?Qt::cyan:Qt::blue);
-        if(role==Qt::ForegroundRole)return QColor(row.header?Qt::blue:Qt::white);
+        if(role==Qt::BackgroundRole)return QColor(row.header?colors::header:colors::surface);
+        if(role==Qt::ForegroundRole)return QColor(colors::text);
         if(role==Qt::TextAlignmentRole)return int((row.title?Qt::AlignHCenter:index.column()==0?Qt::AlignLeft:Qt::AlignRight)|Qt::AlignVCenter);
         if(role==Qt::FontRole){auto font=usableUiFont(QApplication::font());font.setBold(!row.header);return font;}
         return {};
@@ -83,7 +84,7 @@ QWidget* finalScreen(ApplicationShell& shell) {
     auto* title=label(QStringLiteral("summary-title"));auto* iteration=label(QStringLiteral("summary-iteration"));auto* objective=label(QStringLiteral("summary-objective"));auto* message=label(QStringLiteral("summary-message"));
     const auto button=[page](const QString& text,const QString& id,QHBoxLayout* row){auto* b=new QPushButton(text,page);b->setObjectName(id);row->addWidget(b);return b;};
     auto* commands=new QHBoxLayout;commands->addStretch();button(QStringLiteral("Next Iteration"),QStringLiteral("summary-next"),commands)->setEnabled(false);button(QStringLiteral("All Iterations"),QStringLiteral("summary-all"),commands)->setEnabled(false);auto* print=button(QStringLiteral("Write to Printer"),QStringLiteral("summary-print"),commands);commands->addStretch();layout->addLayout(commands);
-    auto* view=new SummaryView;view->setObjectName(QStringLiteral("summary-grid"));view->setModel(new SummaryModel(c,view));view->horizontalHeader()->hide();view->verticalHeader()->hide();view->setSelectionMode(QAbstractItemView::NoSelection);view->setShowGrid(false);view->setStyleSheet(QStringLiteral("QTableView {background: blue; border: 1px solid white;}"));layout->addWidget(view,1);
+    auto* view=new SummaryView;view->setObjectName(QStringLiteral("summary-grid"));view->setModel(new SummaryModel(c,view));view->horizontalHeader()->hide();view->verticalHeader()->hide();view->setSelectionMode(QAbstractItemView::NoSelection);view->setShowGrid(false);view->setStyleSheet(QStringLiteral("QTableView {background: white; border: 1px solid #879bb5;}"));layout->addWidget(view,1);
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("summary-view-input"),footer);auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("summary-main"),footer);auto* exit=button(QStringLiteral("Exit TORA"),QStringLiteral("summary-exit"),footer);footer->addStretch();layout->addLayout(footer);
     const auto update=[&c,title,iteration,objective,message,view,print]{tora::lp::SummaryDisplay d;if(c.session())d=c.session()->display(c.format(),true);title->setText(QStringLiteral("Title: ")+legacyText(d.title));iteration->setText(QStringLiteral("Final Iteration No.: ")+QString::number(d.iteration));objective->setText(d.objectiveValue?QString::fromStdString(d.objectiveLabel)+QStringLiteral(" =")+QString::fromStdString(*d.objectiveValue):QString());message->setText(QString::fromStdString(d.message));message->setVisible(!d.message.empty());const bool available=!d.sections.empty();
         print->setEnabled(available);print->setVisible(available);view->setVisible(available);

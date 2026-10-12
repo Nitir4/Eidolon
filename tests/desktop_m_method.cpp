@@ -1,4 +1,5 @@
 #include "lp_simplex_controller.hpp"
+#include "ui_colors.hpp"
 #include "lp_input_controller.hpp"
 #include "lp_screens.hpp"
 #include "application_shell.hpp"
@@ -40,8 +41,8 @@ private slots:
         auto* heading=shell.currentContent()->findChild<QLabel*>(QStringLiteral("simplex-method"));QVERIFY(heading);QCOMPARE(heading->text(),QStringLiteral("SIMPLEX TABLEAU - (M-Method)"));
         auto* grid=shell.currentContent()->findChild<QTableView*>(QStringLiteral("simplex-grid"));QVERIFY(grid);
         QCOMPARE(grid->model()->data(grid->model()->index(3,5),Qt::BackgroundRole).value<QColor>(),QColor(Qt::white));
-        QCOMPARE(grid->model()->data(grid->model()->index(3,5),Qt::ForegroundRole).value<QColor>(),QColor(Qt::blue));
-        QCOMPARE(grid->model()->data(grid->model()->index(2,5),Qt::BackgroundRole).value<QColor>(),QColor(Qt::blue));
+        QCOMPARE(grid->model()->data(grid->model()->index(3,5),Qt::ForegroundRole).value<QColor>(),QColor(colors::text));
+        QCOMPARE(grid->model()->data(grid->model()->index(2,5),Qt::BackgroundRole).value<QColor>(),QColor(colors::surface));
         c.selectCell(1,2);QVERIFY(!notice.isEmpty());QVERIFY(!c.session()->history().back().entering);
         c.selectCell(1,1);c.selectCell(4,0);QCOMPARE(c.session()->history().back().leaving,std::optional<std::size_t>(2));c.next();
         QCOMPARE(c.session()->history().size(),std::size_t(2));c.all();QTRY_VERIFY(!c.busy());QCOMPARE(notice,QStringLiteral("Iteration 4 is optimal"));

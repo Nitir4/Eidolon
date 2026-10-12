@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     // Native Qt Widgets painted in a consistent classic style across OSes.
     // This also avoids third-party style plugins replacing recovered fonts.
     QApplication::setStyle(QStyleFactory::create(QStringLiteral("Fusion")));
-    QApplication::setFont(tora::desktop::usableUiFont(application.font()));
+    QApplication::setFont(tora::desktop::readableUiFont(application.font()));
     QApplication::setApplicationName(QStringLiteral("ToraClone"));
     QApplication::setOrganizationName(QStringLiteral("ToraClone"));
     QApplication::setApplicationDisplayName(QStringLiteral("TORA Clone"));

@@ -22,6 +22,17 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    // A valid but tiny desktop font must not make screen controls unreadable.
+    QFont tiny(QStringLiteral("sans-serif"), 7);
+    QApplication::setFont(tiny);
+    QWidget readableWindow;
+    tora::desktop::polishUsableFonts(readableWindow);
+    if (readableWindow.font().pointSizeF() < 12) {
+        std::cerr << "Screen font is below the readable point-size minimum\n";
+        return 1;
+    }
+    QApplication::setFont(preferred);
+
     // Attributes observed in the user's malformed qt6ct font configuration.
     QFont malformed = preferred;
     malformed.setPixelSize(167828479);

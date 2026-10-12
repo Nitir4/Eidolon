@@ -1,6 +1,7 @@
 #include "application_shell.hpp"
 #include "screen_widgets.hpp"
 #include "ui_font.hpp"
+#include "ui_colors.hpp"
 
 #include <QApplication>
 #include <QCloseEvent>
@@ -70,10 +71,12 @@ QRect reachableGeometry(QRect requested, const QVector<QRect>& screens)
 void blueCanvas(QWidget& widget)
 {
     QPalette palette = widget.palette();
-    palette.setColor(QPalette::Window, QColor(Qt::blue));
-    palette.setColor(QPalette::WindowText, QColor(Qt::white));
-    palette.setColor(QPalette::Text, QColor(Qt::black));
-    palette.setColor(QPalette::Base, QColor(Qt::cyan));
+    palette.setColor(QPalette::Window, QColor(colors::canvas));
+    palette.setColor(QPalette::WindowText, QColor(colors::text));
+    palette.setColor(QPalette::Text, QColor(colors::text));
+    palette.setColor(QPalette::Highlight, QColor(colors::selection));
+    palette.setColor(QPalette::HighlightedText, QColor(colors::selectedText));
+    palette.setColor(QPalette::Base, QColor(colors::surface));
     palette.setColor(QPalette::Button, QColor(239, 239, 239));
     palette.setColor(QPalette::ButtonText, QColor(Qt::black));
     palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(100, 100, 100));
@@ -109,24 +112,24 @@ ApplicationShell::ApplicationShell(QSettings* settings, QWidget* parent)
 {
     // Internal Qt menus (including the menubar's overflow menu) can be created
     // after page polishing and inherit the application font directly.
-    QApplication::setFont(usableUiFont(QApplication::font()));
+    QApplication::setFont(readableUiFont(QApplication::font()));
     setObjectName(QStringLiteral("application-shell"));
-    setFont(usableUiFont(QApplication::font()));
+    setFont(readableUiFont(QApplication::font()));
     setWindowTitle(QStringLiteral("TORA Clone"));
     // Decorations are logical-pixel strokes; control sizes remain native font
     // metrics/layout hints. Scope palette overrides to this window so desktop
-    // themes cannot turn TORA's blue/cyan roles into unreadable dark panels.
+    // themes cannot override paired foreground/background contrast roles.
     setStyleSheet(QStringLiteral(
-        "QLabel { color: white; }"
-        "QGroupBox { color: white; border: 1px solid white; margin-top: 1em; }"
+        "QLabel { color: #172b4d; }"
+        "QGroupBox { color: #172b4d; border: 1px solid #879bb5; margin-top: 1em; }"
         "QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; }"
-        "QRadioButton { color: white; }"
+        "QRadioButton { color: #172b4d; }"
         "QPushButton, QToolButton { background: #efefef; color: black; border: 1px solid #777777; padding: 0.25em 0.7em; }"
         "QPushButton:focus, QToolButton:focus { border: 1px solid #000080; }"
         "QPushButton:hover, QToolButton:hover { background: white; }"
         "QPushButton:disabled, QToolButton:disabled { color: #666666; }"
-        "QLineEdit { background: cyan; color: blue; border: 1px solid white; }"
-        "QFrame#welcome-panel { border: 1px solid white; }"));
+        "QLineEdit { background: white; color: #172b4d; border: 1px solid #879bb5; padding: 0.2em; selection-background-color: #225ea8; selection-color: white; }"
+        "QFrame#welcome-panel { border: 1px solid #879bb5; }"));
     setCentralWidget(stack_);
     // Keep menus inside the window on all OSes, matching the observed layout.
     menuBar()->setNativeMenuBar(false);
@@ -202,7 +205,7 @@ bool ApplicationShell::navigate(const QString& screenId)
             auto* heading = new QLabel(descriptor->heading);
             heading->setObjectName(QStringLiteral("screen-heading"));
             heading->setAlignment(Qt::AlignCenter);
-            heading->setStyleSheet(QStringLiteral("background: white; color: blue;"));
+            heading->setStyleSheet(QStringLiteral("background: white; color: #174b83;"));
             outer->addWidget(heading);
         }
         auto* scroll = new QScrollArea;
@@ -262,9 +265,9 @@ void ApplicationShell::refreshMetrics()
     for (int i = 0; i < stack_->count(); ++i) {
         auto* page = stack_->widget(i);
         for (auto* widget : page->findChildren<QWidget*>()) {
-            if (widget->property("toraRecoveredFont").toBool()) widget->setFont(usableUiFont(font()));
+            if (widget->property("toraRecoveredFont").toBool()) widget->setFont(readableUiFont(font()));
             if (widget->objectName() == QStringLiteral("welcome-title")) {
-                QFont titleFont = usableUiFont(font());
+                QFont titleFont = readableUiFont(font());
                 if (titleFont.pointSizeF() > 0) titleFont.setPointSizeF(titleFont.pointSizeF() * 4);
                 else titleFont.setPixelSize(titleFont.pixelSize() * 4);
                 titleFont.setBold(true);
@@ -350,11 +353,11 @@ ModuleDescriptor shellModule()
         font.setBold(true);
         title->setFont(font);
         title->setAlignment(Qt::AlignCenter);
-        title->setStyleSheet(QStringLiteral("color: cyan;"));
+        title->setStyleSheet(QStringLiteral("color: #174b83;"));
         inner->addWidget(title);
         auto* description = new QLabel(QStringLiteral("Operations Research\nLinear Programming"));
         description->setAlignment(Qt::AlignCenter);
-        description->setStyleSheet(QStringLiteral("background: cyan; color: black;"));
+        description->setStyleSheet(QStringLiteral("background: #dce8f7; color: #172b4d;"));
         inner->addWidget(description);
         button(QStringLiteral("Click Here"), QStringLiteral("welcome-enter"), *inner,
             [&shell] { shell.navigate(QStringLiteral("main")); });

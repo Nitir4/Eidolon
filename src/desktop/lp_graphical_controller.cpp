@@ -57,7 +57,7 @@ void drawPlot(QPainter& painter,const QRectF& area,const tora::lp::GraphicalSess
     if(printing){auto paperFont=painter.font();paperFont.setBold(true);painter.setFont(paperFont);}
     const QFontMetricsF metrics(painter.font(),painter.device());
     painter.setClipRect(printing?area.adjusted(-metrics.height(),-metrics.height(),metrics.height()*2,metrics.height()*2):area);
-    painter.fillRect(area,printing?Qt::white:Qt::cyan);
+    painter.fillRect(area,Qt::white);
     const double maximum=graph.rangeMax();const auto origin=mapped({0,0},area,maximum,graph.rangeMin());
     const auto sample=graph.gridStep();painter.setPen(Qt::NoPen);painter.setBrush(printing?QColor(Qt::black):QColor(128,128,128));
     const auto dotWidth=metrics.height()*2/13,dotHeight=metrics.height()*3/13;
@@ -123,7 +123,7 @@ bool printGraph(QPrinter& printer,const LpGraphicalController& c,const QFont& fo
 QWidget* graphicalScreen(ApplicationShell& shell){
     auto* page=new QWidget;auto* outer=new QVBoxLayout(page);auto* heading=new QLabel(QStringLiteral("GRAPHICAL LINEAR PROGRAMMING SOLUTION"));heading->setObjectName(QStringLiteral("graph-heading"));heading->setAlignment(Qt::AlignCenter);outer->addWidget(heading);
     auto& c=graphicalController(shell);auto* body=new QHBoxLayout;auto* left=new QVBoxLayout;auto* instruction=new QLabel(QStringLiteral("To graph the LP below, click constraints\none at a time, then click objective function"));instruction->setWordWrap(true);left->addWidget(instruction);
-    auto* rows=new QListWidget;rows->setObjectName(QStringLiteral("graph-problem"));rows->setStyleSheet(QStringLiteral("QListWidget {background: #00ffff; color: #0000ff; border: 1px solid white;} QListWidget::item:selected {background: #4499ff; color: white;}"));left->addWidget(rows,1);
+    auto* rows=new QListWidget;rows->setObjectName(QStringLiteral("graph-problem"));rows->setStyleSheet(QStringLiteral("QListWidget {background: white; color: #172b4d; border: 1px solid #879bb5;} QListWidget::item:selected {background: #225ea8; color: white;}"));left->addWidget(rows,1);
     auto* solution=new QGroupBox(QStringLiteral("Optimal Solution"));auto* solutionLayout=new QVBoxLayout(solution);auto* result=new QLabel;result->setObjectName(QStringLiteral("graph-result"));result->setWordWrap(true);result->setTextFormat(Qt::PlainText);solutionLayout->addWidget(result);left->addWidget(solution);
     body->addLayout(left,2);auto* right=new QVBoxLayout;auto* controls=new QHBoxLayout;controls->addStretch();auto* zoomIn=new QPushButton(QStringLiteral("Zoom In"));zoomIn->setObjectName(QStringLiteral("graph-zoom-in"));auto* zoomOut=new QPushButton(QStringLiteral("Zoom Out"));zoomOut->setObjectName(QStringLiteral("graph-zoom-out"));auto* print=new QPushButton(QStringLiteral("Print Graph"));print->setObjectName(QStringLiteral("graph-print"));for(auto* b:{zoomIn,zoomOut,print})controls->addWidget(b);controls->addStretch();right->addLayout(controls);auto* plot=new GraphPlot(c);right->addWidget(plot,1);body->addLayout(right,3);outer->addLayout(body,1);
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=new QPushButton(QStringLiteral("View/Modify Input Data"));input->setObjectName(QStringLiteral("graph-view-input"));auto* main=new QPushButton(QStringLiteral("MAIN Menu"));auto* exit=new QPushButton(QStringLiteral("Exit TORA"));for(auto* b:{input,main,exit})footer->addWidget(b);footer->addStretch();outer->addLayout(footer);
