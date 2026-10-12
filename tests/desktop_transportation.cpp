@@ -135,7 +135,9 @@ private slots:
     void switchStartingMethods() {
         ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);
         c.loadExample();QVERIFY(shell.navigate(QStringLiteral("transportation/solve-menu")));shell.show();
-        auto* least=shell.findChild<QPushButton*>(QStringLiteral("transport-leastcost-start"));QVERIFY(least);least->click();
+        auto* least=shell.findChild<QPushButton*>(QStringLiteral("transport-leastcost-start"));QVERIFY(least);
+        QTimer::singleShot(0,[]{for(auto* w:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(w))box->accept();});
+        least->click();
         QCOMPARE(shell.currentScreen(),QStringLiteral("transportation/leastcost"));
         QCOMPARE(c.method(),tora::transportation::StartMethod::LeastCost);QCOMPARE(c.trace().size(),std::size_t(1));
         QCOMPARE(c.trace().front().objective,150.0);
@@ -146,6 +148,28 @@ private slots:
         QCOMPARE(c.trace().front().objective,230.0);
         QString error;QVERIFY(!c.solve(error,static_cast<tora::transportation::StartMethod>(999)));
         QCOMPARE(c.method(),tora::transportation::StartMethod::NorthWest);QCOMPARE(c.trace().size(),std::size_t(3));
+    }
+    void initialOptimalNotice_data() {
+        QTest::addColumn<bool>("leastcost");
+        QTest::newRow("leastcost")<<true;QTest::newRow("northwest")<<false;
+    }
+    void initialOptimalNotice() {
+        QFETCH(bool,leastcost);ApplicationShell shell;shell.registerModule(transportationModule());
+        auto& c=transportationController(shell);c.loadExample();
+        if(!leastcost) {auto p=c.problem();p.costs={{1,1,1},{1,1,1}};c.load(std::move(p));}
+        QVERIFY(shell.navigate(QStringLiteral("transportation/solve-menu")));shell.show();
+        bool seen=false;QString title,message;QTimer notice;notice.setSingleShot(true);
+        QObject::connect(&notice,&QTimer::timeout,&shell,[&] {
+            for(auto* widget:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(widget)) {
+                seen=true;title=box->windowTitle();message=box->text();box->accept();
+            }
+        });
+        auto* start=shell.findChild<QPushButton*>(leastcost?QStringLiteral("transport-leastcost-start"):QStringLiteral("transport-northwest-start"));
+        QVERIFY(start);notice.start(0);start->click();notice.stop();
+        QVERIFY2(seen,"Missing observed initial optimal-tableau notice");
+        QCOMPARE(title,QStringLiteral("Optimal Tableau"));QCOMPARE(message,QStringLiteral("Iteration 1 is optimal"));
+        QCOMPARE(c.trace().size(),std::size_t(1));
+        auto* next=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));QVERIFY(next);QVERIFY(!next->isEnabled());
     }
     void resolutionPreview_data() {
         QTest::addColumn<QSize>("physical");QTest::addColumn<QString>("method");

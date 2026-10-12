@@ -108,6 +108,8 @@ void solveProblem(ApplicationShell& shell, transportation::StartMethod method = 
         return;
     }
     shell.navigate(id(method==transportation::StartMethod::LeastCost?"leastcost":"northwest"));
+    if(transportationController(shell).trace().size()==1)
+        QMessageBox::information(&shell,QStringLiteral("Optimal Tableau"),QStringLiteral("Iteration 1 is optimal"));
 }
 TransportationTable* table(QWidget* parent, const char* name)
 {

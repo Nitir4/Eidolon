@@ -42,7 +42,9 @@ limits and exact-single-precision balanced-quantity restrictions apply.
 The same native table renders each method's costs, shipments, reduced costs,
 u/v, supply/demand, objective and iteration label. Next/All append iterations;
 terminal buttons disable, and advancement to the last tableau reports
-“Iteration N is optimal”. Method selection replaces the trace only after a
+“Iteration N is optimal”. Selecting an already optimal start shows the
+“Optimal Tableau” dialog with “Iteration 1 is optimal”, as captured in case01.
+The same shared selection behavior applies to North-west starts. Method selection replaces the trace only after a
 successful solve. Failed method selection preserves the previous trace and
 method. Loading another model clears the trace. The method heading refreshes
 when revisiting cached views. Screen fonts/layout use the approved readable
@@ -56,3 +58,10 @@ thresholds and printer output remain outside the verified profile. Equal-cost
 scan order is supported by the observed bases; this does not claim that every
 possible equivalent internal scan order has been distinguished. Vogel is a
 separate method cycle, not part of this implementation.
+
+
+Final screen review found the initially optimal notice missing from the first
+feature commit. A tests-first regression failed for both starts; selection now
+shows the observed dialog after rendering the initial tableau. This correction
+requires a new full-suite and three-OS gate; the earlier successful matrix alone
+does not close it.

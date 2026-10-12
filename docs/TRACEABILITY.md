@@ -339,3 +339,13 @@ Raw screenshots, authentic TORA files and executables remain private.
 New tests were introduced before implementation and failed on missing method
 behavior/API. Local full 81/81 and Qt-free29/29 pass; final three-OS/package gate
 is recorded separately in STATUS.json. No LP numerical implementation changed.
+
+
+TR-UI-OPT: Selecting an already optimal Transportation basis shows
+“Optimal Tableau” / “Iteration 1 is optimal” before returning to its disabled
+Next/All controls. Code: transportation_screens.cpp solveProblem; regression:
+desktop_transportation.cpp initialOptimalNotice (both starts). Private evidence:
+01-normal/leastcost/initial-message.png and the captured all-ties profile.
+The regression fails before correction and passes after it, including actual
+Wayland4/4 checks. Corrected local full suite81/81 passes; native count is now49
+per scale. This screen-review finding supersedes the earlier47-check count.
