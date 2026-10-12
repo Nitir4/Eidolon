@@ -96,3 +96,5 @@ remains in the accepted profile. Earlier successful-numerical/failed-screen
 and macOS-title-test runs are retained as history, not final acceptance evidence.
 The full local suite passed 81/81 after the product correction; final test-only
 portability changes passed focused 7/7 and the complete three-OS matrix.
+
+The subsequent [Vogel cycle](TRANSPORTATION_VOGEL.md) is now independently delivered on future-scope; this Least-cost gate remains historical evidence for its original source.

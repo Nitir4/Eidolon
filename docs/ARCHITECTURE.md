@@ -428,7 +428,7 @@ dependency enters the Qt-free mathematical library.
 ## Authorized Transportation extension (October 2026)
 
 The original LP delivery is unchanged. A new compiled-in module now uses the
-existing registry: `or_transportation` (Qt-free model, validation, North-west/Least-cost
+existing registry: `or_transportation` (Qt-free model, validation, North-west/Least-cost/Vogel
 starting bases, shared MODI solver and display), `transportation_compat` (Qt-free read-only 4000 parser),
 and `TransportationController`/screen factories inside `desktop_shell`.
 The executable registers both modules. The controller owns the current model

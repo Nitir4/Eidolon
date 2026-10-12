@@ -362,3 +362,5 @@ and installed-window evidence is recorded in STATUS.json. main is unchanged.
 |---|---|---|---|---|---|
 | TR-VG | Penalty start, row-first penalty ties, first minimum cell, basic zeros and MODI trace | TRANSPORTATION_VOGEL.md | transportation/north_west.cpp StartMethod::Vogel | transportation.vogel.goldens; transportation.safety | corpus/*/vogel; vogel-probes/19-axis-penalty-tie/vogel |
 | TR-VG-UI | Exact heading, method route, optimal notices and scaled tables | UI_SPEC.md | desktop/transportation_screens.cpp | desktop.transportation.scale-*; desktop_native_acceptance --transportation | same Vogel screens |
+
+Vogel final gate closes at source 6b01925, CI 38265173986: 82/82 per OS, 625 exact new-method fields, 71 Transportation checks/scale and 36 renders/OS. All-three-OS screenshots, package audits and actual installed Wayland identity pass. Evidence and retained limits are recorded in STATUS.json and TRANSPORTATION_VOGEL.md.

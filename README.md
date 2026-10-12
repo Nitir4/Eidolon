@@ -13,11 +13,11 @@ its input module supplies native LP data entry, row/column editing and Open/Save
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-all three OS builds pass 81 tests each, including independent printer PDF
+all three OS builds pass 82 tests each, including independent printer PDF
 comparison and live synthetic display changes. The latest verification and packages
 are recorded in [current status](docs/STATUS.json). Recorded physical-printer/driver,
 physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
-One source tree and the `main` branch serve Windows, macOS and Linux.
+One source tree serves Windows, macOS and Linux; the authorized extensions are on `future-scope`.
 
 See [current status](docs/STATUS.json), [Foundation 1 report](docs/FOUNDATION1_REPORT.md)
 [Foundation 5 report](docs/FOUNDATION5_REPORT.md) and
@@ -160,4 +160,15 @@ all additional feature commits remain on `future-scope`.
 
 ## Vogel method cycle on future-scope
 
-Vogel start adds penalty-based initialization to the shared Transportation improvement/tableau workflow. All18 captured cases/19 tableaus/625 fields match locally, including a new live TORA axis-tie probe. Local full82/82, focused8/8, Qt-free30/30 and actual Wayland14-view checks pass; three-OS matrix/package verification is pending. See [Vogel analysis](docs/tora-analysis/TRANSPORTATION_VOGEL.md).
+Vogel start is delivered on `future-scope`. Its 18 captured problems contain
+19 tableaus and 625 displayed fields, all matching TORA exactly. The final
+[three-OS CI](https://github.com/Nitir4/TORA-Clone/actions/runs/38265173986) passes
+82 tests per OS (246 overall), with 71 Transportation checks at each scale and
+36 resolution renders per OS. Windows, macOS and Linux renders were reviewed;
+the Windows offscreen font omission is fixed and covered by a glyph regression.
+
+The verified Linux AppImage from source `6b01925` is installed and open through
+`tora-clone`. Local feature tests passed 82/82, the final focused checks passed
+8/8, the Qt-free suite passed 30/30, and actual Wayland acceptance passed all
+14 views. See [Vogel analysis](docs/tora-analysis/TRANSPORTATION_VOGEL.md) for
+evidence and the remaining Transportation scope.

@@ -121,3 +121,5 @@ Transportation printing remain future work.
 ## Vogel method cycle
 
 The future-scope branch now implements Vogel start against the17 existing method captures plus one targeted axis-penalty tie probe. The original76-tableau corpus was preserved; the new probe is under `vogel-probes/19-axis-penalty-tie/`. See TRANSPORTATION_VOGEL.md for tested rules, limitations and delivery evidence. Other Transportation functionality remains a separate cycle.
+
+Vogel final gate closes at source 6b01925, CI 38265173986: 82/82 per OS, 625 exact new-method fields, 71 Transportation checks/scale and 36 renders/OS. All-three-OS screenshots, package audits and actual installed Wayland identity pass. Evidence and retained limits are recorded in STATUS.json and TRANSPORTATION_VOGEL.md.
