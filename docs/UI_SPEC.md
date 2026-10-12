@@ -304,11 +304,11 @@ window geometry and model/session state are asserted. Test-only offscreen
 monitor changes are distinguished from still-pending physical monitor acceptance.
 
 
-## Native Transportation North-west preview
+## Native Transportation North-west and Least-cost preview
 
 MAIN Menu → Transportation model opens existing-file/example choices. Open
 uses a native picker and shows the cost/supply/demand grid read only. SOLVE
-Menu → North-west corner start opens stacked automatic tableaus. Each source
+Menu → North-west corner start or Least-cost start opens stacked automatic tableaus. Each source
 uses cost, shipment and reduced-cost rows, with u/v multipliers, supply, demand,
 Name, ObjVal = and Iter labels. Basic zero shipments remain visible; nonbasic
 cells are blank. Next adds one tableau, All adds the remainder, terminal
@@ -320,6 +320,11 @@ handles smaller viewports. Tests check all 17 captured profiles at four scales
 and exact window sizes for 1366×768,1080p and4K. A separate real-desktop harness
 can inspect the entry/input/initial/terminal routes with `--transportation`.
 
-The preview exposes only supported automatic behavior. New/edit/save, other
-starts, manual loop selection, multiplier changes, final summary and printing
+The selected heading distinguishes North-West Corner Method from Least Cost
+Method. Switching methods recomputes the trace and resets visible iterations;
+failed solving leaves the current method and trace intact. Both method routes
+have 17 independent golden profiles and three resolution checks at four scales.
+
+The preview exposes only supported automatic behavior. New/edit/save, Vogel's
+start, manual loop selection, multiplier changes, final summary and printing
 remain outside this slice. Read-only input uses normal arrow-key selection.

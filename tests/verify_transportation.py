@@ -8,6 +8,8 @@ import hashlib
 import tempfile
 
 records=json.loads(Path(sys.argv[2]).read_text())
+method=sys.argv[4] if len(sys.argv)>4 else 'northwest'
+arguments=['--method',method]
 differences=[]
 fields=tableaus=0
 comparison=[]
@@ -16,7 +18,7 @@ for record in records:
     lines=[f"{len(p['supply'])} {len(p['demand'])}"]
     lines+=[' '.join(map(str,row)) for row in p['costs']]
     lines+=[' '.join(map(str,p['supply'])),' '.join(map(str,p['demand']))]
-    result=subprocess.run([sys.argv[1]],input='\n'.join(lines)+'\n',text=True,capture_output=True)
+    result=subprocess.run([sys.argv[1]]+arguments,input='\n'.join(lines)+'\n',text=True,capture_output=True)
     if result.returncode:
         raise AssertionError(record['case']+': '+result.stderr)
     actual=json.loads(result.stdout)
@@ -29,7 +31,7 @@ for record in records:
     assert hashlib.sha256(document).hexdigest()==record['file_sha256'],record['case']+' actual oracle file hash'
     with tempfile.TemporaryDirectory(prefix='tora-transportation-') as temporary:
         path=Path(temporary)/'independently-generated.txt';path.write_bytes(document)
-        from_file=subprocess.run([sys.argv[1],'--file',str(path)],text=True,capture_output=True)
+        from_file=subprocess.run([sys.argv[1],'--file',str(path)]+arguments,text=True,capture_output=True)
         assert from_file.returncode==0,record['case']+': '+from_file.stderr
         assert json.loads(from_file.stdout)==actual,record['case']+' file-backed trace'
     if actual!=record['tables']:
@@ -43,12 +45,16 @@ for record in records:
         elif isinstance(value,list):
             for k,v in enumerate(value):yield from flatten(v,path+'/'+str(k))
         else:yield path,value
-    for (key,expected),(_,got) in zip(flatten(record['tables']),flatten(actual)):
-        comparison.append([record['case'],key,expected,got]);fields+=1
+    actual_fields=dict(flatten(actual))
+    expected_fields=dict(flatten(record['tables']))
+    for key,expected in expected_fields.items():
+        comparison.append([record['case'],key,expected,actual_fields.get(key)]);fields+=1
+    if actual_fields.keys()!=expected_fields.keys():
+        differences.append((record['case'],'field paths differ'))
     tableaus+=len(actual)
 if len(sys.argv)>3:
     target=Path(sys.argv[3]);target.parent.mkdir(parents=True,exist_ok=True)
     with target.open('w',newline='',encoding='utf-8') as stream:
         writer=csv.writer(stream,delimiter='\t');writer.writerow(['case','field','TORA','Clone']);writer.writerows(comparison)
 if differences:raise AssertionError('\n'.join(map(str,differences)))
-print(f'{len(records)} North-west cases, {tableaus} tableaus, {fields} exact fields MATCH')
+print(f'{len(records)} {method} cases, {tableaus} tableaus, {fields} exact fields MATCH')

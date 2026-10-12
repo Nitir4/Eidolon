@@ -428,8 +428,8 @@ dependency enters the Qt-free mathematical library.
 ## Authorized Transportation extension (October 2026)
 
 The original LP delivery is unchanged. A new compiled-in module now uses the
-existing registry: `or_transportation` (Qt-free model, validation, North-west
-solver and display), `transportation_compat` (Qt-free read-only 4000 parser),
+existing registry: `or_transportation` (Qt-free model, validation, North-west/Least-cost
+starting bases, shared MODI solver and display), `transportation_compat` (Qt-free read-only 4000 parser),
 and `TransportationController`/screen factories inside `desktop_shell`.
 The executable registers both modules. The controller owns the current model
 and immutable computed trace; screens subscribe to model/session changes.
@@ -440,7 +440,7 @@ state on failure. Navigation retains pages, which refresh when models change.
 flowchart LR
   File[Saved Transportation file] --> Reader[transportation_compat]
   Reader --> Model[Transportation Problem]
-  Model --> Solver[or_transportation: North-west + MODI]
+  Model --> Solver[or_transportation: North-west / Least-cost + MODI]
   Solver --> Trace[Ordered tableaus]
   Trace --> Display[Shared display strings]
   Display --> Controller[TransportationController]
@@ -448,8 +448,11 @@ flowchart LR
   Registry[ApplicationShell module registry] --> Widgets
 ```
 
-The preview provides existing-file viewing and automatic North-west stepping
-only. Native editing/writing, other starts, manual loops, alternate multiplier
+The preview provides existing-file viewing and automatic North-west/Least-cost
+stepping. StartMethod selects the initial basis, and both methods share the
+unchanged MODI improvement loop and formatting. The controller records the
+selected method only with a successful new trace. Native editing/writing,
+Vogel's start, manual loops, alternate multiplier
 initialization, final summary and printing are separate future slices. The
 profile rejects unbalanced/non-exact-single-precision quantities and unknown
 format headers; original error/threshold behavior is not inferred. Numerical

@@ -2,7 +2,9 @@
 
 Status: seventeen complete numerical profiles and seventy-six observed tableaus
 across three starts. The native North-west golden contract covers all thirty-eight
-North-west tableaus; other starting algorithms remain observation only.
+North-west tableaus. The feature branch also implements Least-cost from its
+20 independently transcribed tableaus; Vogel remains observation only. See
+[Least-cost method specification](TRANSPORTATION_LEAST_COST.md).
 
 ## Layout and navigation
 
@@ -83,7 +85,7 @@ selection and printing are outside this initial preview.
 
 ## Unknowns / things I could not verify
 
-Least-cost/Vogel penalty/tie policies; manual loop validation; other multiplier
+Vogel penalty/tie policies and Least-cost behavior beyond its captured profile; manual loop validation; other multiplier
 initializations; imbalance; cycling; exact near-zero improvement thresholds;
 nonbinary fraction strings; scientific settings; printer layout and
 horizontal pagination. Passing this captured profile does not verify those.

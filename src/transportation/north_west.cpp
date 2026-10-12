@@ -106,7 +106,9 @@ void validate(const Problem& p) {
         finite(value);if(value<0)throw std::invalid_argument("Supply and demand must be nonnegative.");
     }
 }
-std::vector<Tableau> solveNorthWest(const Problem& p) {
+std::vector<Tableau> solve(const Problem& p,StartMethod method) {
+    if(method!=StartMethod::NorthWest && method!=StartMethod::LeastCost)
+        throw std::invalid_argument("Unsupported Transportation starting method.");
     validate(p);
     for(const auto& values:{p.supply,p.demand})for(double value:values)
         if(static_cast<double>(static_cast<float>(value))!=value)
@@ -117,15 +119,38 @@ std::vector<Tableau> solveNorthWest(const Problem& p) {
     if(supply!=demand)throw std::invalid_argument("This Transportation preview requires equal total supply and demand.");
     const auto m=p.supply.size(),n=p.demand.size();
     auto remainingSupply=p.supply,remainingDemand=p.demand;Basis basis;
-    std::size_t i=0,j=0;
-    while(i<m && j<n) {
-        const double value=std::min(remainingSupply[i],remainingDemand[j]);
-        basis[{i,j}]=value;remainingSupply[i]-=value;remainingDemand[j]-=value;
-        // Equal exhaustion moves to the next source first, preserving the
-        // observed zero basic shipment in that destination.
-        if(remainingSupply[i]==0 && i+1<m)++i;
-        else if(remainingDemand[j]==0)++j;
-        else ++i;
+    if(method==StartMethod::NorthWest) {
+        std::size_t i=0,j=0;
+        while(i<m && j<n) {
+            const double value=std::min(remainingSupply[i],remainingDemand[j]);
+            basis[{i,j}]=value;remainingSupply[i]-=value;remainingDemand[j]-=value;
+            // Equal exhaustion moves to the next source first, preserving the
+            // observed zero basic shipment in that destination.
+            if(remainingSupply[i]==0 && i+1<m)++i;
+            else if(remainingDemand[j]==0)++j;
+            else ++i;
+        }
+    } else {
+        // Remove exactly one exhausted line at each allocation. Equal
+        // exhaustion removes the source first unless it is the last source;
+        // keeping the destination active preserves the observed basic zero.
+        std::vector<bool> activeSources(m,true),activeDestinations(n,true);
+        std::size_t sources=m,destinations=n;
+        while(sources && destinations) {
+            std::optional<Edge> selected;
+            double best=std::numeric_limits<double>::infinity();
+            for(std::size_t r=0;r<m;++r)for(std::size_t c=0;c<n;++c)
+                if(activeSources[r] && activeDestinations[c] && (!selected || p.costs[r][c]<best)) {
+                    selected=Edge{r,c};best=p.costs[r][c];
+                }
+            if(!selected)throw std::runtime_error("No active Transportation allocation cell.");
+            const auto [r,c]=*selected;
+            const double value=std::min(remainingSupply[r],remainingDemand[c]);
+            basis[*selected]=value;remainingSupply[r]-=value;remainingDemand[c]-=value;
+            if(remainingSupply[r]==0 && sources>1) {activeSources[r]=false;--sources;}
+            else if(remainingDemand[c]==0) {activeDestinations[c]=false;--destinations;}
+            else {activeSources[r]=false;--sources;}
+        }
     }
     std::vector<Tableau> history;
     std::set<std::vector<Edge>> visited;
@@ -151,6 +176,8 @@ std::vector<Tableau> solveNorthWest(const Problem& p) {
     }
     throw std::runtime_error("Transportation iteration safety limit reached; no optimal result returned.");
 }
+std::vector<Tableau> solveNorthWest(const Problem& p) { return solve(p,StartMethod::NorthWest); }
+std::vector<Tableau> solveLeastCost(const Problem& p) { return solve(p,StartMethod::LeastCost); }
 std::string quantity(double value) {
     finite(value);if(value==0)return "0";
     char buffer[128];const auto result=std::to_chars(buffer,buffer+sizeof(buffer),value);

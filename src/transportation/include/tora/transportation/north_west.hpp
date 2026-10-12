@@ -16,6 +16,7 @@ struct Problem {
 // General model validation is distinct from the captured numerical profile.
 // The size bound is a native allocation safeguard, not a claimed TORA limit.
 void validate(const Problem& problem);
+enum class StartMethod { NorthWest, LeastCost };
 struct Cell {
     std::size_t source, destination;
 };
@@ -38,7 +39,9 @@ struct Display {
 // Automatic minimum-cost North-west start and MODI improvements, u1=0.
 // Nonbinary single-precision quantities are deliberately rejected until their
 // observed long/clipped TORA display has a complete compatibility contract.
+std::vector<Tableau> solve(const Problem& problem, StartMethod method);
 std::vector<Tableau> solveNorthWest(const Problem& problem);
+std::vector<Tableau> solveLeastCost(const Problem& problem);
 Display display(const Problem& problem, const Tableau& tableau, std::size_t iteration);
 std::string quantity(double value);
 } // namespace tora::transportation

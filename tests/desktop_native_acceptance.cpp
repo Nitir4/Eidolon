@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
     parser.addOption({QStringLiteral("output"), QStringLiteral("Private capture/report directory."), QStringLiteral("path")});
     parser.addOption({QStringLiteral("print-dialog"), QStringLiteral("Capture and cancel the real Linux Qt print dialog; sends no print job.")});
     parser.addOption({QStringLiteral("fullscreen"), QStringLiteral("Temporarily display each view fullscreen on the connected monitor.")});
-    parser.addOption({QStringLiteral("transportation"), QStringLiteral("Also check the native Transportation North-west preview.")});
+    parser.addOption({QStringLiteral("transportation"), QStringLiteral("Also check native Transportation North-west and Least-cost methods.")});
     parser.process(app);
     try {
         require(parser.isSet(QStringLiteral("problem")) && parser.isSet(QStringLiteral("output")), "--problem and --output are required");
@@ -106,6 +106,18 @@ int main(int argc, char** argv) {
             all->click();require(!all->isEnabled(),"Transportation did not terminate");
             require(transport.trace().size()==3 && transport.trace().back().objective==150,"Transportation pilot mismatch");
             capture(QStringLiteral("transportation-optimal"),QStringLiteral("transportation/northwest"));
+            auto tie=tora::transportation::Problem::blank(2,3);
+            tie.title="Least-cost tie example";tie.costs={{2,2,5},{2,4,1}};tie.supply={17,23};tie.demand={11,13,16};
+            transport.load(std::move(tie));require(transport.solve(error,tora::transportation::StartMethod::LeastCost),"Least-cost solve failed");
+            require(shell.navigate(QStringLiteral("transportation/leastcost")),"Least-cost route failed");
+            require(transport.trace().size()==2 && transport.trace().front().objective==78,"Least-cost initial mismatch");
+            capture(QStringLiteral("transportation-leastcost-initial"),QStringLiteral("transportation/leastcost"));
+            auto* leastAll=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-all"));
+            require(leastAll && leastAll->isEnabled(),"Least-cost All missing");
+            QTimer::singleShot(0,[]{for(auto* widget:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(widget))box->accept();});
+            leastAll->click();require(!leastAll->isEnabled(),"Least-cost did not terminate");
+            require(transport.trace().back().objective==64,"Least-cost terminal mismatch");
+            capture(QStringLiteral("transportation-leastcost-optimal"),QStringLiteral("transportation/leastcost"));
         }
         QString panel=QStringLiteral("not requested");
         if(parser.isSet(QStringLiteral("print-dialog"))) {

@@ -100,14 +100,14 @@ void openProblem(ApplicationShell& shell)
     }
     shell.navigate(id("input"));
 }
-void solveProblem(ApplicationShell& shell)
+void solveProblem(ApplicationShell& shell, transportation::StartMethod method = transportation::StartMethod::NorthWest)
 {
     QString error;
-    if (!transportationController(shell).solve(error)) {
+    if (!transportationController(shell).solve(error,method)) {
         QMessageBox::warning(&shell, QStringLiteral("Cannot Solve Problem"), error);
         return;
     }
-    shell.navigate(id("northwest"));
+    shell.navigate(id(method==transportation::StartMethod::LeastCost?"leastcost":"northwest"));
 }
 TransportationTable* table(QWidget* parent, const char* name)
 {
@@ -143,7 +143,7 @@ QWidget* inputMode(ApplicationShell& shell)
     auto* title = new QLabel(QStringLiteral("TRANSPORTATION MODEL"));
     title->setAlignment(Qt::AlignCenter);
     choices->addWidget(title);
-    auto* description = new QLabel(QStringLiteral("Open an existing TORA problem or load the example.\nNorth-west corner start · automatic iterations\nSaved problems are opened read only."));
+    auto* description = new QLabel(QStringLiteral("Open an existing TORA problem or load the example.\nNorth-west / Least-cost starts · automatic iterations\nSaved problems are opened read only."));
     description->setAlignment(Qt::AlignCenter);
     choices->addWidget(description);
     button(QStringLiteral("Enter/Edit Existing Problem"), QStringLiteral("transport-open"), *choices, [&shell] { openProblem(shell); });
@@ -217,6 +217,8 @@ QWidget* solveMenu(ApplicationShell& shell)
     heading->setAlignment(Qt::AlignCenter); choices->addWidget(heading);
     button(QStringLiteral("North-west corner start"), QStringLiteral("transport-northwest-start"), *choices,
            [&shell] { solveProblem(shell); });
+    button(QStringLiteral("Least-cost start"), QStringLiteral("transport-leastcost-start"), *choices,
+           [&shell] { solveProblem(shell,transportation::StartMethod::LeastCost); });
     centerPanel(*layout, panel);
     footer(*layout, shell, true);
     return page;
@@ -226,7 +228,8 @@ QWidget* iterations(ApplicationShell& shell)
     auto& controller = transportationController(shell);
     auto* page = new QWidget;
     auto* layout = new QVBoxLayout(page);
-    auto* heading = new QLabel(QStringLiteral("TRANSPORTATION TABLEAU - (North-West Corner Method)"));
+    auto* heading = new QLabel;
+    heading->setObjectName(QStringLiteral("transport-method-heading"));
     heading->setWordWrap(true); layout->addWidget(heading);
     auto* title = new QLabel;
     title->setWordWrap(true); layout->addWidget(title);
@@ -240,7 +243,10 @@ QWidget* iterations(ApplicationShell& shell)
     layout->addLayout(controls);
     auto* grid = table(page, "transport-tableau"); layout->addWidget(grid, 1);
     auto shown = std::make_shared<std::size_t>(1);
-    const auto render = [&controller, grid, next, all, shown, title] {
+    const auto render = [&controller, grid, next, all, shown, title, heading] {
+        heading->setText(controller.method()==transportation::StartMethod::LeastCost?
+                         QStringLiteral("TRANSPORTATION TABLEAU - (Least Cost Method)"):
+                         QStringLiteral("TRANSPORTATION TABLEAU - (North-West Corner Method)"));
         grid->clearSpans(); grid->clear();
         const auto& history=controller.trace();
         const auto& p=controller.problem();
@@ -310,6 +316,8 @@ void menus(ApplicationShell& shell, QMenuBar& bar)
     auto* solve=bar.addMenu(QStringLiteral("Solve Problem"));
     auto* northwest=solve->addAction(QStringLiteral("Iterations — North-west corner start"),&shell,[&shell]{solveProblem(shell);});
     northwest->setEnabled(transportationController(shell).loaded());
+    auto* leastcost=solve->addAction(QStringLiteral("Iterations — Least-cost start"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::LeastCost);});
+    leastcost->setEnabled(transportationController(shell).loaded());
     bar.addAction(QStringLiteral("MAIN Menu"),&shell,[&shell]{shell.navigate(QStringLiteral("main"));});
 }
 } // namespace
@@ -319,7 +327,7 @@ TransportationController::TransportationController(QObject* parent):QObject(pare
 void TransportationController::load(transportation::Problem problem)
 {
     transportation::validate(problem);
-    problem_=std::move(problem); trace_.clear(); loaded_=true; emit changed();
+    problem_=std::move(problem); trace_.clear(); method_=transportation::StartMethod::NorthWest; loaded_=true; emit changed();
 }
 void TransportationController::loadExample()
 {
@@ -339,18 +347,18 @@ bool TransportationController::openFile(const QString& filename, QString& error)
         return true;
     } catch (const std::exception& e) { error=QString::fromUtf8(e.what()); return false; }
 }
-bool TransportationController::solve(QString& error)
+bool TransportationController::solve(QString& error, transportation::StartMethod method)
 {
     error.clear();
     if (!loaded_) { error=QStringLiteral("Open a Transportation problem first."); return false; }
     try {
-        auto result=transportation::solveNorthWest(problem_);
+        auto result=transportation::solve(problem_,method);
         const auto cellsPerTable=(3*problem_.supply.size()+4)*(problem_.demand.size()+4);
         if (result.size()>250000/cellsPerTable) {
             error=QStringLiteral("This Transportation preview limits the displayed trace to 250,000 cells. The problem requires a larger trace.");
             return false;
         }
-        trace_=std::move(result); emit changed(); return true;
+        trace_=std::move(result); method_=method; emit changed(); return true;
     } catch (const std::exception& e) { error=QString::fromUtf8(e.what()); return false; }
 }
 TransportationController& transportationController(ApplicationShell& shell)
@@ -365,6 +373,7 @@ ModuleDescriptor transportationModule()
     module.screens.append({id("input"),QStringLiteral("TRANSPORTATION INPUT DATA"),input,menus});
     module.screens.append({id("solve-menu"),QStringLiteral("TRANSPORTATION MODEL"),solveMenu,menus});
     module.screens.append({id("northwest"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
+    module.screens.append({id("leastcost"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
     return module;
 }
 } // namespace tora::desktop

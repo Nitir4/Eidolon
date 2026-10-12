@@ -325,3 +325,17 @@ viewport's column count; `nextAndReload` sends the resize event to the viewport.
 
 Final source/run, packages and local audit paths are recorded in STATUS.json.
 Raw screenshots, authentic TORA files and executables remain private.
+
+
+## Least-cost start on future-scope
+
+| Requirement | Code | Test | Private capture |
+|---|---|---|---|
+| TR-LC-01: least active cost, feasible initial basis, basic zeros | transportation/north_west.cpp solve(StartMethod::LeastCost) | transportation.leastcost.goldens:17 cases/20 tableaus/644 fields | corpus/<case>/leastcost/numbers-draft.json and hashed screen strips |
+| TR-LC-02: shared automatic MODI progression and termination | same shared snapshot/pivot loop | cases 07/10/17 require one improvement; all 20 tableaus exact | leastcost/initial, terminal and trace strips |
+| TR-LC-03: method selection, heading, cached view refresh and failure preservation | desktop/transportation_screens.cpp | desktop_transportation.cpp goldenNativeTableaus and switchStartingMethods;47 checks per scale | native heading reviewed against case 10 screen |
+| TR-LC-04: scalable native rendering | same table/layout framework | three resolutions/four scales per method; actual 1080p Wayland initial/optimal; small 200% render reviewed | original-app PNGs kept outside Git |
+
+New tests were introduced before implementation and failed on missing method
+behavior/API. Local full 81/81 and Qt-free29/29 pass; final three-OS/package gate
+is recorded separately in STATUS.json. No LP numerical implementation changed.

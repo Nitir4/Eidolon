@@ -16,6 +16,11 @@ add_test(NAME transportation.northwest.goldens COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-northwest.json"
     "${CMAKE_CURRENT_BINARY_DIR}/transportation-northwest-comparison.tsv")
 set_tests_properties(transportation.northwest.goldens PROPERTIES TIMEOUT 30)
+add_test(NAME transportation.leastcost.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation.py" "$<TARGET_FILE:transportation_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-leastcost.json"
+    "${CMAKE_CURRENT_BINARY_DIR}/transportation-leastcost-comparison.tsv" leastcost)
+set_tests_properties(transportation.leastcost.goldens PROPERTIES TIMEOUT 30)
 add_executable(transportation_safety transportation_safety.cpp)
 tora_target_defaults(transportation_safety)
 target_link_libraries(transportation_safety PRIVATE tora::transportation_compat)
@@ -109,7 +114,8 @@ if(TORA_BUILD_DESKTOP)
     set_target_properties(desktop_transportation_test PROPERTIES AUTOMOC ON)
     tora_target_defaults(desktop_transportation_test)
     target_link_libraries(desktop_transportation_test PRIVATE desktop_shell Qt6::Test)
-    target_compile_definitions(desktop_transportation_test PRIVATE TORA_TRANSPORT_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-northwest.json")
+    target_compile_definitions(desktop_transportation_test PRIVATE TORA_TRANSPORT_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-northwest.json"
+        TORA_LEASTCOST_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-leastcost.json")
     foreach(scale IN ITEMS 1 1.25 1.5 2)
         add_test(NAME desktop.transportation.scale-${scale} COMMAND desktop_transportation_test
             -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-transportation-scale-${scale}.xml,junitxml" -o -,txt)

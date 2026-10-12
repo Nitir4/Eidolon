@@ -2,7 +2,7 @@ name: Build, test and package
 
 on:
   push:
-    branches: [main]
+    branches: [main, future-scope]
   pull_request:
   workflow_dispatch:
 
@@ -102,6 +102,7 @@ jobs:
             build/ci/tests/final-comparison.tsv
             build/ci/tests/sensitivity-comparison.tsv
             build/ci/tests/transportation-northwest-comparison.tsv
+            build/ci/tests/transportation-leastcost-comparison.tsv
             build/ci/tests/desktop-transportation-scale-*.xml
             build/ci/tests/desktop-input-scale-*.xml
             build/ci/tests/desktop-simplex-scale-*.xml

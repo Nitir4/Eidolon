@@ -211,3 +211,10 @@ unbalanced handling and nonbinary fractional inputs need further evidence.
 The 76-tableau observation corpus includes other starts but does not itself
 implement them or resolve every tie rule. The existing physical hardware and
 trusted signing limits also remain open.
+
+
+On `future-scope`, Least-cost is now implemented for the existing captured
+input profile, with 17 cases/20 exact tableaus and no local numerical mismatch.
+The preceding main-branch remaining-feature list is historical. Broader
+Least-cost inputs and physical acceptance limits remain as described in
+TRANSPORTATION_LEAST_COST.md; CI/package completion is tracked in STATUS.json.

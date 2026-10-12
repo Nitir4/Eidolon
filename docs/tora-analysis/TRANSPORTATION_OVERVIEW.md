@@ -105,3 +105,15 @@ Machine-readable evidence is under `build/transportation-release/` in
 `installation.json`. These checks verify only the preview scope above; physical
 mixed-monitor handoff, trusted signing and other Transportation features remain
 outside this delivery.
+
+
+## Feature branch: Least-cost extension
+
+`future-scope` adds automatic Least-cost start to the preceding main-branch
+preview. The initial basis differs, while file opening, native tables and MODI
+improvements are shared. Its17 captured cases/20 tableaus/644 exact fields pass
+locally, along with the full 81/81 desktop and 29/29 Qt-free suites. See
+[the method specification](TRANSPORTATION_LEAST_COST.md) and STATUS.json for
+final CI/package status. The main-branch preview boundary above is historical;
+Vogel, editing/writing, manual loops, alternate multipliers, final-summary and
+Transportation printing remain future work.

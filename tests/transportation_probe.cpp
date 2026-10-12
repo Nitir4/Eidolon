@@ -25,8 +25,19 @@ int main(int argc,char** argv) {
     try {
         std::cin.imbue(std::locale::classic());
         tora::transportation::Problem problem;
-        if(argc==3 && std::string(argv[1])=="--file") {
-            std::ifstream file(argv[2],std::ios::binary);
+        auto method=tora::transportation::StartMethod::NorthWest;
+        std::string filename;
+        for(int i=1;i<argc;++i) {
+            const std::string arg=argv[i];
+            if(arg=="--file" && i+1<argc)filename=argv[++i];
+            else if(arg=="--method" && i+1<argc) {
+                const std::string name=argv[++i];
+                if(name=="leastcost")method=tora::transportation::StartMethod::LeastCost;
+                else if(name!="northwest")throw std::invalid_argument("Unknown method");
+            } else throw std::invalid_argument("Unknown or incomplete probe option");
+        }
+        if(!filename.empty()) {
+            std::ifstream file(filename,std::ios::binary);
             if(!file)throw std::runtime_error("Cannot open probe file");
             const std::string bytes{std::istreambuf_iterator<char>(file),{}};
             problem=tora::compat::readTransportation(bytes);
@@ -38,7 +49,7 @@ int main(int argc,char** argv) {
         for(auto& value:problem.demand)std::cin>>value;
         if(!std::cin)throw std::runtime_error("Invalid probe input");
         }
-        const auto trace=tora::transportation::solveNorthWest(problem);
+        const auto trace=tora::transportation::solve(problem,method);
         std::cout<<'[';
         for(std::size_t k=0;k<trace.size();++k) {
             if(k)std::cout<<',';

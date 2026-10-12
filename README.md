@@ -138,3 +138,12 @@ unchanged-source job rerun; final evidence uses the successful rerun, and the
 failed report is retained separately. Actual laptop Wayland and X11 packaged
 startup checks passed. The still-open previous window has the identical native
 application executable and need not be restarted to see this preview.
+
+
+On `future-scope`, Transportation also offers **Least-cost start**, with the
+same read-only input and automatic MODI iteration view. Its independent golden
+corpus covers 17 cases/20 tableaus/644 fields; no raw TORA material is included.
+The branch uses the same Windows/Linux/macOS matrix. See the
+[Least-cost specification](docs/tora-analysis/TRANSPORTATION_LEAST_COST.md)
+for scope, evidence and known limits. Final branch CI delivery status is
+recorded in STATUS.json; the main-branch delivery above remains historical.

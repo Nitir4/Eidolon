@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Native Transportation North-west preview verified and installed; captured LP delivery preserved",
+  "active_step": "future-scope: Transportation Least-cost local/full/native verification complete; three-OS CI/package gate pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Review the delivered Transportation preview; remaining Transportation methods and editing are separate future slices",
+  "next_step": "Finish Least-cost full/native/CI/package comparison gate before another Transportation method",
   "foundation_order": [
     1,
     5,
@@ -467,5 +467,20 @@
       "linux-x86_64": "567972c9239289da45e7f51fa8a2eca2bfa07eba7fc4d04a8c8ac73e3beabe55",
       "windows-x86_64": "f807dcc934aa86a2449f6fed69ac3baecc2a676fb392958f8d0417e17f105d25"
     }
+  },
+  "future_scope": {
+    "branch": "future-scope",
+    "current_method": "Transportation Least-cost start",
+    "status": "locally verified; CI/package gate pending",
+    "spec": "docs/tora-analysis/TRANSPORTATION_LEAST_COST.md",
+    "cases": 17,
+    "tableaus": 20,
+    "exact_fields": 644,
+    "native_checks_per_scale": 47,
+    "remaining": "Vogel, new/edit/save, manual loops, multiplier choices, final summary and Transportation printing",
+    "local_tests": "81/81 full desktop suite,107.55 seconds;29/29 Qt-free suite; focused7/7",
+    "native_acceptance": "12 actual1920x1080 Wayland views, both Transportation starts; LP model preserved; small200% view reviewed",
+    "local_evidence": "build/transportation-leastcost/",
+    "numerical_mismatches": 0
   }
 }
