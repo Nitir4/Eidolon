@@ -74,3 +74,19 @@ balanced ASCII/default-header, exactly single-precision-representable quantity
 profile. Engineering size/iteration limits are not claimed as original limits.
 The method must pass full numerical, native, matrix and package gates before
 being marked delivered.
+
+
+## Windows screen-review correction
+
+The first Vogel matrix (sourceff18316, run38262831294) passed82 CTests per OS,
+but visual review found missing-glyph boxes in Windows Transportation renders.
+Its XML reports a missing Qt SDK lib/fonts directory. This test runner omitted
+the Windows offscreen font bootstrap already used by the other native tests.
+[Qt6.10.3 offscreen source](https://raw.githubusercontent.com/qt/qtbase/v6.10.3/src/plugins/platforms/offscreen/qoffscreenintegration.cpp)
+selects QFreeTypeFontDatabase on Windows. The corrected runner supplies
+SystemRoot/Fonts before QApplication; normal production native font handling
+is unchanged. A glyph-coverage init regression fails on a missing-font minimal
+backend (U+0041 missing) before the runner correction. It will now prevent
+text-string assertions from accepting unreadable Transportation screenshots.
+The first packages were withheld from installation. A fresh matrix and visual
+review are required for final acceptance; numerical goldens are unchanged.

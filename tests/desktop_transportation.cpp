@@ -1,5 +1,7 @@
 #include "application_shell.hpp"
 #include "transportation_screens.hpp"
+#include "ui_font.hpp"
+#include <QFontMetrics>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -19,6 +21,13 @@ using namespace tora::desktop;
 class DesktopTransportation: public QObject {
     Q_OBJECT
 private slots:
+    void initTestCase() {
+        const auto font=readableUiFont(QApplication::font());
+        const QFontMetrics metrics(font);
+        for(const auto character:QStringLiteral("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=().,:/'—"))
+            QVERIFY2(metrics.inFont(character),qPrintable(QStringLiteral("Missing UI glyph U+%1 in %2")
+                .arg(static_cast<unsigned>(character.unicode()),4,16,QLatin1Char('0')).arg(font.toString())));
+    }
     void goldenNativeTableaus_data() {
         QTest::addColumn<QByteArray>("record");
         for(const auto& method:{QStringLiteral("northwest"),QStringLiteral("leastcost"),QStringLiteral("vogel")}) {
@@ -209,5 +218,15 @@ private slots:
         }
     }
 };
-QTEST_MAIN(DesktopTransportation)
+int main(int argc,char** argv) {
+#ifdef Q_OS_WIN
+    // The offscreen Windows backend uses FreeType rather than the native
+    // Windows font database, so supply the OS fonts just as other UI tests do.
+    qputenv("QT_QPA_FONTDIR",qgetenv("SystemRoot")+"/Fonts");
+#endif
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+    QApplication app(argc,argv);
+    DesktopTransportation test;
+    return QTest::qExec(&test,argc,argv);
+}
 #include "desktop_transportation.moc"

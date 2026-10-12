@@ -229,3 +229,5 @@ difference is documented, rather than an unresolved numerical mismatch.
 Vogel and the remaining Transportation features/profile limits are still open.
 
 Vogel starting-basis investigation: all18 captured profiles match the implemented row-first penalty policy, including a new targeted axis-tie probe. Delivery verification is in progress. Internal singleton penalty/sentinel remains unobservable; nonbinary fractions, unbalanced input, editing/writing, manual loops, multiplier choices, final summary and Transportation printing are still outside this cycle.
+
+Vogel first-matrix visual review found Windows offscreen missing glyphs despite passing numeric/text tests. The test runner now uses the established SystemRoot/Fonts bootstrap and glyph-coverage initialization. Final matrix/screens/package audit must pass before delivery; the first artifacts were withheld.

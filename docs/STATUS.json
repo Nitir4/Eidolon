@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation Vogel captured-profile verification in progress",
+  "active_step": "future-scope: Vogel final font/render verification and delivery",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -505,16 +505,18 @@
       "windows-x86_64": "8c45b73b808cda8078a1f0d4a09405332964e33bd8d70f96aaeca4a10a4b9f15"
     },
     "vogel": {
-      "status": "local gate passed; three-OS CI/package gate pending",
+      "status": "numerical/local gate passed; Windows offscreen font correction verification in progress",
       "spec": "docs/tora-analysis/TRANSPORTATION_VOGEL.md",
       "evidence": "build/transportation-vogel/",
-      "remaining": "three-OS CI and verified deployment",
+      "remaining": "fresh three-OS matrix, native screenshot review and verified deployment",
       "local_tests": "82/82 CTest,110.15 seconds; Qt-free30/30; focused8/8",
       "native_acceptance": "14 actual1920x1080 Wayland views; model preserved; small200% view reviewed",
       "cases": 18,
       "tableaus": 19,
       "exact_fields": 625,
-      "native_checks_per_scale": 71
+      "native_checks_per_scale": 71,
+      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38262831294",
+      "initial_ci_result": "82/82 CTest per OS and all packages passed; visual review found missing glyphs in Windows offscreen Transportation screenshots. Test font bootstrap corrected and glyph regression added; fresh full gate pending. Packages not installed."
     }
   }
 }

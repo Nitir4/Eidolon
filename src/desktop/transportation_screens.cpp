@@ -145,7 +145,7 @@ QWidget* inputMode(ApplicationShell& shell)
     auto* title = new QLabel(QStringLiteral("TRANSPORTATION MODEL"));
     title->setAlignment(Qt::AlignCenter);
     choices->addWidget(title);
-    auto* description = new QLabel(QStringLiteral("Open an existing TORA problem or load the example.\nNorth-west / Least-cost starts · automatic iterations\nSaved problems are opened read only."));
+    auto* description = new QLabel(QStringLiteral("Open an existing TORA problem or load the example.\nNorth-west / Least-cost / Vogel starts · automatic iterations\nSaved problems are opened read only."));
     description->setAlignment(Qt::AlignCenter);
     choices->addWidget(description);
     button(QStringLiteral("Enter/Edit Existing Problem"), QStringLiteral("transport-open"), *choices, [&shell] { openProblem(shell); });
