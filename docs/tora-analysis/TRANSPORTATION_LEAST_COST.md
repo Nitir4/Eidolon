@@ -65,3 +65,12 @@ feature commit. A tests-first regression failed for both starts; selection now
 shows the observed dialog after rendering the initial tableau. This correction
 requires a new full-suite and three-OS gate; the earlier successful matrix alone
 does not close it.
+
+
+The next macOS matrix exposed a test assumption: Qt deliberately suppresses
+QMessageBox titles on macOS, while Linux/Windows retain the observed title.
+[Qt6.10 documentation](https://doc.qt.io/qt-6.10/qmessagebox.html#setWindowTitle)
+confirms this native platform behavior. The regression expects an empty macOS
+title and the exact title elsewhere; every OS still requires the exact message,
+Information icon, OK button, visible popup and disabled terminal controls.
+No product or numerical changes were made for this test correction.

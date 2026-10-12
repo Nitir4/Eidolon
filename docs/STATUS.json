@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Least-cost and initial-optimal notice fully verified locally; corrected-source CI pending",
+  "active_step": "future-scope: native macOS popup-title test corrected; final matrix pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -471,7 +471,7 @@
   "future_scope": {
     "branch": "future-scope",
     "current_method": "Transportation Least-cost start",
-    "status": "corrected initial-optimal message; full local suite passed; fresh CI pending",
+    "status": "product locally verified; documented macOS title assertion corrected; fresh matrix pending",
     "spec": "docs/tora-analysis/TRANSPORTATION_LEAST_COST.md",
     "cases": 17,
     "tableaus": 20,
@@ -484,6 +484,8 @@
     "numerical_mismatches": 0,
     "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38247203102",
     "initial_ci_result": "All81/OS,644 Least-cost fields and packages passed. Final actual-screen review found missing initial-optimal notice; tests-first failure reproduced and corrected. A fresh matrix is required.",
-    "native_optimal_notice": "Actual Wayland4/4 Qt checks; both starts show observed initial-optimal title/text and disabled controls"
+    "native_optimal_notice": "Actual Wayland4/4 Qt checks; both starts show observed initial-optimal title/text and disabled controls",
+    "second_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38248782472",
+    "second_ci_result": "Linux81/81/package passed; macOS77/81 solely because QMessageBox suppresses window titles by documented native design. Exact popup text/numerical fields passed. Corrected test expects native title behavior and also checks icon/OK buttons; product unchanged."
   }
 }

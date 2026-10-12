@@ -158,16 +158,25 @@ private slots:
         auto& c=transportationController(shell);c.loadExample();
         if(!leastcost) {auto p=c.problem();p.costs={{1,1,1},{1,1,1}};c.load(std::move(p));}
         QVERIFY(shell.navigate(QStringLiteral("transportation/solve-menu")));shell.show();
-        bool seen=false;QString title,message;QTimer notice;notice.setSingleShot(true);
+        bool seen=false;QString title,message;QMessageBox::Icon icon=QMessageBox::NoIcon;
+        QMessageBox::StandardButtons buttons=QMessageBox::NoButton;
+        QTimer notice;notice.setSingleShot(true);
         QObject::connect(&notice,&QTimer::timeout,&shell,[&] {
             for(auto* widget:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(widget)) {
-                seen=true;title=box->windowTitle();message=box->text();box->accept();
+                seen=true;title=box->windowTitle();message=box->text();icon=box->icon();buttons=box->standardButtons();box->accept();
             }
         });
         auto* start=shell.findChild<QPushButton*>(leastcost?QStringLiteral("transport-leastcost-start"):QStringLiteral("transport-northwest-start"));
         QVERIFY(start);notice.start(0);start->click();notice.stop();
         QVERIFY2(seen,"Missing observed initial optimal-tableau notice");
-        QCOMPARE(title,QStringLiteral("Optimal Tableau"));QCOMPARE(message,QStringLiteral("Iteration 1 is optimal"));
+#ifdef Q_OS_MACOS
+        // QMessageBox ignores titles on macOS by documented platform design.
+        QVERIFY(title.isEmpty());
+#else
+        QCOMPARE(title,QStringLiteral("Optimal Tableau"));
+#endif
+        QCOMPARE(message,QStringLiteral("Iteration 1 is optimal"));
+        QCOMPARE(icon,QMessageBox::Information);QCOMPARE(buttons,QMessageBox::StandardButtons(QMessageBox::Ok));
         QCOMPARE(c.trace().size(),std::size_t(1));
         auto* next=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));QVERIFY(next);QVERIFY(!next->isEnabled());
     }
