@@ -149,6 +149,20 @@ int main(int argc, char** argv) {
             require(transport.openFile(savedPath,error),"Native Transportation reopen failed");
             require(transport.document()->encode()==savedDocument,"Native Transportation reopen changed saved bytes");
             capture(QStringLiteral("transportation-input-reopened"),QStringLiteral("transportation/input"));
+            using Axis=TransportationController::Axis;
+            require(transport.selectLine(Axis::Source,0) && transport.insertSelection(error),"Native source insertion failed");
+            require(transport.problem().supply.size()==3 && transport.document()->cell(2,1)=="0.00","Native inserted source mismatch");
+            capture(QStringLiteral("transportation-editgrid-insert"),QStringLiteral("transportation/input"));
+            require(transport.selectLine(Axis::Source,0) && transport.copySelection(),"Native source copy failed");
+            require(transport.selectLine(Axis::Source,1) && transport.pasteSelection(error),"Native source paste failed");
+            require(transport.problem().costs[1][0]==9.88,"Native pasted cost mismatch");
+            capture(QStringLiteral("transportation-editgrid-paste"),QStringLiteral("transportation/input"));
+            require(transport.undo(error) && transport.problem().costs[1][0]==0,"Native paste undo failed");
+            const auto structuralPath=output+QStringLiteral("/transportation-structural.txt");
+            require(transport.saveTo(structuralPath,error),"Native structural save failed");
+            const auto structuralDocument=transport.document()->encode();
+            require(transport.openFile(structuralPath,error) && transport.document()->encode()==structuralDocument,"Native structural reopen mismatch");
+            capture(QStringLiteral("transportation-editgrid-undo-reopened"),QStringLiteral("transportation/input"));
         }
         QString panel=QStringLiteral("not requested");
         if(parser.isSet(QStringLiteral("print-dialog"))) {

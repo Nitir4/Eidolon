@@ -1,0 +1,403 @@
+[
+  {
+    "case": "delete-first-destination",
+    "title": "Transportation 01-normal",
+    "input": [
+      [
+        "S/D Name",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "2",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "5",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "10",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "operations": [
+      [
+        "erase",
+        "destination",
+        0
+      ]
+    ],
+    "expected": [
+      [
+        "S/D Name",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "provenance": {
+      "file": "reference/tora-captures/transportation/editgrid/actions-fresh-delete-destination/tora-saved.txt",
+      "file_sha256": "f3136bf7fe0a6b5c61e391446031ee3da8d7364f528d24d0875bdb726a8f9272",
+      "evidence": "ev_73f6eccc6c0471d8104bcac652d626a9b9160164ce4cd7ef28a0047e6bc92a1e",
+      "limit": "Original saved source count is one less than the visible grid; native output intentionally writes the actual consistent count. Cell records transcribed from original save and checked against captured visible grid."
+    }
+  },
+  {
+    "case": "insert-source-after-first",
+    "title": "Transportation 01-normal",
+    "input": [
+      [
+        "S/D Name",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "2",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "5",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "10",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "operations": [
+      [
+        "insert",
+        "source",
+        1
+      ]
+    ],
+    "expected": [
+      [
+        "S/D Name",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "2",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "0.00",
+        "0.00",
+        "0.00",
+        ""
+      ],
+      [
+        "",
+        "5",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "10",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "provenance": {
+      "file": "reference/tora-captures/transportation/editgrid/actions-inserted-source-save/tora-saved.txt",
+      "file_sha256": "18296916f962ca256a340eecd7717f78e143f58f870b9dae566995d75d00389c",
+      "evidence": "ev_ee28efaa777db1a23c0638ed12aba5cf32f008c40e1d97bb29c4346836fc8f2e",
+      "limit": "Original saved source count is one less than the visible grid; native output intentionally writes the actual consistent count. Cell records transcribed from original save and checked against captured visible grid."
+    }
+  },
+  {
+    "case": "insert-destination-before-second",
+    "title": "Transportation 01-normal",
+    "input": [
+      [
+        "S/D Name",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "2",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "0.00",
+        "0.00",
+        "0.00",
+        ""
+      ],
+      [
+        "",
+        "5",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "10",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "operations": [
+      [
+        "insert",
+        "destination",
+        1
+      ]
+    ],
+    "expected": [
+      [
+        "S/D Name",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "2",
+        "0.00",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "0.00",
+        "0.00",
+        "0.00",
+        "0.00",
+        ""
+      ],
+      [
+        "",
+        "5",
+        "0.00",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "10",
+        "",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "provenance": {
+      "file": "reference/tora-captures/transportation/editgrid/actions-insert-destination-before/tora-saved.txt",
+      "file_sha256": "53a66e2cf8cadec028cae4c4f4e9365b2d9111ed10963f7faa9e7709ce6bb350",
+      "evidence": "ev_0e8c3a7f2c44250cc3ed72ffb3b4ac495e95bf8a23d34de3a8247611f570878c",
+      "limit": "Original saved source count is one less than the visible grid; native output intentionally writes the actual consistent count. Cell records transcribed from original save and checked against captured visible grid."
+    }
+  },
+  {
+    "case": "paste-destination-column",
+    "title": "Transportation 01-normal",
+    "input": [
+      [
+        "S/D Name",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "operations": [
+      [
+        "paste-line",
+        "destination",
+        0,
+        1
+      ]
+    ],
+    "expected": [
+      [
+        "S/D Name",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "3",
+        "3",
+        "20"
+      ],
+      [
+        "",
+        "4",
+        "4",
+        "30"
+      ],
+      [
+        "",
+        "25",
+        "25",
+        ""
+      ]
+    ],
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/editgrid/actions-destination-paste-and-floor/delete-at-two.png",
+      "screenshot_sha256": "d80becc2620faae188bff0692cf70c0be10db81d9b9d082941aa8e0c126d5e83",
+      "evidence": "ev_7b3a2814f7f43186f7e6213b832d5424daa28d1c7c030d6bb3e06ef1383165e2",
+      "limit": "Filename names attempted subsequent action; actual screenshot shows committed destination paste, also confirmed unchanged by next fresh boundary capture. Only grid cells are oracle expectations; consistent header is native policy."
+    }
+  },
+  {
+    "case": "paste-source-row",
+    "title": "Transportation 01-normal",
+    "input": [
+      [
+        "S/D Name",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "2",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "5",
+        "4",
+        "8",
+        "30"
+      ],
+      [
+        "",
+        "10",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "operations": [
+      [
+        "paste-line",
+        "source",
+        0,
+        1
+      ]
+    ],
+    "expected": [
+      [
+        "S/D Name",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "2",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "2",
+        "3",
+        "1",
+        "20"
+      ],
+      [
+        "",
+        "10",
+        "25",
+        "15",
+        ""
+      ]
+    ],
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/editgrid/actions-source-paste-stable/source-pasted-stable.png",
+      "screenshot_sha256": "98c2cc4d1dbcf324a3783bdc1f2be9e2385541b1903fd874565506544c86cc59",
+      "evidence": "ev_53427e21ffc00390c70dace20fca333d819606c6adc4dabd020ca57f85ac10a9",
+      "limit": "Independent screenshot transcription; native consistent header checked separately. Alias copy additionally has native safety coverage and earlier partial original visual evidence."
+    }
+  }
+]

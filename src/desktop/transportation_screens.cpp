@@ -312,6 +312,23 @@ QWidget* input(ApplicationShell& shell)
     QObject::connect(initialize, &QPushButton::clicked, page, initializeGrid);
     QObject::connect(sources, &QLineEdit::returnPressed, page, initializeGrid);
     QObject::connect(destinations, &QLineEdit::returnPressed, page, initializeGrid);
+    const auto selectHeading = [&controller](int r, int c, bool before) {
+        const auto m = static_cast<int>(controller.problem().supply.size());
+        const auto n = static_cast<int>(controller.problem().demand.size());
+        if (c == 0 && r >= 2 && r < m + 2) controller.selectLine(TransportationController::Axis::Source, r - 2, before);
+        else if (r == 0 && c >= 2 && c < n + 2) controller.selectLine(TransportationController::Axis::Destination, c - 2, before);
+        else controller.clearSelection();
+    };
+    QObject::connect(grid, &QTableWidget::cellClicked, page, [selectHeading](int r, int c) { selectHeading(r, c, false); });
+    QObject::connect(grid, &QTableWidget::cellDoubleClicked, page, [selectHeading](int r, int c) { selectHeading(r, c, true); });
+    QObject::connect(&controller, &TransportationController::selectionChanged, grid, [&controller, grid] {
+        const QSignalBlocker block(grid);
+        if (!controller.hasSelection()) grid->clearSelection();
+        else if (*controller.selectionAxis() == TransportationController::Axis::Source) grid->selectRow(controller.selectionIndex() + 2);
+        else grid->selectColumn(controller.selectionIndex() + 2);
+    });
+    auto* editHint = new QLabel(QStringLiteral("EditGrid: click a source/destination heading, then choose Copy, Paste, Delete or Insert.\nSingle click inserts after the heading; double click inserts before it."));
+    editHint->setWordWrap(true); layout->insertWidget(3, editHint);
     refresh(); footer(*layout, shell, false); return page;
 }
 QWidget* solveMenu(ApplicationShell& shell)
@@ -419,7 +436,7 @@ QWidget* iterations(ApplicationShell& shell)
     render(); footer(*layout,shell,true);
     return page;
 }
-void menus(ApplicationShell& shell, QMenuBar& bar)
+void moduleMenus(ApplicationShell& shell, QMenuBar& bar, bool inputPage)
 {
     auto* file=bar.addMenu(QStringLiteral("File"));
     auto* create=file->addAction(QStringLiteral("New"),&shell,[&shell]{newProblem(shell);});
@@ -431,6 +448,32 @@ void menus(ApplicationShell& shell, QMenuBar& bar)
     save->setShortcut(QKeySequence::Save);
     auto* saveAs=file->addAction(QStringLiteral("Save As…"),&controller,[&controller]{controller.requestSave();});
     saveAs->setShortcut(QKeySequence::SaveAs);
+    if (inputPage) {
+        auto* edit = bar.addMenu(QStringLiteral("EditGrid"));
+        const QStringList labels{QStringLiteral("Undo Last Insert, Paste, Or Delete"), QStringLiteral("Copy Column or Row"),
+            QStringLiteral("Paste on Column or Row"), QStringLiteral("Delete Column or Row"), QStringLiteral("Insert Column or Row")};
+        const QStringList names{QStringLiteral("undo"), QStringLiteral("copy"), QStringLiteral("paste"), QStringLiteral("delete"), QStringLiteral("insert")};
+        const QStringList shortcuts{QStringLiteral("Ctrl+U"), QStringLiteral("Ctrl+C"), QStringLiteral("Ctrl+P"), QStringLiteral("Ctrl+D"), QStringLiteral("Ctrl+I")};
+        QList<QAction*> actions;
+        for (int i = 0; i < labels.size(); ++i) {
+            auto* action = edit->addAction(labels[i]);
+            action->setObjectName(QStringLiteral("transport-grid-") + names[i]); action->setShortcut(QKeySequence(shortcuts[i])); actions.append(action);
+        }
+        QObject::connect(actions[1], &QAction::triggered, &controller, [&controller] { controller.copySelection(); });
+        const auto change = [&controller](int operation) {
+            QString error;
+            const bool ok = operation == 0 ? controller.undo(error) : operation == 2 ? controller.pasteSelection(error)
+                : operation == 3 ? controller.deleteSelection(error) : controller.insertSelection(error);
+            if (!ok && !error.isEmpty()) controller.dialogs().showError(QStringLiteral("EditGrid"), error);
+        };
+        for (const int i : {0, 2, 3, 4}) QObject::connect(actions[i], &QAction::triggered, &controller, [change, i] { change(i); });
+        const auto updateEdit = [&controller, actions] {
+            actions[0]->setEnabled(controller.canUndo()); actions[1]->setEnabled(controller.canCopy()); actions[2]->setEnabled(controller.canPaste());
+            actions[3]->setEnabled(controller.hasSelection() && !controller.readOnly()); actions[4]->setEnabled(controller.hasSelection() && !controller.readOnly());
+        };
+        QObject::connect(&controller, &TransportationController::changed, edit, updateEdit);
+        QObject::connect(&controller, &TransportationController::selectionChanged, edit, updateEdit); updateEdit();
+    }
     auto* solve=bar.addMenu(QStringLiteral("Solve Problem"));
     auto* northwest=solve->addAction(QStringLiteral("Iterations — North-west corner start"),&shell,[&shell]{solveProblem(shell);});
     northwest->setEnabled(transportationController(shell).loaded());
@@ -444,6 +487,8 @@ void menus(ApplicationShell& shell, QMenuBar& bar)
     QObject::connect(&controller,&TransportationController::changed,file,update); update();
     bar.addAction(QStringLiteral("MAIN Menu"),&shell,[&shell]{shell.navigate(QStringLiteral("main"));});
 }
+void menus(ApplicationShell& shell, QMenuBar& bar) { moduleMenus(shell, bar, false); }
+void inputMenus(ApplicationShell& shell, QMenuBar& bar) { moduleMenus(shell, bar, true); }
 } // namespace
 
 ModuleDescriptor transportationModule()
@@ -455,7 +500,7 @@ ModuleDescriptor transportationModule()
         return true;
     };
     module.screens.append({id("input-mode"),QStringLiteral("TRANSPORTATION MODEL"),inputMode,menus});
-    module.screens.append({id("input"),QStringLiteral("TRANSPORTATION INPUT DATA"),input,menus});
+    module.screens.append({id("input"),QStringLiteral("TRANSPORTATION INPUT DATA"),input,inputMenus});
     module.screens.append({id("solve-menu"),QStringLiteral("TRANSPORTATION MODEL"),solveMenu,menus});
     module.screens.append({id("northwest"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
     module.screens.append({id("leastcost"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});

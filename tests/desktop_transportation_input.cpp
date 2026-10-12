@@ -78,6 +78,98 @@ private slots:
         QVERIFY(c.editCell(1, 1, QStringLiteral("3"), error)); QVERIFY(c.trace().empty());
         QVERIFY(c.solve(error)); QVERIFY(c.setTitle(QStringLiteral("Changed"), error)); QVERIFY(c.trace().empty());
     }
+    void structuralControllerLifecycle() {
+        using Axis = TransportationController::Axis;
+        ApplicationShell shell; shell.registerModule(transportationModule());
+        auto& c = transportationController(shell); QString error; QTemporaryDir temp;
+        c.dialogs().showError = [](const QString&, const QString&) {};
+        c.loadExample(); QVERIFY(c.editCell(1, 0, QStringLiteral("Origin A"), error));
+        QVERIFY(c.solve(error)); const auto original = c.document()->encode();
+        QVERIFY(c.selectLine(Axis::Source, 0)); QVERIFY(c.copySelection());
+        QVERIFY(c.selectLine(Axis::Destination, 0)); QVERIFY(!c.canPaste());
+        QVERIFY(!c.pasteSelection(error)); QCOMPARE(c.document()->encode(), original);
+        QVERIFY(!c.trace().empty());
+        QVERIFY(c.selectLine(Axis::Source, 1)); QVERIFY(c.canPaste()); QVERIFY(c.pasteSelection(error));
+        QCOMPARE(c.problem().sourceNames[1], std::string("Origin A")); QCOMPARE(c.problem().supply[1], 20.0);
+        QCOMPARE(c.problem().costs[1], c.problem().costs[0]); QVERIFY(c.trace().empty()); QVERIFY(c.canUndo());
+        QVERIFY(c.undo(error)); QCOMPARE(c.document()->encode(), original); QVERIFY(!c.canUndo());
+        QVERIFY(c.trace().empty()); QVERIFY(c.dirty());
+        QVERIFY(c.selectLine(Axis::Source, 0)); QVERIFY(c.insertSelection(error));
+        QCOMPARE(c.problem().supply.size(), std::size_t(3)); QCOMPARE(c.document()->cell(2, 1), std::string("0.00"));
+        QCOMPARE(c.document()->cell(2, 4), std::string()); QCOMPARE(c.problem().supply[2], 30.0);
+        const auto path = temp.filePath(QStringLiteral("structural.txt")); QVERIFY(c.saveTo(path, error));
+        QVERIFY(c.canUndo()); QVERIFY(c.undo(error)); QCOMPARE(c.document()->encode(), original);
+        QVERIFY(c.selectLine(Axis::Destination, 1, true)); QVERIFY(c.insertSelection(error));
+        QCOMPARE(c.problem().demand.size(), std::size_t(4)); QCOMPARE(c.problem().costs[0], (std::vector<double>{2,0,3,1}));
+        QVERIFY(c.selectLine(Axis::Destination, 1)); QVERIFY(c.deleteSelection(error));
+        QCOMPARE(c.problem().costs[0], (std::vector<double>{2,3,1}));
+        QVERIFY(c.saveTo(path, error)); QVERIFY(c.openFile(path, error, true)); QVERIFY(!c.canUndo());
+        QVERIFY(c.selectLine(Axis::Source, 0)); QVERIFY(c.copySelection());
+        const auto readOnly = c.document()->encode();
+        QVERIFY(!c.insertSelection(error)); QVERIFY(!c.deleteSelection(error)); QVERIFY(!c.pasteSelection(error));
+        QCOMPARE(c.document()->encode(), readOnly);
+        c.loadExample(); QVERIFY(!c.hasSelection()); QVERIFY(!c.canUndo()); QVERIFY(!c.canPaste());
+        const auto minimum = c.document()->encode();
+        QVERIFY(c.selectLine(Axis::Source, 0)); QVERIFY(!c.deleteSelection(error));
+        QCOMPARE(c.document()->encode(), minimum); QVERIFY(!c.canUndo());
+        QVERIFY(c.selectLine(Axis::Destination, 0)); QVERIFY(c.deleteSelection(error));
+        const auto twoDestinations = c.document()->encode();
+        QVERIFY(c.selectLine(Axis::Destination, 0)); QVERIFY(!c.deleteSelection(error));
+        QCOMPARE(c.document()->encode(), twoDestinations); QVERIFY(c.canUndo());
+        QVERIFY(!c.selectLine(Axis::Source, 999)); QVERIFY(!c.hasSelection());
+    }
+    void nativeStructuralHeadingActions() {
+        ApplicationShell shell; shell.registerModule(transportationModule());
+        auto& c = transportationController(shell); c.loadExample();
+        c.dialogs().showError = [](const QString&, const QString&) {};
+        QVERIFY(shell.navigate(QStringLiteral("transportation/input"))); shell.show(); QTest::qWait(20);
+        auto* grid = shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-input-grid")); QVERIFY(grid);
+        auto* insert = shell.findChild<QAction*>(QStringLiteral("transport-grid-insert"));
+        auto* undo = shell.findChild<QAction*>(QStringLiteral("transport-grid-undo"));
+        auto* copy = shell.findChild<QAction*>(QStringLiteral("transport-grid-copy"));
+        auto* paste = shell.findChild<QAction*>(QStringLiteral("transport-grid-paste"));
+        QVERIFY(insert && undo && copy && paste); QVERIFY(!insert->isEnabled()); QVERIFY(!undo->isEnabled());
+        const auto original = c.document()->encode();
+        QTest::mouseClick(grid->viewport(), Qt::LeftButton, Qt::NoModifier, grid->visualItemRect(grid->item(0,2)).center());
+        QVERIFY(c.hasSelection()); QVERIFY(insert->isEnabled()); QVERIFY(copy->isEnabled()); QVERIFY(!paste->isEnabled());
+        copy->trigger();
+        QTest::mouseClick(grid->viewport(), Qt::LeftButton, Qt::NoModifier, grid->visualItemRect(grid->item(0,3)).center());
+        QVERIFY(paste->isEnabled()); insert->trigger();
+        QCOMPARE(c.problem().demand.size(), std::size_t(4)); QCOMPARE(grid->columnCount(), 7); QVERIFY(undo->isEnabled());
+        QCOMPARE(shell.currentContent()->findChild<QLineEdit*>(QStringLiteral("transport-destinations"))->text(), QStringLiteral("4"));
+        undo->trigger(); QCOMPARE(c.document()->encode(), original); QCOMPARE(grid->columnCount(), 6);
+        QTest::mouseClick(grid->viewport(), Qt::LeftButton, Qt::NoModifier, grid->visualItemRect(grid->item(2,0)).center());
+        QTest::mouseDClick(grid->viewport(), Qt::LeftButton, Qt::NoModifier, grid->visualItemRect(grid->item(2,0)).center());
+        QVERIFY(insert->isEnabled()); insert->trigger();
+        QCOMPARE(c.problem().supply.size(), std::size_t(3)); QCOMPARE(c.problem().costs[0], (std::vector<double>{0,0,0}));
+        QCOMPARE(c.problem().costs[1], (std::vector<double>{2,3,1}));
+        QVERIFY(c.selectLine(TransportationController::Axis::Source, 1));
+        for (const auto physical : {QSize(1366,768), QSize(1920,1080), QSize(3840,2160)}) {
+            const auto scale = shell.devicePixelRatioF(); shell.resize(qRound(physical.width()/scale), qRound(physical.height()/scale)); QTest::qWait(20);
+            for (auto* button : shell.currentContent()->findChildren<QPushButton*>()) QVERIFY(button->width() >= button->minimumSizeHint().width());
+            const auto base = qEnvironmentVariable("TORA_UI_CAPTURES");
+            if (!base.isEmpty()) {
+                const auto folder = base + QStringLiteral("/transportation-editgrid"); QVERIFY(QDir().mkpath(folder));
+                QVERIFY(shell.grab().save(folder + QStringLiteral("/editgrid-%1x%2-%3.png").arg(physical.width()).arg(physical.height()).arg(scale)));
+            }
+        }
+    }
+    void invalidEditorBlocksStructuralChange() {
+        using Axis = TransportationController::Axis;
+        ApplicationShell shell; shell.registerModule(transportationModule());
+        auto& c = transportationController(shell); c.loadExample(); QString error;
+        c.dialogs().showError = [](const QString&, const QString&) {};
+        QVERIFY(shell.navigate(QStringLiteral("transportation/input"))); shell.show(); QTest::qWait(20);
+        auto* grid = shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-input-grid")); QVERIFY(grid);
+        QVERIFY(c.selectLine(Axis::Source, 0));
+        grid->setCurrentCell(2,2); grid->editItem(grid->item(2,2)); QTest::qWait(10);
+        auto* editor = qobject_cast<QLineEdit*>(QApplication::focusWidget()); QVERIFY(editor); editor->setText(QStringLiteral("nan"));
+        const auto original = c.document()->encode();
+        QVERIFY(!c.insertSelection(error)); QCOMPARE(c.document()->encode(), original); QVERIFY(!c.canUndo());
+        editor->setText(QStringLiteral("7.125")); QVERIFY(c.insertSelection(error));
+        QCOMPARE(c.problem().costs[0][0], 7.13); QCOMPARE(c.problem().supply.size(), std::size_t(3));
+        QVERIFY(c.undo(error)); QCOMPARE(c.problem().costs[0][0], 7.13); QCOMPARE(c.problem().supply.size(), std::size_t(2));
+    }
     void nativeEditingAndActiveSave() {
         ApplicationShell shell; shell.registerModule(transportationModule());
         auto& c = transportationController(shell); c.loadExample(); QString error; QTemporaryDir temp;

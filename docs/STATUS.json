@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation editing/new/save locally verified; three-OS/package/install gate pending",
+  "active_step": "future-scope: Transportation EditGrid locally verified; three-OS/package/install gate pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Next separate feature cycle: observe and specify Transportation EditGrid structural operations; then tests-first implementation and independent delivery gate",
+  "next_step": "Complete EditGrid independent three-OS/package/install gate, then continue Transportation multiplier/manual-loop observations",
   "foundation_order": [
     1,
     5,
@@ -571,7 +571,7 @@
         "windows-x86_64": "a6480f201748b38a46c186183875bc865919542b4aa0fb254aa00ecb3e202a49"
       }
     },
-    "active_cycle": "Transportation input editing delivered; next EditGrid structural operations",
+    "active_cycle": "Transportation EditGrid structural operations",
     "input_editing": {
       "status": "verified, packaged and installed for the observed input-editing profile",
       "spec": "docs/tora-analysis/TRANSPORTATION_EDITING.md",
@@ -610,6 +610,23 @@
       "mismatches": 0,
       "completed_on": "2026-10-12",
       "archive_note": "New input-scale tests and oracle verifier are confirmed by aggregate CTest pass records; current artifact selection omits their individual Qt XML files and successful stdout. Existing native tests retain individual XML. Initial private auditor lookup failure retained and corrected without product changes."
+    },
+    "editgrid": {
+      "status": "locally verified; source-pinned three-OS gate pending",
+      "spec": "docs/tora-analysis/TRANSPORTATION_EDITGRID.md",
+      "local_evidence": "build/transportation-editgrid/",
+      "independent_scenarios": 5,
+      "native_input_checks_per_scale": 11,
+      "structural_resolution_renders": 12,
+      "original_defects_corrected": [
+        "inconsistent saved source count",
+        "source insertion undo loses destination"
+      ],
+      "local_headless": "33/33 in3.71s; final five-scenario golden focused pass",
+      "remaining": "Multipliers/manual loops, final summary, Transportation printing/settings and six other modules",
+      "local_desktop": "89/89 in158.43s; focused final five-scenario golden test1/1 in0.10s",
+      "native_acceptance": "20 actual Wayland views; LP model preserved; structural insert/paste/undo/save/reopen passed",
+      "original_evidence": "REA captures referenced by independent fixture hashes and EditGrid contract"
     }
   }
 }

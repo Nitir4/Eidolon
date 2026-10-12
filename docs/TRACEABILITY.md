@@ -369,3 +369,6 @@ Vogel final gate closes at source 6b01925, CI 38265173986: 82/82 per OS, 625 exa
 ## Transportation editing continuation
 
 The current future-scope source adds editable Transportation documents, native new/input initialization, aliases/costs/quantities/title editing, Open/read-only copies and atomic Save/Save As. Historical read-only descriptions above identify earlier deliveries. See [the editing contract](tora-analysis/TRANSPORTATION_EDITING.md) and STATUS.json for current verification. Unbalanced drafts are savable; solver profile restrictions remain. EditGrid structural operations, manual loops, multiplier choices, final summary and Transportation printing remain separate cycles. New source has not yet passed a three-OS/package/install gate.
+
+
+Transportation EditGrid continuation: structural source/destination insert/delete/copy/paste and one-level snapshot undo are implemented locally. See [EditGrid contract](tora-analysis/TRANSPORTATION_EDITGRID.md) and STATUS.json for current gate. Original structural-save and source-undo defects are deliberately corrected and documented; delivered input editing remains edc34b0 until the new gate/install completes.

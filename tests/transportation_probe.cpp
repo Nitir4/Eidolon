@@ -7,6 +7,7 @@
 #include <iterator>
 #include <string>
 #include <tuple>
+#include <functional>
 #ifdef _WIN32
 #include <fcntl.h>
 #include <io.h>
@@ -34,7 +35,13 @@ int main(int argc,char** argv) {
         auto method=tora::transportation::StartMethod::NorthWest;
         std::string filename;
         bool roundtrip=false;
-        std::vector<std::tuple<int,int,std::string>> edits;
+        using Document = tora::compat::TransportationDocument;
+        std::vector<std::function<void(Document&)>> edits;
+        const auto axis = [](const std::string& name) {
+            if (name == "source") return Document::Axis::Source;
+            if (name == "destination") return Document::Axis::Destination;
+            throw std::invalid_argument("Unknown structural axis");
+        };
         std::size_t newSources=0,newDestinations=0;std::string newTitle;
         for(int i=1;i<argc;++i) {
             const std::string arg=argv[i];
@@ -46,7 +53,26 @@ int main(int argc,char** argv) {
             }
             else if(arg=="--edit" && i+3<argc) {
                 const auto row=std::stoi(argv[++i]),column=std::stoi(argv[++i]);
-                edits.emplace_back(row,column,argv[++i]);
+                const std::string value = argv[++i];
+                edits.emplace_back([row,column,value](Document& document) {
+                    document.setCell(static_cast<std::size_t>(row),static_cast<std::size_t>(column),value);
+                });
+            }
+            else if((arg=="--insert" || arg=="--erase") && i+2<argc) {
+                const auto selectedAxis=axis(argv[++i]);
+                const auto position=static_cast<std::size_t>(std::stoul(argv[++i]));
+                edits.emplace_back([arg,selectedAxis,position](Document& document) {
+                    if(arg=="--insert")document.insert(selectedAxis,position);
+                    else document.erase(selectedAxis,position);
+                });
+            }
+            else if(arg=="--paste-line" && i+3<argc) {
+                const auto selectedAxis=axis(argv[++i]);
+                const auto from=static_cast<std::size_t>(std::stoul(argv[++i]));
+                const auto to=static_cast<std::size_t>(std::stoul(argv[++i]));
+                edits.emplace_back([selectedAxis,from,to](Document& document) {
+                    document.paste(selectedAxis,to,document.line(selectedAxis,from));
+                });
             }
             else if(arg=="--method" && i+1<argc) {
                 const std::string name=argv[++i];
@@ -59,8 +85,7 @@ int main(int argc,char** argv) {
         if(roundtrip)_setmode(_fileno(stdout),_O_BINARY);
 #endif
         const auto applyEdits=[&edits](tora::compat::TransportationDocument& document) {
-            for(const auto& [row,column,value]:edits)
-                document.setCell(static_cast<std::size_t>(row),static_cast<std::size_t>(column),value);
+            for(const auto& edit:edits) edit(document);
         };
         if(newSources) {
             auto document=tora::compat::TransportationDocument::blank(newSources,newDestinations,newTitle);

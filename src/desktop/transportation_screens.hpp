@@ -10,6 +10,7 @@ namespace tora::desktop {
 class TransportationController final : public QObject {
     Q_OBJECT
 public:
+    using Axis = compat::TransportationDocument::Axis;
     explicit TransportationController(QObject* parent);
     void load(transportation::Problem problem);
     void loadExample();
@@ -23,6 +24,19 @@ public:
     bool requestSave();
     bool leaveInput();
     bool commitInput();
+    bool selectLine(Axis axis, int position, bool before = false);
+    void clearSelection();
+    bool hasSelection() const;
+    std::optional<Axis> selectionAxis() const { return selectionAxis_; }
+    int selectionIndex() const { return selection_; }
+    bool canCopy() const { return hasSelection(); }
+    bool canPaste() const;
+    bool canUndo() const { return undo_.has_value() && !readOnly_; }
+    bool copySelection();
+    bool pasteSelection(QString& error);
+    bool insertSelection(QString& error);
+    bool deleteSelection(QString& error);
+    bool undo(QString& error);
     InputDialogs& dialogs() { return dialogs_; }
     const compat::TransportationDocument* document() const { return document_ ? &*document_ : nullptr; }
     bool dirty() const { return dirty_; }
@@ -38,9 +52,18 @@ signals:
     void inputReset();
     void cellChanged(int row, int column);
     void commitRequested();
+    void selectionChanged();
 private:
     bool reject(QString& error, const QString& message);
     void modified(bool resetInput = true);
+    void resetEditState();
+    enum class GridOperation { Insert, Delete, Paste };
+    bool changeSelection(QString& error, GridOperation operation);
+    std::optional<Axis> selectionAxis_, clipboardAxis_;
+    int selection_ = -1;
+    bool insertBefore_ = false;
+    std::vector<std::string> clipboard_;
+    std::optional<compat::TransportationDocument> undo_;
     std::optional<compat::TransportationDocument> document_;
     InputDialogs dialogs_;
     QString sourcePath_, preferredSavePath_;

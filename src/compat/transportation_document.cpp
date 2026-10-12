@@ -151,6 +151,63 @@ void TransportationDocument::setCell(std::size_t row, std::size_t col, std::stri
     }
     next.cells_[k] = std::move(value); (void)next.encode(); *this = std::move(next);
 }
+std::vector<std::string> TransportationDocument::line(Axis axis, std::size_t position) const {
+    const auto m = problem_.supply.size(), n = problem_.demand.size();
+    if (position >= (axis == Axis::Source ? m : n)) throw std::out_of_range("Select a Transportation source or destination.");
+    std::vector<std::string> result;
+    if (axis == Axis::Source) {
+        for (std::size_t col = 0; col < n + 2; ++col) result.push_back(cell(position + 1, col));
+    } else {
+        for (std::size_t row = 0; row < m + 2; ++row) result.push_back(cell(row, position + 1));
+    }
+    return result;
+}
+void TransportationDocument::replaceGrid(std::size_t m, std::size_t n, std::vector<std::string> cells) {
+    // Validate the complete candidate before replacing any state.
+    const auto sources = m == problem_.supply.size() ? sourceCountRecord_ : std::to_string(m);
+    const auto destinations = n == problem_.demand.size() ? destinationCountRecord_ : std::to_string(n);
+    std::string bytes = "4000\r\n5\r\n2\r\n1\r\n" + quote(problem_.title) + "\r\n" + sources + "\r\n" + destinations + "\r\n";
+    for (const auto& value : cells) {
+        bytes += quote(value) + "\r\n";
+        if (bytes.size() > MaximumBytes) throw std::invalid_argument("Transportation file exceeds the native 4 MiB limit.");
+    }
+    auto next = decode(bytes); *this = std::move(next);
+}
+void TransportationDocument::insert(Axis axis, std::size_t position) {
+    const auto m = problem_.supply.size(), n = problem_.demand.size();
+    const bool source = axis == Axis::Source;
+    const auto count = source ? m : n;
+    if (position > count) throw std::out_of_range("Transportation insertion is outside the grid.");
+    if (count >= 100) throw std::invalid_argument("Transportation native dimension limit is 100.");
+    const auto mm = m + (source ? 1 : 0), nn = n + (source ? 0 : 1), at = position + 1;
+    std::vector<std::string> cells((mm + 2) * (nn + 2));
+    for (std::size_t row = 0; row < mm + 2; ++row) for (std::size_t col = 0; col < nn + 2; ++col) {
+        auto& value = cells[row * (nn + 2) + col];
+        if ((source && row == at) || (!source && col == at)) {
+            if (row >= 1 && row <= mm && col >= 1 && col <= nn) value = "0.00";
+        } else value = cell(row - (source && row > at ? 1 : 0), col - (!source && col > at ? 1 : 0));
+    }
+    replaceGrid(mm, nn, std::move(cells));
+}
+void TransportationDocument::erase(Axis axis, std::size_t position) {
+    const auto m = problem_.supply.size(), n = problem_.demand.size();
+    const bool source = axis == Axis::Source;
+    const auto count = source ? m : n;
+    if (position >= count) throw std::out_of_range("Transportation deletion is outside the grid.");
+    if (count <= 1) throw std::invalid_argument("Keep at least one Transportation source and destination.");
+    const auto mm = m - (source ? 1 : 0), nn = n - (source ? 0 : 1), at = position + 1;
+    std::vector<std::string> cells; cells.reserve((mm + 2) * (nn + 2));
+    for (std::size_t row = 0; row < mm + 2; ++row) for (std::size_t col = 0; col < nn + 2; ++col)
+        cells.push_back(cell(row + (source && row >= at ? 1 : 0), col + (!source && col >= at ? 1 : 0)));
+    replaceGrid(mm, nn, std::move(cells));
+}
+void TransportationDocument::paste(Axis axis, std::size_t position, const std::vector<std::string>& values) {
+    if (values.size() != line(axis, position).size()) throw std::invalid_argument("Copied Transportation line does not fit this grid.");
+    auto cells = cells_;
+    for (std::size_t i = 0; i < values.size(); ++i)
+        cells[index(axis == Axis::Source ? position + 1 : i, axis == Axis::Source ? i : position + 1)] = values[i];
+    replaceGrid(problem_.supply.size(), problem_.demand.size(), std::move(cells));
+}
 std::string TransportationDocument::encode() const {
     std::string bytes = "4000\r\n5\r\n2\r\n1\r\n" + quote(problem_.title) + "\r\n"
         + sourceCountRecord_ + "\r\n" + destinationCountRecord_ + "\r\n";

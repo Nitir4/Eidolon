@@ -39,6 +39,11 @@ add_test(NAME transportation.input.goldens COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation_input.py" "$<TARGET_FILE:transportation_probe>"
     "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-input.json")
 set_tests_properties(transportation.input.goldens PROPERTIES TIMEOUT 15)
+add_test(NAME transportation.editgrid.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation_editgrid.py" "$<TARGET_FILE:transportation_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-editgrid.json"
+    "${CMAKE_CURRENT_BINARY_DIR}/transportation-editgrid-comparison.tsv")
+set_tests_properties(transportation.editgrid.goldens PROPERTIES TIMEOUT 15)
 add_test(NAME lp.graphical.goldens COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/verify_graphical.py"
     "$<TARGET_FILE:graphical_probe>" "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graphical.json" "${CMAKE_CURRENT_BINARY_DIR}/graphical-comparison.tsv")
 set_tests_properties(lp.graphical.goldens PROPERTIES TIMEOUT 30)
