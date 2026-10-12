@@ -12,6 +12,7 @@
 #include <QTemporaryDir>
 #include <QDir>
 #include <QScreen>
+#include <QResizeEvent>
 
 using namespace tora::desktop;
 class DesktopTransportation: public QObject {
@@ -111,6 +112,18 @@ private slots:
         QVERIFY(!c.openFile(path,error));QVERIFY(!error.isEmpty());QCOMPARE(c.problem().supply[0],20.0);QCOMPARE(c.trace().size(),std::size_t(3));
         QVERIFY(!c.openFile(directory.filePath(QStringLiteral("missing.txt")),error));QVERIFY(!error.isEmpty());
         QCOMPARE(c.trace().back().objective,150.0);
+    }
+    void resizeDuringColumnShrink() {
+        ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);c.loadExample();
+        QVERIFY(shell.navigate(QStringLiteral("transportation/input")));shell.show();
+        auto* grid=shell.findChild<QTableWidget*>(QStringLiteral("transport-input-grid"));QVERIFY(grid);
+        // Windows can resize synchronously between dimension replacement and
+        // the new destination-column configuration. Isolate that ordering.
+        grid->setColumnCount(4);
+        QResizeEvent event(grid->viewport()->size(),grid->viewport()->size());
+        try {QApplication::sendEvent(grid->viewport(),&event);}catch(const std::exception& e){QFAIL(e.what());}
+        auto p=tora::transportation::Problem::blank(1,1);p.supply={4};p.demand={4};p.costs={{3}};c.load(p);
+        QCOMPARE(grid->columnCount(),4);QCOMPARE(grid->item(2,2)->text(),QStringLiteral("3.00"));
     }
     void resolutionPreview_data() {
         QTest::addColumn<QSize>("physical");

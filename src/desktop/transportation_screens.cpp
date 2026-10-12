@@ -53,8 +53,11 @@ private:
         }
         int total=0;for (int width:widths) total+=width;
         int extra=std::max(0,viewport()->width()-total);
-        for (int j=0; j<destinations_; ++j) {
-            const int share=extra/(destinations_-j);
+        // A model reload can resize the viewport synchronously while the old
+        // destination count is still cached. Use only columns that exist now.
+        const int destinations=std::max(0,std::min(destinations_,columnCount()-firstDestination_));
+        for (int j=0; j<destinations; ++j) {
+            const int share=extra/(destinations-j);
             widths.at(static_cast<std::size_t>(firstDestination_+j))+=share; extra-=share;
         }
         for (int col=0; col<columnCount(); ++col) setColumnWidth(col,widths[static_cast<std::size_t>(col)]);

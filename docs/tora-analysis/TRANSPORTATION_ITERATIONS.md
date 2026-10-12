@@ -87,3 +87,8 @@ Least-cost/Vogel penalty/tie policies; manual loop validation; other multiplier
 initializations; imbalance; cycling; exact near-zero improvement thresholds;
 nonbinary fraction strings; scientific settings; printer layout and
 horizontal pagination. Passing this captured profile does not verify those.
+
+A Windows-only event ordering in the first matrix run exposed a native column
+resize bug on model reload. A deterministic viewport-event regression now
+checks it on every OS; distribution is bounded by the columns currently
+present. This is a presentation fix and does not alter numerical traces.
