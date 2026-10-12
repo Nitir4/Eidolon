@@ -13,7 +13,7 @@ its input module supplies native LP data entry, row/column editing and Open/Save
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-all three OS builds pass 80 tests each, including independent printer PDF
+all three OS builds pass 81 tests each, including independent printer PDF
 comparison and live synthetic display changes. The latest verification and packages
 are recorded in [current status](docs/STATUS.json). Recorded physical-printer/driver,
 physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
@@ -59,7 +59,7 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
-Transportation is an authorized extension with an initial read-only North-west preview. Other OR modules remain outside this project. Review layouts with, for
+Transportation is an authorized extension with read-only North-west and Least-cost starts. Other OR modules remain outside this project. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal
@@ -126,7 +126,7 @@ unsupported fractional/format inputs produce explicit errors. See the
 [Transportation scope and evidence](docs/tora-analysis/TRANSPORTATION_OVERVIEW.md).
 
 
-The current Transportation preview delivery at source `7e35986` passes **80/80
+The earlier North-west preview delivery at source `7e35986` passes **80/80
 tests on each OS (240 overall)** in
 [CI run 38243044784](https://github.com/Nitir4/TORA-Clone/actions/runs/38243044784).
 Independent downloaded-report checks confirm 1,261 Transportation fields across
@@ -141,9 +141,19 @@ application executable and need not be restarted to see this preview.
 
 
 On `future-scope`, Transportation also offers **Least-cost start**, with the
-same read-only input and automatic MODI iteration view. Its independent golden
-corpus covers 17 cases/20 tableaus/644 fields; no raw TORA material is included.
-The branch uses the same Windows/Linux/macOS matrix. See the
+same read-only input and automatic MODI iteration view. Source `77e78cb` passes
+**81/81 tests per OS (243 overall)** in
+[CI run 38249608884](https://github.com/Nitir4/TORA-Clone/actions/runs/38249608884).
+Its 17 cases/20 tableaus/644 exact fields match TORA; existing LP and North-west
+comparisons also pass. Both starts show the observed initial-optimal notice.
+Downloaded packages and reports passed independent integrity/comparison checks;
+packages are in `dist/transportation/leastcost-verified/`. The installed
+`tora-clone` launcher opens this release. Choose **Transportation model → Load
+Example → SOLVE Menu → Least-cost start**; this example is already optimal
+under Least-cost, so the initial optimal notice and disabled controls are expected.
+
+Vogel, editing/saving, manual loops, alternate multipliers, final summary and
+Transportation printing remain future work. See the
 [Least-cost specification](docs/tora-analysis/TRANSPORTATION_LEAST_COST.md)
-for scope, evidence and known limits. Final branch CI delivery status is
-recorded in STATUS.json; the main-branch delivery above remains historical.
+for evidence and profile limits. The main-branch delivery above is historical;
+all additional feature commits remain on `future-scope`.

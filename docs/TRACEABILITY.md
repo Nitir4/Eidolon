@@ -333,7 +333,7 @@ Raw screenshots, authentic TORA files and executables remain private.
 |---|---|---|---|
 | TR-LC-01: least active cost, feasible initial basis, basic zeros | transportation/north_west.cpp solve(StartMethod::LeastCost) | transportation.leastcost.goldens:17 cases/20 tableaus/644 fields | corpus/<case>/leastcost/numbers-draft.json and hashed screen strips |
 | TR-LC-02: shared automatic MODI progression and termination | same shared snapshot/pivot loop | cases 07/10/17 require one improvement; all 20 tableaus exact | leastcost/initial, terminal and trace strips |
-| TR-LC-03: method selection, heading, cached view refresh and failure preservation | desktop/transportation_screens.cpp | desktop_transportation.cpp goldenNativeTableaus and switchStartingMethods;47 checks per scale | native heading reviewed against case 10 screen |
+| TR-LC-03: method selection, heading, cached view refresh and failure preservation | desktop/transportation_screens.cpp | desktop_transportation.cpp goldenNativeTableaus and switchStartingMethods;49 checks per scale | native heading reviewed against case 10 screen |
 | TR-LC-04: scalable native rendering | same table/layout framework | three resolutions/four scales per method; actual 1080p Wayland initial/optimal; small 200% render reviewed | original-app PNGs kept outside Git |
 
 New tests were introduced before implementation and failed on missing method
@@ -349,3 +349,11 @@ desktop_transportation.cpp initialOptimalNotice (both starts). Private evidence:
 The regression fails before correction and passes after it, including actual
 Wayland4/4 checks. Corrected local full suite81/81 passes; native count is now49
 per scale. This screen-review finding supersedes the earlier47-check count.
+
+
+Least-cost final gate closes at `77e78cb`, CI 38249608884: 81/81 per OS; 644 exact
+new-method fields; 49 native checks per scale; 24 resolution renders per OS.
+TR-UI-OPT also verifies Information icon/OK button; macOS expects an empty
+native title per Qt 6.10 documentation, while Windows/Linux require the original
+caption. All numeric strings and message text remain exact. Independent package
+and installed-window evidence is recorded in STATUS.json. main is unchanged.

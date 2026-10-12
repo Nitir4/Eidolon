@@ -159,7 +159,7 @@ Final graphical CI run 37908644559 also passes 56/56 tests on each OS and all pa
 The separate final checkpoint passes62/62 per OS at41c5017. Its sensitivity
 extension atf18eaf9 passes68/68 per OS,204 overall, with all deployed-package
 startup checks successful. Exact expanded comparisons include1116 final fields
-and2337 sensitivity fields. All35 actual saved-file round trips and source hashes
+and 2337 sensitivity fields. All35 actual saved-file round trips and source hashes
 pass;1124 fixture numeric strings match independent private glyph transcriptions.
 The observed automatic iteration accounting, interleaved bound rows, signed
 minimization costs, negative-RHS/free orientation and negative-lower/upper quirk
@@ -218,3 +218,12 @@ input profile, with 17 cases/20 exact tableaus and no local numerical mismatch.
 The preceding main-branch remaining-feature list is historical. Broader
 Least-cost inputs and physical acceptance limits remain as described in
 TRANSPORTATION_LEAST_COST.md; CI/package completion is tracked in STATUS.json.
+
+
+Least-cost's captured-profile gate is now closed at `77e78cb`/run 38249608884:
+81/81 tests per OS and every 644 Least-cost field match, with all packages and
+actual Linux backends verified. The initial-optimal message gap was fixed.
+macOS deliberately omits QMessageBox titles as documented by Qt; the exact
+message/Information icon/OK button remain tested. This native-platform caption
+difference is documented, rather than an unresolved numerical mismatch.
+Vogel and the remaining Transportation features/profile limits are still open.

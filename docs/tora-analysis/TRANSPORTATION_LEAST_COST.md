@@ -69,8 +69,30 @@ does not close it.
 
 The next macOS matrix exposed a test assumption: Qt deliberately suppresses
 QMessageBox titles on macOS, while Linux/Windows retain the observed title.
-[Qt6.10 documentation](https://doc.qt.io/qt-6.10/qmessagebox.html#setWindowTitle)
+[Qt 6.10 documentation](https://doc.qt.io/qt-6.10/qmessagebox.html#setWindowTitle)
 confirms this native platform behavior. The regression expects an empty macOS
 title and the exact title elsewhere; every OS still requires the exact message,
 Information icon, OK button, visible popup and disabled terminal controls.
 No product or numerical changes were made for this test correction.
+
+
+## Completed gate (12 October 2026)
+
+Final source `77e78cb6adca3795b6f83e5cd18b12cebdc4934a` passes
+[three-OS CI run 38249608884](https://github.com/Nitir4/TORA-Clone/actions/runs/38249608884):
+81/81 CTest per OS, 49 Transportation Qt checks at each of four scales,
+24 Transportation resolution renders per OS and 644 exact Least-cost fields.
+All existing LP/North-west comparisons and 23 printer PDFs also pass.
+Independent downloaded-report/package audits verify all three native artifacts,
+Qt legal manifests, Windows' seven installer checks and Linux's 281-file payload.
+The final AppImage starts on actual Wayland/xcb with SDK paths removed and is
+installed under the stable `tora-clone` launcher. Its native Wayland window was
+confirmed by process/AppImage identity; previous windows/releases were preserved.
+
+Evidence is in build/transportation-leastcost-verified/{ci-verified,
+packages-verified,linux-payload-verified,installation,installed-window}.json;
+packages are in dist/transportation/leastcost-verified/. No known mismatch
+remains in the accepted profile. Earlier successful-numerical/failed-screen
+and macOS-title-test runs are retained as history, not final acceptance evidence.
+The full local suite passed 81/81 after the product correction; final test-only
+portability changes passed focused 7/7 and the complete three-OS matrix.
