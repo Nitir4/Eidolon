@@ -131,3 +131,20 @@ LP_DATA_ENTRY_MODULE.md and tests/fixtures/tora-input-edits.tsv.
 ## Graphical module file behavior
 
 Graphical reads the same LP document and does not change the `.txt` grammar or saved coefficients. Selected display notation and viewport changes are session state; graph pixels are never written into the problem file. Finite bounds/free variables remain readable/editable but are rejected by the Graphical menu with the observed warning. Thirty-five canonical private TORA saves pass byte-identical codec round trips for this module. Invalid historical scratch saves are not substituted for previously reviewed canonical files.
+
+
+## Read-only Transportation preview
+
+The separately authorized extension reads module discriminator 4000 with the
+observed following header records 5,2,1, quoted title, source count m and
+destination count n. It then reads exactly (m+2)(n+2) quoted row-major grid
+records: destination aliases on row zero, source aliases/costs/supply on source
+rows, and demand on the final row. CRLF terminates each record. See
+[tora-analysis/TRANSPORTATION_INPUT.md](tora-analysis/TRANSPORTATION_INPUT.md).
+
+The reader is isolated in `transportation_compat`; LP parsing is unchanged.
+Default settings, ASCII corpus files and numeric grids are verified against
+17 authentic saved-file hashes. Unknown format headers are rejected. No
+Transportation writer or dirty-document lifecycle is provided in this preview.
+Native parsing limits and doubled-quote safety handling are documented
+engineering policies, not claims about all legacy reader behavior.

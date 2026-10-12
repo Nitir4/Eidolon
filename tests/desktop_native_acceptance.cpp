@@ -6,6 +6,7 @@
 #include "lp_printing.hpp"
 #include "lp_screens.hpp"
 #include "ui_font.hpp"
+#include "transportation_screens.hpp"
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDir>
@@ -15,6 +16,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPushButton>
@@ -41,6 +43,7 @@ int main(int argc, char** argv) {
     parser.addOption({QStringLiteral("output"), QStringLiteral("Private capture/report directory."), QStringLiteral("path")});
     parser.addOption({QStringLiteral("print-dialog"), QStringLiteral("Capture and cancel the real Linux Qt print dialog; sends no print job.")});
     parser.addOption({QStringLiteral("fullscreen"), QStringLiteral("Temporarily display each view fullscreen on the connected monitor.")});
+    parser.addOption({QStringLiteral("transportation"), QStringLiteral("Also check the native Transportation North-west preview.")});
     parser.process(app);
     try {
         require(parser.isSet(QStringLiteral("problem")) && parser.isSet(QStringLiteral("output")), "--problem and --output are required");
@@ -49,6 +52,7 @@ int main(int argc, char** argv) {
         require(QDir().mkpath(output), "Cannot create output directory");
         ApplicationShell shell;
         require(shell.registerModule(lpModule()), "LP module registration failed");
+        require(shell.registerModule(transportationModule()), "Transportation module registration failed");
         if(parser.isSet(QStringLiteral("fullscreen"))) shell.showFullScreen();
         else shell.showMaximized();
         QTest::qWait(200);
@@ -88,6 +92,21 @@ int main(int argc, char** argv) {
         summary.notice=[](const QString&,const QString&){};
         require(summary.request() && summary.start({tora::core::Notation::Decimal,5,2}), "Final solution start failed");
         capture(QStringLiteral("final-sensitivity"),QStringLiteral("lp/final"));
+        if (parser.isSet(QStringLiteral("transportation"))) {
+            require(shell.navigate(QStringLiteral("transportation/input-mode")),"Transportation entry failed");
+            capture(QStringLiteral("transportation-entry"),QStringLiteral("transportation/input-mode"));
+            auto& transport=transportationController(shell);transport.loadExample();
+            require(shell.navigate(QStringLiteral("transportation/input")),"Transportation input failed");
+            capture(QStringLiteral("transportation-input"),QStringLiteral("transportation/input"));
+            QString error;require(transport.solve(error),"Transportation solve failed");
+            require(shell.navigate(QStringLiteral("transportation/northwest")),"Transportation iteration route failed");
+            capture(QStringLiteral("transportation-initial"),QStringLiteral("transportation/northwest"));
+            auto* all=shell.findChild<QPushButton*>(QStringLiteral("transport-all"));require(all && all->isEnabled(),"Transportation All missing");
+            QTimer::singleShot(0,[]{for(auto* widget:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(widget))box->accept();});
+            all->click();require(!all->isEnabled(),"Transportation did not terminate");
+            require(transport.trace().size()==3 && transport.trace().back().objective==150,"Transportation pilot mismatch");
+            capture(QStringLiteral("transportation-optimal"),QStringLiteral("transportation/northwest"));
+        }
         QString panel=QStringLiteral("not requested");
         if(parser.isSet(QStringLiteral("print-dialog"))) {
             require(app.platformName()==QStringLiteral("wayland") || app.platformName()==QStringLiteral("xcb"), "Linux dialog automation requires Wayland or X11");

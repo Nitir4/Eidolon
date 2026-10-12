@@ -8,6 +8,18 @@ add_executable(graphical_probe graphical_probe.cpp)
 tora_target_defaults(graphical_probe)
 target_link_libraries(graphical_probe PRIVATE tora::lp)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_executable(transportation_probe transportation_probe.cpp)
+tora_target_defaults(transportation_probe)
+target_link_libraries(transportation_probe PRIVATE tora::transportation_compat)
+add_test(NAME transportation.northwest.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation.py" "$<TARGET_FILE:transportation_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-northwest.json"
+    "${CMAKE_CURRENT_BINARY_DIR}/transportation-northwest-comparison.tsv")
+set_tests_properties(transportation.northwest.goldens PROPERTIES TIMEOUT 30)
+add_executable(transportation_safety transportation_safety.cpp)
+tora_target_defaults(transportation_safety)
+target_link_libraries(transportation_safety PRIVATE tora::transportation_compat)
+add_test(NAME transportation.safety COMMAND transportation_safety)
 add_test(NAME lp.graphical.goldens COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/verify_graphical.py"
     "$<TARGET_FILE:graphical_probe>" "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graphical.json" "${CMAKE_CURRENT_BINARY_DIR}/graphical-comparison.tsv")
 set_tests_properties(lp.graphical.goldens PROPERTIES TIMEOUT 30)
@@ -93,6 +105,17 @@ set_tests_properties(compat.grid PROPERTIES TIMEOUT 15)
 
 if(TORA_BUILD_DESKTOP)
     find_package(Qt6 6.8 REQUIRED COMPONENTS Test)
+    qt_add_executable(desktop_transportation_test desktop_transportation.cpp)
+    set_target_properties(desktop_transportation_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_transportation_test)
+    target_link_libraries(desktop_transportation_test PRIVATE desktop_shell Qt6::Test)
+    target_compile_definitions(desktop_transportation_test PRIVATE TORA_TRANSPORT_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-northwest.json")
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.transportation.scale-${scale} COMMAND desktop_transportation_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-transportation-scale-${scale}.xml,junitxml" -o -,txt)
+        set_tests_properties(desktop.transportation.scale-${scale} PROPERTIES TIMEOUT 60
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen:configfile=offscreen-display.json;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
+    endforeach()
     configure_file(fixtures/offscreen-display.json offscreen-display.json COPYONLY)
     qt_add_executable(desktop_graphical_test desktop_graphical.cpp)
     set_target_properties(desktop_graphical_test PROPERTIES AUTOMOC ON)

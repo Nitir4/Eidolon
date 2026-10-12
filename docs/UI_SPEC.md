@@ -302,3 +302,24 @@ The live display regression covers four populated routes at three secondary
 DPIs, a live scale change and display removal. Fonts, raster DPR, reachable
 window geometry and model/session state are asserted. Test-only offscreen
 monitor changes are distinguished from still-pending physical monitor acceptance.
+
+
+## Native Transportation North-west preview
+
+MAIN Menu → Transportation model opens existing-file/example choices. Open
+uses a native picker and shows the cost/supply/demand grid read only. SOLVE
+Menu → North-west corner start opens stacked automatic tableaus. Each source
+uses cost, shipment and reduced-cost rows, with u/v multipliers, supply, demand,
+Name, ObjVal = and Iter labels. Basic zero shipments remain visible; nonbasic
+cells are blank. Next adds one tableau, All adds the remainder, terminal
+controls disable and the observed optimal-iteration message appears.
+
+Shared readable colors and a minimum 12-point screen font follow the user's
+accessibility direction. Font metrics/layouts drive sizing; native scrolling
+handles smaller viewports. Tests check all 17 captured profiles at four scales
+and exact window sizes for 1366×768,1080p and4K. A separate real-desktop harness
+can inspect the entry/input/initial/terminal routes with `--transportation`.
+
+The preview exposes only supported automatic behavior. New/edit/save, other
+starts, manual loop selection, multiplier changes, final summary and printing
+remain outside this slice. Read-only input uses normal arrow-key selection.

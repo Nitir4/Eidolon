@@ -1,4 +1,4 @@
-# Native TORA LP clone
+# Native TORA clone
 
 Phase 0 is approved. Foundation 1 supplies the C++17/CMake skeleton, native
 Qt 6 Widgets bootstrap, smoke tests and three-OS packaging pipeline.
@@ -13,7 +13,7 @@ its input module supplies native LP data entry, row/column editing and Open/Save
 All-slack, finite M-method, Two-phase, Bounded and Dual simplex supply manual/automatic iteration tables;
 Graphical supplies native two-variable plots, constraint-by-constraint drawing, zoom and PDF printing.
 Final solution and sensitivity are implemented in the native output summary;
-all three OS builds pass 71 tests each, including independent printer PDF
+all three OS builds pass 74 tests each, including independent printer PDF
 comparison and live synthetic display changes. The latest verification and packages
 are recorded in [current status](docs/STATUS.json). Recorded physical-printer/driver,
 physical mixed-DPI and outside-profile limits remain in [open questions](docs/OPEN_QUESTIONS.md).
@@ -59,7 +59,7 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
-Other OR modules remain outside this LP project. Review layouts with, for
+Transportation is an authorized extension with an initial read-only North-west preview. Other OR modules remain outside this project. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal
@@ -104,3 +104,23 @@ desktop with SDK paths removed. Matching Qt legal documents are included.
 See [the delivery verification](docs/RELEASE_READINESS.md) and
 [build and launch instructions](docs/BUILD.md). Physical mixed-monitor/printer
 acceptance and trusted production signing remain resource-dependent.
+
+
+The keyboard/readability repair at source `c4cf3ad` passes 74/74 tests on each
+OS in [CI run 38211734612](https://github.com/Nitir4/TORA-Clone/actions/runs/38211734612).
+Screen text uses a 12pt minimum and a light, high-contrast palette. Arrow keys
+continue editing in adjacent editable grid cells; Left/Right preserve normal
+caret movement within text. New packages are in `dist/readability/final/`.
+On this laptop, launch the updated installed app with `tora-clone` or the
+**TORA Clone** application-menu entry. Existing windows keep their older
+version until closed. Algorithms, numeric displays and saved files are unchanged.
+
+
+The Transportation preview is available from **MAIN Menu → Transportation
+model → Load Example → SOLVE Menu → North-west corner start**. It can also
+open existing default-format TORA Transportation files, show input read only,
+and step automatic iterations. Seventeen captured cases supply38 independently
+transcribed North-west tableaus. New/edit/save, Least-cost/Vogel, manual loops,
+final summary and Transportation printing remain future work. Unbalanced or
+unsupported fractional/format inputs produce explicit errors. See the
+[Transportation scope and evidence](docs/tora-analysis/TRANSPORTATION_OVERVIEW.md).

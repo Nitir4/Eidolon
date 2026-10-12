@@ -15,8 +15,8 @@ Use C++17 or newer, CMake, and Qt 6 Widgets. `or_core` has no Qt dependency;
 format, method-selection warnings, display conventions, and compatibility
 policies. `desktop_shell` supplies Qt screens, module registration, navigation,
 file dialogs, and printing. The executable registers the LP module at startup.
-Future modules can register with the same interface; this project implements LP
-only. No HTML, browser runtime, or QtWebEngine dependency is permitted.
+The original scope implements LP. The authorized Transportation extension
+below now registers through the same interface. No HTML, browser runtime, or QtWebEngine dependency is permitted.
 
 ## Responsibilities
 
@@ -423,3 +423,34 @@ slack separately from TORA's screen quirk; it never edits solver history or
 input. QPainter/QPrinter draw the pages with installed fonts. PDF verification
 is test-only Python; Qt GuiPrivate is test-only display configuration. Neither
 dependency enters the Qt-free mathematical library.
+
+
+## Authorized Transportation extension (October 2026)
+
+The original LP delivery is unchanged. A new compiled-in module now uses the
+existing registry: `or_transportation` (Qt-free model, validation, North-west
+solver and display), `transportation_compat` (Qt-free read-only 4000 parser),
+and `TransportationController`/screen factories inside `desktop_shell`.
+The executable registers both modules. The controller owns the current model
+and immutable computed trace; screens subscribe to model/session changes.
+Parsing/solving use temporary values before replacement, preserving the old
+state on failure. Navigation retains pages, which refresh when models change.
+
+```mermaid
+flowchart LR
+  File[Saved Transportation file] --> Reader[transportation_compat]
+  Reader --> Model[Transportation Problem]
+  Model --> Solver[or_transportation: North-west + MODI]
+  Solver --> Trace[Ordered tableaus]
+  Trace --> Display[Shared display strings]
+  Display --> Controller[TransportationController]
+  Controller --> Widgets[Native Qt Widgets screens]
+  Registry[ApplicationShell module registry] --> Widgets
+```
+
+The preview provides existing-file viewing and automatic North-west stepping
+only. Native editing/writing, other starts, manual loops, alternate multiplier
+initialization, final summary and printing are separate future slices. The
+profile rejects unbalanced/non-exact-single-precision quantities and unknown
+format headers; original error/threshold behavior is not inferred. Numerical
+size/cycle/iteration guards are explicit native engineering policies.

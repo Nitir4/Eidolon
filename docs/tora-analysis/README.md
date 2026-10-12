@@ -43,3 +43,9 @@ Foundation 4 document/file decisions and targeted compatibility provenance:
 
 Printer acceptance extension: [LP printing](LP_PRINTING.md) covers 25 actual
 print observations and the independent native-PDF verification contract.
+
+
+Authorized post-LP extension: [Transportation overview](TRANSPORTATION_OVERVIEW.md),
+[input/files](TRANSPORTATION_INPUT.md), [iterations](TRANSPORTATION_ITERATIONS.md)
+and [final output observations](TRANSPORTATION_FINAL.md). The first native
+slice is read-only default-file opening and automatic North-west iterations.

@@ -289,10 +289,24 @@ are not claimed by these checks.
 | Behaviour | Code | Regression evidence |
 |---|---|---|
 | Continue editing after arrow navigation; skip read-only cells and preserve text caret movement | lp_screens.cpp InputDelegate/InputView | desktop_input.cpp arrowNavigationCommitsAndSkipsLabels; tests-first baseline fails, focused fixed test passes |
-| Legible selected row labels/numbers | ui_colors.hpp; lp_input_controller.cpp | selectedInputRowsStayReadable checks at least4.5:1 contrast; baseline fails, fixed passes |
-| Readable screen font without changing print size | ui_font.hpp readableUiFont; application_shell.cpp; main.cpp | desktop_font.cpp valid tiny font minimum; baseline fails, fixed passes; print goldens pending full suite |
-| Consistent readable tables/canvas/graph list | application_shell.cpp; lp_screens.cpp; lp_simplex_controller.cpp; lp_final_controller.cpp; lp_graphical_controller.cpp | full layout/scale tests and actual desktop image inspection pending |
+| Legible selected row labels/numbers | ui_colors.hpp; lp_input_controller.cpp | selectedInputRowsStayReadable checks at least 4.5:1 contrast; baseline fails, fixed passes |
+| Readable screen font without changing print size | ui_font.hpp readableUiFont; application_shell.cpp; main.cpp | desktop_font.cpp valid tiny font minimum; baseline fails, fixed passes; 74/74 per OS; 23 original PDF comparisons passed per OS |
+| Consistent readable tables/canvas/graph list | application_shell.cpp; lp_screens.cpp; lp_simplex_controller.cpp; lp_final_controller.cpp; lp_graphical_controller.cpp | four-scale tests passed on all three OSes; six actual Wayland views and installed-app image reviewed |
 
 The user requested this screen-presentation change; exact original saturated
 colours are no longer the desired screen default. Algorithms, trace labels,
 numeric formatting and file compatibility remain unchanged.
+
+
+## Transportation North-west preview
+
+| Requirement | Code | Test | Private capture |
+|---|---|---|---|
+| TR-NW-01: North-west allocation, basic zeros, u1=0, MODI sequence | src/transportation/north_west.cpp | transportation.northwest.goldens; fixtures/transportation-northwest.json | transportation/corpus:17 complete profiles,38 North-west tableaus |
+| TR-NW-02: entering/leaving row-major ties | north_west.cpp pivot/solveNorthWest | golden cases17/18 | 17-leaving-tie and18-entering-tie/northwest |
+| TR-FILE-01: observed default4000 file opening | src/compat/transportation_reader.cpp | generated files match17 authentic file SHA256s before file-backed goldens; transportation.safety | each case/tora-saved.txt |
+| TR-UI-01: read-only grid, labels/values, Next/All and terminal navigation | src/desktop/transportation_screens.cpp | desktop.transportation.scale-* | input/initial/terminal/scroll screens per case |
+| TR-UI-02: DPI/resolution/readability and reload/nonmutation | transportation_screens.cpp | four scales,three sizes; nextAndReload/failedOpenPreservesModelAndTrace | clone captures are independent native renders |
+
+The corpus also observes Least-cost/Vogel and final output (76 tableaus total),
+but those native algorithms/screens are not implemented by this slice.

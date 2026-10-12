@@ -2,6 +2,7 @@
 #include "ui_font.hpp"
 #include "application_shell.hpp"
 #include "lp_screens.hpp"
+#include "transportation_screens.hpp"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -38,6 +39,7 @@ int main(int argc, char* argv[])
     QSettings settings;
     tora::desktop::ApplicationShell window(parser.isSet(smoke_test) || parser.isSet(no_settings) ? nullptr : &settings);
     window.registerModule(tora::desktop::lpModule());
+    window.registerModule(tora::desktop::transportationModule());
     if (parser.isSet(screen) && !window.navigate(parser.value(screen))) {
         qCritical("Unknown screen ID");
         return 2;

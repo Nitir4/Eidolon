@@ -26,6 +26,7 @@ endfunction()
 
 add_subdirectory(src/core)
 add_subdirectory(src/lp)
+add_subdirectory(src/transportation)
 add_subdirectory(src/compat)
 
 if(TORA_BUILD_DESKTOP)

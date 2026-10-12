@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Phase 2 captured LP profile delivered; native deployment follow-up complete",
+  "active_step": "LP keyboard/readability repair delivered; REA-backed Transportation observation pilot started",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Use latest packages; remaining physical devices, trusted signing credentials and owner production licensing decisions are recorded without starting another OR phase",
+  "next_step": "Observe and specify Transportation using REA process evidence and the actual TORA UI; preserve module gates and existing LP delivery",
   "foundation_order": [
     1,
     5,
@@ -408,5 +408,43 @@
     "deployed_visual": "Actual final6.10.3 Wayland LP input-mode/format view readable;956x1046 compositor tile; own window closed normally",
     "native_source_sdk": "Qt6.11.2",
     "package_sdk": "Qt6.10.3"
+  },
+  "readability_delivery": {
+    "status": "verified",
+    "source_commit": "c4cf3ad0f6671e99d204a5e925f7b95cfefd6094",
+    "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38211734612",
+    "local_tests": "74/74",
+    "ci_tests": "74/74 per OS, 222 overall; 45 input Qt cases per scale",
+    "numerical_fields_per_os": 31654,
+    "printing": "25 states, 23 PDFs, 4259 tokens/page counts per OS; actual laptop PDF 139 tokens/page counts",
+    "native_desktop": "Six actual 1920x1080 Wayland views, keyboard editing and print cancellation/PDF selection passed",
+    "packages": "dist/readability/final/",
+    "evidence": "build/readability/ci-verified.json, packages-verified.json, native/verification.json, installation.json, linux-payload-verified.json",
+    "installed_launcher": "/home/nitir505/.local/bin/tora-clone",
+    "installed_source": "c4cf3ad",
+    "linux_sha256": "e5f5f630119828c4d1b1c640d4f20547ac629b02b0c82623c3479d11ae7af6f9",
+    "known_scope_limits": "Physical mixed-monitor/printer and trusted signing remain as previously recorded; no solver/file fixture changed"
+  },
+  "next_module_pilot": {
+    "candidate": "Transportation model",
+    "status": "native read-only North-west preview locally verified; fresh three-OS CI/package delivery pending",
+    "rea_checkout": "/home/nitir505/Ritin/rea",
+    "rea_source": "4a5aec8ad6d54444b2a2c2313fbc506b17ff91aa",
+    "rea_version": "6.4.0",
+    "node_version": "24.18.0",
+    "workflow": "capture-process wraps the existing isolated Wine GUI observer",
+    "reference": "reference/tora-captures/transportation/corpus/",
+    "public_reference_material": false,
+    "complete_numerical_profiles": 17,
+    "captured_inputs": 18,
+    "observed_tableaus": 76,
+    "northwest_tableaus": 38,
+    "excluded_probe": "15-small-fractions: clipped long fractional values",
+    "scope": "Existing default-format file opening, example loading, read-only input, automatic North-west iterations; other Transportation functionality deferred",
+    "local_tests": "80/80 full desktop suite; after layout fix,6/6 focused and all25 Transportation Qt checks per scale",
+    "headless_tests": "28/28 full Qt-free C++17 suite; changed-reader focused checks rerun",
+    "native_desktop": "Final Wayland/eDP-1,1920x1080,10 route-checked views; revised column layout reviewed; model preserved",
+    "native_safeguards": "4 MiB,100 sources/destinations,250000 displayed cells; ASCII/default-header profile; balanced exact-single-precision quantities",
+    "northwest_exact_fields": 1261
   }
 }
