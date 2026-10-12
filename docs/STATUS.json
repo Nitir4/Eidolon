@@ -441,12 +441,16 @@
     "northwest_tableaus": 38,
     "excluded_probe": "15-small-fractions: clipped long fractional values",
     "scope": "Existing default-format file opening, example loading, read-only input, automatic North-west iterations; other Transportation functionality deferred",
-    "local_tests": "80/80 prior full suite; corrected reload/layout6/6 focused,26 Transportation Qt checks per scale; actual Wayland reload/event test executed",
+    "local_tests": "80/80 corrected-source desktop suite;26 Transportation Qt checks per scale; actual Wayland reload/event4/4; installer unit6/6",
     "headless_tests": "28/28 full Qt-free C++17 suite; changed-reader focused checks rerun",
     "native_desktop": "Final Wayland/eDP-1,1920x1080,10 route-checked views; revised column layout reviewed; model preserved",
     "native_safeguards": "4 MiB,100 sources/destinations,250000 displayed cells; ASCII/default-header profile; balanced exact-single-precision quantities",
     "northwest_exact_fields": 1261,
     "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38239858897",
-    "initial_ci_result": "Linux/macOS80/80 and packages passed; Windows76/80: new Transportation reload viewport event exposed stale destination-count range error. Reproduced locally and corrected; fresh matrix pending."
+    "initial_ci_result": "Linux/macOS80/80 and packages passed; Windows76/80: new Transportation reload viewport event exposed stale destination-count range error. Reproduced locally and corrected; fresh matrix pending.",
+    "second_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38241406979",
+    "second_ci_result": "All80 tests pass per OS; Linux/macOS packages pass. Windows installer self-file removal failed; bounded retry and deterministic native lock probe added, fresh CI pending.",
+    "installed_linux_source": "2c7f20fb9803c7b3dfefc8b2e1e577e57b12cd4d",
+    "installed_linux_sha256": "36315275e1db391da17436752a5511a4a71be1dc1ce54b0e3ae44a4b13bed2b8"
   }
 }

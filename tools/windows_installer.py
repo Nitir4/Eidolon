@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+from contextlib import contextmanager
 
 ROOT = Path(__file__).resolve().parents[1]
 UNINSTALL_KEY = r'Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone'
@@ -79,6 +80,50 @@ def build_installer(stage, output, version):
     return artifact
 
 
+@contextmanager
+def _prevent_uninstaller_delete(path):
+    """Hold an explicit non-inherited Windows read handle without delete sharing."""
+    import ctypes
+    from ctypes import wintypes
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    create = kernel.CreateFileW
+    create.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD,
+                       wintypes.LPVOID, wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE]
+    create.restype = wintypes.HANDLE
+    close = kernel.CloseHandle
+    close.argtypes = [wintypes.HANDLE]
+    close.restype = wintypes.BOOL
+    # GENERIC_READ; FILE_SHARE_READ | FILE_SHARE_WRITE (omit FILE_SHARE_DELETE);
+    # OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL. Executing/copying remains allowed.
+    handle = create(str(path), 0x80000000, 3, None, 3, 0x80, None)
+    if handle == ctypes.c_void_p(-1).value:
+        raise ctypes.WinError(ctypes.get_last_error())
+    try:
+        yield
+    finally:
+        if not close(handle):
+            raise ctypes.WinError(ctypes.get_last_error())
+
+
+def uninstall_with_lock_probe(uninstaller, target):
+    """Exercise real cleanup while self-file deletion is briefly blocked."""
+    with _prevent_uninstaller_delete(uninstaller):
+        process = subprocess.Popen([str(uninstaller), '/S'])
+        deadline = time.monotonic() + 30
+        while (target / 'ToraClone.exe').exists():
+            code = process.poll()
+            if code not in (None, 0):
+                raise RuntimeError(f'Uninstaller bootstrap failed: {code}')
+            if time.monotonic() >= deadline:
+                raise RuntimeError('Uninstaller did not begin removing its payload')
+            time.sleep(.1)
+        # Keep the original image locked after payload cleanup starts, so the
+        # child must retry self-file deletion instead of winning a timing race.
+        time.sleep(.5)
+    if process.wait(timeout=60) != 0:
+        raise RuntimeError('Uninstaller bootstrap failed')
+
+
 def verify_installer(installer, manifest, environment, report):
     import winreg  # Windows packaging only; portable tests never import this.
     def registered():
@@ -119,7 +164,7 @@ def verify_installer(installer, manifest, environment, report):
         env['PATH'] = os.pathsep.join([str(target), str(Path(os.environ['SystemRoot']) / 'System32')])
         subprocess.run([str(target / 'ToraClone.exe'), '--smoke-test'], env=env,
                        check=True, cwd=target, timeout=30)
-        subprocess.run([str(target / 'Uninstall.exe'), '/S'], check=True, timeout=60)
+        uninstall_with_lock_probe(target / 'Uninstall.exe', target)
         deadline = time.monotonic() + 30
         while time.monotonic() < deadline:
             key = registered()
@@ -149,5 +194,6 @@ def verify_installer(installer, manifest, environment, report):
               'install_and_reinstall': 'passed', 'installed_startup_without_sdk': 'passed',
               'unicode_and_spaces_path': 'passed', 'start_menu_and_registry': 'passed',
               'uninstall_owned_files': 'passed', 'unrelated_student_files_preserved': 'passed'}
+    result['uninstall_retry_under_file_lock'] = 'passed'
     report.write_text(json.dumps(result, indent=2) + '\n')
     return result

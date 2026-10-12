@@ -3,13 +3,33 @@ import sys
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
+from contextlib import contextmanager
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from windows_installer import payload_commands, nsis_literal, install_command
+from windows_installer import payload_commands, nsis_literal, install_command, uninstall_with_lock_probe
 
 
 class InstallerSafety(unittest.TestCase):
+    def test_uninstall_probe_releases_lock_before_waiting_for_completion(self):
+        with tempfile.TemporaryDirectory() as name:
+            target=Path(name);uninstaller=target/'Uninstall.exe';uninstaller.write_bytes(b'MZ')
+            app=target/'ToraClone.exe';app.write_bytes(b'MZ');state={'locked':False}
+            @contextmanager
+            def lock(path):
+                self.assertEqual(path,uninstaller);state['locked']=True
+                try:yield
+                finally:state['locked']=False
+            process=Mock()
+            def launch(args):
+                self.assertTrue(state['locked']);self.assertEqual(args,[str(uninstaller),'/S']);app.unlink();return process
+            def wait(**kwargs):
+                self.assertFalse(state['locked']);return 0
+            process.wait.side_effect=wait
+            def sleep(_):self.assertTrue(state['locked'])
+            with patch('windows_installer._prevent_uninstaller_delete',lock), patch('windows_installer.subprocess.Popen',side_effect=launch), patch('windows_installer.time.sleep',side_effect=sleep):
+                uninstall_with_lock_probe(uninstaller,target)
+            process.wait.assert_called_once_with(timeout=60)
     def test_literals_do_not_expand_nsis_variables(self):
         self.assertEqual(nsis_literal('cost$5 "quoted"'), 'cost$$5 $\\"quoted$\\"')
         for value in ['bad\npath', 'bad\rpath', 'bad\0path']:

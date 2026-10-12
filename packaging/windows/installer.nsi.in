@@ -55,7 +55,22 @@ Section "Uninstall"
   SetShellVarContext current
   SetOutPath "$TEMP"
 @REMOVE_FILES@
+  ; The original bootstrap image or a scanner may still hold this owned file.
+  ; Retry only this exact path; keep registration if cleanup cannot finish.
+  StrCpy $0 100
+uninstall_remove_self:
+  ClearErrors
   Delete "$INSTDIR\Uninstall.exe"
+  IfErrors 0 uninstall_self_removed
+  IntOp $0 $0 - 1
+  IntCmp $0 0 uninstall_self_failed
+  Sleep 100
+  Goto uninstall_remove_self
+uninstall_self_failed:
+  SetErrorLevel 1
+  MessageBox MB_OK|MB_ICONEXCLAMATION "The uninstaller is still in use. Close other processes using it, then run it again." /SD IDOK
+  Quit
+uninstall_self_removed:
   RMDir "$INSTDIR"
   Delete "$SMPROGRAMS\TORA Clone\TORA Clone.lnk"
   Delete "$SMPROGRAMS\TORA Clone\Uninstall TORA Clone.lnk"
