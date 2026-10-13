@@ -47,10 +47,15 @@ int main(int argc, char** argv) {
     parser.addOption({QStringLiteral("print-dialog"), QStringLiteral("Capture and cancel the real Linux Qt print dialog; sends no print job.")});
     parser.addOption({QStringLiteral("fullscreen"), QStringLiteral("Temporarily display each view fullscreen on the connected monitor.")});
     parser.addOption({QStringLiteral("transportation"), QStringLiteral("Also check native Transportation North-west, Least-cost and Vogel methods.")});
+    parser.addOption({QStringLiteral("transportation-printing"), QStringLiteral("Submit Transportation test jobs to the isolated OraclePS printer; requires --transportation and the private CUPS server.")});
     parser.process(app);
     try {
         require(parser.isSet(QStringLiteral("problem")) && parser.isSet(QStringLiteral("output")), "--problem and --output are required");
         require(app.platformName() != QStringLiteral("offscreen") && app.platformName() != QStringLiteral("minimal"), "This check requires an actual desktop backend");
+        if(parser.isSet(QStringLiteral("transportation-printing"))) {
+            require(parser.isSet(QStringLiteral("transportation")),"Printer acceptance requires Transportation views");
+            require(qEnvironmentVariable("CUPS_SERVER")==QStringLiteral("127.0.0.1:18631") && QPrinterInfo::defaultPrinter().printerName()==QStringLiteral("OraclePS"),"Private printer identity mismatch; no jobs submitted");
+        }
         const auto output=parser.value(QStringLiteral("output"));
         require(QDir().mkpath(output), "Cannot create output directory");
         ApplicationShell shell;
@@ -104,6 +109,12 @@ int main(int argc, char** argv) {
             QString error;require(transport.solve(error),"Transportation solve failed");
             require(shell.navigate(QStringLiteral("transportation/northwest")),"Transportation iteration route failed");
             capture(QStringLiteral("transportation-initial"),QStringLiteral("transportation/northwest"));
+            if(parser.isSet(QStringLiteral("transportation-printing"))) {
+                const auto bytes=transport.document()->encode();
+                auto* command=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-print"));
+                require(command && command->isEnabled(),"Native iteration print unavailable");command->click();
+                require(transport.document()->encode()==bytes,"Iteration print changed input");
+            }
             auto* tableauGrid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));
             require(tableauGrid && tableauGrid->item(4,5),"Native manual tableau missing");
             QTest::mouseClick(tableauGrid->viewport(),Qt::LeftButton,Qt::NoModifier,tableauGrid->visualItemRect(tableauGrid->item(4,5)).center());
@@ -121,6 +132,12 @@ int main(int argc, char** argv) {
             require(transport.finalOutput() && transport.finalOutput()->objective=="150.00" && transport.trace().size()==priorSummaryTrace,"Native final summary/trace mismatch");
             require(shell.navigate(QStringLiteral("transportation/final")),"Native final route missing");
             capture(QStringLiteral("transportation-final-summary"),QStringLiteral("transportation/final"));
+            if(parser.isSet(QStringLiteral("transportation-printing"))) {
+                const auto bytes=transport.document()->encode();
+                auto* command=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-final-print"));
+                require(command && command->isEnabled(),"Native final print unavailable");command->click();
+                require(transport.document()->encode()==bytes && transport.trace().size()==priorSummaryTrace,"Final print changed input/trace");
+            }
             require(shell.navigate(QStringLiteral("transportation/northwest")),"Native iteration return failed");
             auto* anchorNext=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));
             require(anchorNext && anchorNext->isEnabled(),"Native anchor Next missing");anchorNext->click();
@@ -248,6 +265,7 @@ int main(int argc, char** argv) {
                            {QStringLiteral("print_dialog"),panel},{QStringLiteral("model_preserved"),true},{QStringLiteral("captures"),captures},
                            {QStringLiteral("available_printer_count"),QPrinterInfo::availablePrinters().size()},
                            {QStringLiteral("default_printer_present"),!QPrinterInfo::defaultPrinter().isNull()},
+                           {QStringLiteral("transportation_printer_commands"),parser.isSet(QStringLiteral("transportation-printing"))?QStringLiteral("initial trace and two-job final command submitted to private OraclePS; spool audit required"):QStringLiteral("not requested")},
                            {QStringLiteral("scope"),QStringLiteral("Actual backend and connected display; not mixed-monitor or physical printer acceptance")}};
         QFile file(output+QStringLiteral("/verification.json"));require(file.open(QIODevice::WriteOnly), "Cannot write report");
         file.write(QJsonDocument(report).toJson());

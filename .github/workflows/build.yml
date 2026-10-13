@@ -122,6 +122,8 @@ jobs:
             build/ci/tests/desktop-display-changes.xml
             build/ci/tests/desktop-printing.xml
             build/ci/tests/printing-pdfs/
+            build/ci/tests/desktop-transportation-printing.xml
+            build/ci/tests/transportation-printing-pdfs/
             build/ci/ui-captures/
             build/ci/desktop-runtime/
           if-no-files-found: warn

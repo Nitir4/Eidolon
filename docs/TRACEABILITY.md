@@ -375,3 +375,5 @@ Transportation EditGrid continuation: structural source/destination insert/delet
 
 
 Transportation final-summary continuation is specified in tora-analysis/TRANSPORTATION_FINAL.md. Nineteen independent original summaries cover basic zero rows, default Least-cost basis, fractional amount display and aliases. Current source is under verification; STATUS.json records delivery separately from implementation.
+
+Transportation printer contract: [TRANSPORTATION_PRINTING.md](tora-analysis/TRANSPORTATION_PRINTING.md), independent11workflow/15job/26page fixture, native export/state/cancellation/error checks, page counts/token multiplicity/278ordered spatial rows, actual private-queue job evidence. Exact-source delivery remains pending.

@@ -1,4 +1,5 @@
 #include "transportation_screens.hpp"
+#include "transportation_printing.hpp"
 #include "screen_widgets.hpp"
 #include "ui_colors.hpp"
 #include "ui_font.hpp"
@@ -369,10 +370,16 @@ QWidget* finalScreen(ApplicationShell& shell) {
     for(const auto& command:{std::pair<const char*,const char*>{"Next Iteration","transport-final-next"},{"All Iterations","transport-final-all"}}) {
         auto* b=new QPushButton(QString::fromLatin1(command.first));b->setObjectName(QString::fromLatin1(command.second));b->setEnabled(false);controls->addWidget(b);
     }
+    auto* print=new QPushButton(QStringLiteral("Write to Printer"));print->setObjectName(QStringLiteral("transport-final-print"));controls->addWidget(print);
+    QObject::connect(print,&QPushButton::clicked,page,[&controller,&shell] {
+        if(requestTransportationFinalPrint(&shell,controller)==PrintOutcome::Failed)
+            controller.dialogs().showError(QStringLiteral("Printer Error"),QStringLiteral("The Transportation print job could not be completed."));
+    });
     controls->addStretch();layout->addLayout(controls);
     auto* grid=table(page,"transport-final-grid");layout->addWidget(grid,1);
-    const auto render=[&controller,title,iteration,objective,grid] {
+    const auto render=[&controller,title,iteration,objective,grid,print] {
         const auto* output=controller.finalOutput();grid->clear();grid->setRowCount(0);grid->setColumnCount(5);
+        print->setEnabled(output!=nullptr);
         title->setText(output?QStringLiteral("Title: ")+text(output->title):QStringLiteral("Open or initialize input, then choose Final solution from the SOLVE Menu."));
         iteration->setText(output?QStringLiteral("Final Iteration No.: ")+text(output->iteration):QString());
         objective->setText(output?QStringLiteral("Objective Value (minimum cost) =")+text(output->objective):QString());
@@ -401,6 +408,7 @@ QWidget* iterations(ApplicationShell& shell)
     next->setObjectName(QStringLiteral("transport-next")); controls->addWidget(next);
     auto* all = new QPushButton(QStringLiteral("All Iterations"));
     all->setObjectName(QStringLiteral("transport-all")); controls->addWidget(all);
+    auto* print=new QPushButton(QStringLiteral("Write to Printer"));print->setObjectName(QStringLiteral("transport-print"));controls->addWidget(print);
     controls->addStretch();
     controls->addWidget(new QLabel(QStringLiteral("Initialize u or v:")));
     auto* anchor=new QComboBox;anchor->setObjectName(QStringLiteral("transport-multiplier-anchor"));controls->addWidget(anchor);
@@ -415,7 +423,7 @@ QWidget* iterations(ApplicationShell& shell)
         else if(role==transportation::LoopRole::Leaving)item->setBackground(QColor(colors::leaving));
         else if(role==transportation::LoopRole::Other)item->setBackground(QColor(colors::header));
     };
-    const auto render = [&controller, grid, next, all, shown, title, heading, anchor, attempt, mark] {
+    const auto render = [&controller, grid, next, all, shown, title, heading, anchor, attempt, mark, print] {
         heading->setText(controller.method()==transportation::StartMethod::Vogel?
                          QStringLiteral("TRANSPORTATION TABLEAU - (Vogel's Method)"):
                          controller.method()==transportation::StartMethod::LeastCost?
@@ -435,6 +443,7 @@ QWidget* iterations(ApplicationShell& shell)
             anchor->setEnabled(controller.canInitializeMultiplier());
         }
         const auto count=std::min(*shown,history.size());
+        print->setEnabled(count>0);
         grid->setRowCount(static_cast<int>(count)*height); grid->setColumnCount(n+4);
         next->setEnabled(count<history.size()); all->setEnabled(count<history.size());
         for (std::size_t k=0; k<count; ++k) {
@@ -504,6 +513,10 @@ QWidget* iterations(ApplicationShell& shell)
     };
     QObject::connect(next,&QPushButton::clicked,page,[advance]{advance(false);});
     QObject::connect(all,&QPushButton::clicked,page,[advance]{advance(true);});
+    QObject::connect(print,&QPushButton::clicked,page,[&controller,&shell,shown] {
+        const auto outcome=requestLpPrint(&shell,[&](QPrinter& printer){return printTransportationTrace(printer,controller,*shown);});
+        if(outcome==PrintOutcome::Failed)controller.dialogs().showError(QStringLiteral("Printer Error"),QStringLiteral("The Transportation print job could not be completed."));
+    });
     render(); footer(*layout,shell,true);
     return page;
 }

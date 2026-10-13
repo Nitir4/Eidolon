@@ -1,0 +1,985 @@
+[
+  {
+    "case": "nw-initial",
+    "title": "Transportation 01-normal",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "file_sha256": "eb462b2a1089783c1241ddca5e2689fa03397bb0e1851812ea91550afcff6bd8",
+    "method": "northwest",
+    "shown": 1,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_9de2ea0e4606bdf87f6fd5b410649242e3682655cd84343b076afbab09a4cfeb",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-pilot-northwest-initial-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "c5d0fd5deba3ecf5d5f3a03ffa626fe8689f07b440b075948898258375881ec4",
+        "original_pdf_sha256": "46c8d5dd7975560371ed9eb69927f5be686ebab1dcd73fbb1af6c77a6d4b1441",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Transportation 01-normal d1 d2 d3 Supply Name s1 2.00 3.00 1.00 20.00 s2 5.00 4.00 8.00 30.00 Demand 10.00 25.00 15.00",
+          "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method) Title: Transportation 01-normal Iteration 1: ObjVal 230.00 D1 D2 D3 Supply Name v1=2.00 v2=3.00 v3=7.00 2.00 3.00 1.00 S1 u1=0.00 10 10 20 0.00 0.00 6.00 5.00 4.00 8.00 S2 u2=1.00 15 15 30 -2.00 0.00 0.00 Demand 10 25 15"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Transportation 01-normal",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00 3.00 1.00 20.00",
+            "s2 5.00 4.00 8.00 30.00",
+            "Demand 10.00 25.00 15.00"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method)",
+            "Title: Transportation 01-normal",
+            "Iteration 1: ObjVal 230.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00 v2=3.00 v3=7.00",
+            "2.00 3.00 1.00",
+            "S1 u1=0.00 10 10 20",
+            "0.00 0.00 6.00",
+            "5.00 4.00 8.00",
+            "S2 u2=1.00 15 15 30",
+            "-2.00 0.00 0.00",
+            "Demand 10 25 15"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "nw-all",
+    "title": "Transportation 01-normal",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "file_sha256": "eb462b2a1089783c1241ddca5e2689fa03397bb0e1851812ea91550afcff6bd8",
+    "method": "northwest",
+    "shown": 3,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_997d06d513fde97ac4a2eacca8db2280836c560065cd84a9c8ce063577248f48",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-pilot-northwest-all-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "0113755a5bf963838ef4e8a3b2ac1c9e68d54739b0b61f95ca158ca355f263f6",
+        "original_pdf_sha256": "d1245efafa2e7088315d176f002b846d9403ef5f4404581fb554b9dfd5f93e82",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Transportation 01-normal d1 d2 d3 Supply Name s1 2.00 3.00 1.00 20.00 s2 5.00 4.00 8.00 30.00 Demand 10.00 25.00 15.00",
+          "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method) Title: Transportation 01-normal Iteration 1: ObjVal 230.00 D1 D2 D3 Supply Name v1=2.00 v2=3.00 v3=7.00 2.00 3.00 1.00 S1 u1=0.00 10 10 20 0.00 0.00 6.00 5.00 4.00 8.00 S2 u2=1.00 15 15 30 -2.00 0.00 0.00 Demand 10 25 15",
+          "Iteration 2: ObjVal 170.00 D1 D2 D3 Supply Name v1=2.00 v2=-3.00 v3=1.00 2.00 3.00 1.00 S1 u1=0.00 10 10 20 0.00 -6.00 0.00 5.00 4.00 8.00 S2 u2=7.00 25 5 30 4.00 0.00 0.00 Demand 10 25 15",
+          "Iteration 3: ObjVal 150.00 D1 D2 D3 Supply Name v1=2.00 v2=1.00 v3=1.00 2.00 3.00 1.00 S1 u1=0.00 5 15 20 0.00 -2.00 0.00 5.00 4.00 8.00 S2 u2=3.00 5 25 30 0.00 0.00 -4.00 Demand 10 25 15"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Transportation 01-normal",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00 3.00 1.00 20.00",
+            "s2 5.00 4.00 8.00 30.00",
+            "Demand 10.00 25.00 15.00"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method)",
+            "Title: Transportation 01-normal",
+            "Iteration 1: ObjVal 230.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00 v2=3.00 v3=7.00",
+            "2.00 3.00 1.00",
+            "S1 u1=0.00 10 10 20",
+            "0.00 0.00 6.00",
+            "5.00 4.00 8.00",
+            "S2 u2=1.00 15 15 30",
+            "-2.00 0.00 0.00",
+            "Demand 10 25 15"
+          ],
+          [
+            "Iteration 2: ObjVal 170.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00 v2=-3.00 v3=1.00",
+            "2.00 3.00 1.00",
+            "S1 u1=0.00 10 10 20",
+            "0.00 -6.00 0.00",
+            "5.00 4.00 8.00",
+            "S2 u2=7.00 25 5 30",
+            "4.00 0.00 0.00",
+            "Demand 10 25 15"
+          ],
+          [
+            "Iteration 3: ObjVal 150.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00 v2=1.00 v3=1.00",
+            "2.00 3.00 1.00",
+            "S1 u1=0.00 5 15 20",
+            "0.00 -2.00 0.00",
+            "5.00 4.00 8.00",
+            "S2 u2=3.00 5 25 30",
+            "0.00 0.00 -4.00",
+            "Demand 10 25 15"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "nw-anchor",
+    "title": "Transportation 01-normal",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "file_sha256": "eb462b2a1089783c1241ddca5e2689fa03397bb0e1851812ea91550afcff6bd8",
+    "method": "northwest",
+    "shown": 1,
+    "anchor": {
+      "axis": "destination",
+      "index": 2
+    },
+    "provenance": {
+      "evidence_id": "ev_1f9f7b7a59e5508a864dffcb8e1553faf503dd3cb55bcfea37d92adcaf6b92d0",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-anchored-northwest-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "0f2ba11f09ea32a4c4ba30f289645fc0964396a2e13c5fdf0029874852ab573e",
+        "original_pdf_sha256": "d35131528ee5c5749934461d5492f16ea0bc0048d40aaaac20e2c0e4b1973bc2",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Transportation 01-normal d1 d2 d3 Supply Name s1 2.00 3.00 1.00 20.00 s2 5.00 4.00 8.00 30.00 Demand 10.00 25.00 15.00",
+          "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method) Title: Transportation 01-normal Iteration 1: ObjVal 230.00 D1 D2 D3 Supply Name v1=-5 v2=-4 v3=0 2.00 3.00 1.00 S1 u1=7 10 10 20 0.00 0.00 6.00 5.00 4.00 8.00 S2 u2=8 15 15 30 -2.00 0.00 0.00 Demand 10 25 15"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Transportation 01-normal",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00 3.00 1.00 20.00",
+            "s2 5.00 4.00 8.00 30.00",
+            "Demand 10.00 25.00 15.00"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method)",
+            "Title: Transportation 01-normal",
+            "Iteration 1: ObjVal 230.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=-5 v2=-4 v3=0",
+            "2.00 3.00 1.00",
+            "S1 u1=7 10 10 20",
+            "0.00 0.00 6.00",
+            "5.00 4.00 8.00",
+            "S2 u2=8 15 15 30",
+            "-2.00 0.00 0.00",
+            "Demand 10 25 15"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "leastcost-all",
+    "title": "Transportation 10-cost-ties",
+    "problem": {
+      "costs": [
+        [
+          2,
+          2,
+          5
+        ],
+        [
+          2,
+          4,
+          1
+        ]
+      ],
+      "supply": [
+        17,
+        23
+      ],
+      "demand": [
+        11,
+        13,
+        16
+      ]
+    },
+    "file_sha256": "79a3ed571dccdbe0e7f94a5f0ae3bc69d109e72b63f7b3491467dca298ec2b08",
+    "method": "leastcost",
+    "shown": 2,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_5bf1a49daf753a09896d1088efc831be8ef2ec625bc1f979ec847a2ba81e1e5d",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-leastcost-all-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "bdd0d6046357bcb5c7914de571de08c3b3387c655e5cd20c7f6a213aefce3062",
+        "original_pdf_sha256": "0c180df72347bc3643b8b309e2ef4ca1431a18a322dc126d3674ba92c6649fa3",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Transportation 10-cost-ties d1 d2 d3 Supply Name s1 2.00 2.00 5.00 17.00 s2 2.00 4.00 1.00 23.00 Demand 11.00 13.00 16.00",
+          "TRANSPORTATION MODEL -- TABLEAUS (Least-Cost Method ) Title: Transportation 10-cost-ties Iteration 1: ObjVal 78.00 D1 D2 D3 Supply Name v1=2.00 v2=2.00 v3=-1.00 2.00 2.00 5.00 S1 u1=0.00 11 6 17 0.00 0.00 -6.00 2.00 4.00 1.00 S2 u2=2.00 7 16 23 2.00 0.00 0.00 Demand 11 13 16",
+          "Iteration 2: ObjVal 64.00 D1 D2 D3 Supply Name v1=2.00 v2=2.00 v3=1.00 2.00 2.00 5.00 S1 u1=0.00 4 13 17 0.00 0.00 -4.00 2.00 4.00 1.00 S2 u2=0.00 7 16 23 0.00 -2.00 0.00 Demand 11 13 16"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Transportation 10-cost-ties",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00 2.00 5.00 17.00",
+            "s2 2.00 4.00 1.00 23.00",
+            "Demand 11.00 13.00 16.00"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (Least-Cost Method )",
+            "Title: Transportation 10-cost-ties",
+            "Iteration 1: ObjVal 78.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00 v2=2.00 v3=-1.00",
+            "2.00 2.00 5.00",
+            "S1 u1=0.00 11 6 17",
+            "0.00 0.00 -6.00",
+            "2.00 4.00 1.00",
+            "S2 u2=2.00 7 16 23",
+            "2.00 0.00 0.00",
+            "Demand 11 13 16"
+          ],
+          [
+            "Iteration 2: ObjVal 64.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00 v2=2.00 v3=1.00",
+            "2.00 2.00 5.00",
+            "S1 u1=0.00 4 13 17",
+            "0.00 0.00 -4.00",
+            "2.00 4.00 1.00",
+            "S2 u2=0.00 7 16 23",
+            "0.00 -2.00 0.00",
+            "Demand 11 13 16"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "vogel-all",
+    "title": "Transportation 17-leaving-tie",
+    "problem": {
+      "costs": [
+        [
+          7,
+          0,
+          8
+        ],
+        [
+          9,
+          5,
+          3
+        ],
+        [
+          9,
+          0,
+          5
+        ]
+      ],
+      "supply": [
+        2,
+        3,
+        8
+      ],
+      "demand": [
+        6,
+        4,
+        3
+      ]
+    },
+    "file_sha256": "924b363ed18b3473f9e0e794935eaa59db9abaf0ce2b65ad7a44f32081cf469e",
+    "method": "vogel",
+    "shown": 2,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_6e6ddef84d283d15a852a67621b64a6bdba3a43a415963bd834cdc8676309f3c",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-vogel-all-print-keyboard-recovered",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "d4e39848464d2b34491cd3aefc2f0b9f62dc1a2562b2606c6f8146110021bfde",
+        "original_pdf_sha256": "4dc435ef613ef52834f7485825cf70c95647e3438fc272a2088b28d3892dde07",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Transportation 17-leaving-tie d1 d2 d3 Supply Name s1 7.00 0.00 8.00 2.00 s2 9.00 5.00 3.00 3.00 s3 9.00 0.00 5.00 8.00 Demand 6.00 4.00 3.00",
+          "TRANSPORTATION MODEL -- TABLEAUS (Vogel's Method) Title: Transportation 17-leaving-tie Iteration 1: ObjVal 63.00 D1 D2 D3 Supply Name v1=9.00 v2=0.00 v3=5.00 7.00 0.00 8.00 S1 u1=0.00 2 2 2.00 0.00 -3.00 9.00 5.00 3.00 S2 u2=-2.00 3 3 -2.00 -7.00 0.00 9.00 0.00 5.00 S3 u3=0.00 6 2 0 8 0.00 0.00 0.00 Demand 6 4 3",
+          "Iteration 2: ObjVal 59.00 D1 D2 D3 Supply Name v1=7.00 v2=-2.00 v3=3.00 7.00 0.00 8.00 S1 u1=0.00 2 2 0.00 -2.00 -5.00 9.00 5.00 3.00 S2 u2=0.00 3 3 -2.00 -7.00 0.00 9.00 0.00 5.00 S3 u3=2.00 4 4 0 8 0.00 0.00 0.00 Demand 6 4 3"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Transportation 17-leaving-tie",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 7.00 0.00 8.00 2.00",
+            "s2 9.00 5.00 3.00 3.00",
+            "s3 9.00 0.00 5.00 8.00",
+            "Demand 6.00 4.00 3.00"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (Vogel's Method)",
+            "Title: Transportation 17-leaving-tie",
+            "Iteration 1: ObjVal 63.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=9.00 v2=0.00 v3=5.00",
+            "7.00 0.00 8.00",
+            "S1 u1=0.00 2 2",
+            "2.00 0.00 -3.00",
+            "9.00 5.00 3.00",
+            "S2 u2=-2.00 3 3",
+            "-2.00 -7.00 0.00",
+            "9.00 0.00 5.00",
+            "S3 u3=0.00 6 2 0 8",
+            "0.00 0.00 0.00",
+            "Demand 6 4 3"
+          ],
+          [
+            "Iteration 2: ObjVal 59.00",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=7.00 v2=-2.00 v3=3.00",
+            "7.00 0.00 8.00",
+            "S1 u1=0.00 2 2",
+            "0.00 -2.00 -5.00",
+            "9.00 5.00 3.00",
+            "S2 u2=0.00 3 3",
+            "-2.00 -7.00 0.00",
+            "9.00 0.00 5.00",
+            "S3 u3=2.00 4 4 0 8",
+            "0.00 0.00 0.00",
+            "Demand 6 4 3"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-normal",
+    "title": "Transportation 01-normal",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "file_sha256": "eb462b2a1089783c1241ddca5e2689fa03397bb0e1851812ea91550afcff6bd8",
+    "method": "final",
+    "shown": 0,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_8957e6f6c8bc265ddeabb3d6c021fc8eeec29805cea0d14c85956e69338f1ca3",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-pilot-final-print-multiple",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "input",
+        "original_ps_sha256": "8644429af2462ced26a753484b2147e4084fc4d643ac1276a617a1764ae8a512",
+        "original_pdf_sha256": "7a6e9428b2a3691b9d1eb4a2e23d26604815543a3699bb825d69dbfaf9274b47",
+        "pages": [
+          "TRANSPORTATION MODEL -- ORIGINAL DATA Title: Transportation 01-normal d1 d2 d3 Supply Name s1 2.00 3.00 1.00 20.00 s2 5.00 4.00 8.00 30.00 Demand 10.00 25.00 15.00"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL -- ORIGINAL DATA",
+            "Title: Transportation 01-normal",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00 3.00 1.00 20.00",
+            "s2 5.00 4.00 8.00 30.00",
+            "Demand 10.00 25.00 15.00"
+          ]
+        ]
+      },
+      {
+        "role": "summary",
+        "original_ps_sha256": "cbef3c6ec0e7ab06758b8d9ef73943c048949d61f74505d407d9d3e01b415f40",
+        "original_pdf_sha256": "65fab0cc8ad9e21860572474f139add87d7258317693f631f5d9ba771fa4830d",
+        "pages": [
+          "TRANSPORTATION MODEL OUTPUT SUMMARY Title: Transportation 01-normal Final Iteration No.: 1 Objective Value (minimum cost) =150.00 From To Amt Shipped Obj Coeff Obj Contrib S1: D1: 5 2.00 10.00 S1: D3: 15 1.00 15.00 S2: D1: 5 5.00 25.00 S2: D2: 25 4.00 100.00"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL OUTPUT SUMMARY",
+            "Title: Transportation 01-normal",
+            "Final Iteration No.: 1",
+            "Objective Value (minimum cost) =150.00",
+            "From To Amt Shipped Obj Coeff Obj Contrib",
+            "S1: D1: 5 2.00 10.00",
+            "S1: D3: 15 1.00 15.00",
+            "S2: D1: 5 5.00 25.00",
+            "S2: D2: 25 4.00 100.00"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-fraction",
+    "title": "Transportation 08-decimal-quantities",
+    "problem": {
+      "costs": [
+        [
+          2.25,
+          3.5,
+          1.75
+        ],
+        [
+          5.5,
+          4.25,
+          8.5
+        ]
+      ],
+      "supply": [
+        2.5,
+        3.5
+      ],
+      "demand": [
+        1.5,
+        2.75,
+        1.75
+      ]
+    },
+    "file_sha256": "dfd978a9ec5328f872165ec355ec41f7c7308499b0cb1032df7c7b24be8da826",
+    "method": "final",
+    "shown": 0,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_c9a45388fb2e2662272b6061bfdab31531822a10909f24b012adacef7adcb6cb",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-fractional-final-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "input",
+        "original_ps_sha256": "5fb8cff33c23f2e07cca72e61dd74d502319881f636f98e4ec07a9defd2dbceb",
+        "original_pdf_sha256": "63499f0767f6541cf5a29372ef2de9cd7d3156d47e3a78ffab7615af95cb03a7",
+        "pages": [
+          "TRANSPORTATION MODEL -- ORIGINAL DATA Title: Transportation 08-decimal-quantities d1 d2 d3 Supply Name s1 2.25 3.50 1.75 2.50 s2 5.50 4.25 8.50 3.50 Demand 1.50 2.75 1.75"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL -- ORIGINAL DATA",
+            "Title: Transportation 08-decimal-quantities",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.25 3.50 1.75 2.50",
+            "s2 5.50 4.25 8.50 3.50",
+            "Demand 1.50 2.75 1.75"
+          ]
+        ]
+      },
+      {
+        "role": "summary",
+        "original_ps_sha256": "dc2b6cc4776d2fba5c1d5a79ad122e54938e7677e48dc9a36667b8e4591118a4",
+        "original_pdf_sha256": "660e4349d7b734d52f16dcd7bf154712bc089c7a37cac7c1fb3fad1dd5d94292",
+        "pages": [
+          "TRANSPORTATION MODEL OUTPUT SUMMARY Title: Transportation 08-decimal-quantities Final Iteration No.: 1 Objective Value (minimum cost) =20.56 From To Amt Shipped Obj Coeff Obj Contrib S1: D1: 0 2.25 1.69 S1: D3: 2 1.75 3.06 S2: D1: 0 5.50 4.13 S2: D2: 3 4.25 11.69"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL OUTPUT SUMMARY",
+            "Title: Transportation 08-decimal-quantities",
+            "Final Iteration No.: 1",
+            "Objective Value (minimum cost) =20.56",
+            "From To Amt Shipped Obj Coeff Obj Contrib",
+            "S1: D1: 0 2.25 1.69",
+            "S1: D3: 2 1.75 3.06",
+            "S2: D1: 0 5.50 4.13",
+            "S2: D2: 3 4.25 11.69"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-alias",
+    "title": "Final alias labels",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ],
+      "source_names": [
+        "Alpha",
+        "Beta"
+      ],
+      "destination_names": [
+        "Depot",
+        "Hub",
+        "Port"
+      ]
+    },
+    "file_sha256": "c81b7572ce1da8394819cdebb17d324a7a1350d22f70300682168396cd610063",
+    "method": "final",
+    "shown": 0,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_03cbc4b7d2525d95b6edc88b34f6a8f6a187d1f465a573f2f7adf205abdd6c06",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-alias-final-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "input",
+        "original_ps_sha256": "7759c50b9291072bfc32d50e446772109ec5171e5e05dc28045f182f6255f735",
+        "original_pdf_sha256": "c3fa4b9ac5e2e9fe13ec90d78b896d18d28d325be5ee768e77b552cb56cc2000",
+        "pages": [
+          "TRANSPORTATION MODEL -- ORIGINAL DATA Title: Final alias labels d1 d2 d3 Supply Name depot hub port s1 alpha 2.00 3.00 1.00 20.00 s2 beta 5.00 4.00 8.00 30.00 Demand 10.00 25.00 15.00"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL -- ORIGINAL DATA",
+            "Title: Final alias labels",
+            "d1 d2 d3 Supply",
+            "Name depot hub port",
+            "s1 alpha 2.00 3.00 1.00 20.00",
+            "s2 beta 5.00 4.00 8.00 30.00",
+            "Demand 10.00 25.00 15.00"
+          ]
+        ]
+      },
+      {
+        "role": "summary",
+        "original_ps_sha256": "c02584a3269de151b6c084445e1a950da4651aa3599a685e94e911dd1c462d3e",
+        "original_pdf_sha256": "a0cc328294d2e29f3a7a5064e7c393df7babdd216b21582b3d7a270ee4df9cdd",
+        "pages": [
+          "TRANSPORTATION MODEL OUTPUT SUMMARY Title: Final alias labels Final Iteration No.: 1 Objective Value (minimum cost) =150.00 From To Amt Shipped Obj Coeff Obj Contrib S1: Alpha D1: Depot 5 2.00 10.00 S1: Alpha D3: Port 15 1.00 15.00 S2: Beta D1: Depot 5 5.00 25.00 S2: Beta D2: Hub 25 4.00 100.00"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL OUTPUT SUMMARY",
+            "Title: Final alias labels",
+            "Final Iteration No.: 1",
+            "Objective Value (minimum cost) =150.00",
+            "From To Amt Shipped Obj Coeff Obj Contrib",
+            "S1: Alpha D1: Depot 5 2.00 10.00",
+            "S1: Alpha D3: Port 15 1.00 15.00",
+            "S2: Beta D1: Depot 5 5.00 25.00",
+            "S2: Beta D2: Hub 25 4.00 100.00"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "final-wide",
+    "title": "Fractional amount threshold",
+    "problem": {
+      "costs": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          99
+        ],
+        [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          0
+        ]
+      ],
+      "supply": [
+        10.984375,
+        4.5
+      ],
+      "demand": [
+        0.125,
+        0.5,
+        0.75,
+        0.984375,
+        1.125,
+        1.5,
+        2.5,
+        3.5,
+        4.5
+      ]
+    },
+    "file_sha256": "032fabd28c79adab64a34a20790e333bb701e833e0aeed89e2557409f1e16a9e",
+    "method": "final",
+    "shown": 0,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_b905ce8a6404d4047287d92015a21359a0a5ea890af230fa77b4cbf78249025c",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-wide-threshold-final-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "input",
+        "original_ps_sha256": "6104f0b885dfee7630e9b072f71e92ca60b8cb4885765eba1c60ab9ccad85eb1",
+        "original_pdf_sha256": "2f2f7589b9e3c8a65d3729f9cda0a2aab9bab3512af14be5f327a961531b6093",
+        "pages": [
+          "TRANSPORTATION MODEL -- ORIGINAL DATA Title: Fractional amount threshold d1 d2 d3 d4 d5 Name s1 0.00 0.00 0.00 0.00 0.00 s2 99.00 99.00 99.00 99.00 99.00 Demand 0.13 0.50 0.75 0.98 1.13 d6 d7 d8 d9 Supply s1 0.00 0.00 0.00 99.00 10.98 s2 99.00 99.00 99.00 0.00 4.50 Demand 1.50 2.50 3.50 4.50"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL -- ORIGINAL DATA",
+            "Title: Fractional amount threshold",
+            "d1 d2 d3 d4 d5",
+            "Name",
+            "s1 0.00 0.00 0.00 0.00 0.00",
+            "s2 99.00 99.00 99.00 99.00 99.00",
+            "Demand 0.13 0.50 0.75 0.98 1.13",
+            "d6 d7 d8 d9 Supply",
+            "s1 0.00 0.00 0.00 99.00 10.98",
+            "s2 99.00 99.00 99.00 0.00 4.50",
+            "Demand 1.50 2.50 3.50 4.50"
+          ]
+        ]
+      },
+      {
+        "role": "summary",
+        "original_ps_sha256": "59e9b81b9f3f4083e242a410862ddc1e916e4762369621e06003b58d3eaf0b8f",
+        "original_pdf_sha256": "659576699a64bbd40138c952d78aee81047b42bca816024cbebf435a0ab1d038",
+        "pages": [
+          "TRANSPORTATION MODEL OUTPUT SUMMARY Title: Fractional amount threshold Final Iteration No.: 1 Objective Value (minimum cost) =0.00 From To Amt Shipped Obj Coeff Obj Contrib S1: D1: 0 0.00 0.00 S1: D2: 0 0.00 0.00 S1: D3: 0 0.00 0.00 S1: D4: 0 0.00 0.00 S1: D5: 1 0.00 0.00 S1: D6: 2 0.00 0.00 S1: D7: 3 0.00 0.00 S1: D8: 4 0.00 0.00 S2: D8: 0 99.00 0.00 S2: D9: 5 0.00 0.00"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL OUTPUT SUMMARY",
+            "Title: Fractional amount threshold",
+            "Final Iteration No.: 1",
+            "Objective Value (minimum cost) =0.00",
+            "From To Amt Shipped Obj Coeff Obj Contrib",
+            "S1: D1: 0 0.00 0.00",
+            "S1: D2: 0 0.00 0.00",
+            "S1: D3: 0 0.00 0.00",
+            "S1: D4: 0 0.00 0.00",
+            "S1: D5: 1 0.00 0.00",
+            "S1: D6: 2 0.00 0.00",
+            "S1: D7: 3 0.00 0.00",
+            "S1: D8: 4 0.00 0.00",
+            "S2: D8: 0 99.00 0.00",
+            "S2: D9: 5 0.00 0.00"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "nw-alias",
+    "title": "Final alias labels",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ],
+      "source_names": [
+        "Alpha",
+        "Beta"
+      ],
+      "destination_names": [
+        "Depot",
+        "Hub",
+        "Port"
+      ]
+    },
+    "file_sha256": "c81b7572ce1da8394819cdebb17d324a7a1350d22f70300682168396cd610063",
+    "method": "northwest",
+    "shown": 1,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_e6815c8623263bd6c947cfab1d70a7578476a104470581eb7488b0dc672b0ee3",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-alias-northwest-initial-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "cf1a310b2ed4cf626921c0b2e6cf674285713c961e53d64e60b5fcdf5dde2922",
+        "original_pdf_sha256": "ec032b8f2c6c945e48bb886be831e514d57080e849ac5533ca74402cf8f1efba",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Final alias labels d1 d2 d3 Supply Name depot hub port s1 alpha 2.00 3.00 1.00 20.00 s2 beta 5.00 4.00 8.00 30.00 Demand 10.00 25.00 15.00",
+          "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method) Title: Final alias labels Iteration 1: ObjVal 230.00 D1 D2 D3 Supply Name Depot Hub Port v1=2.00 v2=3.00 v3=7.00 2.00 3.00 1.00 S1 Alpha u1=0.00 10 10 20 0.00 0.00 6.00 5.00 4.00 8.00 S2 Beta u2=1.00 15 15 30 -2.00 0.00 0.00 Demand 10 25 15"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Final alias labels",
+            "d1 d2 d3 Supply",
+            "Name depot hub port",
+            "s1 alpha 2.00 3.00 1.00 20.00",
+            "s2 beta 5.00 4.00 8.00 30.00",
+            "Demand 10.00 25.00 15.00"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method)",
+            "Title: Final alias labels",
+            "Iteration 1: ObjVal 230.00",
+            "D1 D2 D3 Supply",
+            "Name Depot Hub Port",
+            "v1=2.00 v2=3.00 v3=7.00",
+            "2.00 3.00 1.00",
+            "S1 Alpha u1=0.00 10 10 20",
+            "0.00 0.00 6.00",
+            "5.00 4.00 8.00",
+            "S2 Beta u2=1.00 15 15 30",
+            "-2.00 0.00 0.00",
+            "Demand 10 25 15"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "case": "nw-wide",
+    "title": "Fractional amount threshold",
+    "problem": {
+      "costs": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          99
+        ],
+        [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          0
+        ]
+      ],
+      "supply": [
+        10.984375,
+        4.5
+      ],
+      "demand": [
+        0.125,
+        0.5,
+        0.75,
+        0.984375,
+        1.125,
+        1.5,
+        2.5,
+        3.5,
+        4.5
+      ]
+    },
+    "file_sha256": "032fabd28c79adab64a34a20790e333bb701e833e0aeed89e2557409f1e16a9e",
+    "method": "northwest",
+    "shown": 1,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_48ccbe565ba38eeae712359ce20c8248141b7fb81ad8a969e5abb246a1878413",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-wide-northwest-initial-print",
+      "review": "Original pages visually reviewed; teaching text transcribed independently of clone output."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "d8f18bf2c8e28e90c2a24a60232087f4bf1a5772b1a4d5b442f90469e48caa92",
+        "original_pdf_sha256": "fccd94d1895392cd2578d0ff01bbc4dd738725910a0f31358a283d4413d84b8a",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Fractional amount threshold d1 d2 d3 d4 d5 Name s1 0.00 0.00 0.00 0.00 0.00 s2 99.00 99.00 99.00 99.00 99.00 Demand 0.13 0.50 0.75 0.98 1.13 d6 d7 d8 d9 Supply s1 0.00 0.00 0.00 99.00 10.98 s2 99.00 99.00 99.00 0.00 4.50 Demand 1.50 2.50 3.50 4.50",
+          "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method) Title: Fractional amount threshold Iteration 1: ObjVal 0.00 D1 D2 D3 D4 Name v1=0.00 v2=0.00 v3=0.00 v4=0.00 0.00 0.00 0.00 0.00 S1 u1=0.00 0.125 0.5 0.75 0.984375 0.00 0.00 0.00 0.00 99.00 99.00 99.00 99.00 S2 u2=99.00 0.00 0.00 0.00 0.00 Demand 0.125 0.5 0.75 0.984375 D5 D6 D7 D8 D9 Supply v5=0.00 v6=0.00 v7=0.00 v8=0.00 v9=-99.00 0.00 0.00 0.00 0.00 99.00 S1 1.125 1.5 2.5 3.5 10.984375 0.00 0.00 0.00 0.00 -198.00 99.00 99.00 99.00 99.00 0.00 S2 0 4.5 4.5 0.00 0.00 0.00 0.00 0.00 1.125 1.5 2.5 3.5 4.5"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Fractional amount threshold",
+            "d1 d2 d3 d4 d5",
+            "Name",
+            "s1 0.00 0.00 0.00 0.00 0.00",
+            "s2 99.00 99.00 99.00 99.00 99.00",
+            "Demand 0.13 0.50 0.75 0.98 1.13",
+            "d6 d7 d8 d9 Supply",
+            "s1 0.00 0.00 0.00 99.00 10.98",
+            "s2 99.00 99.00 99.00 0.00 4.50",
+            "Demand 1.50 2.50 3.50 4.50"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method)",
+            "Title: Fractional amount threshold",
+            "Iteration 1: ObjVal 0.00",
+            "D1 D2 D3 D4",
+            "Name",
+            "v1=0.00 v2=0.00 v3=0.00 v4=0.00",
+            "0.00 0.00 0.00 0.00",
+            "S1 u1=0.00 0.125 0.5 0.75 0.984375",
+            "0.00 0.00 0.00 0.00",
+            "99.00 99.00 99.00 99.00",
+            "S2 u2=99.00",
+            "0.00 0.00 0.00 0.00",
+            "Demand 0.125 0.5 0.75 0.984375",
+            "D5 D6 D7 D8 D9 Supply",
+            "v5=0.00 v6=0.00 v7=0.00 v8=0.00 v9=-99.00",
+            "0.00 0.00 0.00 0.00 99.00",
+            "S1 1.125 1.5 2.5 3.5 10.984375",
+            "0.00 0.00 0.00 0.00 -198.00",
+            "99.00 99.00 99.00 99.00 0.00",
+            "S2 0 4.5 4.5",
+            "0.00 0.00 0.00 0.00 0.00",
+            "1.125 1.5 2.5 3.5 4.5"
+          ]
+        ]
+      }
+    ]
+  }
+]

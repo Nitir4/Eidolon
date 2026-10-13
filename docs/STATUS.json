@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: final summary delivered; Transportation printing observation and implementation next",
+  "active_step": "future-scope: Transportation printing locally verified; exact-source three-OS gate next",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Observe and implement Transportation printing, then settings/broader profiles and remaining six OR modules",
+  "next_step": "Complete Transportation printing release gate; then observe settings/broader profiles and remaining modules",
   "foundation_order": [
     1,
     5,
@@ -738,6 +738,21 @@
       },
       "completed_on": "2026-10-14",
       "recovery_note": "Reused private build/transportation-final contained older same-named downloads/reports. Digest rejection prevented acceptance/install of appended archives. Fresh source-specific directory downloaded and audited all six current archives; rejected files preserved."
+    },
+    "printing": {
+      "status": "locally verified; source-pinned delivery gate pending",
+      "spec": "docs/tora-analysis/TRANSPORTATION_PRINTING.md",
+      "evidence": "build/transportation-printing/",
+      "workflows": 11,
+      "jobs": 15,
+      "pages": 26,
+      "ordered_spatial_rows": 278,
+      "native_checks": 17,
+      "local_desktop": "100/100 in124.59s before final Error-state guard; focused final2/2 in1.45s",
+      "local_headless": "38/38 in3.83s",
+      "native_acceptance": "26actualWaylandviews; finalguard source delivered3nonemptyPDFjobs with2/1/1pages toprivatecompatibleCUPSsink; LP/input/tracepreserved",
+      "visual": "26 Poppler pages reviewed; private Ghostscript missing-glyph derivative rejected, cause unresolved",
+      "remaining": "Three-OS/package/install gate; Transportation settings/broader profiles and six other modules"
     }
   }
 }

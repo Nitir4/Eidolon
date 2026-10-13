@@ -89,7 +89,7 @@ def manifest(stage, qt_root, version, target):
     data = {'application': 'ToraClone', 'version': version, 'qt_version': qt_version,
             'qt_legal_bundle': 'licenses/Qt-' + qt_version
                                if (stage / 'licenses' / ('Qt-' + qt_version) / 'SOURCES.json').is_file() else None,
-            'platform': target, 'stage': 'Native LP input, All-slack, M-method, Two-phase, Bounded, Dual, Graphical, Final solution, Sensitivity; Transportation input, EditGrid, North-west/Least-cost/Vogel, multipliers, manual-loop feedback and final summary',
+            'platform': target, 'stage': 'Native LP input, All-slack, M-method, Two-phase, Bounded, Dual, Graphical, Final solution, Sensitivity; Transportation input, EditGrid, North-west/Least-cost/Vogel, multipliers, manual-loop feedback, final summary and printing',
             'files': {str(p.relative_to(stage)).replace('\\', '/'): digest(p)
                       for p in sorted(stage.rglob('*')) if p.is_file()}}
     (stage / 'package-manifest.json').write_text(json.dumps(data, indent=2) + '\n')
