@@ -31,6 +31,10 @@ struct Tableau {
     double objective=0;
     std::optional<Pivot> nextPivot;
 };
+enum class LoopRole { None, Entering, Leaving, Other };
+// Original manual clicks provide feedback for the computed improvement loop.
+// They do not select a different pivot or change allocation state.
+LoopRole loopRole(const Tableau& tableau, Cell cell);
 struct Display {
     std::string label, objective;
     std::vector<std::vector<std::string>> costs, shipments, reducedCosts;

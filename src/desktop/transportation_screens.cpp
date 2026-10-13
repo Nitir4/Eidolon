@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <exception>
 #include <memory>
+#include <set>
 
 namespace tora::desktop {
 namespace {
@@ -370,8 +371,16 @@ QWidget* iterations(ApplicationShell& shell)
     auto* anchor=new QComboBox;anchor->setObjectName(QStringLiteral("transport-multiplier-anchor"));controls->addWidget(anchor);
     layout->addLayout(controls);
     auto* grid = table(page, "transport-tableau"); layout->addWidget(grid, 1);
+    auto* hint=new QLabel(QStringLiteral("Click shipment cells to check the improvement loop. Next or All can be used without selecting cells."));
+    hint->setWordWrap(true);layout->insertWidget(3,hint);
     auto shown = std::make_shared<std::size_t>(1);
-    const auto render = [&controller, grid, next, all, shown, title, heading, anchor] {
+    auto attempt=std::make_shared<std::set<std::pair<std::size_t,std::size_t>>>();
+    const auto mark=[](QTableWidgetItem* item,transportation::LoopRole role) {
+        if(role==transportation::LoopRole::Entering)item->setBackground(QColor(colors::entering));
+        else if(role==transportation::LoopRole::Leaving)item->setBackground(QColor(colors::leaving));
+        else if(role==transportation::LoopRole::Other)item->setBackground(QColor(colors::header));
+    };
+    const auto render = [&controller, grid, next, all, shown, title, heading, anchor, attempt, mark] {
         heading->setText(controller.method()==transportation::StartMethod::Vogel?
                          QStringLiteral("TRANSPORTATION TABLEAU - (Vogel's Method)"):
                          controller.method()==transportation::StartMethod::LeastCost?
@@ -424,19 +433,13 @@ QWidget* iterations(ApplicationShell& shell)
                     auto* shipment=put(*grid,row+1,j+3,text(d.shipments[r][c]));
                     QFont large=grid->font(); large.setPointSizeF(large.pointSizeF()*1.2); large.setBold(true); shipment->setFont(large);
                     put(*grid,row+2,j+3,text(d.reducedCosts[r][c]));
-                    if (k+1<count && history[k].nextPivot) {
-                        const auto& pivot=*history[k].nextPivot;
-                        for (const auto& cell:pivot.loop) if (cell.source==r && cell.destination==c)
-                            shipment->setBackground(QColor(colors::header));
-                        if (pivot.entering.source==r && pivot.entering.destination==c) shipment->setBackground(QColor(colors::entering));
-                        if (pivot.leaving.source==r && pivot.leaving.destination==c) shipment->setBackground(QColor(colors::leaving));
-                    }
+                    if(k+1<count || attempt->count({r,c}))mark(shipment,transportation::loopRole(history[k],{r,c}));
                 }
             }
         }
         grid->fitColumns(3,n);
     };
-    QObject::connect(&controller, &TransportationController::changed, page, [shown,render] { *shown=1; render(); });
+    QObject::connect(&controller, &TransportationController::changed, page, [shown,attempt,render] { *shown=1;attempt->clear();render(); });
     QObject::connect(&controller, &TransportationController::multipliersChanged, page, render);
     QObject::connect(anchor,qOverload<int>(&QComboBox::activated),page,[&controller,render](int index) {
         const auto m=static_cast<int>(controller.problem().supply.size());QString error;
@@ -446,10 +449,20 @@ QWidget* iterations(ApplicationShell& shell)
             controller.dialogs().showError(QStringLiteral("Initialize u or v"),error);render();
         }
     });
-    const auto advance = [&controller, &shell, shown, render, grid](bool complete) {
+    QObject::connect(grid,&QTableWidget::cellClicked,page,[&controller,grid,shown,attempt,mark](int row,int col) {
+        const auto count=std::min(*shown,controller.trace().size());if(!count)return;
+        const auto& p=controller.problem();const int m=static_cast<int>(p.supply.size()),n=static_cast<int>(p.demand.size());
+        const int local=row-static_cast<int>(count-1)*(3*m+4);
+        if(local<4 || (local-4)%3 || (local-4)/3>=m || col<3 || col>=n+3)return;
+        const auto source=static_cast<std::size_t>((local-4)/3),destination=static_cast<std::size_t>(col-3);
+        const auto role=transportation::loopRole(controller.trace()[count-1],{source,destination});
+        if(role==transportation::LoopRole::None)return;
+        attempt->emplace(source,destination);mark(grid->item(row,col),role);grid->clearSelection();
+    });
+    const auto advance = [&controller, &shell, shown, attempt, render, grid](bool complete) {
         const auto total=controller.trace().size();
         if (*shown>=total) return;
-        controller.lockMultipliers();*shown=complete ? total : *shown+1; render();
+        controller.lockMultipliers();attempt->clear();*shown=complete ? total : *shown+1; render();
         if (grid->rowCount()) grid->scrollToItem(grid->item(grid->rowCount()-1,1));
         if (*shown==total) QMessageBox::information(&shell,QStringLiteral("Optimal Tableau"),
                                                    QStringLiteral("Iteration %1 is optimal").arg(total));

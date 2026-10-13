@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation multiplier initialization delivered; manual-loop feedback observed and next",
+  "active_step": "future-scope: Transportation manual feedback locally verified; source-pinned delivery gate pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -673,6 +673,20 @@
         "windows-x86_64": "402cd1db21d5a887df0491b48b56b2db51559ac1e84429e3032a59e64f186044"
       },
       "completed_on": "2026-10-13"
+    },
+    "manual": {
+      "status": "locally verified; delivery gate pending",
+      "spec": "docs/tora-analysis/TRANSPORTATION_MANUAL.md",
+      "evidence": "build/transportation-manual/",
+      "native_transportation_checks_per_scale": 76,
+      "manual_resolution_renders": 12,
+      "scope": "Computed-loop shipment feedback; automatic progression unchanged; tied alternate entering ignored as observed",
+      "remaining": "Final summary, printing/settings, broader profiles and six other modules",
+      "local_desktop": "92/92in187.86s; final cross-method focused5/5in25.05s after tests-only extension",
+      "local_headless": "36/36in4.39s; final extended core-focused1/1in0.01s",
+      "native_acceptance": "25actualWaylandviews; LP preserved; entering feedback and anchor preservation passed",
+      "regression": "Isolated pre-feature94de057with corrected tests:73passed,three manual checks fail on absentfeedback; current source passes",
+      "source_methods": "North-west,Least-cost,Vogel original feedback directly observed"
     }
   }
 }

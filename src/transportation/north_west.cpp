@@ -210,6 +210,13 @@ std::string quantity(double value) {
     if(result.ec!=std::errc{})throw std::runtime_error("Cannot format shipment.");
     return {buffer,result.ptr};
 }
+LoopRole loopRole(const Tableau& t,Cell cell) {
+    if(!t.nextPivot || cell.source>=t.shipments.size() || cell.destination>=t.shipments[cell.source].size())return LoopRole::None;
+    const auto same=[cell](Cell other) {return cell.source==other.source && cell.destination==other.destination;};
+    if(same(t.nextPivot->entering))return LoopRole::Entering;
+    if(same(t.nextPivot->leaving))return LoopRole::Leaving;
+    return std::any_of(t.nextPivot->loop.begin(),t.nextPivot->loop.end(),same)?LoopRole::Other:LoopRole::None;
+}
 Tableau initializeMultipliers(const Problem& p,const Tableau& t,MultiplierAnchor anchor) {
     validate(p);
     const auto m=p.supply.size(),n=p.demand.size();

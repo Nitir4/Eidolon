@@ -1,6 +1,7 @@
 #include "application_shell.hpp"
 #include "transportation_screens.hpp"
 #include "ui_font.hpp"
+#include "ui_colors.hpp"
 #include <QFontMetrics>
 #include <QFile>
 #include <QJsonArray>
@@ -22,6 +23,73 @@ using namespace tora::desktop;
 class DesktopTransportation: public QObject {
     Q_OBJECT
 private slots:
+    void manualLoopFeedback() {
+        ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);
+        c.loadExample();QString error;QVERIFY(c.solve(error));QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.show();QTest::qWait(20);
+        auto* grid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));QVERIFY(grid);
+        const auto click=[grid](int row,int col) {QTest::mouseClick(grid->viewport(),Qt::LeftButton,Qt::NoModifier,grid->visualItemRect(grid->item(row,col)).center());};
+        const auto input=c.document()->encode();
+        click(3,5);QCOMPARE(grid->item(4,5)->background().color(),QColor(colors::surface)); // cost row ignored
+        click(5,5);QCOMPARE(grid->item(4,5)->background().color(),QColor(colors::surface)); // reduced row ignored
+        click(7,3);QCOMPARE(grid->item(7,3)->background().color(),QColor(colors::surface)); // wrong shipment
+        click(7,5);QCOMPARE(grid->item(7,5)->background().color(),QColor(colors::header));
+        click(4,4);QCOMPARE(grid->item(4,4)->background().color(),QColor(colors::leaving));
+        click(4,5);QCOMPARE(grid->item(4,5)->background().color(),QColor(colors::entering));
+        click(4,5);QCOMPARE(grid->item(4,5)->background().color(),QColor(colors::entering));
+        auto* anchor=shell.currentContent()->findChild<QComboBox*>(QStringLiteral("transport-multiplier-anchor"));QVERIFY(anchor);
+        anchor->setFocus();QTest::keyClick(anchor,Qt::Key_End);
+        QCOMPARE(grid->item(4,5)->background().color(),QColor(colors::entering));
+        QCOMPARE(grid->item(4,4)->background().color(),QColor(colors::leaving));
+        QCOMPARE(c.document()->encode(),input);QVERIFY(!c.dirty());QCOMPARE(c.trace()[0].objective,230.0);
+        const auto base=qEnvironmentVariable("TORA_UI_CAPTURES");
+        for(const auto physical:{QSize(1366,768),QSize(1920,1080),QSize(3840,2160)}) {
+            const auto scale=shell.devicePixelRatioF();shell.resize(qRound(physical.width()/scale),qRound(physical.height()/scale));QTest::qWait(20);
+            for(auto* button:shell.currentContent()->findChildren<QPushButton*>())QVERIFY(button->width()>=button->minimumSizeHint().width());
+            if(!base.isEmpty()) {
+                const auto folder=base+QStringLiteral("/transportation-manual");QVERIFY(QDir().mkpath(folder));
+                QVERIFY(shell.grab().save(folder+QStringLiteral("/manual-%1x%2-%3.png").arg(physical.width()).arg(physical.height()).arg(scale)));
+            }
+        }
+    }
+    void partialManualNextAndReset() {
+        ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);
+        c.loadExample();QString error;QVERIFY(c.solve(error));QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.show();QTest::qWait(20);
+        auto* grid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));QVERIFY(grid);
+        const auto click=[grid](int row,int col) {grid->scrollToItem(grid->item(row,col));QTest::qWait(10);QTest::mouseClick(grid->viewport(),Qt::LeftButton,Qt::NoModifier,grid->visualItemRect(grid->item(row,col)).center());};
+        click(4,5);
+        auto* next=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));QVERIFY(next);next->click();
+        QCOMPARE(grid->rowCount(),20);QCOMPARE(grid->item(10,2)->text(),QStringLiteral("170.00"));
+        QCOMPARE(grid->item(4,4)->background().color(),QColor(colors::leaving)); // automatic completion
+        click(17,3);QCOMPARE(grid->item(17,3)->background().color(),QColor(colors::entering));
+        QVERIFY(c.solve(error));QCOMPARE(grid->rowCount(),10);QCOMPARE(grid->item(4,5)->background().color(),QColor(colors::surface));
+        QVERIFY(c.solve(error,tora::transportation::StartMethod::LeastCost));
+        click(4,5);QCOMPARE(grid->item(4,5)->background().color(),QColor(colors::surface));QVERIFY(!next->isEnabled());
+    }
+    void manualTieAndZeroFeedback() {
+        ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);QString error;
+        auto p=tora::transportation::Problem::blank(3,3);p.costs={{6,6,2},{1,5,5},{7,1,3}};p.supply={2,9,3};p.demand={1,8,5};c.load(p);QVERIFY(c.solve(error));
+        QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.show();QTest::qWait(20);
+        auto* grid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));QVERIFY(grid);
+        const auto click=[&grid](int row,int col) {QTest::mouseClick(grid->viewport(),Qt::LeftButton,Qt::NoModifier,grid->visualItemRect(grid->item(row,col)).center());};
+        click(7,3);QCOMPARE(grid->item(7,3)->background().color(),QColor(colors::surface)); // tied alternate entering ignored
+        click(7,5);QCOMPARE(grid->item(7,5)->background().color(),QColor(colors::header));
+        p.costs={{7,0,8},{9,5,3},{9,0,5}};p.supply={2,3,8};p.demand={6,4,3};c.load(p);QVERIFY(c.solve(error));
+        click(10,5);QCOMPARE(grid->item(10,5)->background().color(),QColor(colors::header));
+        click(7,3);QCOMPARE(grid->item(7,3)->background().color(),QColor(colors::leaving));
+        p=tora::transportation::Problem::blank(2,3);p.costs={{2,3,1},{5,4,8}};p.supply={0,50};p.demand={10,25,15};c.load(p);QVERIFY(c.solve(error));
+        click(4,3);QCOMPARE(grid->item(4,3)->text(),QStringLiteral("0"));QCOMPARE(grid->item(4,3)->background().color(),QColor(colors::leaving));
+        p.costs={{2,2,5},{2,4,1}};p.supply={17,23};p.demand={11,13,16};c.load(p);
+        QVERIFY(c.solve(error,tora::transportation::StartMethod::LeastCost));QVERIFY(shell.navigate(QStringLiteral("transportation/leastcost")));
+        grid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));QVERIFY(grid);QTest::qWait(10);
+        click(7,3);QCOMPARE(grid->item(7,3)->background().color(),QColor(colors::entering));
+        click(7,4);QCOMPARE(grid->item(7,4)->background().color(),QColor(colors::leaving));
+        p=tora::transportation::Problem::blank(3,3);p.costs={{7,0,8},{9,5,3},{9,0,5}};p.supply={2,3,8};p.demand={6,4,3};c.load(p);
+        QVERIFY(c.solve(error,tora::transportation::StartMethod::Vogel));QVERIFY(shell.navigate(QStringLiteral("transportation/vogel")));
+        grid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));QVERIFY(grid);QTest::qWait(10);
+        click(4,3);QCOMPARE(grid->item(4,3)->background().color(),QColor(colors::entering));
+        click(4,4);QCOMPARE(grid->item(4,4)->background().color(),QColor(colors::leaving));
+        click(10,5);QCOMPARE(grid->item(10,5)->background().color(),QColor(colors::surface));
+    }
     void multiplierAnchorLifecycle() {
         using namespace tora::transportation;
         ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);

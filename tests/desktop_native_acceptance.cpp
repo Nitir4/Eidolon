@@ -6,6 +6,7 @@
 #include "lp_printing.hpp"
 #include "lp_screens.hpp"
 #include "ui_font.hpp"
+#include "ui_colors.hpp"
 #include "transportation_screens.hpp"
 #include <QApplication>
 #include <QCommandLineParser>
@@ -103,11 +104,18 @@ int main(int argc, char** argv) {
             QString error;require(transport.solve(error),"Transportation solve failed");
             require(shell.navigate(QStringLiteral("transportation/northwest")),"Transportation iteration route failed");
             capture(QStringLiteral("transportation-initial"),QStringLiteral("transportation/northwest"));
+            auto* tableauGrid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));
+            require(tableauGrid && tableauGrid->item(4,5),"Native manual tableau missing");
+            QTest::mouseClick(tableauGrid->viewport(),Qt::LeftButton,Qt::NoModifier,tableauGrid->visualItemRect(tableauGrid->item(4,5)).center());
+            require(tableauGrid->item(4,5)->background().color()==QColor(colors::entering),"Native entering feedback missing");
+            capture(QStringLiteral("transportation-manual-entering"),QStringLiteral("transportation/northwest"));
             auto* anchor=shell.currentContent()->findChild<QComboBox*>(QStringLiteral("transport-multiplier-anchor"));
             require(anchor && anchor->count()==5 && anchor->isEnabled(),"Native multiplier anchor missing");
             anchor->setFocus();QTest::keyClick(anchor,Qt::Key_End);
             require(transport.trace()[0].u==std::vector<double>({7,8}) && transport.trace()[0].v[2]==0,"Native zero anchor mismatch");
             capture(QStringLiteral("transportation-anchor-initial"),QStringLiteral("transportation/northwest"));
+            require(tableauGrid->item(4,5)->background().color()==QColor(colors::entering),"Native anchor erased manual feedback");
+            capture(QStringLiteral("transportation-manual-anchor-preserved"),QStringLiteral("transportation/northwest"));
             auto* anchorNext=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));
             require(anchorNext && anchorNext->isEnabled(),"Native anchor Next missing");anchorNext->click();
             require(!anchor->isEnabled() && transport.trace()[1].u[0]==1,"Native anchor progression mismatch");

@@ -40,6 +40,11 @@ tora_target_defaults(transportation_multipliers)
 target_link_libraries(transportation_multipliers PRIVATE tora::transportation)
 add_test(NAME transportation.multipliers COMMAND transportation_multipliers)
 set_tests_properties(transportation.multipliers PROPERTIES TIMEOUT 15)
+add_executable(transportation_manual transportation_manual.cpp)
+tora_target_defaults(transportation_manual)
+target_link_libraries(transportation_manual PRIVATE tora::transportation)
+add_test(NAME transportation.manual COMMAND transportation_manual)
+set_tests_properties(transportation.manual PROPERTIES TIMEOUT 15)
 add_test(NAME transportation.multipliers.goldens COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation_multipliers.py" "$<TARGET_FILE:transportation_probe>"
     "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-multipliers.json"
