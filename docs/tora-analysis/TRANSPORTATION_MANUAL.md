@@ -107,3 +107,17 @@ The corrected regression tests on isolated pre-feature source94de057 fail exactl
 The production-source full desktop suite passes92/92in187.86seconds; Qt-free full suite passes36/36in4.39seconds. Final cross-method test extensions were focused-checked after that full suite; production code did not change. Actual Wayland acceptance passes25views with LP input preserved. The three-OS/package/install gate is still pending.
 
 Nonoptimal Least-cost case10 shows enteringS2D1green and leavingS2D2red under REAev_e1a8ca246454c74de40e763b8e99d3b6cb1480f8f4612164fed6173965605b2f. Vogel case17 shows enteringS1D1green, leavingS1D2red and nonloopbasiczeroS3D3unchanged under REAev_4096e6f8a6cb95b0235565cb292ef613dea551e84afed1dc3054004b3148e871. Both child exits are zero. These observations support the shared native feedback path across all three starts.
+
+
+## Delivery gate attempts
+
+Source22ce1fc passed92/92CTest on each OS in the initial run38351356443. Windows/macOS finished successfully. Linux packaging passed, then headless Wayland deployed welcome startup timed out after45seconds with an empty application log. The Linux package upload was skipped. Its five available archives and failed startup/server logs are retained; no initial artifact was installed. The cause is not established.
+
+A fresh full matrix at unchanged source is running as38353276843, with separate evidence build/transportation-manual-final/ and intended packages dist/transportation/manual-final-verified/. This tests independent runner state without a guessed product fix or deleting failed-run evidence. Until the complete audit/install succeeds, the installed release remains e8e2c23.
+
+
+## Final delivery
+
+The fresh exact-source [gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38353276843) passed all three OS jobs,92CTests each/276total,76Transportationchecks per scale and all existing comparisons. All36manual renders were reviewed, including small200%images on eachOS. Package/legal/installer/PDF audits and281Linuxpayloadhashes plus actualWayland/xcbstartup passed. Six artifact archives passedGitHubdigest/integrity checks.
+
+Source22ce1fc is installed through tora-clone and its exact AppImage identity was verified in a nativeWaylandwindow. SHA256 1d683908734f73d2107d5398637559e4312eb2f49acdc0c928eafdc2fa17983e. Prior releases/windows and firstfailedgate artifacts/logs are preserved. The initialLinuxheadlessstartup timeout did not recur on new runners; its rootcause remains unknown. Newrun evidence is build/transportation-manual-final/; packages dist/transportation/manual-final-verified/.

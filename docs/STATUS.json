@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation manual feedback locally verified; source-pinned delivery gate pending",
+  "active_step": "future-scope: manual feedback delivered; final summary next",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Implement observed manual-loop shipment feedback with independent tests and its own delivery gate; continue final/printing/settings and remaining modules",
+  "next_step": "Implement nineteen observed final-summary cases with independent tests, then verify/packages/install; continue printing/settings and remaining modules",
   "foundation_order": [
     1,
     5,
@@ -571,7 +571,7 @@
         "windows-x86_64": "a6480f201748b38a46c186183875bc865919542b4aa0fb254aa00ecb3e202a49"
       }
     },
-    "active_cycle": "Transportation manual-loop feedback",
+    "active_cycle": "Transportation final summary",
     "input_editing": {
       "status": "verified, packaged and installed for the observed input-editing profile",
       "spec": "docs/tora-analysis/TRANSPORTATION_EDITING.md",
@@ -675,7 +675,7 @@
       "completed_on": "2026-10-13"
     },
     "manual": {
-      "status": "locally verified; delivery gate pending",
+      "status": "verified, packaged and installed for observed computed-loop feedback",
       "spec": "docs/tora-analysis/TRANSPORTATION_MANUAL.md",
       "evidence": "build/transportation-manual/",
       "native_transportation_checks_per_scale": 76,
@@ -686,7 +686,27 @@
       "local_headless": "36/36in4.39s; final extended core-focused1/1in0.01s",
       "native_acceptance": "25actualWaylandviews; LP preserved; entering feedback and anchor preservation passed",
       "regression": "Isolated pre-feature94de057with corrected tests:73passed,three manual checks fail on absentfeedback; current source passes",
-      "source_methods": "North-west,Least-cost,Vogel original feedback directly observed"
+      "source_methods": "North-west,Least-cost,Vogel original feedback directly observed",
+      "source_commit": "22ce1fc15cca36545f28499345d98d53e96106b0",
+      "initial_ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38351356443",
+      "initial_ci_result": "92/92tests eachOS; Windows/macOScomplete; Linux packagingpassed then headlessWaylandwelcome startup45stimeoutwithblankapplog; Linuxartifactwithheld, no install",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38353276843",
+      "delivery_evidence": "build/transportation-manual-final/",
+      "release_state": "Fresh exact-source AppImage installed and verified in nativeWayland; earlierfailedrun retained/uninstalled",
+      "retry_reason": "Fresh independent runners at unchangedsource; cause not established from first timeout logs; failedrun/fiveverifiedartifacts preserved",
+      "ci_validation": "92/92CTest perWindows/Linux/macOS,276total,zero failures/skips;34637comparisonrecords/OS;76TransportationQtchecks/scale;12manualrenders/OS",
+      "packages": "dist/transportation/manual-final-verified/",
+      "test_reports": "build/transportation-manual-final/ci-final/",
+      "delivery_audit": "build/transportation-manual-final/{visual-review,ci-verified,packages-verified,linux-payload-verified,installation,installed-window}.json",
+      "installed_source": "22ce1fc15cca36545f28499345d98d53e96106b0",
+      "installed_linux_sha256": "1d683908734f73d2107d5398637559e4312eb2f49acdc0c928eafdc2fa17983e",
+      "installed_launcher": "/home/nitir505/.local/bin/tora-clone",
+      "package_sha256": {
+        "macos-universal": "75d21a8e796b321a4e0763c35431111e393289931e8c39565876947857d25bb0",
+        "linux-x86_64": "1d683908734f73d2107d5398637559e4312eb2f49acdc0c928eafdc2fa17983e",
+        "windows-x86_64": "bc4a8bd0106e42472c6cb869f509e560958041d6f6a75d7c44762f4ab6cf05bd"
+      },
+      "completed_on": "2026-10-13"
     }
   }
 }

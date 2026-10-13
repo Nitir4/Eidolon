@@ -185,3 +185,6 @@ Transportation **EditGrid** is now installed: click a source/destination heading
 
 
 Transportation **Initialize u or v** is now installed. Select any source or destination zero anchor before advancing the first tableau. The anchor persists through later iterations; already-optimal starts still permit selection. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38348718758) passes 91 tests on each OS. See [the multiplier contract](docs/tora-analysis/TRANSPORTATION_MULTIPLIERS.md) for observed formatting and control behavior. Manual-loop feedback and the remaining application modules are next.
+
+
+Transportation manual-loop feedback is installed. Click shipment cells to check the computed loop: entering, chosen leaving and other loop cells receive feedback in any order; incorrect cells remain unchanged. Next/All work with partial or no selection. [The final gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38353276843) passes92tests perOS. See [the observed contract](docs/tora-analysis/TRANSPORTATION_MANUAL.md). Final summary, printing/settings and other OR modules remain underway.
