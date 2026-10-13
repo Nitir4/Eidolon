@@ -48,12 +48,27 @@ bool TransportationController::reject(QString& error, const QString& message) {
 }
 void TransportationController::modified(bool resetInput) {
     dirty_ = true; trace_.clear(); method_ = transportation::StartMethod::NorthWest;
+    resetMultipliers();
     if (resetInput) emit inputReset();
     emit changed();
 }
 void TransportationController::resetEditState() {
+    resetMultipliers();
     selectionAxis_.reset(); selection_ = -1; insertBefore_ = false;
     clipboardAxis_.reset(); clipboard_.clear(); undo_.reset(); emit selectionChanged();
+}
+void TransportationController::resetMultipliers() {
+    multiplierAnchor_={};multipliersRefreshed_=false;multipliersLocked_=false;
+}
+bool TransportationController::initializeMultiplier(transportation::MultiplierAnchor anchor, QString& error) {
+    error.clear();
+    if(!canInitializeMultiplier())return reject(error,QStringLiteral("Initialize a multiplier before advancing the first tableau."));
+    try {
+        auto candidate=trace_;
+        for(auto& tableau:candidate)tableau=transportation::initializeMultipliers(problem(),tableau,anchor);
+        trace_=std::move(candidate);multiplierAnchor_=anchor;multipliersRefreshed_=true;
+        emit multipliersChanged();return true;
+    } catch(const std::exception& e) {return reject(error,QString::fromUtf8(e.what()));}
 }
 bool TransportationController::hasSelection() const {
     if (!document_ || !selectionAxis_ || selection_ < 0) return false;
@@ -198,7 +213,7 @@ bool TransportationController::solve(QString& error, transportation::StartMethod
         const auto& p = problem(); auto result = transportation::solve(p, method);
         const auto cellsPerTable = (3*p.supply.size()+4)*(p.demand.size()+4);
         if (result.size() > 250000/cellsPerTable) return reject(error, QStringLiteral("This Transportation preview limits the displayed trace to 250,000 cells. The problem requires a larger trace."));
-        trace_ = std::move(result); method_ = method; emit changed(); return true;
+        trace_ = std::move(result); method_ = method; resetMultipliers(); emit changed(); return true;
     } catch (const std::exception& e) { return reject(error, QString::fromUtf8(e.what())); }
 }
 TransportationController& transportationController(ApplicationShell& shell) {

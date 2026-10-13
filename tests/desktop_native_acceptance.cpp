@@ -25,6 +25,7 @@
 #include <QTest>
 #include <QTableWidget>
 #include <QTimer>
+#include <QComboBox>
 #include <stdexcept>
 using namespace tora::desktop;
 
@@ -102,11 +103,22 @@ int main(int argc, char** argv) {
             QString error;require(transport.solve(error),"Transportation solve failed");
             require(shell.navigate(QStringLiteral("transportation/northwest")),"Transportation iteration route failed");
             capture(QStringLiteral("transportation-initial"),QStringLiteral("transportation/northwest"));
+            auto* anchor=shell.currentContent()->findChild<QComboBox*>(QStringLiteral("transport-multiplier-anchor"));
+            require(anchor && anchor->count()==5 && anchor->isEnabled(),"Native multiplier anchor missing");
+            anchor->setFocus();QTest::keyClick(anchor,Qt::Key_End);
+            require(transport.trace()[0].u==std::vector<double>({7,8}) && transport.trace()[0].v[2]==0,"Native zero anchor mismatch");
+            capture(QStringLiteral("transportation-anchor-initial"),QStringLiteral("transportation/northwest"));
+            auto* anchorNext=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));
+            require(anchorNext && anchorNext->isEnabled(),"Native anchor Next missing");anchorNext->click();
+            require(!anchor->isEnabled() && transport.trace()[1].u[0]==1,"Native anchor progression mismatch");
+            capture(QStringLiteral("transportation-anchor-next"),QStringLiteral("transportation/northwest"));
             auto* all=shell.findChild<QPushButton*>(QStringLiteral("transport-all"));require(all && all->isEnabled(),"Transportation All missing");
             QTimer::singleShot(0,[]{for(auto* widget:QApplication::topLevelWidgets())if(auto* box=qobject_cast<QMessageBox*>(widget))box->accept();});
             all->click();require(!all->isEnabled(),"Transportation did not terminate");
             require(transport.trace().size()==3 && transport.trace().back().objective==150,"Transportation pilot mismatch");
             capture(QStringLiteral("transportation-optimal"),QStringLiteral("transportation/northwest"));
+            require(transport.trace().back().u==std::vector<double>({1,4}) && transport.trace().back().v[2]==0,"Native terminal anchor mismatch");
+            capture(QStringLiteral("transportation-anchor-optimal"),QStringLiteral("transportation/northwest"));
             auto tie=tora::transportation::Problem::blank(2,3);
             tie.title="Least-cost tie example";tie.costs={{2,2,5},{2,4,1}};tie.supply={17,23};tie.demand={11,13,16};
             transport.load(std::move(tie));require(transport.solve(error,tora::transportation::StartMethod::LeastCost),"Least-cost solve failed");

@@ -210,12 +210,46 @@ std::string quantity(double value) {
     if(result.ec!=std::errc{})throw std::runtime_error("Cannot format shipment.");
     return {buffer,result.ptr};
 }
-Display display(const Problem& p,const Tableau& t,std::size_t iteration) {
+Tableau initializeMultipliers(const Problem& p,const Tableau& t,MultiplierAnchor anchor) {
+    validate(p);
+    const auto m=p.supply.size(),n=p.demand.size();
+    if ((anchor.axis!=MultiplierAxis::Source && anchor.axis!=MultiplierAxis::Destination) ||
+        anchor.index>=(anchor.axis==MultiplierAxis::Source?m:n))
+        throw std::invalid_argument("Select a valid source or destination multiplier.");
+    if(t.shipments.size()!=m)throw std::invalid_argument("Multiplier basis has incorrect dimensions.");
+    std::vector<std::vector<std::pair<std::size_t,double>>> graph(m+n);
+    std::size_t edges=0;
+    for(std::size_t i=0;i<m;++i) {
+        if(t.shipments[i].size()!=n)throw std::invalid_argument("Multiplier basis has incorrect dimensions.");
+        for(std::size_t j=0;j<n;++j)if(t.shipments[i][j]) {
+            finite(*t.shipments[i][j]);++edges;
+            graph[i].push_back({m+j,p.costs[i][j]});graph[m+j].push_back({i,p.costs[i][j]});
+        }
+    }
+    if(edges!=m+n-1)throw std::invalid_argument("Multiplier basis must be a connected tree.");
+    std::vector<double> values(m+n,std::numeric_limits<double>::quiet_NaN());
+    const auto root=anchor.axis==MultiplierAxis::Source?anchor.index:m+anchor.index;
+    values[root]=0;
+    std::queue<std::size_t> pending;pending.push(root);std::size_t visited=0;
+    while(!pending.empty()) {
+        const auto current=pending.front();pending.pop();++visited;
+        for(const auto& [other,cost]:graph[current])if(!std::isfinite(values[other])) {
+            values[other]=cost-values[current];finite(values[other]);pending.push(other);
+        }
+    }
+    if(visited!=m+n)throw std::invalid_argument("Multiplier basis must be a connected tree.");
+    auto result=t;
+    result.u.assign(values.begin(),values.begin()+static_cast<std::ptrdiff_t>(m));
+    result.v.assign(values.begin()+static_cast<std::ptrdiff_t>(m),values.end());
+    return result;
+}
+Display display(const Problem& p,const Tableau& t,std::size_t iteration,bool shortMultipliers) {
     const core::NumberFormatter formatter({core::Notation::Decimal,5,2});
+    const auto multiplier=[&](double value) {return shortMultipliers?quantity(value):formatter.format(value);};
     Display result;result.label="Iter"+std::to_string(iteration);result.objective=formatter.format(t.objective);
     for(std::size_t i=0;i<p.supply.size();++i) {
         result.costs.emplace_back();result.shipments.emplace_back();result.reducedCosts.emplace_back();
-        result.u.push_back("u"+std::to_string(i+1)+"="+formatter.format(t.u.at(i)));
+        result.u.push_back("u"+std::to_string(i+1)+"="+multiplier(t.u.at(i)));
         result.supply.push_back(quantity(p.supply[i]));
         for(std::size_t j=0;j<p.demand.size();++j) {
             result.costs.back().push_back(formatter.format(p.costs[i][j]));
@@ -225,7 +259,7 @@ Display display(const Problem& p,const Tableau& t,std::size_t iteration) {
         }
     }
     for(std::size_t j=0;j<p.demand.size();++j) {
-        result.v.push_back("v"+std::to_string(j+1)+"="+formatter.format(t.v.at(j)));
+        result.v.push_back("v"+std::to_string(j+1)+"="+multiplier(t.v.at(j)));
         result.demand.push_back(quantity(p.demand[j]));
     }
     return result;

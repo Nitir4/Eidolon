@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation EditGrid delivered; multiplier initialization observations in progress",
+  "active_step": "future-scope: Transportation multipliers locally verified; three-OS/package/install gate pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Implement observed zero-multiplier initialization with independent tests and a separate delivery gate; continue whole-app inventory",
+  "next_step": "Complete multiplier local/native/three-OS/package/install gate, then implement observed manual loops",
   "foundation_order": [
     1,
     5,
@@ -642,6 +642,21 @@
         "windows-x86_64": "965dadbfe71222ad9a870cb8ab4781edee79fde4a419f46e7a354e64df7477f6"
       },
       "completed_on": "2026-10-13"
+    },
+    "multipliers": {
+      "status": "locally verified; delivery gate pending",
+      "spec": "docs/tora-analysis/TRANSPORTATION_MULTIPLIERS.md",
+      "evidence": "build/transportation-multipliers/",
+      "scenarios": 8,
+      "tableaus": 10,
+      "exact_fields": 311,
+      "native_transportation_checks_per_scale": 73,
+      "anchor_resolution_renders": 12,
+      "focused_local": "6/6 in17.93s",
+      "remaining": "Manual loops, final summary, printing/settings and six other OR modules",
+      "local_desktop": "91/91 in157.82s",
+      "local_headless": "35/35 in3.39s",
+      "native_acceptance": "23 actual Wayland views; LP preserved; zero-anchor refresh/Next/terminal and structural save/reopen passed"
     }
   }
 }

@@ -37,6 +37,11 @@ public:
     bool insertSelection(QString& error);
     bool deleteSelection(QString& error);
     bool undo(QString& error);
+    bool initializeMultiplier(transportation::MultiplierAnchor anchor, QString& error);
+    transportation::MultiplierAnchor multiplierAnchor() const { return multiplierAnchor_; }
+    bool multipliersRefreshed() const { return multipliersRefreshed_; }
+    bool canInitializeMultiplier() const { return !trace_.empty() && !multipliersLocked_; }
+    void lockMultipliers() { multipliersLocked_=true; }
     InputDialogs& dialogs() { return dialogs_; }
     const compat::TransportationDocument* document() const { return document_ ? &*document_ : nullptr; }
     bool dirty() const { return dirty_; }
@@ -53,10 +58,14 @@ signals:
     void cellChanged(int row, int column);
     void commitRequested();
     void selectionChanged();
+    void multipliersChanged();
 private:
     bool reject(QString& error, const QString& message);
     void modified(bool resetInput = true);
     void resetEditState();
+    void resetMultipliers();
+    transportation::MultiplierAnchor multiplierAnchor_;
+    bool multipliersRefreshed_=false, multipliersLocked_=false;
     enum class GridOperation { Insert, Delete, Paste };
     bool changeSelection(QString& error, GridOperation operation);
     std::optional<Axis> selectionAxis_, clipboardAxis_;

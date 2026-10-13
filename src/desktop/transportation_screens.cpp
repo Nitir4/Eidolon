@@ -26,6 +26,7 @@
 #include <QStyledItemDelegate>
 #include <QSignalBlocker>
 #include <QTimer>
+#include <QComboBox>
 #include <QVBoxLayout>
 #include <algorithm>
 #include <exception>
@@ -365,11 +366,12 @@ QWidget* iterations(ApplicationShell& shell)
     auto* all = new QPushButton(QStringLiteral("All Iterations"));
     all->setObjectName(QStringLiteral("transport-all")); controls->addWidget(all);
     controls->addStretch();
-    controls->addWidget(new QLabel(QStringLiteral("Initialize u or v: u1 = 0")));
+    controls->addWidget(new QLabel(QStringLiteral("Initialize u or v:")));
+    auto* anchor=new QComboBox;anchor->setObjectName(QStringLiteral("transport-multiplier-anchor"));controls->addWidget(anchor);
     layout->addLayout(controls);
     auto* grid = table(page, "transport-tableau"); layout->addWidget(grid, 1);
     auto shown = std::make_shared<std::size_t>(1);
-    const auto render = [&controller, grid, next, all, shown, title, heading] {
+    const auto render = [&controller, grid, next, all, shown, title, heading, anchor] {
         heading->setText(controller.method()==transportation::StartMethod::Vogel?
                          QStringLiteral("TRANSPORTATION TABLEAU - (Vogel's Method)"):
                          controller.method()==transportation::StartMethod::LeastCost?
@@ -380,12 +382,20 @@ QWidget* iterations(ApplicationShell& shell)
         const auto& p=controller.problem();
         title->setText(QStringLiteral("Title: %1 — (minimum cost)").arg(text(p.title)));
         const int m=static_cast<int>(p.supply.size()), n=static_cast<int>(p.demand.size()), height=3*m+4;
+        {
+            const QSignalBlocker blocker(anchor);anchor->clear();
+            for(int i=0;i<m;++i)anchor->addItem(QStringLiteral("u%1=0").arg(i+1));
+            for(int j=0;j<n;++j)anchor->addItem(QStringLiteral("v%1=0").arg(j+1));
+            const auto selected=controller.multiplierAnchor();
+            anchor->setCurrentIndex(static_cast<int>(selected.index)+(selected.axis==transportation::MultiplierAxis::Destination?m:0));
+            anchor->setEnabled(controller.canInitializeMultiplier());
+        }
         const auto count=std::min(*shown,history.size());
         grid->setRowCount(static_cast<int>(count)*height); grid->setColumnCount(n+4);
         next->setEnabled(count<history.size()); all->setEnabled(count<history.size());
         for (std::size_t k=0; k<count; ++k) {
             const int base=static_cast<int>(k)*height;
-            const auto d=transportation::display(p,history[k],k+1);
+            const auto d=transportation::display(p,history[k],k+1,k==0 && controller.multipliersRefreshed());
             put(*grid, base, 0, QStringLiteral("Iter %1").arg(k+1), true);
             put(*grid, base, 1, QStringLiteral("ObjVal ="), true);
             put(*grid, base, 2, text(d.objective), true);
@@ -394,7 +404,9 @@ QWidget* iterations(ApplicationShell& shell)
             for (int j=0; j<n; ++j) {
                 put(*grid, base, j+3, QStringLiteral("D%1").arg(j+1), true);
                 put(*grid, base+1, j+3, text(p.destinationNames[static_cast<std::size_t>(j)]), true);
-                put(*grid, base+2, j+3, text(d.v[static_cast<std::size_t>(j)]), true);
+                auto* multiplier=put(*grid, base+2, j+3, text(d.v[static_cast<std::size_t>(j)]), true);
+                if(controller.multiplierAnchor().axis==transportation::MultiplierAxis::Destination && controller.multiplierAnchor().index==static_cast<std::size_t>(j))
+                    multiplier->setForeground(QColor(Qt::darkRed));
                 put(*grid, base+height-1, j+3, text(d.demand[static_cast<std::size_t>(j)]), true);
             }
             put(*grid, base+height-1, 1, QStringLiteral("Demand"), true);
@@ -402,7 +414,9 @@ QWidget* iterations(ApplicationShell& shell)
                 const int row=base+3+3*i; const auto r=static_cast<std::size_t>(i);
                 put(*grid, row, 0, QStringLiteral("S%1").arg(i+1), true); grid->setSpan(row,0,3,1);
                 put(*grid, row, 1, text(p.sourceNames[r])); grid->setSpan(row,1,3,1);
-                put(*grid, row, 2, text(d.u[r]), true); grid->setSpan(row,2,3,1);
+                auto* multiplier=put(*grid, row, 2, text(d.u[r]), true); grid->setSpan(row,2,3,1);
+                if(controller.multiplierAnchor().axis==transportation::MultiplierAxis::Source && controller.multiplierAnchor().index==r)
+                    multiplier->setForeground(QColor(Qt::darkRed));
                 put(*grid, row, n+3, text(d.supply[r]), true); grid->setSpan(row,n+3,3,1);
                 for (int j=0; j<n; ++j) {
                     const auto c=static_cast<std::size_t>(j);
@@ -423,10 +437,19 @@ QWidget* iterations(ApplicationShell& shell)
         grid->fitColumns(3,n);
     };
     QObject::connect(&controller, &TransportationController::changed, page, [shown,render] { *shown=1; render(); });
+    QObject::connect(&controller, &TransportationController::multipliersChanged, page, render);
+    QObject::connect(anchor,qOverload<int>(&QComboBox::activated),page,[&controller,render](int index) {
+        const auto m=static_cast<int>(controller.problem().supply.size());QString error;
+        const transportation::MultiplierAnchor selected{index<m?transportation::MultiplierAxis::Source:transportation::MultiplierAxis::Destination,
+            static_cast<std::size_t>(index<m?index:index-m)};
+        if(!controller.initializeMultiplier(selected,error)) {
+            controller.dialogs().showError(QStringLiteral("Initialize u or v"),error);render();
+        }
+    });
     const auto advance = [&controller, &shell, shown, render, grid](bool complete) {
         const auto total=controller.trace().size();
         if (*shown>=total) return;
-        *shown=complete ? total : *shown+1; render();
+        controller.lockMultipliers();*shown=complete ? total : *shown+1; render();
         if (grid->rowCount()) grid->scrollToItem(grid->item(grid->rowCount()-1,1));
         if (*shown==total) QMessageBox::information(&shell,QStringLiteral("Optimal Tableau"),
                                                    QStringLiteral("Iteration %1 is optimal").arg(total));

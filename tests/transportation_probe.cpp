@@ -35,6 +35,7 @@ int main(int argc,char** argv) {
         auto method=tora::transportation::StartMethod::NorthWest;
         std::string filename;
         bool roundtrip=false;
+        std::optional<tora::transportation::MultiplierAnchor> multiplierAnchor;
         using Document = tora::compat::TransportationDocument;
         std::vector<std::function<void(Document&)>> edits;
         const auto axis = [](const std::string& name) {
@@ -47,6 +48,13 @@ int main(int argc,char** argv) {
             const std::string arg=argv[i];
             if(arg=="--file" && i+1<argc)filename=argv[++i];
             else if(arg=="--roundtrip")roundtrip=true;
+            else if(arg=="--anchor" && i+2<argc) {
+                const std::string name=argv[++i];
+                if(name!="source" && name!="destination")throw std::invalid_argument("Unknown multiplier axis");
+                multiplierAnchor=tora::transportation::MultiplierAnchor{
+                    name=="source"?tora::transportation::MultiplierAxis::Source:tora::transportation::MultiplierAxis::Destination,
+                    static_cast<std::size_t>(std::stoul(argv[++i]))};
+            }
             else if(arg=="--new" && i+3<argc) {
                 newSources=static_cast<std::size_t>(std::stoul(argv[++i]));
                 newDestinations=static_cast<std::size_t>(std::stoul(argv[++i]));newTitle=argv[++i];
@@ -110,11 +118,12 @@ int main(int argc,char** argv) {
         if(!std::cin)throw std::runtime_error("Invalid probe input");
         if(roundtrip) {std::cout<<tora::compat::TransportationDocument::create(problem).encode();return 0;}
         }
-        const auto trace=tora::transportation::solve(problem,method);
+        auto trace=tora::transportation::solve(problem,method);
+        if(multiplierAnchor)for(auto& tableau:trace)tableau=tora::transportation::initializeMultipliers(problem,tableau,*multiplierAnchor);
         std::cout<<'[';
         for(std::size_t k=0;k<trace.size();++k) {
             if(k)std::cout<<',';
-            const auto display=tora::transportation::display(problem,trace[k],k+1);
+            const auto display=tora::transportation::display(problem,trace[k],k+1,multiplierAnchor.has_value() && k==0);
             std::cout<<"{\"label\":";quote(display.label);
             std::cout<<",\"objective\":";quote(display.objective);
             std::cout<<",\"u\":";array(display.u);std::cout<<",\"v\":";array(display.v);

@@ -36,6 +36,14 @@ struct Display {
     std::vector<std::vector<std::string>> costs, shipments, reducedCosts;
     std::vector<std::string> u,v,supply,demand;
 };
+enum class MultiplierAxis { Source, Destination };
+struct MultiplierAnchor {
+    MultiplierAxis axis=MultiplierAxis::Source;
+    std::size_t index=0;
+};
+// Reinitialize a connected basic tree without altering allocations/pivots.
+// Returns a candidate; invalid anchors/bases leave the supplied tableau intact.
+Tableau initializeMultipliers(const Problem& problem, const Tableau& tableau, MultiplierAnchor anchor);
 // Automatic minimum-cost North-west start and MODI improvements, u1=0.
 // Nonbinary single-precision quantities are deliberately rejected until their
 // observed long/clipped TORA display has a complete compatibility contract.
@@ -43,6 +51,6 @@ std::vector<Tableau> solve(const Problem& problem, StartMethod method);
 std::vector<Tableau> solveNorthWest(const Problem& problem);
 std::vector<Tableau> solveLeastCost(const Problem& problem);
 std::vector<Tableau> solveVogel(const Problem& problem);
-Display display(const Problem& problem, const Tableau& tableau, std::size_t iteration);
+Display display(const Problem& problem, const Tableau& tableau, std::size_t iteration, bool shortMultipliers=false);
 std::string quantity(double value);
 } // namespace tora::transportation

@@ -1,0 +1,1013 @@
+[
+  {
+    "case": "normal-u2",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "method": "northwest",
+    "anchor": [
+      "source",
+      1
+    ],
+    "trace_length": 3,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "230.00",
+          "u": [
+            "u1=-1",
+            "u2=0"
+          ],
+          "v": [
+            "v1=3",
+            "v2=4",
+            "v3=8"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "10",
+              "10",
+              ""
+            ],
+            [
+              "",
+              "15",
+              "15"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "0.00",
+              "6.00"
+            ],
+            [
+              "-2.00",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-normal-zero-anchors/u2-zero.png",
+          "sha256": "f970a7cadc63c845edb81ccc0f3a08eeb89e1182d24a35ce4ba48c93b1049f67"
+        }
+      ],
+      "evidence": [
+        "ev_5e35ab218f77a57c411b2154d991becd3b4e034ff5fe55c1ba53df113cd66e74"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  },
+  {
+    "case": "normal-v1",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "method": "northwest",
+    "anchor": [
+      "destination",
+      0
+    ],
+    "trace_length": 3,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "230.00",
+          "u": [
+            "u1=2",
+            "u2=3"
+          ],
+          "v": [
+            "v1=0",
+            "v2=1",
+            "v3=5"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "10",
+              "10",
+              ""
+            ],
+            [
+              "",
+              "15",
+              "15"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "0.00",
+              "6.00"
+            ],
+            [
+              "-2.00",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-normal-zero-anchors/v1-zero.png",
+          "sha256": "d5922038fbf6033aeed0aa12c2007605509a30e1f72f85f272e46199b62ad69a"
+        }
+      ],
+      "evidence": [
+        "ev_5e35ab218f77a57c411b2154d991becd3b4e034ff5fe55c1ba53df113cd66e74"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  },
+  {
+    "case": "normal-v2",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "method": "northwest",
+    "anchor": [
+      "destination",
+      1
+    ],
+    "trace_length": 3,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "230.00",
+          "u": [
+            "u1=3",
+            "u2=4"
+          ],
+          "v": [
+            "v1=-1",
+            "v2=0",
+            "v3=4"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "10",
+              "10",
+              ""
+            ],
+            [
+              "",
+              "15",
+              "15"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "0.00",
+              "6.00"
+            ],
+            [
+              "-2.00",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-normal-zero-anchors/v2-zero.png",
+          "sha256": "744a8093758233a8715fafeea599bfb24b2734076669eeb549bcc1ad803db97f"
+        }
+      ],
+      "evidence": [
+        "ev_5e35ab218f77a57c411b2154d991becd3b4e034ff5fe55c1ba53df113cd66e74"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  },
+  {
+    "case": "normal-u1-reselect",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "method": "northwest",
+    "anchor": [
+      "source",
+      0
+    ],
+    "trace_length": 3,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "230.00",
+          "u": [
+            "u1=0",
+            "u2=1"
+          ],
+          "v": [
+            "v1=2",
+            "v2=3",
+            "v3=7"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "10",
+              "10",
+              ""
+            ],
+            [
+              "",
+              "15",
+              "15"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "0.00",
+              "6.00"
+            ],
+            [
+              "-2.00",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-anchor-next-transition/u1-reselected.png",
+          "sha256": "b04989f78b8cf654b653ef7d1a3a25347fea2d5eabf75049a1d421b861fb457e"
+        }
+      ],
+      "evidence": [
+        "ev_21ac9390564bcb99ce17af2ccb8eed73ca99c7dbd42b6adeed100c53f2ae39d5"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  },
+  {
+    "case": "normal-v3-through-terminal",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "method": "northwest",
+    "anchor": [
+      "destination",
+      2
+    ],
+    "trace_length": 3,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "230.00",
+          "u": [
+            "u1=7",
+            "u2=8"
+          ],
+          "v": [
+            "v1=-5",
+            "v2=-4",
+            "v3=0"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "10",
+              "10",
+              ""
+            ],
+            [
+              "",
+              "15",
+              "15"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "0.00",
+              "6.00"
+            ],
+            [
+              "-2.00",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      },
+      {
+        "iteration": 2,
+        "table": {
+          "label": "Iter2",
+          "objective": "170.00",
+          "u": [
+            "u1=1.00",
+            "u2=8.00"
+          ],
+          "v": [
+            "v1=1.00",
+            "v2=-4.00",
+            "v3=0.00"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "10",
+              "",
+              "10"
+            ],
+            [
+              "",
+              "25",
+              "5"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "-6.00",
+              "0.00"
+            ],
+            [
+              "4.00",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      },
+      {
+        "iteration": 3,
+        "table": {
+          "label": "Iter3",
+          "objective": "150.00",
+          "u": [
+            "u1=1.00",
+            "u2=4.00"
+          ],
+          "v": [
+            "v1=1.00",
+            "v2=0.00",
+            "v3=0.00"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "5",
+              "",
+              "15"
+            ],
+            [
+              "5",
+              "25",
+              ""
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "-2.00",
+              "0.00"
+            ],
+            [
+              "0.00",
+              "0.00",
+              "-4.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-normal-zero-anchors/v3-zero.png",
+          "sha256": "57cc6cbc0261c6d60f607f90d420a3a404865569a007ebb5d77b1ec17ec2d4c1"
+        },
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-anchor-next-transition/second-tableau.png",
+          "sha256": "aa99c4a5637ea41a2a6d84b4fd031759c2eeea1a0ea2b0525ada09f01efeb5ec"
+        },
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-anchor-terminal/terminal-v3.png",
+          "sha256": "2848d4d1e66c41ea6a5c2941556880ec613fa0c93785ae18379e0c326ad1ad5a"
+        }
+      ],
+      "evidence": [
+        "ev_5e35ab218f77a57c411b2154d991becd3b4e034ff5fe55c1ba53df113cd66e74",
+        "ev_21ac9390564bcb99ce17af2ccb8eed73ca99c7dbd42b6adeed100c53f2ae39d5",
+        "ev_1d8dc3aae3513b904e44e2e5a41f4bdd1b975500858f78674d490750dd0573cc"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  },
+  {
+    "case": "optimal-leastcost-u2",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "method": "leastcost",
+    "anchor": [
+      "source",
+      1
+    ],
+    "trace_length": 1,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "150.00",
+          "v": [
+            "v1=5",
+            "v2=4",
+            "v3=4"
+          ],
+          "u": [
+            "u1=-3",
+            "u2=0"
+          ],
+          "costs": [
+            [
+              "2.00",
+              "3.00",
+              "1.00"
+            ],
+            [
+              "5.00",
+              "4.00",
+              "8.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "5",
+              "",
+              "15"
+            ],
+            [
+              "5",
+              "25",
+              ""
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "-2.00",
+              "0.00"
+            ],
+            [
+              "0.00",
+              "0.00",
+              "-4.00"
+            ]
+          ],
+          "supply": [
+            "20",
+            "30"
+          ],
+          "demand": [
+            "10",
+            "25",
+            "15"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-optimal-and-fractional-anchor/leastcost-u2-zero.png",
+          "sha256": "3dba81a87a6009161b6f042c8ad4934157b3603cdf485bdc5919f9a873e89ede"
+        }
+      ],
+      "evidence": [
+        "ev_0df011568d976d78f25ab2e71f32f25e587ce29c66fbd09b02fe3ba1b244b10a"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  },
+  {
+    "case": "fractional-v1",
+    "problem": {
+      "costs": [
+        [
+          2.25,
+          3.5,
+          1.75
+        ],
+        [
+          5.5,
+          4.25,
+          8.5
+        ]
+      ],
+      "supply": [
+        2.5,
+        3.5
+      ],
+      "demand": [
+        1.5,
+        2.75,
+        1.75
+      ]
+    },
+    "method": "northwest",
+    "anchor": [
+      "destination",
+      0
+    ],
+    "trace_length": 3,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "29.19",
+          "u": [
+            "u1=2.25",
+            "u2=3"
+          ],
+          "v": [
+            "v1=0",
+            "v2=1.25",
+            "v3=5.5"
+          ],
+          "costs": [
+            [
+              "2.25",
+              "3.50",
+              "1.75"
+            ],
+            [
+              "5.50",
+              "4.25",
+              "8.50"
+            ]
+          ],
+          "shipments": [
+            [
+              "1.5",
+              "1",
+              ""
+            ],
+            [
+              "",
+              "1.75",
+              "1.75"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "0.00",
+              "6.00"
+            ],
+            [
+              "-2.50",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "2.5",
+            "3.5"
+          ],
+          "demand": [
+            "1.5",
+            "2.75",
+            "1.75"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-optimal-and-fractional-anchor/fractional-v1-zero.png",
+          "sha256": "b95230f210696a401d361cc0e26fb9962e259fc005cb637837135084019ad2f2"
+        }
+      ],
+      "evidence": [
+        "ev_0df011568d976d78f25ab2e71f32f25e587ce29c66fbd09b02fe3ba1b244b10a"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  },
+  {
+    "case": "three-source-u3",
+    "problem": {
+      "costs": [
+        [
+          7,
+          0,
+          8
+        ],
+        [
+          9,
+          5,
+          3
+        ],
+        [
+          9,
+          0,
+          5
+        ]
+      ],
+      "supply": [
+        2,
+        3,
+        8
+      ],
+      "demand": [
+        6,
+        4,
+        3
+      ]
+    },
+    "method": "northwest",
+    "anchor": [
+      "source",
+      2
+    ],
+    "trace_length": 2,
+    "expected": [
+      {
+        "iteration": 1,
+        "table": {
+          "label": "Iter1",
+          "objective": "65.00",
+          "u": [
+            "u1=-2",
+            "u2=0",
+            "u3=0"
+          ],
+          "v": [
+            "v1=9",
+            "v2=0",
+            "v3=5"
+          ],
+          "costs": [
+            [
+              "7.00",
+              "0.00",
+              "8.00"
+            ],
+            [
+              "9.00",
+              "5.00",
+              "3.00"
+            ],
+            [
+              "9.00",
+              "0.00",
+              "5.00"
+            ]
+          ],
+          "shipments": [
+            [
+              "2",
+              "",
+              ""
+            ],
+            [
+              "3",
+              "",
+              ""
+            ],
+            [
+              "1",
+              "4",
+              "3"
+            ]
+          ],
+          "reduced_costs": [
+            [
+              "0.00",
+              "-2.00",
+              "-5.00"
+            ],
+            [
+              "0.00",
+              "-5.00",
+              "2.00"
+            ],
+            [
+              "0.00",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "supply": [
+            "2",
+            "3",
+            "8"
+          ],
+          "demand": [
+            "6",
+            "4",
+            "3"
+          ]
+        }
+      }
+    ],
+    "provenance": {
+      "screenshots": [
+        {
+          "path": "reference/tora-captures/transportation/multipliers/actions-three-source-anchor/u3-zero.png",
+          "sha256": "9067f1a206fd34d6649c58b8a8a8739c57de5fa90716b38e3ded4df9f27601a0"
+        }
+      ],
+      "evidence": [
+        "ev_8c06a3d62754c97cd1250576ede89c68a7180df67d0eeeb259c52ec121a98031"
+      ],
+      "review": "Multiplier strings manually read from original screenshot. Invariant cost/shipment/reduced/quantity/objective fields reused from independently reviewed same-model original tableau transcription, also visually unchanged on anchor screens."
+    }
+  }
+]

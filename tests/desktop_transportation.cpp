@@ -16,11 +16,55 @@
 #include <QDir>
 #include <QScreen>
 #include <QResizeEvent>
+#include <QComboBox>
 
 using namespace tora::desktop;
 class DesktopTransportation: public QObject {
     Q_OBJECT
 private slots:
+    void multiplierAnchorLifecycle() {
+        using namespace tora::transportation;
+        ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);
+        c.loadExample();QString error;QVERIFY(c.solve(error));
+        QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.show();QTest::qWait(20);
+        auto* anchor=shell.currentContent()->findChild<QComboBox*>(QStringLiteral("transport-multiplier-anchor"));QVERIFY(anchor);
+        QCOMPARE(anchor->count(),5);QVERIFY(anchor->isEnabled());QCOMPARE(anchor->itemText(4),QStringLiteral("v3=0"));
+        const auto bytes=c.document()->encode();QVERIFY(!c.dirty());
+        anchor->setFocus();QTest::keyClick(anchor,Qt::Key_End);
+        auto* grid=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("transport-tableau"));QVERIFY(grid);
+        QCOMPARE(grid->item(3,2)->text(),QStringLiteral("u1=7"));
+        QCOMPARE(grid->item(2,5)->text(),QStringLiteral("v3=0"));
+        QCOMPARE(grid->item(2,5)->foreground().color(),QColor(Qt::darkRed));
+        QVERIFY(grid->item(3,2)->foreground().color()!=QColor(Qt::darkRed));
+        QCOMPARE(c.document()->encode(),bytes);QVERIFY(!c.dirty());
+        auto* next=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));QVERIFY(next);next->click();
+        QVERIFY(!anchor->isEnabled());QCOMPARE(grid->item(13,2)->text(),QStringLiteral("u1=1.00"));
+        QCOMPARE(grid->item(12,5)->text(),QStringLiteral("v3=0.00"));
+        const auto before=c.trace()[0].u;QVERIFY(!c.initializeMultiplier({MultiplierAxis::Source,0},error));QCOMPARE(c.trace()[0].u,before);
+        c.loadExample();QVERIFY(c.solve(error,StartMethod::LeastCost));
+        QVERIFY(shell.navigate(QStringLiteral("transportation/leastcost")));
+        anchor=shell.currentContent()->findChild<QComboBox*>(QStringLiteral("transport-multiplier-anchor"));QVERIFY(anchor);QVERIFY(anchor->isEnabled());
+        anchor->setFocus();QTest::keyClick(anchor,Qt::Key_Home);QTest::keyClick(anchor,Qt::Key_Down);
+        QCOMPARE(c.trace()[0].u,(std::vector<double>{-3,0}));
+        QVERIFY(!c.initializeMultiplier({MultiplierAxis::Source,999},error));QCOMPARE(c.trace()[0].u,(std::vector<double>{-3,0}));
+        QVERIFY(c.solve(error));QCOMPARE(c.multiplierAnchor().index,std::size_t(0));QVERIFY(!c.multipliersRefreshed());
+    }
+    void multiplierAnchorResolutionPreview() {
+        ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);
+        c.loadExample();QString error;QVERIFY(c.solve(error));QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.show();
+        auto* anchor=shell.currentContent()->findChild<QComboBox*>(QStringLiteral("transport-multiplier-anchor"));QVERIFY(anchor);
+        anchor->setFocus();QTest::keyClick(anchor,Qt::Key_End);
+        for(const auto physical:{QSize(1366,768),QSize(1920,1080),QSize(3840,2160)}) {
+            const auto scale=shell.devicePixelRatioF();shell.resize(qRound(physical.width()/scale),qRound(physical.height()/scale));QTest::qWait(20);
+            QVERIFY(anchor->width()>=anchor->minimumSizeHint().width());
+            for(auto* button:shell.currentContent()->findChildren<QPushButton*>())QVERIFY(button->width()>=button->minimumSizeHint().width());
+            const auto base=qEnvironmentVariable("TORA_UI_CAPTURES");
+            if(!base.isEmpty()) {
+                const auto folder=base+QStringLiteral("/transportation-multipliers");QVERIFY(QDir().mkpath(folder));
+                QVERIFY(shell.grab().save(folder+QStringLiteral("/anchor-%1x%2-%3.png").arg(physical.width()).arg(physical.height()).arg(scale)));
+            }
+        }
+    }
     void initTestCase() {
         const auto font=readableUiFont(QApplication::font());
         const QFontMetrics metrics(font);

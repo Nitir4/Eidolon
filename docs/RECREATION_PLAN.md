@@ -203,3 +203,10 @@ new/open/edit/save/solve/manual/print/navigation paths where offered, and a fina
 exact-source three-OS release gate. Passing current LP/Transportation tests is
 not evidence that the other modules are complete. Unknown or unavailable states
 must remain visible in the ledger rather than being renamed done.
+
+
+## Current continuation — 13 October 2026
+
+EditGrid is delivered at a4dd531 / CI 38292868212: 89 CTests per OS, 267 overall. Multiplier initialization is locally verified and has its own pending gate; see TRANSPORTATION_MULTIPLIERS.md.
+
+The restored original MAIN hierarchy was expanded through ordinary UI under REA ev_f7954020ceefb2e77579c9da2c771478262599c2f9ad395bde9e22d89ed6fc42 (child exit zero). Linear Equations offers Matrix Inversion and Linear Equations Solution. Network models offers Minimal Spanning Tree, Shortest Route and Maximal Flow. Project Planning offers CPM - Critical Path Method and PERT - Program Evaluation & Review Technique. These names replace the earlier unknown submenu labels; input, file, numerical, manual and printer contracts still need observation. Integer entry reaches the shared new/existing, decimal/scientific N=5/D=2 screen (REA ev_2289cc40c23d2ec7239056865ab5ba52e43fc5b1aace50eae22873573f62f5c4, child zero); its model/solver choices remain unknown. Private images are under reference/tora-captures/application-inventory/.
