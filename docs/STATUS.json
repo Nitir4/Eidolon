@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: manual feedback delivered; final summary next",
+  "active_step": "future-scope: final summary locally verified; source-pinned three-OS delivery gate pending",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Implement nineteen observed final-summary cases with independent tests, then verify/packages/install; continue printing/settings and remaining modules",
+  "next_step": "Complete final-summary local/three-OS/package/install gate, then observe and implement Transportation printing/settings and remaining modules",
   "foundation_order": [
     1,
     5,
@@ -707,6 +707,21 @@
         "windows-x86_64": "bc4a8bd0106e42472c6cb869f509e560958041d6f6a75d7c44762f4ab6cf05bd"
       },
       "completed_on": "2026-10-13"
+    },
+    "final_summary": {
+      "status": "locally verified; delivery gate pending",
+      "spec": "docs/tora-analysis/TRANSPORTATION_FINAL.md",
+      "evidence": "build/transportation-final/",
+      "cases": 19,
+      "rows": 85,
+      "comparison_fields": 482,
+      "comparison_note": "Eight alias identity cells use explicit native one-space separator policy; other observed strings exact. Original authentic input hashes reconstructed before parse.",
+      "native_final_checks_per_scale": 24,
+      "final_resolution_renders": 12,
+      "local_headless": "38/38in4.17s",
+      "remaining": "Transportationprinting/settings,broaderprofilesandsixothermodules",
+      "local_desktop": "98/98in183.23s",
+      "native_acceptance": "26actualWaylandviews; LPpreserved; finalsummaryandreturntoprioranchorediterationspassed"
     }
   }
 }

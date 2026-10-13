@@ -1,4 +1,4 @@
-add_library(or_transportation STATIC north_west.cpp)
+add_library(or_transportation STATIC north_west.cpp final_summary.cpp)
 add_library(tora::transportation ALIAS or_transportation)
 tora_target_defaults(or_transportation)
 target_include_directories(or_transportation PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

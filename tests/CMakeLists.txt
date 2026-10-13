@@ -45,6 +45,16 @@ tora_target_defaults(transportation_manual)
 target_link_libraries(transportation_manual PRIVATE tora::transportation)
 add_test(NAME transportation.manual COMMAND transportation_manual)
 set_tests_properties(transportation.manual PROPERTIES TIMEOUT 15)
+add_executable(transportation_final transportation_final.cpp)
+tora_target_defaults(transportation_final)
+target_link_libraries(transportation_final PRIVATE tora::transportation)
+add_test(NAME transportation.final COMMAND transportation_final)
+set_tests_properties(transportation.final PROPERTIES TIMEOUT 15)
+add_test(NAME transportation.final.goldens COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation_final.py" "$<TARGET_FILE:transportation_probe>"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-final.json"
+    "${CMAKE_CURRENT_BINARY_DIR}/transportation-final-comparison.tsv")
+set_tests_properties(transportation.final.goldens PROPERTIES TIMEOUT 15)
 add_test(NAME transportation.multipliers.goldens COMMAND "${Python3_EXECUTABLE}"
     "${CMAKE_CURRENT_SOURCE_DIR}/verify_transportation_multipliers.py" "$<TARGET_FILE:transportation_probe>"
     "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-multipliers.json"
@@ -155,6 +165,17 @@ if(TORA_BUILD_DESKTOP)
             ENVIRONMENT "QT_QPA_PLATFORM=offscreen:configfile=offscreen-display.json;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
     endforeach()
     qt_add_executable(desktop_transportation_test desktop_transportation.cpp)
+    qt_add_executable(desktop_transportation_final_test desktop_transportation_final.cpp)
+    set_target_properties(desktop_transportation_final_test PROPERTIES AUTOMOC ON)
+    tora_target_defaults(desktop_transportation_final_test)
+    target_link_libraries(desktop_transportation_final_test PRIVATE desktop_shell Qt6::Test)
+    target_compile_definitions(desktop_transportation_final_test PRIVATE TORA_FINAL_GOLDENS="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/transportation-final.json")
+    foreach(scale IN ITEMS 1 1.25 1.5 2)
+        add_test(NAME desktop.transportation-final.scale-${scale} COMMAND desktop_transportation_final_test
+            -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-transportation-final-scale-${scale}.xml,junitxml" -o -,txt)
+        set_tests_properties(desktop.transportation-final.scale-${scale} PROPERTIES TIMEOUT 60
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen:configfile=offscreen-display.json;QT_SCALE_FACTOR=${scale};QT_QPA_PLATFORMTHEME=;QT_STYLE_OVERRIDE=Fusion")
+    endforeach()
     set_target_properties(desktop_transportation_test PROPERTIES AUTOMOC ON)
     tora_target_defaults(desktop_transportation_test)
     target_link_libraries(desktop_transportation_test PRIVATE desktop_shell Qt6::Test)

@@ -116,6 +116,12 @@ int main(int argc, char** argv) {
             capture(QStringLiteral("transportation-anchor-initial"),QStringLiteral("transportation/northwest"));
             require(tableauGrid->item(4,5)->background().color()==QColor(colors::entering),"Native anchor erased manual feedback");
             capture(QStringLiteral("transportation-manual-anchor-preserved"),QStringLiteral("transportation/northwest"));
+            const auto priorSummaryTrace=transport.trace().size();
+            require(transport.computeFinal(error),"Native final solution failed");
+            require(transport.finalOutput() && transport.finalOutput()->objective=="150.00" && transport.trace().size()==priorSummaryTrace,"Native final summary/trace mismatch");
+            require(shell.navigate(QStringLiteral("transportation/final")),"Native final route missing");
+            capture(QStringLiteral("transportation-final-summary"),QStringLiteral("transportation/final"));
+            require(shell.navigate(QStringLiteral("transportation/northwest")),"Native iteration return failed");
             auto* anchorNext=shell.currentContent()->findChild<QPushButton*>(QStringLiteral("transport-next"));
             require(anchorNext && anchorNext->isEnabled(),"Native anchor Next missing");anchorNext->click();
             require(!anchor->isEnabled() && transport.trace()[1].u[0]==1,"Native anchor progression mismatch");

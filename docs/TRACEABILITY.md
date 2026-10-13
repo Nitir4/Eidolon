@@ -372,3 +372,6 @@ The current future-scope source adds editable Transportation documents, native n
 
 
 Transportation EditGrid continuation: structural source/destination insert/delete/copy/paste and one-level snapshot undo are implemented locally. See [EditGrid contract](tora-analysis/TRANSPORTATION_EDITGRID.md) and STATUS.json for current gate. Original structural-save and source-undo defects are deliberately corrected and documented; delivered input editing remains edc34b0 until the new gate/install completes.
+
+
+Transportation final-summary continuation is specified in tora-analysis/TRANSPORTATION_FINAL.md. Nineteen independent original summaries cover basic zero rows, default Least-cost basis, fractional amount display and aliases. Current source is under verification; STATUS.json records delivery separately from implementation.

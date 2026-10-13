@@ -1,0 +1,1439 @@
+[
+  {
+    "case": "01-normal",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "title": "Transportation 01-normal",
+    "file_sha256": "eb462b2a1089783c1241ddca5e2689fa03397bb0e1851812ea91550afcff6bd8",
+    "expected": {
+      "iteration": "1",
+      "objective": "150.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "5",
+          "2.00",
+          "10.00"
+        ],
+        [
+          "S1:",
+          "D3:",
+          "15",
+          "1.00",
+          "15.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "5",
+          "5.00",
+          "25.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "25",
+          "4.00",
+          "100.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/01-normal/final/initial.png",
+      "screenshot_sha256": "4fa619cf54c5b80b194e37b867303ab35e6c147827c84ef2f0cf2bd78c9b09f9",
+      "review": "build/transportation-final-review/01-normal.json",
+      "evidence": [
+        "ev_0fcbf68d43a195600aebbd940e5603d00bec33bff2e7160b28ffb9485d4ca063"
+      ]
+    }
+  },
+  {
+    "case": "02-reverse-costs",
+    "problem": {
+      "costs": [
+        [
+          8,
+          4,
+          5
+        ],
+        [
+          1,
+          3,
+          2
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "title": "Transportation 02-reverse-costs",
+    "file_sha256": "f731047f8bda0925e3dd87a9a656941916a88a3c0c0789178d88409fd05783c9",
+    "expected": {
+      "iteration": "1",
+      "objective": "135.00",
+      "rows": [
+        [
+          "S1:",
+          "D2:",
+          "20",
+          "4.00",
+          "80.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "10",
+          "1.00",
+          "10.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "5",
+          "3.00",
+          "15.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "15",
+          "2.00",
+          "30.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/02-reverse-costs/final/initial.png",
+      "screenshot_sha256": "dd3eee47c40795199c5125874a47f1bcb88846ffd801d775894931f93e54708d",
+      "review": "build/transportation-final-review/02-reverse-costs.json",
+      "evidence": [
+        "ev_fbbcb4b8bf260d30a3b243b15f5c6465020258ebbc88b944bfc7916dde43c72e"
+      ]
+    }
+  },
+  {
+    "case": "03-all-ties",
+    "problem": {
+      "costs": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "title": "Transportation 03-all-ties",
+    "file_sha256": "4e3f43e76bdbdeb8b89f9015b06c515ad29466d97ac98810873e0e3f098fd109",
+    "expected": {
+      "iteration": "1",
+      "objective": "50.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "10",
+          "1.00",
+          "10.00"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "10",
+          "1.00",
+          "10.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "15",
+          "1.00",
+          "15.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "15",
+          "1.00",
+          "15.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/03-all-ties/final/initial.png",
+      "screenshot_sha256": "b0c91a9012af69b574b38fe087115dcabb11475656c044d66184b23641d68c13",
+      "review": "build/transportation-final-review/03-all-ties.json",
+      "evidence": [
+        "ev_a95c6b4a4bcf016bb84f0efdc5c55c1046d080e4c6dab427fb37b75b86eace55"
+      ]
+    }
+  },
+  {
+    "case": "04-degenerate",
+    "problem": {
+      "costs": [
+        [
+          4,
+          1,
+          5
+        ],
+        [
+          2,
+          6,
+          3
+        ]
+      ],
+      "supply": [
+        10,
+        40
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "title": "Transportation 04-degenerate",
+    "file_sha256": "ce87b7d93843fffd59973bb9a198beea3107f2305498aa0e3abba366e7c60e32",
+    "expected": {
+      "iteration": "1",
+      "objective": "165.00",
+      "rows": [
+        [
+          "S1:",
+          "D2:",
+          "10",
+          "1.00",
+          "10.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "10",
+          "2.00",
+          "20.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "15",
+          "6.00",
+          "90.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "15",
+          "3.00",
+          "45.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/04-degenerate/final/initial.png",
+      "screenshot_sha256": "9ca2a91e8342ac485e6c1e3f662f45e1ba613df5218e190b50451b77e7363551",
+      "review": "build/transportation-final-review/04-degenerate.json",
+      "evidence": [
+        "ev_409b49a720e3c750336fe3833d5d254b725cf6cc052dd423d6da3d4fe61378d4"
+      ]
+    }
+  },
+  {
+    "case": "05-zero-source",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        0,
+        50
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "title": "Transportation 05-zero-source",
+    "file_sha256": "ca3959d4c61ecaecdb51b9c1a3435da02037823229357ab5346106cf92d8cede",
+    "expected": {
+      "iteration": "1",
+      "objective": "270.00",
+      "rows": [
+        [
+          "S1:",
+          "D3:",
+          "0",
+          "1.00",
+          "0.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "10",
+          "5.00",
+          "50.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "25",
+          "4.00",
+          "100.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "15",
+          "8.00",
+          "120.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/05-zero-source/final/initial.png",
+      "screenshot_sha256": "c441ac0918673a5c78595633b653cb7708dae0f4923c8b225373b5e6e6f19e4d",
+      "review": "build/transportation-final-review/05-zero-source.json",
+      "evidence": [
+        "ev_897136e630b04fbe927d01e9f747e3f5cf33dcb9d5c5a0c10b30c18a8626a31f"
+      ]
+    }
+  },
+  {
+    "case": "06-zero-destination",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        0,
+        35,
+        15
+      ]
+    },
+    "title": "Transportation 06-zero-destination",
+    "file_sha256": "53044ea4f690499f6e5f99a2e2e1f3d64eac9acd91334183aabaa88cd84d1ecd",
+    "expected": {
+      "iteration": "1",
+      "objective": "150.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "0",
+          "2.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "5",
+          "3.00",
+          "15.00"
+        ],
+        [
+          "S1:",
+          "D3:",
+          "15",
+          "1.00",
+          "15.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "30",
+          "4.00",
+          "120.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/06-zero-destination/final/initial.png",
+      "screenshot_sha256": "a3b230b0083ff3486b4d66bac0f854475a64e7f80c0ef84854806d2b7ee6de93",
+      "review": "build/transportation-final-review/06-zero-destination.json",
+      "evidence": [
+        "ev_92648d27c2ca32691f6a71bc70235fe37926f6947bed34ea9182de2d4468c827"
+      ]
+    }
+  },
+  {
+    "case": "07-zero-costs",
+    "problem": {
+      "costs": [
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          5,
+          0,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "title": "Transportation 07-zero-costs",
+    "file_sha256": "aca5a7ad55c6411725d323b663097c319562a16c5e19bb7907985bbb991d191a",
+    "expected": {
+      "iteration": "2",
+      "objective": "25.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "5",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D3:",
+          "15",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "5",
+          "5.00",
+          "25.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "25",
+          "0.00",
+          "0.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/07-zero-costs/final/initial.png",
+      "screenshot_sha256": "f9041b6c73048ff617ba31cbe2381fa9f5ff54b9928fad1fd3596d0f898e8dd7",
+      "review": "build/transportation-final-review/07-zero-costs.json",
+      "evidence": [
+        "ev_2acf3f7dbcdeb5ff64bb63c6a9a7aa84d0da116cda72ce7b1f34667556c756b6"
+      ]
+    }
+  },
+  {
+    "case": "08-decimal-quantities",
+    "problem": {
+      "costs": [
+        [
+          2.25,
+          3.5,
+          1.75
+        ],
+        [
+          5.5,
+          4.25,
+          8.5
+        ]
+      ],
+      "supply": [
+        2.5,
+        3.5
+      ],
+      "demand": [
+        1.5,
+        2.75,
+        1.75
+      ]
+    },
+    "title": "Transportation 08-decimal-quantities",
+    "file_sha256": "dfd978a9ec5328f872165ec355ec41f7c7308499b0cb1032df7c7b24be8da826",
+    "expected": {
+      "iteration": "1",
+      "objective": "20.56",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "0",
+          "2.25",
+          "1.69"
+        ],
+        [
+          "S1:",
+          "D3:",
+          "2",
+          "1.75",
+          "3.06"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "0",
+          "5.50",
+          "4.13"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "3",
+          "4.25",
+          "11.69"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/08-decimal-quantities/final/initial.png",
+      "screenshot_sha256": "5303dfa27654d05f4c4ee5d1724424c26b449f2bd106fdd1812ba6d561e6ec4b",
+      "review": "build/transportation-final-review/08-decimal-quantities.json",
+      "evidence": [
+        "ev_63f26bdb8d3535066765d4a74434c466f3b5afeb89974428e7b00392d42df88e"
+      ]
+    }
+  },
+  {
+    "case": "09-negative-costs",
+    "problem": {
+      "costs": [
+        [
+          -2,
+          3,
+          1
+        ],
+        [
+          5,
+          -4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "title": "Transportation 09-negative-costs",
+    "file_sha256": "a748aca308fa0bfb28e4e19be1a7b09b94cdfb98f8966995dbfd7547e0fc1a6e",
+    "expected": {
+      "iteration": "1",
+      "objective": "-70.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "10",
+          "-2.00",
+          "-20.00"
+        ],
+        [
+          "S1:",
+          "D3:",
+          "10",
+          "1.00",
+          "10.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "25",
+          "-4.00",
+          "-100.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "5",
+          "8.00",
+          "40.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/09-negative-costs/final/initial.png",
+      "screenshot_sha256": "4532a98828c4a26bda27af0067e503b2ec374f5cfaf488604a1cced2003cd500",
+      "review": "build/transportation-final-review/09-negative-costs.json",
+      "evidence": [
+        "ev_154d17763cc7496df85c661bec190ad74bfe3063a0010d210cb61e042c8afaa8"
+      ]
+    }
+  },
+  {
+    "case": "10-cost-ties",
+    "problem": {
+      "costs": [
+        [
+          2,
+          2,
+          5
+        ],
+        [
+          2,
+          4,
+          1
+        ]
+      ],
+      "supply": [
+        17,
+        23
+      ],
+      "demand": [
+        11,
+        13,
+        16
+      ]
+    },
+    "title": "Transportation 10-cost-ties",
+    "file_sha256": "79a3ed571dccdbe0e7f94a5f0ae3bc69d109e72b63f7b3491467dca298ec2b08",
+    "expected": {
+      "iteration": "2",
+      "objective": "64.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "4",
+          "2.00",
+          "8.00"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "13",
+          "2.00",
+          "26.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "7",
+          "2.00",
+          "14.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "16",
+          "1.00",
+          "16.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/10-cost-ties/final/initial.png",
+      "screenshot_sha256": "302902a5d2f788b8ad3228dc2cfdd0205c584010a1c7cf8ffc4d74f8a595121b",
+      "review": "build/transportation-final-review/10-cost-ties.json",
+      "evidence": [
+        "ev_1b8f9c5b4a79172f1a88179fd160ae14d74924d87d48d10998d84137e94f5a1a"
+      ]
+    }
+  },
+  {
+    "case": "11-larger-quantities",
+    "problem": {
+      "costs": [
+        [
+          12,
+          7,
+          9
+        ],
+        [
+          8,
+          11,
+          4
+        ]
+      ],
+      "supply": [
+        120,
+        180
+      ],
+      "demand": [
+        70,
+        130,
+        100
+      ]
+    },
+    "title": "Transportation 11-larger-quantities",
+    "file_sha256": "5133e0a86431745ebad5c0d7cc820b1b040642bd025783fced5cf88313b1b803",
+    "expected": {
+      "iteration": "1",
+      "objective": "1910.00",
+      "rows": [
+        [
+          "S1:",
+          "D2:",
+          "120",
+          "7.00",
+          "840.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "70",
+          "8.00",
+          "560.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "10",
+          "11.00",
+          "110.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "100",
+          "4.00",
+          "400.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/11-larger-quantities/final/initial.png",
+      "screenshot_sha256": "12108fd2f883f58f921de71ea1ff7b5dd7c6a837229cfb280cbbec455dfbbb5d",
+      "review": "build/transportation-final-review/11-larger-quantities.json",
+      "evidence": [
+        "ev_37680ee282587910eb0b5fee1aebaf414c729c6b889f2f3a442609b369325c96"
+      ]
+    }
+  },
+  {
+    "case": "12-vogel-ties",
+    "problem": {
+      "costs": [
+        [
+          1,
+          3,
+          5
+        ],
+        [
+          3,
+          5,
+          1
+        ]
+      ],
+      "supply": [
+        26,
+        34
+      ],
+      "demand": [
+        12,
+        23,
+        25
+      ]
+    },
+    "title": "Transportation 12-vogel-ties",
+    "file_sha256": "74d652f74612b3e25f10a7911117e15f464a5dc01dce9257d4646fed058878f9",
+    "expected": {
+      "iteration": "1",
+      "objective": "124.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "12",
+          "1.00",
+          "12.00"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "14",
+          "3.00",
+          "42.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "9",
+          "5.00",
+          "45.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "25",
+          "1.00",
+          "25.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/12-vogel-ties/final/initial.png",
+      "screenshot_sha256": "bc856bf486b3e080dc53be2763c4cbbcb471e8e8c2775fc32d655fac5ae8223e",
+      "review": "build/transportation-final-review/12-vogel-ties.json",
+      "evidence": [
+        "ev_1d93702a3dd9142f7274e5a530d94a076193c0b5b895bf85b89356d7ab8e5cf6"
+      ]
+    }
+  },
+  {
+    "case": "13-three-sources",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ],
+        [
+          6,
+          2,
+          7
+        ]
+      ],
+      "supply": [
+        20,
+        30,
+        10
+      ],
+      "demand": [
+        10,
+        25,
+        25
+      ]
+    },
+    "title": "Transportation 13-three-sources",
+    "file_sha256": "95aeb8b48cdf7241ef4d9d99f97791987fbc850b044cf38306b5972f7cf75b47",
+    "expected": {
+      "iteration": "1",
+      "objective": "190.00",
+      "rows": [
+        [
+          "S1:",
+          "D3:",
+          "20",
+          "1.00",
+          "20.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "10",
+          "5.00",
+          "50.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "15",
+          "4.00",
+          "60.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "5",
+          "8.00",
+          "40.00"
+        ],
+        [
+          "S3:",
+          "D2:",
+          "10",
+          "2.00",
+          "20.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/13-three-sources/final/initial.png",
+      "screenshot_sha256": "82bbd40a8b397d85b0eb63d9d17d524cea17076d051f5af2413d55cce2c5ec5f",
+      "review": "build/transportation-final-review/13-three-sources.json",
+      "evidence": [
+        "ev_fe22cc32b58ceed1c84efbe346308ec5e46b943d886554c9d428cfcf0f829196"
+      ]
+    }
+  },
+  {
+    "case": "14-digits",
+    "problem": {
+      "costs": [
+        [
+          8,
+          7,
+          9
+        ],
+        [
+          6,
+          5,
+          4
+        ]
+      ],
+      "supply": [
+        37,
+        44
+      ],
+      "demand": [
+        17,
+        29,
+        35
+      ]
+    },
+    "title": "Transportation 14-digits",
+    "file_sha256": "aabad5881604a187dc34d4b30d3adf9d38eb9056208de066120a930dca1f89c0",
+    "expected": {
+      "iteration": "1",
+      "objective": "461.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "17",
+          "8.00",
+          "136.00"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "20",
+          "7.00",
+          "140.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "9",
+          "5.00",
+          "45.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "35",
+          "4.00",
+          "140.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/14-digits/final/initial.png",
+      "screenshot_sha256": "ff8195980f0388d61c602978f17dcfa59c40061159f1dc0f63cdf44124c3630c",
+      "review": "build/transportation-final-review/14-digits.json",
+      "evidence": [
+        "ev_d1f7c4e0fa95b2efded2ffe696daf14b5ffd34b116a63c719fb8ba1e84f7e973"
+      ]
+    }
+  },
+  {
+    "case": "16-dyadic-fractions",
+    "problem": {
+      "costs": [
+        [
+          0.125,
+          0.25,
+          0.5
+        ],
+        [
+          0.75,
+          0.375,
+          0.625
+        ]
+      ],
+      "supply": [
+        0.375,
+        0.625
+      ],
+      "demand": [
+        0.25,
+        0.25,
+        0.5
+      ]
+    },
+    "title": "Transportation 16-dyadic-fractions",
+    "file_sha256": "b4c4019c95a86d1d112f2c61f1f34c9d092192903ff972c578832a3d88549482",
+    "expected": {
+      "iteration": "1",
+      "objective": "0.42",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "0",
+          "0.13",
+          "0.03"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "0",
+          "0.25",
+          "0.03"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "0",
+          "0.38",
+          "0.05"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "0",
+          "0.63",
+          "0.31"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/16-dyadic-fractions/final/initial.png",
+      "screenshot_sha256": "718668bfcbc5ddf9d0041f18b18e2c3d7befc2b39d584ecf4deb6dd7dc598f79",
+      "review": "build/transportation-final-review/16-dyadic-fractions.json",
+      "evidence": [
+        "ev_bb697e726c74fff4977ddb482e67e47a3155d0f2d1ae9f0b35253b527b7edc80"
+      ]
+    }
+  },
+  {
+    "case": "17-leaving-tie",
+    "problem": {
+      "costs": [
+        [
+          7,
+          0,
+          8
+        ],
+        [
+          9,
+          5,
+          3
+        ],
+        [
+          9,
+          0,
+          5
+        ]
+      ],
+      "supply": [
+        2,
+        3,
+        8
+      ],
+      "demand": [
+        6,
+        4,
+        3
+      ]
+    },
+    "title": "Transportation 17-leaving-tie",
+    "file_sha256": "924b363ed18b3473f9e0e794935eaa59db9abaf0ce2b65ad7a44f32081cf469e",
+    "expected": {
+      "iteration": "2",
+      "objective": "59.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "2",
+          "7.00",
+          "14.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "3",
+          "3.00",
+          "9.00"
+        ],
+        [
+          "S3:",
+          "D1:",
+          "4",
+          "9.00",
+          "36.00"
+        ],
+        [
+          "S3:",
+          "D2:",
+          "4",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S3:",
+          "D3:",
+          "0",
+          "5.00",
+          "0.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/17-leaving-tie/final/initial.png",
+      "screenshot_sha256": "a3ccbd38a026796f11de3194c86be481003b9df4ddacc43f6b05eb78623bd0aa",
+      "review": "build/transportation-final-review/17-leaving-tie.json",
+      "evidence": [
+        "ev_88d2b9312ef95d5a9f46ebd1fc3ba3f58faaa7a3dd8a619d063ccb5ab693c4c9"
+      ]
+    }
+  },
+  {
+    "case": "18-entering-tie",
+    "problem": {
+      "costs": [
+        [
+          6,
+          6,
+          2
+        ],
+        [
+          1,
+          5,
+          5
+        ],
+        [
+          7,
+          1,
+          3
+        ]
+      ],
+      "supply": [
+        2,
+        9,
+        3
+      ],
+      "demand": [
+        1,
+        8,
+        5
+      ]
+    },
+    "title": "Transportation 18-entering-tie",
+    "file_sha256": "4724de0ee23990723df06efeef4d50cfe51f96c04b897894fca7fd572b1ecb2f",
+    "expected": {
+      "iteration": "1",
+      "objective": "48.00",
+      "rows": [
+        [
+          "S1:",
+          "D3:",
+          "2",
+          "2.00",
+          "4.00"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "1",
+          "1.00",
+          "1.00"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "5",
+          "5.00",
+          "25.00"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "3",
+          "5.00",
+          "15.00"
+        ],
+        [
+          "S3:",
+          "D2:",
+          "3",
+          "1.00",
+          "3.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/corpus/18-entering-tie/final/initial.png",
+      "screenshot_sha256": "9f9822b53d99694791c60d5e0181f54032e881781ea509d853e05022b0c43963",
+      "review": "build/transportation-final-review/18-entering-tie.json",
+      "evidence": [
+        "ev_fd3e2e2515b18492ab4b8c827bdcdce918f5d30ed61a9b522c0edef86ff643fa"
+      ]
+    }
+  },
+  {
+    "case": "20-fractional-amount-threshold",
+    "problem": {
+      "costs": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          99
+        ],
+        [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          0
+        ]
+      ],
+      "supply": [
+        10.984375,
+        4.5
+      ],
+      "demand": [
+        0.125,
+        0.5,
+        0.75,
+        0.984375,
+        1.125,
+        1.5,
+        2.5,
+        3.5,
+        4.5
+      ]
+    },
+    "title": "Fractional amount threshold",
+    "file_sha256": "032fabd28c79adab64a34a20790e333bb701e833e0aeed89e2557409f1e16a9e",
+    "expected": {
+      "iteration": "1",
+      "objective": "0.00",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "0",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "0",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D3:",
+          "0",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D4:",
+          "0",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D5:",
+          "1",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D6:",
+          "2",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D7:",
+          "3",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S1:",
+          "D8:",
+          "4",
+          "0.00",
+          "0.00"
+        ],
+        [
+          "S2:",
+          "D8:",
+          "0",
+          "99.00",
+          "0.00"
+        ],
+        [
+          "S2:",
+          "D9:",
+          "5",
+          "0.00",
+          "0.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/final-probes/actions-fractional-amount-threshold/initial.png",
+      "screenshot_sha256": "1a391514fa4909049fad494a80878ab9ac340d96c4bdd9a1ffc368eba5834e5a",
+      "evidence": [
+        "ev_752236634140fc085daaa605bd67cbd497467b8c27aaea70e969987a6262d56e"
+      ]
+    }
+  },
+  {
+    "case": "21-alias-labels",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ],
+      "source_names": [
+        "Alpha",
+        "Beta"
+      ],
+      "destination_names": [
+        "Depot",
+        "Hub",
+        "Port"
+      ]
+    },
+    "title": "Final alias labels",
+    "file_sha256": "c81b7572ce1da8394819cdebb17d324a7a1350d22f70300682168396cd610063",
+    "expected": {
+      "iteration": "1",
+      "objective": "150.00",
+      "rows": [
+        [
+          "S1: Alpha",
+          "D1: Depot",
+          "5",
+          "2.00",
+          "10.00"
+        ],
+        [
+          "S1: Alpha",
+          "D3: Port",
+          "15",
+          "1.00",
+          "15.00"
+        ],
+        [
+          "S2: Beta",
+          "D1: Depot",
+          "5",
+          "5.00",
+          "25.00"
+        ],
+        [
+          "S2: Beta",
+          "D2: Hub",
+          "25",
+          "4.00",
+          "100.00"
+        ]
+      ]
+    },
+    "provenance": {
+      "screenshot": "reference/tora-captures/transportation/final-probes/actions-summary-alias-labels/initial.png",
+      "screenshot_sha256": "d41b0e43042123a92c0a5885cde4f3b5f7dfe76e6243eb07fad6df0209c4853f",
+      "evidence": [
+        "ev_06b55d2bf25b94a98815e46470fd585c2971e32239b2b4c1693cd1d38c3738eb"
+      ],
+      "limit": "Native one-space alias join is policy; original visible prefix/alias components verified, exact separator-space count unestablished."
+    }
+  }
+]

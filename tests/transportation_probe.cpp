@@ -1,6 +1,7 @@
 #include <tora/transportation/north_west.hpp>
 #include <tora/compat/transportation_reader.hpp>
 #include <tora/compat/transportation_document.hpp>
+#include <tora/transportation/final_summary.hpp>
 #include <iostream>
 #include <locale>
 #include <fstream>
@@ -34,7 +35,7 @@ int main(int argc,char** argv) {
         tora::transportation::Problem problem;
         auto method=tora::transportation::StartMethod::NorthWest;
         std::string filename;
-        bool roundtrip=false;
+        bool roundtrip=false,summary=false;
         std::optional<tora::transportation::MultiplierAnchor> multiplierAnchor;
         using Document = tora::compat::TransportationDocument;
         std::vector<std::function<void(Document&)>> edits;
@@ -48,6 +49,7 @@ int main(int argc,char** argv) {
             const std::string arg=argv[i];
             if(arg=="--file" && i+1<argc)filename=argv[++i];
             else if(arg=="--roundtrip")roundtrip=true;
+            else if(arg=="--final")summary=true;
             else if(arg=="--anchor" && i+2<argc) {
                 const std::string name=argv[++i];
                 if(name!="source" && name!="destination")throw std::invalid_argument("Unknown multiplier axis");
@@ -117,6 +119,11 @@ int main(int argc,char** argv) {
         for(auto& value:problem.demand)std::cin>>value;
         if(!std::cin)throw std::runtime_error("Invalid probe input");
         if(roundtrip) {std::cout<<tora::compat::TransportationDocument::create(problem).encode();return 0;}
+        }
+        if(summary) {
+            const auto output=tora::transportation::finalSummary(problem);
+            std::cout<<"{\"title\":";quote(output.title);std::cout<<",\"iteration\":";quote(output.iteration);
+            std::cout<<",\"objective\":";quote(output.objective);std::cout<<",\"rows\":";matrix(output.rows);std::cout<<'}';return 0;
         }
         auto trace=tora::transportation::solve(problem,method);
         if(multiplierAnchor)for(auto& tableau:trace)tableau=tora::transportation::initializeMultipliers(problem,tableau,*multiplierAnchor);

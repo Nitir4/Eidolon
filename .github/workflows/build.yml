@@ -106,7 +106,9 @@ jobs:
             build/ci/tests/transportation-vogel-comparison.tsv
             build/ci/tests/transportation-editgrid-comparison.tsv
             build/ci/tests/transportation-multipliers-comparison.tsv
+            build/ci/tests/transportation-final-comparison.tsv
             build/ci/tests/desktop-transportation-scale-*.xml
+            build/ci/tests/desktop-transportation-final-scale-*.xml
             build/ci/tests/desktop-transportation-input-scale-*.xml
             build/ci/tests/desktop-input-scale-*.xml
             build/ci/tests/desktop-simplex-scale-*.xml

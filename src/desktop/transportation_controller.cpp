@@ -47,12 +47,14 @@ bool TransportationController::reject(QString& error, const QString& message) {
     error = message; pendingCommitValid_ = false; return false;
 }
 void TransportationController::modified(bool resetInput) {
+    final_.reset();emit finalChanged();
     dirty_ = true; trace_.clear(); method_ = transportation::StartMethod::NorthWest;
     resetMultipliers();
     if (resetInput) emit inputReset();
     emit changed();
 }
 void TransportationController::resetEditState() {
+    final_.reset();emit finalChanged();
     resetMultipliers();
     selectionAxis_.reset(); selection_ = -1; insertBefore_ = false;
     clipboardAxis_.reset(); clipboard_.clear(); undo_.reset(); emit selectionChanged();
@@ -69,6 +71,15 @@ bool TransportationController::initializeMultiplier(transportation::MultiplierAn
         trace_=std::move(candidate);multiplierAnchor_=anchor;multipliersRefreshed_=true;
         emit multipliersChanged();return true;
     } catch(const std::exception& e) {return reject(error,QString::fromUtf8(e.what()));}
+}
+bool TransportationController::computeFinal(QString& error) {
+    error.clear();
+    if(!commitInput())return reject(error,QStringLiteral("Correct the active Transportation input before solving."));
+    if(!document_)return reject(error,QStringLiteral("Open or initialize a Transportation problem first."));
+    try {
+        auto candidate=transportation::finalSummary(problem());
+        final_=std::move(candidate);emit finalChanged();return true;
+    }catch(const std::exception& e){return reject(error,QString::fromUtf8(e.what()));}
 }
 bool TransportationController::hasSelection() const {
     if (!document_ || !selectionAxis_ || selection_ < 0) return false;

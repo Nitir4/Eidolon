@@ -4,6 +4,7 @@
 #include "lp_input_controller.hpp"
 #include <tora/compat/transportation_document.hpp>
 #include <tora/transportation/north_west.hpp>
+#include <tora/transportation/final_summary.hpp>
 #include <QObject>
 
 namespace tora::desktop {
@@ -42,6 +43,8 @@ public:
     bool multipliersRefreshed() const { return multipliersRefreshed_; }
     bool canInitializeMultiplier() const { return !trace_.empty() && !multipliersLocked_; }
     void lockMultipliers() { multipliersLocked_=true; }
+    bool computeFinal(QString& error);
+    const transportation::FinalSummary* finalOutput() const { return final_?&*final_:nullptr; }
     InputDialogs& dialogs() { return dialogs_; }
     const compat::TransportationDocument* document() const { return document_ ? &*document_ : nullptr; }
     bool dirty() const { return dirty_; }
@@ -59,12 +62,14 @@ signals:
     void commitRequested();
     void selectionChanged();
     void multipliersChanged();
+    void finalChanged();
 private:
     bool reject(QString& error, const QString& message);
     void modified(bool resetInput = true);
     void resetEditState();
     void resetMultipliers();
     transportation::MultiplierAnchor multiplierAnchor_;
+    std::optional<transportation::FinalSummary> final_;
     bool multipliersRefreshed_=false, multipliersLocked_=false;
     enum class GridOperation { Insert, Delete, Paste };
     bool changeSelection(QString& error, GridOperation operation);

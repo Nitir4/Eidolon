@@ -122,6 +122,14 @@ void solveProblem(ApplicationShell& shell, transportation::StartMethod method = 
     if(transportationController(shell).trace().size()==1)
         QMessageBox::information(&shell,QStringLiteral("Optimal Tableau"),QStringLiteral("Iteration 1 is optimal"));
 }
+void finalProblem(ApplicationShell& shell) {
+    if(shell.currentScreen()==id("input") && !shell.navigate(id("solve-menu")))return;
+    auto& controller=transportationController(shell);QString error;
+    if(!controller.computeFinal(error)) {
+        controller.dialogs().showError(QStringLiteral("Cannot Solve Problem"),error);return;
+    }
+    shell.navigate(id("final"));
+}
 TransportationTable* table(QWidget* parent, const char* name)
 {
     auto* grid = new TransportationTable(parent);
@@ -347,9 +355,36 @@ QWidget* solveMenu(ApplicationShell& shell)
            [&shell] { solveProblem(shell,transportation::StartMethod::LeastCost); });
     button(QStringLiteral("Vogel start"), QStringLiteral("transport-vogel-start"), *choices,
            [&shell] { solveProblem(shell,transportation::StartMethod::Vogel); });
+    button(QStringLiteral("Final solution"),QStringLiteral("transport-final-start"),*choices,[&shell]{finalProblem(shell);});
     centerPanel(*layout, panel);
     footer(*layout, shell, true);
     return page;
+}
+QWidget* finalScreen(ApplicationShell& shell) {
+    auto& controller=transportationController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);
+    auto* heading=new QLabel(QStringLiteral("TRANSPORTATION MODEL OUTPUT SUMMARY"));heading->setAlignment(Qt::AlignCenter);layout->addWidget(heading);
+    const auto label=[layout](const char* name) {auto* value=new QLabel;value->setObjectName(QString::fromLatin1(name));value->setWordWrap(true);layout->addWidget(value);return value;};
+    auto* title=label("transport-final-title"),*iteration=label("transport-final-iteration"),*objective=label("transport-final-objective");
+    auto* controls=new QHBoxLayout;
+    for(const auto& command:{std::pair<const char*,const char*>{"Next Iteration","transport-final-next"},{"All Iterations","transport-final-all"}}) {
+        auto* b=new QPushButton(QString::fromLatin1(command.first));b->setObjectName(QString::fromLatin1(command.second));b->setEnabled(false);controls->addWidget(b);
+    }
+    controls->addStretch();layout->addLayout(controls);
+    auto* grid=table(page,"transport-final-grid");layout->addWidget(grid,1);
+    const auto render=[&controller,title,iteration,objective,grid] {
+        const auto* output=controller.finalOutput();grid->clear();grid->setRowCount(0);grid->setColumnCount(5);
+        title->setText(output?QStringLiteral("Title: ")+text(output->title):QStringLiteral("Open or initialize input, then choose Final solution from the SOLVE Menu."));
+        iteration->setText(output?QStringLiteral("Final Iteration No.: ")+text(output->iteration):QString());
+        objective->setText(output?QStringLiteral("Objective Value (minimum cost) =")+text(output->objective):QString());
+        if(!output)return;
+        grid->setRowCount(static_cast<int>(output->rows.size())+1);
+        const QStringList headers{QStringLiteral("From"),QStringLiteral("To"),QStringLiteral("Amt Shipped"),QStringLiteral("Obj Coeff"),QStringLiteral("Obj Contrib")};
+        for(int col=0;col<5;++col)put(*grid,0,col,headers[col],true);
+        for(std::size_t row=0;row<output->rows.size();++row)for(int col=0;col<5;++col)
+            put(*grid,static_cast<int>(row)+1,col,text(output->rows[row][static_cast<std::size_t>(col)]));
+        grid->fitColumns(0,5);
+    };
+    QObject::connect(&controller,&TransportationController::finalChanged,page,render);render();footer(*layout,shell,true);return page;
 }
 QWidget* iterations(ApplicationShell& shell)
 {
@@ -517,8 +552,9 @@ void moduleMenus(ApplicationShell& shell, QMenuBar& bar, bool inputPage)
     leastcost->setEnabled(transportationController(shell).loaded());
     auto* vogel=solve->addAction(QStringLiteral("Iterations — Vogel start"),&shell,[&shell]{solveProblem(shell,transportation::StartMethod::Vogel);});
     vogel->setEnabled(transportationController(shell).loaded());
-    const auto update=[&controller,save,saveAs,northwest,leastcost,vogel] {
-        for (auto* action:{save,saveAs,northwest,leastcost,vogel}) action->setEnabled(controller.loaded());
+    auto* final=solve->addAction(QStringLiteral("Final solution"),&shell,[&shell]{finalProblem(shell);});final->setObjectName(QStringLiteral("transport-final-action"));
+    const auto update=[&controller,save,saveAs,northwest,leastcost,vogel,final] {
+        for (auto* action:{save,saveAs,northwest,leastcost,vogel,final}) action->setEnabled(controller.loaded());
     };
     QObject::connect(&controller,&TransportationController::changed,file,update); update();
     bar.addAction(QStringLiteral("MAIN Menu"),&shell,[&shell]{shell.navigate(QStringLiteral("main"));});
@@ -541,6 +577,7 @@ ModuleDescriptor transportationModule()
     module.screens.append({id("northwest"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
     module.screens.append({id("leastcost"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
     module.screens.append({id("vogel"),QStringLiteral("TRANSPORTATION MODEL"),iterations,menus});
+    module.screens.append({id("final"),QStringLiteral("TRANSPORTATION MODEL"),finalScreen,menus});
     return module;
 }
 } // namespace tora::desktop
