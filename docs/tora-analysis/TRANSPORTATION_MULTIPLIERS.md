@@ -115,3 +115,10 @@ unverified. Manual loops, final summary, printing and remaining modules are
 still separate feature cycles.
 
 Local complete gate: 91/91 desktop CTests in 157.82 seconds; 35/35 Qt-free CTests in 3.39 seconds. Actual Wayland acceptance passed 23 views with LP preserved. Selected anchor/Next views and small 200% render were visually inspected. Three-OS/package/install gate remains pending.
+
+
+## Final delivery — 13 October 2026
+
+Source e8e2c23675fee282453a99555dff6ce46d3bbf92 passed [three-OS CI](https://github.com/Nitir4/TORA-Clone/actions/runs/38348718758): 91 CTests each, 273 total, zero failures/skips. Each OS passes the eight-scenario/311-field anchor corpus, 73 Transportation Qt checks per scale, and 12 anchor renders. All 36 renders and small 200% images on each OS were reviewed. Existing solver comparisons, structural/input checks, 23 PDFs/4,259 tokens per OS, package/legal/installer audits and real Linux backend startup passed. Six archive digests/integrity checks and 281 Linux payload hashes passed.
+
+The exact-source AppImage is installed through tora-clone and verified in a native Wayland window. SHA-256: 129868b9f38dce57cf7f09a761e838269a713a40e9288d8385041bb72c260449. Previous releases/windows remain preserved. Evidence is build/transportation-multipliers/; packages are dist/transportation/multipliers-verified/. Manual feedback, final summary, printing/settings and six other OR modules remain separate work.

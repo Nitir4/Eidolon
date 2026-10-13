@@ -182,3 +182,6 @@ The input-editing [final three-OS gate](https://github.com/Nitir4/TORA-Clone/act
 
 
 Transportation **EditGrid** is now installed: click a source/destination heading, then choose Copy, Paste, Delete or Insert. Single click inserts after; double click inserts before. Ctrl+U restores the last structural edit. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38292868212) passes89tests on eachOS. See [EditGrid contract](docs/tora-analysis/TRANSPORTATION_EDITGRID.md) for observed rules, original defects corrected and remaining scope. Multiplier/manual loops, final summary, printing/settings and six other modules remain underway.
+
+
+Transportation **Initialize u or v** is now installed. Select any source or destination zero anchor before advancing the first tableau. The anchor persists through later iterations; already-optimal starts still permit selection. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38348718758) passes 91 tests on each OS. See [the multiplier contract](docs/tora-analysis/TRANSPORTATION_MULTIPLIERS.md) for observed formatting and control behavior. Manual-loop feedback and the remaining application modules are next.
