@@ -179,3 +179,6 @@ The current working source adds **Transportation model → Enter New Problem**. 
 Typed Transportation supplies/demands commit to whole numbers, matching the captured input workflow; untouched imported fractions retain their original text. Canceling the unsaved-data prompt blocks direct solver menu actions before a trace is computed.
 
 The input-editing [final three-OS gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38286295916) passes 88 tests per OS (264 overall), three authentic input hashes per OS and native input checks at four scales. The source `edc34b0` AppImage is installed and verified on Wayland. Structural EditGrid operations, manual loops, multiplier choices, final summary, Transportation printing and other OR modules remain separate cycles.
+
+
+Transportation **EditGrid** is now installed: click a source/destination heading, then choose Copy, Paste, Delete or Insert. Single click inserts after; double click inserts before. Ctrl+U restores the last structural edit. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38292868212) passes89tests on eachOS. See [EditGrid contract](docs/tora-analysis/TRANSPORTATION_EDITGRID.md) for observed rules, original defects corrected and remaining scope. Multiplier/manual loops, final summary, printing/settings and six other modules remain underway.
