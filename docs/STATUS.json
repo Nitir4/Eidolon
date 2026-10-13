@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: final summary locally verified; source-pinned three-OS delivery gate pending",
+  "active_step": "future-scope: final summary delivered; Transportation printing observation and implementation next",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Complete final-summary local/three-OS/package/install gate, then observe and implement Transportation printing/settings and remaining modules",
+  "next_step": "Observe and implement Transportation printing, then settings/broader profiles and remaining six OR modules",
   "foundation_order": [
     1,
     5,
@@ -709,7 +709,7 @@
       "completed_on": "2026-10-13"
     },
     "final_summary": {
-      "status": "locally verified; delivery gate pending",
+      "status": "verified, packaged and installed for observed final-summary profile",
       "spec": "docs/tora-analysis/TRANSPORTATION_FINAL.md",
       "evidence": "build/transportation-final/",
       "cases": 19,
@@ -719,9 +719,25 @@
       "native_final_checks_per_scale": 24,
       "final_resolution_renders": 12,
       "local_headless": "38/38in4.17s",
-      "remaining": "Transportationprinting/settings,broaderprofilesandsixothermodules",
+      "remaining": "Transportation printing/settings, broader profiles and six other OR modules",
       "local_desktop": "98/98in183.23s",
-      "native_acceptance": "26actualWaylandviews; LPpreserved; finalsummaryandreturntoprioranchorediterationspassed"
+      "native_acceptance": "26actualWaylandviews; LPpreserved; finalsummaryandreturntoprioranchorediterationspassed",
+      "source_commit": "7a86ef6492aa2b10907fcfb7998cc76c6c7f8183",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38447468335",
+      "ci_validation": "98/98 CTest each Windows/Linux/macOS, 294 total, zero failures/skips; 35119 comparison fields per OS including 482 final-summary fields; 24 final Qt checks per scale; 12 final renders per OS",
+      "delivery_evidence": "build/transportation-final-7a86ef6/",
+      "packages": "dist/transportation/final-summary-7a86ef6-verified/",
+      "delivery_audit": "build/transportation-final-7a86ef6/{visual-review,ci-verified,packages-verified,linux-payload-verified,installation,installed-window}.json",
+      "installed_source": "7a86ef6492aa2b10907fcfb7998cc76c6c7f8183",
+      "installed_linux_sha256": "ee2e5066242fcd2d964efda658d79a77f351a00503d31292e7995b607a48875b",
+      "installed_launcher": "/home/nitir505/.local/bin/tora-clone",
+      "package_sha256": {
+        "macos-universal": "7f7a7b677307a612be1c42b001ee51a4ac3ca32583e46549ec9bafebba446e36",
+        "linux-x86_64": "ee2e5066242fcd2d964efda658d79a77f351a00503d31292e7995b607a48875b",
+        "windows-x86_64": "e9178dbc61bf9c5f53be4318e7292fd6b4da51ded6f918033ab5429fd62ba0f9"
+      },
+      "completed_on": "2026-10-14",
+      "recovery_note": "Reused private build/transportation-final contained older same-named downloads/reports. Digest rejection prevented acceptance/install of appended archives. Fresh source-specific directory downloaded and audited all six current archives; rejected files preserved."
     }
   }
 }

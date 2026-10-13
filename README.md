@@ -188,3 +188,5 @@ Transportation **Initialize u or v** is now installed. Select any source or dest
 
 
 Transportation manual-loop feedback is installed. Click shipment cells to check the computed loop: entering, chosen leaving and other loop cells receive feedback in any order; incorrect cells remain unchanged. Next/All work with partial or no selection. [The final gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38353276843) passes92tests perOS. See [the observed contract](docs/tora-analysis/TRANSPORTATION_MANUAL.md). Final summary, printing/settings and other OR modules remain underway.
+
+Transportation final summary is installed. Choose Final solution from SOLVE Menu to see the terminal basic shipments, costs and contributions; prior iteration history remains available. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38447468335) passes 98 tests per OS. See [the observed contract](docs/tora-analysis/TRANSPORTATION_FINAL.md) for fractional display and alias policies. Transportation printing/settings and six other OR modules remain in progress.

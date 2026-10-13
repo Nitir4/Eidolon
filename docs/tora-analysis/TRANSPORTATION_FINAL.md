@@ -130,4 +130,11 @@ remain separate investigations. Physical mixed-DPI monitor handoff and printer
 hardware remain unverified.
 
 
-Local gate:98/98desktopCTests in183.23seconds;38/38Qt-free in4.17seconds;24finalQtchecks at each of four scales; nineteen authentic-file-backed summaries/482comparedfields. ActualWaylandacceptance passed26views with LPpreserved. Nativefinalsummary and small200%render visually reviewed. Three-OS/package/install verification remains pending.
+Local gate:98/98desktopCTests in183.23seconds;38/38Qt-free in4.17seconds;24finalQtchecks at each of four scales; nineteen authentic-file-backed summaries/482comparedfields. ActualWaylandacceptance passed26views with LPpreserved. Nativefinalsummary and small200%render visually reviewed. Three-OS/package/install verification completed below.
+
+
+## Verified delivery — 2026-10-14
+
+Source 7a86ef6492aa2b10907fcfb7998cc76c6c7f8183 passed [CI run38447468335](https://github.com/Nitir4/TORA-Clone/actions/runs/38447468335): 98 CTests per OS, 294 total, zero failures/skips. Audited 35,119 comparison fields per OS, including 482 final-summary fields and the recorded alias separator policy. All twelve final renders per OS were reviewed, plus full-size 1366×768 at 200 percent. All six artifact archives passed GitHub digest/ZIP checks. Packages, legal files and Linux 281-file payload were verified; native Wayland/xcb launches passed. The source AppImage was installed and its exact native Wayland window verified.
+
+Authoritative delivery evidence is build/transportation-final-7a86ef6/; packages are dist/transportation/final-summary-7a86ef6-verified/. AppImage SHA256: ee2e5066242fcd2d964efda658d79a77f351a00503d31292e7995b607a48875b. A reused older private directory caused appended archive digest failures before acceptance; its files remain diagnostic only. Clean source-specific downloads and reports passed the audit. Physical mixed-DPI and printer hardware remain unverified. Transportation printing is the next feature cycle.
