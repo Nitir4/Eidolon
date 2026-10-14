@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation printing locally verified; exact-source three-OS gate next",
+  "active_step": "future-scope: Transportation settings investigation; printing implemented, full Windows gate incomplete; Actions disabled",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Complete Transportation printing release gate; then observe settings/broader profiles and remaining modules",
+  "next_step": "Finish local Transportation settings/printing verification and requested fresh handover; no GitHub Actions without specific approval",
   "foundation_order": [
     1,
     5,
@@ -740,7 +740,7 @@
       "recovery_note": "Reused private build/transportation-final contained older same-named downloads/reports. Digest rejection prevented acceptance/install of appended archives. Fresh source-specific directory downloaded and audited all six current archives; rejected files preserved."
     },
     "printing": {
-      "status": "locally verified; source-pinned delivery gate pending",
+      "status": "implemented; printer checks pass all3OS; full Windows release gate incomplete",
       "spec": "docs/tora-analysis/TRANSPORTATION_PRINTING.md",
       "evidence": "build/transportation-printing/",
       "workflows": 11,
@@ -750,9 +750,27 @@
       "native_checks": 17,
       "local_desktop": "100/100 in124.59s before final Error-state guard; focused final2/2 in1.45s",
       "local_headless": "38/38 in3.83s",
-      "native_acceptance": "26actualWaylandviews; finalguard source delivered3nonemptyPDFjobs with2/1/1pages toprivatecompatibleCUPSsink; LP/input/tracepreserved",
+      "native_acceptance": "FinalError-stateguardsource:26actualWaylandviews;3nonemptyPDFqueuejobs2/1/1pages;LP/input/tracepreserved",
       "visual": "26 Poppler pages reviewed; private Ghostscript missing-glyph derivative rejected, cause unresolved",
-      "remaining": "Three-OS/package/install gate; Transportation settings/broader profiles and six other modules"
+      "remaining": "Full Windows deployment unverified; Transportation settings/profile implementation and six other modules",
+      "source_commit": "dc853b45fa57ea3a06a890c599948dbc7cd2ce3a",
+      "ci_run": "https://github.com/Nitir4/TORA-Clone/actions/runs/38454278600",
+      "ci_result": "Linux/macOS100/100; Windows99/100with desktop.graphical.scale-1timeout. New printing export/PDF checks passed all3OS. Windows package withheld. No rerun under Actions policy.",
+      "printer_ci": "17Qtchecks,11workflows,15jobs,26pages,278orderedrows,1143teachingtokens perOS",
+      "delivery_evidence": "build/transportation-printing-dc853b4/",
+      "available_packages": "dist/transportation/printing-dc853b4-verified/",
+      "linux_payload": "281filehashes and actual Wayland/xcb startup passed; SHA256f0c07b3611f101cd7fed4b5d0f078e77bba83b6dc1f2b0c45bef4a3389cecfb8",
+      "installed_source": "dc853b45fa57ea3a06a890c599948dbc7cd2ce3a",
+      "installed_linux_sha256": "f0c07b3611f101cd7fed4b5d0f078e77bba83b6dc1f2b0c45bef4a3389cecfb8",
+      "installed_launcher": "/home/nitir505/.local/bin/tora-clone",
+      "installation_scope": "Linux-only reviewed package, exact Wayland window verified; full Windows release gate remains incomplete"
     }
+  },
+  "execution_policy": {
+    "github_actions": "disabled; specific explicit approval required for every execution or re-enabling, including indirect triggers",
+    "effective": "2026-10-14",
+    "through_october": "No execution through2026-10-31inclusive without specific approval; requirement continues afterward",
+    "native_analysis": "User explicitly authorized REA binary decompilation2026-10-14; raw original material remains private",
+    "handover": "Write fresh agent_handover.md after Transportation module work"
   }
 }

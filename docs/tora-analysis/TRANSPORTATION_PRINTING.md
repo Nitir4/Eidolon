@@ -116,3 +116,12 @@ Large/long-alias models, nondefault formats and printer-specific page geometry
 outside this corpus are not established original behavior. Native continuation
 pagination beyond observed sizes is an engineering policy; it is not evidence
 of every legacy page break. Private evidence: build/transportation-printing/.
+
+
+## Pre-policy CI and Actions shutdown
+
+Source dc853b45fa57ea3a06a890c599948dbc7cd2ce3a ran in CI38454278600 before the new Actions approval restriction. Linux/macOS passed100/100. Windows passed99/100; desktop.graphical.scale-1timed out. All new printer export/PDF checks passed on all three OSes, verifying17Qtchecks and26pages/278orderedrows/1143tokens perOS. Five available artifacts passed GitHub digest/ZIP checks; Windows package was withheld. This is a partial release gate, not full three-OS approval.
+
+Actions are disabled for the repository under the user’s2026-10-14shutdown authorization. No rerun or enabling is allowed without specific explicit approval. Existing artifacts remain readable. Linux payload281hashes and actual Wayland/xcb startup passed. Partial evidence is build/transportation-printing-dc853b4/{printer-ci-verified,partial-delivery-audit,linux-payload-verified}.json. Later local-only settings work must not be described as cross-platform CI verified.
+
+The reviewed Linux package dc853b4is installed via /home/nitir505/.local/bin/tora-clone, SHA256f0c07b3611f101cd7fed4b5d0f078e77bba83b6dc1f2b0c45bef4a3389cecfb8. Its exact native Wayland window was verified; prior releases/windows preserved. Installation is Linux-only and does not close the failed full Windows gate.
