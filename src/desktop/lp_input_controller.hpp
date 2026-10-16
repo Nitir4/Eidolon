@@ -43,12 +43,17 @@ public:
     bool initialize(const QString& title, int variables, int constraints);
     bool setTitle(const QString& title);
     bool openFile(const QString& path, bool readOnly = false);
+    bool loadDocument(tora::compat::LpDocument document);
     bool saveTo(const QString& path);
     bool requestOpen();
     bool requestSave();
     bool leaveInput();
+    bool commitPendingInput() { return commitInput(); }
+    bool editingEnabled() const { return editingEnabled_; }
+    void setEditingEnabled(bool enabled) { editingEnabled_=enabled;grid_.refresh(); }
     bool validateForSolve();
     bool toggleObjective();
+    bool applyCoefficientChanges(const std::vector<double>& objective,const std::vector<double>& rhs);
     void selectRow(int row);
     void selectColumn(int column);
     void clearSelection();
@@ -88,6 +93,7 @@ private:
     Axis selectionAxis_ = Axis::None, clipboardAxis_ = Axis::None;
     int selection_ = -1;
     bool editing_ = false;
+    bool editingEnabled_ = true;
     bool pendingCommitValid_ = true;
     bool openingFromPicker_ = false, retryOpen_ = false;
     std::vector<std::string> clipboard_;
