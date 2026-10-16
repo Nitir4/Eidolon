@@ -63,7 +63,7 @@ public:
         y_+=line_;
     }
     void original(const tora::lp::LpProblem& model,tora::core::NumberFormat format,int extraFieldDigits=0) {
-        text(QStringLiteral("TORA Clone — Linear Programming"));
+        text(QStringLiteral("Eidolon — Linear Programming"));
         text(QDateTime::currentDateTime().toString(QStringLiteral("dddd, MMMM dd, yyyy HH:mm")));
         space(4);text(QStringLiteral("LINEAR PROGRAM -- ORIGINAL DATA"),Qt::AlignHCenter);
         space(1);text(QStringLiteral("Title: ")+legacyText(model.title));rule();space(3);
