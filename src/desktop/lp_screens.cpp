@@ -1,5 +1,7 @@
 #include "lp_final_controller.hpp"
+#include "lp_changes_controller.hpp"
 #include "lp_screens.hpp"
+#include "keyboard_navigation.hpp"
 #include "screen_widgets.hpp"
 #include "lp_input_controller.hpp"
 #include "lp_simplex_controller.hpp"
@@ -40,11 +42,11 @@ QModelIndex directionalCell(const QAbstractItemModel& model, const QModelIndex& 
     return current;
 }
 
-class InputDelegate final : public QStyledItemDelegate {
+class InputDelegate final : public SpreadsheetDelegate {
 public:
-    InputDelegate(LpInputController& c,QObject* parent):QStyledItemDelegate(parent),controller_(c) {}
+    InputDelegate(LpInputController& c,QAbstractItemView* parent):SpreadsheetDelegate(parent),controller_(c) {}
     QWidget* createEditor(QWidget* parent,const QStyleOptionViewItem& option,const QModelIndex& index) const override {
-        auto* editor=QStyledItemDelegate::createEditor(parent,option,index);
+        auto* editor=SpreadsheetDelegate::createEditor(parent,option,index);
         if(auto* text=qobject_cast<QLineEdit*>(editor);text && index.row()>0) {
             const int n=index.model()->columnCount()-3,m=index.model()->rowCount()-5;
             QString pattern=QStringLiteral("[-+0-9.eE]*");
@@ -60,43 +62,9 @@ public:
         controller_.setEditing(editor!=nullptr);return editor;
     }
     void destroyEditor(QWidget* editor,const QModelIndex& index) const override {
-        controller_.setEditing(false);QStyledItemDelegate::destroyEditor(editor,index);
+        controller_.setEditing(false);SpreadsheetDelegate::destroyEditor(editor,index);
     }
-    bool eventFilter(QObject* object,QEvent* event) override {
-        if(event->type()==QEvent::KeyPress) {
-            auto* key=static_cast<QKeyEvent*>(event);
-            auto* editor=qobject_cast<QLineEdit*>(object);
-            if(!editor)return QStyledItemDelegate::eventFilter(object,event);
-            if(key->key()==Qt::Key_Return || key->key()==Qt::Key_Enter) {
-                if(!editor->hasAcceptableInput())return true;
-                emit commitData(editor);
-                emit closeEditor(editor,key->modifiers().testFlag(Qt::ShiftModifier)?QAbstractItemDelegate::EditPreviousItem:QAbstractItemDelegate::EditNextItem);
-                return true;
-            }
-            if(key->modifiers()==Qt::NoModifier) {
-                int dr=0,dc=0;
-                if(key->key()==Qt::Key_Up)dr=-1;
-                else if(key->key()==Qt::Key_Down)dr=1;
-                else if(key->key()==Qt::Key_Left && (editor->hasSelectedText() || editor->cursorPosition()==0))dc=-1;
-                else if(key->key()==Qt::Key_Right && (editor->hasSelectedText() || editor->cursorPosition()==editor->text().size()))dc=1;
-                if(dr || dc) {
-                    if(!editor->hasAcceptableInput())return true;
-                    QWidget* parent=editor->parentWidget();
-                    auto* view=qobject_cast<QTableView*>(parent);
-                    while(parent && !view){parent=parent->parentWidget();view=qobject_cast<QTableView*>(parent);}
-                    if(view) {
-                        const auto next=directionalCell(*view->model(),view->currentIndex(),dr,dc);
-                        if(next!=view->currentIndex()) {
-                            emit commitData(editor);emit closeEditor(editor,QAbstractItemDelegate::NoHint);
-                            view->setCurrentIndex(next);view->scrollTo(next);view->edit(next);
-                        }
-                        return true;
-                    }
-                }
-            }
-        }
-        return QStyledItemDelegate::eventFilter(object,event);
-    }
+
 private:
     LpInputController& controller_;
 };
@@ -104,7 +72,7 @@ class InputView final : public QTableView {
 public:
     QSize sizeHint() const override {
         auto size=QTableView::sizeHint();
-        size.setHeight(18*verticalHeader()->defaultSectionSize()+horizontalHeader()->sizeHint().height()+2*frameWidth());
+        size.setHeight((model()?std::min(18,model()->rowCount()):0)*verticalHeader()->defaultSectionSize()+horizontalHeader()->sizeHint().height()+2*frameWidth());
         return size;
     }
 protected:
@@ -198,7 +166,7 @@ void footer(QVBoxLayout& layout, ApplicationShell& shell, bool modify = false, b
         add(QStringLiteral("SOLVE Menu"), QStringLiteral("input-solve-menu"), QStringLiteral("lp/solve-menu"));
     }
     add(QStringLiteral("MAIN Menu"), QStringLiteral("return-main"), QStringLiteral("main"));
-    add(QStringLiteral("Exit TORA"), QStringLiteral("exit-tora"), {});
+    add(QStringLiteral("Exit Eidolon"), QStringLiteral("exit-tora"), {});
     row->addStretch();
     layout.addLayout(row);
 }
@@ -233,6 +201,15 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
             QObject::connect(action,&QAction::triggered,&shell,[&shell,slack,mMethod,twoPhase,bounded]{if(slack)simplexController(shell).requestAllSlack();else if(mMethod)simplexController(shell).requestMMethod();else if(twoPhase)simplexController(shell).requestTwoPhase();else if(bounded)simplexController(shell).requestBounded();else simplexController(shell).requestDual();});
         }else {action->setEnabled(false);action->setToolTip(QString::fromLatin1(previewReason));}
     }
+    auto* extensions=menu.addMenu(QStringLiteral("Class extensions"));
+    extensions->setObjectName(QStringLiteral("lp-class-extensions"));
+    for(const auto method:{LpChangeMethod::Fresh,LpChangeMethod::RevisedDual}) {
+        auto* action=extensions->addAction(method==LpChangeMethod::Fresh?QStringLiteral("Change Cj / RHS"):QStringLiteral("Dual Revised (RHS)"));
+        action->setObjectName(method==LpChangeMethod::Fresh?QStringLiteral("solve-changes"):QStringLiteral("solve-dual-revised"));
+        const auto update=[action,&graphInput]{action->setEnabled(graphInput.document()!=nullptr);};
+        QObject::connect(&graphInput,&LpInputController::changed,extensions,update);update();
+        QObject::connect(action,&QAction::triggered,&shell,[&shell,method]{changesController(shell).request(method);});
+    }
     menu.setToolTipsVisible(true);
     solve->setToolTipsVisible(true);
     algebraic->setToolTipsVisible(true);
@@ -242,7 +219,7 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
     menu.addSeparator();
     menu.addAction(QStringLiteral("MAIN Menu"), &shell, [&shell] { shell.navigate(QStringLiteral("main")); });
     menu.addSeparator();
-    menu.addAction(QStringLiteral("Exit TORA"), &shell, &QWidget::close);
+    menu.addAction(QStringLiteral("Exit Eidolon"), &shell, &QWidget::close);
 }
 }
 
@@ -321,8 +298,8 @@ ModuleDescriptor lpModule()
         view->setObjectName(QStringLiteral("input-grid"));view->setModel(c.grid());
         view->setItemDelegate(new InputDelegate(c,view));
         view->verticalHeader()->hide();view->horizontalHeader()->setHighlightSections(false);
-        view->setSelectionMode(QAbstractItemView::NoSelection);
-        view->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::AnyKeyPressed);
+        view->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        view->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::AnyKeyPressed);
         view->setStyleSheet(QStringLiteral("QTableView {background: white; gridline-color: #b7c6d8; border: 1px solid #879bb5;} QHeaderView::section {background: #dce8f7; color: #172b4d; border: 1px solid #b7c6d8;} QTableView QLineEdit {background: white; color: black; selection-background-color: #000080; selection-color: white;}"));
         auto* gridRow=new QHBoxLayout;gridRow->addStretch();gridRow->addWidget(view,1);gridRow->addStretch();
         auto* gridArea=new QVBoxLayout;gridArea->addLayout(gridRow);gridArea->addStretch(1);
@@ -350,8 +327,9 @@ ModuleDescriptor lpModule()
                 width+=2*fm.averageCharWidth();view->setColumnWidth(col,width);total+=width;
             }
             if(total>0)view->setMaximumWidth(total+view->style()->pixelMetric(QStyle::PM_ScrollBarExtent)+2*view->frameWidth());
-            view->setMaximumHeight(std::max(18,model->rowCount())*view->verticalHeader()->defaultSectionSize()+view->horizontalHeader()->sizeHint().height()+2*view->frameWidth());
-            gridArea->setStretch(0,model->rowCount()>18?1:0);gridArea->setStretch(1,model->rowCount()>18?0:1);
+            view->setMaximumHeight(model->rowCount()*view->verticalHeader()->defaultSectionSize()+view->horizontalHeader()->sizeHint().height()+2*view->frameWidth());
+            view->updateGeometry();
+            gridArea->setStretch(0,1);gridArea->setStretch(1,0);
         };
         const auto update=[page,title,variables,constraints,view,gridHeading,&c,metrics] {
             const QSignalBlocker a(title),b(variables),d(constraints);
@@ -392,7 +370,7 @@ ModuleDescriptor lpModule()
         auto* save=file->addAction(QStringLiteral("Save"),&c,[&c]{c.requestSave();});
         auto* saveAs=file->addAction(QStringLiteral("Save As"),&c,[&c]{c.requestSave();});
         file->addAction(QStringLiteral("Main Menu"), &shell, [&shell] { shell.navigate(QStringLiteral("main")); });
-        file->addAction(QStringLiteral("Exit TORA"), &shell, &QWidget::close);
+        file->addAction(QStringLiteral("Exit Eidolon"), &shell, &QWidget::close);
         auto* edit = bar.addMenu(QStringLiteral("EditGrid"));
         const QStringList labels{QStringLiteral("Undo Last Insert, Paste, Or Delete"), QStringLiteral("Copy Column or Row"),
             QStringLiteral("Paste on Column or Row"), QStringLiteral("Delete Column or Row"), QStringLiteral("Insert Column or Row")};
@@ -441,6 +419,10 @@ ModuleDescriptor lpModule()
         // centered menu button. The remaining commands are direct buttons.
         solve->setMenu(full->actions().front()->menu());
         inner->addWidget(solve);
+        auto* extensions=new QToolButton;extensions->setText(QStringLiteral("Class extensions"));
+        extensions->setObjectName(QStringLiteral("solve-class-extensions"));extensions->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);extensions->setPopupMode(QToolButton::InstantPopup);
+        for(auto* action:full->actions())if(action->menu() && action->menu()->objectName()==QStringLiteral("lp-class-extensions"))extensions->setMenu(action->menu());
+        inner->addWidget(extensions);
         button(QStringLiteral("View/Modify Input Data"), QStringLiteral("solve-view-input"), *inner,
             [&shell] { shell.navigate(QStringLiteral("lp/input")); });
         auto* separator = new QFrame;
@@ -451,7 +433,7 @@ ModuleDescriptor lpModule()
         auto* exitSeparator = new QFrame;
         exitSeparator->setFrameShape(QFrame::HLine);
         inner->addWidget(exitSeparator);
-        button(QStringLiteral("Exit TORA"), QStringLiteral("solve-exit"), *inner, [&shell] { shell.close(); });
+        button(QStringLiteral("Exit Eidolon"), QStringLiteral("solve-exit"), *inner, [&shell] { shell.close(); });
         centerPanel(*layout, panel);
         return page;
     }, [](ApplicationShell& shell, QMenuBar& bar) {
@@ -481,6 +463,8 @@ ModuleDescriptor lpModule()
         footer(*layout, shell, true);
         return page;
     }, {}});
+    module.screens.append({QStringLiteral("lp/changes"),heading,[](ApplicationShell& shell){return changesScreen(shell);},{}});
+    module.screens.append({QStringLiteral("lp/changes-result"),heading,[](ApplicationShell& shell){return changesResultScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/final"),heading,[](ApplicationShell& shell){return finalScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/graphical"),heading,[](ApplicationShell& shell){return graphicalScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/simplex"),heading,[](ApplicationShell& shell){return simplexScreen(shell);},{}});
