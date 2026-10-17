@@ -11,6 +11,7 @@
 #include <QScrollBar>
 #include <QLabel>
 #include <QPushButton>
+#include <QToolButton>
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QPainter>
@@ -272,14 +273,15 @@ bool printSimplexTrace(QPrinter& printer,const LpSimplexController& c,const QFon
     return c.session() && printLpTrace(printer,*c.session(),c.format(),font);
 }
 QWidget* simplexScreen(ApplicationShell& shell) {
-    auto& c=simplexController(shell);auto* page=new QWidget;auto* outer=new QHBoxLayout(page);
-    outer->addStretch(1);auto* body=new QWidget;outer->addWidget(body,8);outer->addStretch(1);auto* layout=new QVBoxLayout(body);
+    auto& c=simplexController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);
     auto* heading=new QLabel(QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));heading->setObjectName(QStringLiteral("simplex-method"));heading->setAlignment(Qt::AlignCenter);auto bold=heading->font();bold.setBold(true);heading->setFont(bold);layout->addWidget(heading);
     auto* title=new QLabel;title->setObjectName(QStringLiteral("simplex-title"));layout->addWidget(title);
+    auto* help=new QToolButton;help->setObjectName(QStringLiteral("simplex-instructions-toggle"));help->setText(QStringLiteral("Show iteration instructions"));help->setCheckable(true);help->setArrowType(Qt::RightArrow);help->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);layout->addWidget(help,0,Qt::AlignLeft);
     auto* instructions=new QLabel(QStringLiteral("Steps for generating NEXT tableau from CURRENT one:\n"
         "1. ENTERING variable: Click a NONBASIC variable (if correct, column turns green)\n"
         "2. LEAVING variable: Click a BASIC variable (if correct, row turns red)\n"
-        "3. Click command button NEXT ITERATION (or ALL ITERATIONS) -- This step may be executed without Steps 1 and/or 2."));instructions->setWordWrap(true);layout->addWidget(instructions);
+        "3. Click command button NEXT ITERATION (or ALL ITERATIONS) -- This step may be executed without Steps 1 and/or 2."));instructions->setWordWrap(true);instructions->setObjectName(QStringLiteral("simplex-instructions"));instructions->hide();layout->addWidget(instructions);
+    QObject::connect(help,&QToolButton::toggled,instructions,[instructions,help](bool visible){instructions->setVisible(visible);help->setText(visible?QStringLiteral("Hide iteration instructions"):QStringLiteral("Show iteration instructions"));help->setArrowType(visible?Qt::DownArrow:Qt::RightArrow);});
     auto* commands=new QHBoxLayout;commands->addStretch();
     const auto button=[page](const QString& text,const QString& id,QHBoxLayout* row){auto* b=new QPushButton(text,page);b->setObjectName(id);row->addWidget(b);return b;};
     auto* next=button(QStringLiteral("Next Iteration"),QStringLiteral("simplex-next"),commands);
@@ -287,10 +289,10 @@ QWidget* simplexScreen(ApplicationShell& shell) {
     auto* print=button(QStringLiteral("Write to Printer"),QStringLiteral("simplex-print"),commands);commands->addStretch();layout->addLayout(commands);
     auto* view=new TraceView;view->setObjectName(QStringLiteral("simplex-grid"));view->setModel(new TraceModel(c,view));view->verticalHeader()->hide();view->horizontalHeader()->hide();view->setSelectionMode(QAbstractItemView::NoSelection);
     view->setStyleSheet(QStringLiteral("QTableView {background: white; gridline-color: #b7c6d8; border: 1px solid white;}"));
-    auto* gridArea=new QWidget(page);auto* gridLayout=new QHBoxLayout(gridArea);gridLayout->setContentsMargins(0,0,0,0);gridLayout->setSpacing(0);
+    auto* gridArea=new QWidget(page);gridArea->setObjectName(QStringLiteral("simplex-table-area"));auto* gridLayout=new QHBoxLayout(gridArea);gridLayout->setContentsMargins(0,0,0,0);gridLayout->setSpacing(0);
     gridLayout->addWidget(view->labelHost());gridLayout->addWidget(view,1);layout->addWidget(gridArea,1);
     auto* footer=new QHBoxLayout;footer->addStretch();auto* input=button(QStringLiteral("View/Modify Input Data"),QStringLiteral("simplex-view-input"),footer);
-    auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("simplex-main"),footer);auto* exit=button(QStringLiteral("Exit TORA"),QStringLiteral("simplex-exit"),footer);footer->addStretch();layout->addLayout(footer);
+    auto* main=button(QStringLiteral("MAIN Menu"),QStringLiteral("simplex-main"),footer);auto* exit=button(QStringLiteral("Exit Eidolon"),QStringLiteral("simplex-exit"),footer);footer->addStretch();layout->addLayout(footer);
     const auto update=[&c,heading,title,next,all,print,view] {
         const auto method=c.session()?c.session()->method():tora::lp::PrimalMethod::AllSlack;
         heading->setText(method==tora::lp::PrimalMethod::Dual?QStringLiteral("SIMPLEX TABLEAU - (Dual Simplex Method)"):method==tora::lp::PrimalMethod::MMethod?QStringLiteral("SIMPLEX TABLEAU - (M-Method)"):method==tora::lp::PrimalMethod::TwoPhase?QStringLiteral("SIMPLEX TABLEAU - (Two-Phase Method)"):QStringLiteral("SIMPLEX TABLEAU - (Starting All-Slack Method)"));
