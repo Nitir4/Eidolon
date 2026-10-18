@@ -116,7 +116,7 @@ Qt::ItemFlags LpGridModel::flags(const QModelIndex& index) const {
     if(!index.isValid()) return Qt::NoItemFlags;
     auto result=Qt::ItemIsEnabled|Qt::ItemIsSelectable;
     const int n=columnCount()-3,m=rowCount()-5,r=index.row(),c=index.column();
-    if(c>0 && (c<=n || (r>=2 && r<m+2))) result|=Qt::ItemIsEditable;
+    if(controller_.editingEnabled() && c>0 && (c<=n || (r>=2 && r<m+2))) result|=Qt::ItemIsEditable;
     return result;
 }
 bool LpGridModel::setData(const QModelIndex& index,const QVariant& value,int role) {
@@ -154,6 +154,7 @@ bool LpInputController::commitInput() {pendingCommitValid_=true;emit commitReque
 void LpInputController::refresh() {cells_=document_?ToraLpCodec::gridText(*document_):std::vector<std::string>{};clearSelection();grid_.refresh();emit changed();}
 void LpInputController::beginNew(tora::core::NumberFormat format) {newFormat_=format;document_.reset();clipboard_.clear();clipboardAxis_=Axis::None;refresh();}
 bool LpInputController::initialize(const QString& title,int variables,int constraints) {
+    if(!editingEnabled_)return false;
     const auto dimensions=tora::lp::LpValidator::dimensions(variables<0?0:static_cast<std::size_t>(variables),constraints<0?0:static_cast<std::size_t>(constraints));
     if(!dimensions.valid()) return fail(QString::fromStdString(dimensions.issues.front().title),QString::fromStdString(dimensions.issues.front().message));
     try {
@@ -164,10 +165,15 @@ bool LpInputController::initialize(const QString& title,int variables,int constr
     }catch(const std::exception& e){return fail(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::setTitle(const QString& title) {
+    if(!editingEnabled_ && document_ && legacyText(document_->problem.title)!=title)return false;
     if(!document_) return true;
     try {auto next=*document_;next.problem.title=encodedText(title);if(next.problem.title==document_->problem.title)return true;
         (void)ToraLpCodec::encode(next);document_=std::move(next);emit changed();return true;}
     catch(const std::exception& e){return fail(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));}
+}
+bool LpInputController::loadDocument(tora::compat::LpDocument document) {
+    try{(void)ToraLpCodec::encode(document);document_=std::move(document);captionPath_=displayPath(document_->sourcePath());preferredSavePath_=captionPath_;clipboard_.clear();clipboardAxis_=Axis::None;refresh();return true;}
+    catch(const std::exception& e){return fail(QStringLiteral("LP File Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::openFile(const QString& path,bool readOnly) {
     try {auto next=LpFileStore::open(nativePath(path),readOnly);document_=std::move(next);captionPath_=path;preferredSavePath_=path;clipboard_.clear();clipboardAxis_=Axis::None;refresh();return true;}
@@ -206,6 +212,7 @@ bool LpInputController::validateForSolve() {
     return true;
 }
 bool LpInputController::replaceGrid(std::vector<std::string> cells) {
+    if(!editingEnabled_)return false;
     try {auto next=*document_;ToraLpCodec::setGridText(next,cells);document_=std::move(next);cells_=std::move(cells);clearSelection();grid_.valuesChanged();emit changed();return true;}
     catch(const std::exception& e){return fail(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));}
 }
@@ -233,7 +240,16 @@ bool LpInputController::editCell(int row,int column,const QString& value) {
         cells[index(row,j)]=std::move(text);return replaceGrid(std::move(cells));
     }catch(const std::exception& e){return fail(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));}
 }
-bool LpInputController::toggleObjective() {if(!document_)return false;document_->problem.sense=document_->problem.sense==tora::lp::ObjectiveSense::Maximize?tora::lp::ObjectiveSense::Minimize:tora::lp::ObjectiveSense::Maximize;refresh();return true;}
+bool LpInputController::applyCoefficientChanges(const std::vector<double>& objective,const std::vector<double>& rhs) {
+    if(!editingEnabled_)return false;
+    if(!document_ || objective.size()!=document_->problem.variables.size() || rhs.size()!=document_->problem.constraints.size())return false;
+    try {
+        auto next=*document_;next.problem.objective=objective;
+        for(std::size_t i=0;i<rhs.size();++i)next.problem.constraints[i].rhs=rhs[i];
+        (void)ToraLpCodec::encode(next);document_=std::move(next);refresh();return true;
+    }catch(const std::exception& e){return fail(QStringLiteral("Input Data Error"),QString::fromUtf8(e.what()));}
+}
+bool LpInputController::toggleObjective() {if(!editingEnabled_ || !document_)return false;document_->problem.sense=document_->problem.sense==tora::lp::ObjectiveSense::Maximize?tora::lp::ObjectiveSense::Minimize:tora::lp::ObjectiveSense::Maximize;refresh();return true;}
 void LpInputController::selectRow(int row) {selectionAxis_=Axis::Row;selection_=row;grid_.selectionChanged();emit selectionChanged();}
 void LpInputController::selectColumn(int column) {selectionAxis_=Axis::Column;selection_=column;grid_.selectionChanged();emit selectionChanged();}
 void LpInputController::clearSelection() {selectionAxis_=Axis::None;selection_=-1;grid_.selectionChanged();emit selectionChanged();}
@@ -266,6 +282,7 @@ bool LpInputController::pasteSelection() {
 bool LpInputController::deleteSelection() {return reshape(false,true);}
 bool LpInputController::insertSelection(bool before) {return reshape(true,before);}
 bool LpInputController::reshape(bool insert,bool before) {
+    if(!editingEnabled_)return false;
     if(!canCopy())return false;
     const int n=grid_.columnCount()-3,m=grid_.rowCount()-5;
     const bool column=selectionAxis_==Axis::Column;

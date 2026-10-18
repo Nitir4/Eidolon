@@ -1,0 +1,96 @@
+[
+  {
+    "case": "minimum",
+    "title": "Assignment minimum",
+    "costs": [
+      [
+        9,
+        2,
+        7
+      ],
+      [
+        6,
+        4,
+        3
+      ],
+      [
+        5,
+        8,
+        1
+      ]
+    ],
+    "mode": "min",
+    "expected": {
+      "objective": 9,
+      "pairs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "expected_tora_objective": "9.00",
+    "file_sha256": "3e373a4cf3c466ecab3643953b9e94b98dc03b8459abb6d4c0cc6197e298e56c",
+    "provenance": {
+      "source": "reference/tora-captures/application-inventory/actions-assignment-minimum/tora-saved.txt",
+      "evidence_id": "ev_f40dcab5f3a6b34a10867ed80af3c35b7809a2ec9fc81fd88120d984b8f26dc0",
+      "child_exit": 0,
+      "review": "Original final objective and positive unit shipment pairs visually reviewed. Zero basic shipments excluded from real Assignment pairs."
+    }
+  },
+  {
+    "case": "maximum",
+    "title": "Assignment maximum-negated",
+    "costs": [
+      [
+        10,
+        5,
+        13
+      ],
+      [
+        3,
+        9,
+        18
+      ],
+      [
+        10,
+        7,
+        2
+      ]
+    ],
+    "mode": "negated-max",
+    "expected": {
+      "objective": 35,
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    "expected_tora_objective": "-35.00",
+    "file_sha256": "7c00bd1b58458d9828ad30a428fcebdae4edb483b010f5be44a7210bcb1936e9",
+    "provenance": {
+      "source": "reference/tora-captures/application-inventory/actions-assignment-maximum/tora-saved.txt",
+      "evidence_id": "ev_1c81ef43742d11b92dd156780f949bf6ab8e05bb7184d1b312dc239211bc1a55",
+      "child_exit": 0,
+      "review": "Original final objective and positive unit shipment pairs visually reviewed. Zero basic shipments excluded from real Assignment pairs."
+    }
+  }
+]

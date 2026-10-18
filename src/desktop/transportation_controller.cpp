@@ -132,14 +132,15 @@ bool TransportationController::undo(QString& error) {
 }
 void TransportationController::load(transportation::Problem problem) {
     auto next = compat::TransportationDocument::create(std::move(problem));
-    document_ = std::move(next); resetEditState(); trace_.clear(); method_ = transportation::StartMethod::NorthWest;
+    document_ = std::move(next); newFormat_=document_->problem().format; resetEditState(); trace_.clear(); method_ = transportation::StartMethod::NorthWest;
     dirty_ = false; readOnly_ = false; sourcePath_.clear(); preferredSavePath_.clear(); emit inputReset(); emit changed();
 }
 void TransportationController::loadExample() {
     auto p = transportation::Problem::blank(2,3);
     p.title = "Transportation example"; p.costs = {{2,3,1},{5,4,8}}; p.supply = {20,30}; p.demand = {10,25,15}; load(std::move(p));
 }
-void TransportationController::beginNew() {
+void TransportationController::beginNew(core::NumberFormat format) {
+    (void)core::NumberFormatter(format);newFormat_=format;
     document_.reset(); resetEditState(); trace_.clear(); dirty_ = false; readOnly_ = false;
     sourcePath_.clear(); preferredSavePath_.clear(); method_ = transportation::StartMethod::NorthWest; emit inputReset(); emit changed();
 }
@@ -148,7 +149,7 @@ bool TransportationController::initialize(const QString& title, int sources, int
     if (readOnly_) return reject(error, QStringLiteral("This Transportation problem is read-only. Save a copy before editing."));
     try {
         auto next = compat::TransportationDocument::blank(sources > 0 ? static_cast<std::size_t>(sources) : 0,
-                                                         destinations > 0 ? static_cast<std::size_t>(destinations) : 0, title.toStdString());
+                                                         destinations > 0 ? static_cast<std::size_t>(destinations) : 0, title.toStdString(),newFormat_);
         document_ = std::move(next); resetEditState(); modified(); return true;
     } catch (const std::exception& e) { return reject(error, QString::fromUtf8(e.what())); }
 }
@@ -177,7 +178,7 @@ bool TransportationController::openFile(const QString& filename, QString& error,
         const auto bytes = file.readAll();
         if (file.error() != QFileDevice::NoError) return reject(error, file.errorString());
         auto next = compat::TransportationDocument::decode(std::string_view(bytes.constData(), static_cast<std::size_t>(bytes.size())));
-        document_ = std::move(next); resetEditState(); trace_.clear(); method_ = transportation::StartMethod::NorthWest;
+        document_ = std::move(next); newFormat_=document_->problem().format; resetEditState(); trace_.clear(); method_ = transportation::StartMethod::NorthWest;
         sourcePath_ = filename; preferredSavePath_ = filename; dirty_ = false; readOnly_ = readOnly; emit inputReset(); emit changed(); return true;
     } catch (const std::exception& e) { return reject(error, QString::fromUtf8(e.what())); }
 }

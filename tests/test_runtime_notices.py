@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from runtime_notices import validate_qt_bundle, copy_qt_notices, QT_BUNDLE
+from runtime_notices import validate_qt_bundle, copy_qt_notices, copy_distribution_qt_notices, QT_BUNDLE
 
 
 class RuntimeNotices(unittest.TestCase):
@@ -44,6 +44,29 @@ class RuntimeNotices(unittest.TestCase):
             (root / 'SOURCES.json').write_text(json.dumps({'files': [{'path': '../private'}]}))
             with self.assertRaisesRegex(ValueError, 'path'):
                 validate_qt_bundle(root)
+
+    def test_distribution_notices_belong_only_to_system_sdk(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            prefix = root / 'usr'
+            installed = prefix / 'share/licenses/qt6-base'
+            installed.mkdir(parents=True)
+            (installed / 'LGPL.txt').write_text('distribution license fixture')
+            wayland = installed.parent / 'qt6-wayland'
+            if sys.platform == 'win32':
+                wayland.mkdir()
+                (wayland / 'LGPL.txt').write_text('distribution license fixture')
+            else:
+                wayland.symlink_to(installed, target_is_directory=True)
+            stage = root / 'package'
+            self.assertIsNone(copy_distribution_qt_notices(stage, root / 'other-sdk', '6.11.2', prefix))
+            data = copy_distribution_qt_notices(stage, prefix, '6.11.2', prefix)
+            self.assertEqual(data['qt_version'], '6.11.2')
+            self.assertFalse(data['complete_upstream_attribution_bundle'])
+            self.assertEqual((stage / 'licenses/Qt-distribution/qt6-wayland/LGPL.txt').read_text(),
+                             'distribution license fixture')
+            self.assertEqual(data['files']['qt6-base/LGPL.txt'],
+                             hashlib.sha256(b'distribution license fixture').hexdigest())
 
 
 if __name__ == '__main__':

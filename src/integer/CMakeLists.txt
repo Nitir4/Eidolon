@@ -1,0 +1,6 @@
+add_library(or_integer STATIC integer.cpp)
+add_library(tora::integer ALIAS or_integer)
+tora_target_defaults(or_integer)
+target_compile_features(or_integer PUBLIC cxx_std_17)
+target_include_directories(or_integer PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_link_libraries(or_integer PUBLIC tora::lp)

@@ -27,6 +27,7 @@
 #include <QTableWidget>
 #include <QTimer>
 #include <QComboBox>
+#include <QRadioButton>
 #include <stdexcept>
 using namespace tora::desktop;
 
@@ -206,6 +207,34 @@ int main(int argc, char** argv) {
             const auto structuralDocument=transport.document()->encode();
             require(transport.openFile(structuralPath,error) && transport.document()->encode()==structuralDocument,"Native structural reopen mismatch");
             capture(QStringLiteral("transportation-editgrid-undo-reopened"),QStringLiteral("transportation/input"));
+            transport.dialogs().askSave=[] {return SaveChoice::No;};
+            require(shell.navigate(QStringLiteral("transportation/input-mode")),"Native settings entry failed");
+            auto* mode=shell.currentContent();
+            auto* scientific=mode->findChild<QRadioButton*>(QStringLiteral("transport-scientific"));
+            auto* formatN=mode->findChild<QLineEdit*>(QStringLiteral("transport-format-n"));
+            auto* formatD=mode->findChild<QLineEdit*>(QStringLiteral("transport-format-d"));
+            require(scientific && formatN && formatD,"Native format controls missing");
+            scientific->click();formatN->setText(QStringLiteral("2"));formatD->setText(QStringLiteral("3"));
+            capture(QStringLiteral("transportation-settings"),QStringLiteral("transportation/input-mode"));
+            mode->findChild<QPushButton*>(QStringLiteral("transport-new"))->click();
+            require(transport.initialize(QStringLiteral("Scientific draft"),2,3,error),"Native scientific initialization failed");
+            require(transport.document()->cell(1,1)=="0.00e+000","Native scientific blank mismatch");
+            capture(QStringLiteral("transportation-scientific-new"),QStringLiteral("transportation/input"));
+            transport.loadExample();auto scientificProblem=transport.problem();
+            scientificProblem.title="Scientific normal profile";
+            scientificProblem.format={tora::core::Notation::Scientific,5,2};transport.load(scientificProblem);
+            const auto scientificPath=output+QStringLiteral("/transportation-scientific.txt");
+            require(transport.saveTo(scientificPath,error),"Native scientific save failed");
+            const auto scientificBytes=transport.document()->encode();
+            require(transport.openFile(scientificPath,error) && transport.document()->encode()==scientificBytes,"Native scientific roundtrip mismatch");
+            capture(QStringLiteral("transportation-scientific-input"),QStringLiteral("transportation/input"));
+            require(transport.solve(error),"Native scientific solve failed");
+            require(shell.navigate(QStringLiteral("transportation/northwest")),"Native scientific tableau missing");
+            capture(QStringLiteral("transportation-scientific-initial"),QStringLiteral("transportation/northwest"));
+            require(transport.computeFinal(error) && transport.finalOutput()->objective=="1.50000e+02","Native scientific summary mismatch");
+            require(shell.navigate(QStringLiteral("transportation/final")),"Native scientific final route failed");
+            capture(QStringLiteral("transportation-scientific-final"),QStringLiteral("transportation/final"));
+            require(transport.document()->encode()==scientificBytes,"Native settings solve mutated input");
         }
         QString panel=QStringLiteral("not requested");
         if(parser.isSet(QStringLiteral("print-dialog"))) {

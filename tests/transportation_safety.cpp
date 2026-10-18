@@ -53,7 +53,8 @@ int main() {
         rejects([&]{tora::compat::readTransportation(file.substr(0,file.size()-1));});
         rejects([&]{tora::compat::readTransportation(file+"\"extra\"\r\n");});
         auto corrupt=file;corrupt.replace(0,4,"2000");rejects([&]{tora::compat::readTransportation(corrupt);});
-        corrupt=file;corrupt[6]='6';rejects([&]{tora::compat::readTransportation(corrupt);});
+        corrupt=file;corrupt[6]='0';rejects([&]{tora::compat::readTransportation(corrupt);});
+        corrupt=file;corrupt[12]='3';rejects([&]{tora::compat::readTransportation(corrupt);});
         corrupt=file;corrupt.replace(corrupt.find(" +2.5 "),6,"nan");rejects([&]{tora::compat::readTransportation(corrupt);});
         corrupt=file;corrupt[corrupt.find("Depot")]='\0';rejects([&]{tora::compat::readTransportation(corrupt);});
         corrupt=file;corrupt[corrupt.find("Depot")]=static_cast<char>(0xe9);rejects([&]{tora::compat::readTransportation(corrupt);});

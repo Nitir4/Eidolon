@@ -1,4 +1,5 @@
 #include "lp_final_controller.hpp"
+#include "lp_changes_controller.hpp"
 #include "lp_screens.hpp"
 #include "screen_widgets.hpp"
 #include "lp_input_controller.hpp"
@@ -233,6 +234,15 @@ void solveEntries(QMenu& menu, ApplicationShell& shell)
             QObject::connect(action,&QAction::triggered,&shell,[&shell,slack,mMethod,twoPhase,bounded]{if(slack)simplexController(shell).requestAllSlack();else if(mMethod)simplexController(shell).requestMMethod();else if(twoPhase)simplexController(shell).requestTwoPhase();else if(bounded)simplexController(shell).requestBounded();else simplexController(shell).requestDual();});
         }else {action->setEnabled(false);action->setToolTip(QString::fromLatin1(previewReason));}
     }
+    auto* extensions=menu.addMenu(QStringLiteral("Class extensions"));
+    extensions->setObjectName(QStringLiteral("lp-class-extensions"));
+    for(const auto method:{LpChangeMethod::Fresh,LpChangeMethod::RevisedDual}) {
+        auto* action=extensions->addAction(method==LpChangeMethod::Fresh?QStringLiteral("Change Cj / RHS"):QStringLiteral("Dual Revised (RHS)"));
+        action->setObjectName(method==LpChangeMethod::Fresh?QStringLiteral("solve-changes"):QStringLiteral("solve-dual-revised"));
+        const auto update=[action,&graphInput]{action->setEnabled(graphInput.document()!=nullptr);};
+        QObject::connect(&graphInput,&LpInputController::changed,extensions,update);update();
+        QObject::connect(action,&QAction::triggered,&shell,[&shell,method]{changesController(shell).request(method);});
+    }
     menu.setToolTipsVisible(true);
     solve->setToolTipsVisible(true);
     algebraic->setToolTipsVisible(true);
@@ -441,6 +451,10 @@ ModuleDescriptor lpModule()
         // centered menu button. The remaining commands are direct buttons.
         solve->setMenu(full->actions().front()->menu());
         inner->addWidget(solve);
+        auto* extensions=new QToolButton;extensions->setText(QStringLiteral("Class extensions"));
+        extensions->setObjectName(QStringLiteral("solve-class-extensions"));extensions->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);extensions->setPopupMode(QToolButton::InstantPopup);
+        for(auto* action:full->actions())if(action->menu() && action->menu()->objectName()==QStringLiteral("lp-class-extensions"))extensions->setMenu(action->menu());
+        inner->addWidget(extensions);
         button(QStringLiteral("View/Modify Input Data"), QStringLiteral("solve-view-input"), *inner,
             [&shell] { shell.navigate(QStringLiteral("lp/input")); });
         auto* separator = new QFrame;
@@ -481,6 +495,8 @@ ModuleDescriptor lpModule()
         footer(*layout, shell, true);
         return page;
     }, {}});
+    module.screens.append({QStringLiteral("lp/changes"),heading,[](ApplicationShell& shell){return changesScreen(shell);},{}});
+    module.screens.append({QStringLiteral("lp/changes-result"),heading,[](ApplicationShell& shell){return changesResultScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/final"),heading,[](ApplicationShell& shell){return finalScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/graphical"),heading,[](ApplicationShell& shell){return graphicalScreen(shell);},{}});
     module.screens.append({QStringLiteral("lp/simplex"),heading,[](ApplicationShell& shell){return simplexScreen(shell);},{}});

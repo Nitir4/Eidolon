@@ -35,12 +35,17 @@ public:
         painter_.drawText(QRectF(x,y,width,height),alignment|Qt::AlignVCenter,value);painter_.setFont(font_);
     }
     void original(const transportation::Problem& p,bool finalStyle) {
+        // Scientific multiplier labels need more room than fixed decimal cells.
+        if(p.format.notation==core::Notation::Scientific) {
+            const auto available=printer_.pageLayout().paintRectPixels(printer_.resolution()).width();
+            width_=available*.95;left_=(available-width_)/2;
+        }
         line(QStringLiteral("TORA Clone — Transportation"));
         line(QDateTime::currentDateTime().toString(QStringLiteral("dddd, MMMM dd, yyyy HH:mm")));
         space(4);line(finalStyle?QStringLiteral("TRANSPORTATION MODEL -- ORIGINAL DATA"):
             QStringLiteral("TRANSPORTATION MODEL-- ORIGINAL DATA"),Qt::AlignHCenter);
         space();line(QStringLiteral("Title: ")+text(p.title));rule();space(3);
-        const tora::core::NumberFormatter f({tora::core::Notation::Decimal,5,2});
+        const tora::core::NumberFormatter f(p.format);
         const auto number=[&](double value){return text(f.formatBound(value));};
         const auto n=p.demand.size();
         for(std::size_t first=0;first<n;first+=5) {

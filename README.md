@@ -1,4 +1,16 @@
+> Current scope: the full original application, including Linear Equations,
+> LP, Transportation, Integer Programming, Networks, CPM/PERT, Queuing and Games,
+> plus Assignment and the authorized LP class extensions. Local implementation
+> and Release checks pass for the documented profiles; cross-platform and
+> hardware acceptance remain. See [full application coverage](docs/FULL_APPLICATION.md).
+> The installed executable remains the earlier Linux release.
+
 # Native TORA clone
+
+Local LP extensions: open an LP, choose **SOLVE Menu → Class extensions**, then
+**Change Cj / RHS** or **Dual Revised (RHS)**. Analyze keeps input unchanged;
+**Use changed model** applies changes for normal Save As. Results include a
+selected trace and printing. See [native workflow and limits](docs/tora-analysis/LP_CHANGES_NATIVE.md).
 
 Phase 0 is approved. Foundation 1 supplies the C++17/CMake skeleton, native
 Qt 6 Widgets bootstrap, smoke tests and three-OS packaging pipeline.
@@ -59,7 +71,7 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
-Transportation is an authorized extension with North-west, Least-cost and Vogel starts on `future-scope`. The working source also adds editable input and file writing; the published Vogel binaries retain their earlier read-only input. Other OR modules remain outside this project. Review layouts with, for
+Transportation is an authorized extension with North-west, Least-cost and Vogel starts on `future-scope`. The working source also adds editable input and file writing; the published Vogel binaries retain their earlier read-only input. The remaining original OR modules are being integrated under the full-application scope. Review layouts with, for
 example, `ToraClone --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal

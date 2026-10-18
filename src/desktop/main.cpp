@@ -3,6 +3,13 @@
 #include "application_shell.hpp"
 #include "lp_screens.hpp"
 #include "transportation_screens.hpp"
+#include "assignment_controller.hpp"
+#include "games_screens.hpp"
+#include "equations_screens.hpp"
+#include "queuing_screens.hpp"
+#include "networks_screens.hpp"
+#include "integer_controller.hpp"
+#include "planning_screens.hpp"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -40,6 +47,13 @@ int main(int argc, char* argv[])
     tora::desktop::ApplicationShell window(parser.isSet(smoke_test) || parser.isSet(no_settings) ? nullptr : &settings);
     window.registerModule(tora::desktop::lpModule());
     window.registerModule(tora::desktop::transportationModule());
+    window.registerModule(tora::desktop::assignmentModule());
+    window.registerModule(tora::desktop::gamesModule());
+    window.registerModule(tora::desktop::equationsModule());
+    window.registerModule(tora::desktop::queuingModule());
+    window.registerModule(tora::desktop::networksModule());
+    window.registerModule(tora::desktop::integerModule());
+    window.registerModule(tora::desktop::planningModule());
     if (parser.isSet(screen) && !window.navigate(parser.value(screen))) {
         qCritical("Unknown screen ID");
         return 2;

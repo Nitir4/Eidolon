@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "future-scope: Transportation settings investigation; printing implemented, full Windows gate incomplete; Actions disabled",
+  "active_step": "REA local continuation implemented and verified; external release and broader parity gates remain",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Finish local Transportation settings/printing verification and requested fresh handover; no GitHub Actions without specific approval",
+  "next_step": "Use current handover; validate Windows/macOS/older Linux and hardware only with required environment and specific Actions approval. Do not repeat completed modules or new original oracles.",
   "foundation_order": [
     1,
     5,
@@ -764,6 +764,22 @@
       "installed_linux_sha256": "f0c07b3611f101cd7fed4b5d0f078e77bba83b6dc1f2b0c45bef4a3389cecfb8",
       "installed_launcher": "/home/nitir505/.local/bin/tora-clone",
       "installation_scope": "Linux-only reviewed package, exact Wayland window verified; full Windows release gate remains incomplete"
+    },
+    "settings": {
+      "status": "implemented and locally verified; not installed or CI/package verified",
+      "spec": "docs/tora-analysis/TRANSPORTATION_SETTINGS.md",
+      "authentic_format_profiles": 3,
+      "initial_final_fields": 159,
+      "print_workflows": 14,
+      "print_jobs": 19,
+      "print_pages": 34,
+      "print_spatial_rows": 356,
+      "print_tokens": 1444,
+      "native_wayland": "31views at100%and200%,1920x1080physical",
+      "local_validation": "106/106desktop and40/40headless before Assignment; integrated108/108and42/42 afterward",
+      "evidence": "build/transportation-settings/",
+      "rea_success": "ev_506a6b7af44ab265016f7c3f67325de8fa4fe4dd4c1145d01cff25f9369a6951; print handler0x4b2a40",
+      "remaining": "Settings three-OS/package validation; wider profiles"
     }
   },
   "execution_policy": {
@@ -771,6 +787,271 @@
     "effective": "2026-10-14",
     "through_october": "No execution through2026-10-31inclusive without specific approval; requirement continues afterward",
     "native_analysis": "User explicitly authorized REA binary decompilation2026-10-14; raw original material remains private",
-    "handover": "Write fresh agent_handover.md after Transportation module work"
+    "handover": "Refresh compact agent_handover.md after each module; implementation mode already selected."
+  },
+  "project_scope": {
+    "updated_on": "2026-10-18",
+    "required": [
+      "Linear Equations",
+      "Linear Programming",
+      "Transportation",
+      "Assignment class extension",
+      "Integer Programming",
+      "Networks",
+      "Project Planning",
+      "Queuing",
+      "Zero-Sum Games"
+    ],
+    "optional": [],
+    "lp_extensions": [
+      "Objective coefficients Cj changes",
+      "Constraint RHS B changes",
+      "Dual Revised class extension: standard-form and LP adapter implemented; original-equivalent RHS examples verified"
+    ],
+    "report": "External full-application-report.tex created with models and worked cases, current source/evidence limitations. LaTeX compilation/PDF pending; no compiler available in PATH.",
+    "supersedes": "Latest explicit full-application request supersedes prior deferred/optional modules"
+  },
+  "backend_modules": {
+    "assignment": {
+      "status": "Backend and native input/files/results/printing locally implemented and verified; release/unobserved original parity remains",
+      "spec": "docs/tora-analysis/ASSIGNMENT_BACKEND.md",
+      "random_models_exhaustively_checked": 600,
+      "original_equivalent_examples": 2,
+      "expected_objectives": [
+        9,
+        35
+      ],
+      "local_desktop": "108/108 in95.82s",
+      "local_headless": "42/42 in4.25s",
+      "release_backend": "1/1 in0.01s; checks stay active under NDEBUG",
+      "evidence": "build/assignment/",
+      "scope": "min/max,1..100rows/columns,rectangular zero-padding,dual certificate; nonfinite/overflow diagnosed",
+      "remaining": "Wider original numerical/print profiles, release packages/physical hardware; see FULL_APPLICATION.md and handover"
+    },
+    "postoptimal": {
+      "status": "backend and native Cj/RHS drafts/results/trace/application/save/printing locally verified",
+      "spec": "docs/tora-analysis/LP_POSTOPTIMAL.md",
+      "source": "src/lp/postoptimal.cpp",
+      "independent_2d_models": 100,
+      "original_changed_models": 4,
+      "comparison_fields": 44,
+      "headless": "Integrated46/46in3.93s; four changed models/44fields remain verified",
+      "support": "Cj/RHS jointly; min/max; all relations; signedRHS; finite/fixed/negative bounds and free variables via canonicalization",
+      "limits": "Canonical model must fit100variables/rows; baseline finite optimum; fresh solve rather than warm-start/Revised Dual",
+      "evidence": "build/postoptimal/",
+      "remaining": "Report; extension three-OS/package/physical-printer acceptance; broader numerical profiles"
+    },
+    "games": {
+      "status": "Backend and native input/files/results/printing locally implemented and verified; release/unobserved original parity remains",
+      "source": "src/games/games.cpp",
+      "spec": "docs/tora-analysis/GAMES_BACKEND.md",
+      "independent_2x2_models": 200,
+      "general_cases": 100,
+      "original_examples": 2,
+      "comparison_fields": 52,
+      "support": "finite 1..100 strategies per player; normalized probability/payoff certificate; original row-player LP data",
+      "remaining": "Wider original numerical/print profiles, release packages/physical hardware; see FULL_APPLICATION.md and handover",
+      "graphical": {
+        "source": "src/games/graphical.cpp",
+        "spec": "docs/tora-analysis/GAMES_GRAPHICAL.md",
+        "seeded_models": 300,
+        "original_examples": 3,
+        "comparison_fields": 30,
+        "original_profile": "Observed2x2and2x3Graphical output;3x2Graphical entry visibly grayed/unselectable",
+        "extension": "ColumnBmx2upper-envelope backend is a mathematical extension, not an observed original screen",
+        "limits": "Selected player exactly2strategies;opponent1..100;engineering tolerance in scaled units",
+        "excluded_evidence": "Negative-payoff2x3result was black; cause unresolved, no numerical golden claim",
+        "status": "Native envelope/zoom/printing and four-scale/actual Wayland acceptance locally verified; original zoom calibration unmeasured"
+      }
+    },
+    "dual_revised": {
+      "status": "backend/LP adapter and native RHS workflow locally verified",
+      "source": [
+        "src/lp/dual_revised.cpp",
+        "src/lp/dual_revised_model.cpp"
+      ],
+      "spec": "docs/tora-analysis/LP_DUAL_REVISED.md",
+      "method": "Dense basis-system Bland revised dual; explicit baseline bootstrap once then true changed-RHS warm solve",
+      "independent_standard_models": 300,
+      "independent_rhs_models": 150,
+      "original_equivalent_examples": 2,
+      "original_summary_fields": 16,
+      "original_expected_objectives": [
+        12,
+        14
+      ],
+      "rea_evidence": [
+        "ev_a58891b8e2a07b510ccad38ff6b7c8084e3af6ef90a2036b733a0a657b47462a",
+        "ev_2796dda8dc246f91df3033e2e07fe18cd3830f1c5eccbedb2c2d3e99830c41e4"
+      ],
+      "limits": "Explicit dual-feasible nonsingular basis; canonical100nonnegative variables/100rows/200total columns; absolute tolerance1e-9; dependent equality bootstrap rejected; Cj can invalidate basis",
+      "remaining": "Report; three-OSpackage/physical-printer acceptance; dependent equality rank reduction; broader profiles"
+    },
+    "native_lp_changes": {
+      "status": "locally verified source; not installed",
+      "spec": "docs/tora-analysis/LP_CHANGES_NATIVE.md",
+      "source": [
+        "src/desktop/lp_changes_controller.cpp",
+        "src/desktop/lp_changes_screens.cpp"
+      ],
+      "routes": [
+        "lp/changes",
+        "lp/changes-result"
+      ],
+      "methods": [
+        "Fresh Cj/RHS analysis",
+        "Dual Revised RHS warm reoptimization"
+      ],
+      "input_application": "Explicit, transactional; only Cj/RHS; path/read-only/dirty precision preserved; normal Save As",
+      "original_equivalent_display_fields": 16,
+      "native_wayland": "7/7at100%in4.233s and7/7at200%in4.475s, Qt setup/cleanup included",
+      "final_pngs": 24,
+      "final_pdfs": 4,
+      "pdf_pages": 38,
+      "pdf_words": 8016,
+      "out_of_page_words": 0,
+      "evidence": "build/lp-changes/",
+      "remaining": "Three-OSpackage/physical-printer validation; persisted unapplied analysis sessions not implemented"
+    },
+    "equations": {
+      "status": "Native2000equations/1000matrix inversion locally verified",
+      "spec": "docs/tora-analysis/EQUATIONS_BACKEND.md",
+      "support": "Rank/nullspace/witness, inverse [A|I]trace, determinant/log magnitude, formats/files/selected-iteration printing",
+      "remaining": "Numerical conditioning and broader original formatting profiles"
+    },
+    "integer": {
+      "status": "Automated and guided mixed B&B locally verified and original6/7/guidedbounds corroborated",
+      "spec": "docs/tora-analysis/INTEGER_NATIVE.md",
+      "oracles": "docs/tora-analysis/INTEGER_REA_ORACLES.md",
+      "independent_pure_models": 300,
+      "independent_mixed_models": 300,
+      "support": "Independent two-phase relaxations, branch/frontier selection, bounds fathoming, tree/path,5000files,privateLPgrid,read-only/atomic save/printing",
+      "remaining": "Exact original branch/color/print ordering; model/node/tolerance limits; unbounded relaxation is not IPunbounded proof"
+    },
+    "networks": {
+      "status": "MST/Prim,Shortest/Dijkstra/Floyd,negative-edge Bellman extension,flow/mincut native locally verified",
+      "spec": "docs/tora-analysis/NETWORKS_BACKEND.md",
+      "support": "Original7001/0/7004files, symmetry,nodeEditGrid/Undo,source/sink,actualiterations,networkgraph,printing",
+      "original_examples": "MST3;routes5/Dijkstra/Floyd;flow5",
+      "remaining": "Broader original ties/print layouts/numerical profiles"
+    },
+    "planning": {
+      "status": "CPM/PERT input/files/math/network/trace/CPMbar chart and schedule experiments locally verified",
+      "spec": "docs/tora-analysis/PROJECT_PLANNING.md",
+      "independent_dags": 300,
+      "independent_schedules": 300,
+      "support": "Original8001/8002 exchange, forward/backward trace,deadlineapproximation,shift/reset/transitiveprecedence,zoom/vectorPrintGraph,cachedmode switching",
+      "remaining": "Changed three-complete-edge originalPERT faultsVB9 at terminalevent after intermediate means3/7; no observed final8; broader ties/layouts"
+    },
+    "queuing": {
+      "status": "Positive-rate stationary plus original unit-time pure birth/death native paths locally verified",
+      "spec": "docs/tora-analysis/QUEUING_BACKEND.md",
+      "independent_stationary_cases": 300,
+      "independent_transient_cases": 500,
+      "support": "6000scenarios,finite source/system,logweight+analytic tail,EditGrid/Undo,comparative/state-range output,files/format/printing",
+      "remaining": "Small legacy arithmetic discrepancies after effective500cap explanation; broader profiles"
+    }
+  },
+  "current_local_validation": {
+    "date": "2026-10-18",
+    "release": "161/161 in112.14s after compact Queue layout",
+    "headless": "58/58 in7.45s; numerical backend unchanged afterwards",
+    "focused": "Queue4/4 scales in0.93s after compact layout",
+    "native": "ActualWayland100/200: Equations10,Integer10,Queue12QtTestslots per run including setup/cleanup",
+    "artifacts": "Final6nativePDFs/8pages/910words; report68pages/11277words; no blank/out-of-page text errors",
+    "receipt": "build/continuation-rea/verification.json",
+    "package": "build/continuation-release/packages-layout-final/TORA-Clone-0.1.0-linux-x86_64.AppImage",
+    "package_sha256": "985a66e04a844603f2bdc9bdc88ad7b905ffa9e828301041030904b11ef148e7",
+    "package_hash_audit": "247/247; no mismatches",
+    "package_protocols": "actualWayland and dedicatedXvfb/X11 passed",
+    "package_limit": "host preview; bundled dependencies requireglibc2.43; exact distribution notices are not complete upstream attribution bundle",
+    "installed": "unchanged olderLinuxdc853b4",
+    "actions": "repositoryenabled=false confirmed read-only; no run/enable/indirect trigger/commit/push"
+  },
+  "native_analysis_checkpoint": {
+    "directory": "reference/tora-native/mcp-games-affinity-20261015/",
+    "retained_strings": 1201,
+    "snapshot": "reference/tora-native/tora-games.snapshot.json",
+    "snapshot_bytes": 907554,
+    "evidence_records": 15,
+    "primitive_cache_entries": 0,
+    "workflow_cache_entries": 0,
+    "decompilation": "0x4fcaa0failed; unresolved constructor0x508889; no unchanged retry",
+    "session": "closed successfully",
+    "temporary_swap": "owned8GiB swap disabled and file removed; /proc/swaps empty; receiptactive=false,removed=true",
+    "persistent_configuration_changed": false
+  },
+  "reference_runtime_checkpoint": {
+    "date": "2026-10-18",
+    "state": "Owned display/runtime active/running at final check; original GUI at clearMAIN.",
+    "evidence": "ev_4412168c53df99ffb2f882b62395d3aabffdc97f6f3c546b4258d85d81e7f7ef",
+    "lifecycle": "Check services/socket/owned process before any restore; do not restart for capture timeouts or touch unrelated Wine",
+    "native_analysis": "No deep session opened; previous snapshot remains closed",
+    "swap": "None active; no persistent changes"
+  },
+  "fresh_context_checkpoint": {
+    "requested_by_user": true,
+    "handover": "agent_handover.md",
+    "current_module": "Local continuation verified; external gates remain",
+    "source_state": "Extensive pre-existing and new uncommitted changes preserved; no commit/push",
+    "external_docs": "/home/nitir505/Ritin/docs/TORA-clone",
+    "report": "/home/nitir505/Ritin/docs/TORA-clone/full-application-report.tex",
+    "report_pdf": "/home/nitir505/Ritin/docs/TORA-clone/full-application-report.pdf"
+  },
+  "continuation_20261018": {
+    "working_mode": "implementation; user reconfirmed",
+    "rea_findings": "docs/tora-analysis/REA_COMPLETION_20261018.md",
+    "completed": [
+      "Integer pending tree selection",
+      "Equations associated inverse/determinant and original2000/1000 outputs",
+      "Queue original500cap explanation and separate native comparison",
+      "compact200percentQueue layout",
+      "finalRelease/headless/actualWayland/PDF gates",
+      "offline pinned Linux preview and247file audit",
+      "compiled reviewed68page report"
+    ],
+    "in_progress": [],
+    "limits": [
+      "Windows/macOS and olderLinuxbaseline unverified",
+      "physicalprinter/DPI unverified",
+      "broader original tie/number/search/print profiles",
+      "small Queue legacy arithmetic discrepancies",
+      "originalPERTVB9 and printer482 faults"
+    ],
+    "actions": "disabled; no execution authorized",
+    "status": "local_verified_external_gates_remaining",
+    "receipt": "build/continuation-rea/verification.json"
+  },
+  "previous_full_application_local_validation": {
+    "date": "2026-10-18",
+    "desktop_full_checkpoint": "160/160 in125.04s, before final CPM chart/printing/layout additions",
+    "latest_focused": "22/22 in6.98s for final inverse/Games/Integer/Planning/allmodules; then compact CPM layout8/8 in4.71s",
+    "headless": "58/58 in5.44s against latest backends",
+    "native": "Actual Wayland5/5QtTestslots(includes setup/cleanup) at100%5.589s and200%5.163s; MAIN+populated+extended views",
+    "artifacts": "80PNGs;24PDFs/34pages/3452words; no blank text pages or out-of-page word boxes",
+    "build_warnings": "Final focused/chart builds clean; full checkpoint rebuilt two pre-existing desktop_shell.cpp missing beforeLeave initializer warnings",
+    "logs": "build/full-application/{gate-dev-tests,accepted-focused-tests-final,chart-layout-tests,accepted-headless-tests}.log;accepted-wayland-{1,2}/;verification.json;pdf-audit.json",
+    "installed": "unchanged earlier Linux dc853b4; no new Release/package/install in this continuation",
+    "actions": "No execution, enabling or indirect trigger; no commits/pushes"
+  },
+  "platform_followup_20261018": {
+    "status": "final_local_gates_in_progress",
+    "working_mode": "implementation",
+    "spec": "docs/tora-analysis/PLATFORM_FOLLOWUP_20261018.md",
+    "applied": [
+      "Queue mean system time preserves service-time contribution under occupancy underflow",
+      "Guided Integer printing includes unsolved frontier and complete ancestry",
+      "Linux deployment derives selected SDK library path from qmake"
+    ],
+    "host_release_checkpoint": "161/161 in95.92s before portable-reader/verifier-only followup",
+    "native": "Actual Wayland Integer11/Queue12 QtTestslots at100/200 pass; setup/cleanup included",
+    "original_print": "5 software PostScript jobs/9pages/476words; no blank/off-page word errors; physical printers unverified",
+    "older_linux": "Ubuntu24.04/glibc2.39 full build succeeded; first152/161 then dependency/font focused10/10; final portable PDF helper/verifier and full gate pending",
+    "package_preflight": "offline MAIN+9 startups;92ELFs maxGLIBC2.38;281/281 payload hashes; provisional",
+    "actions": "one manual3OS run specifically approved; repository still disabled and no dispatch yet",
+    "hardware": "user has no devices; one monitor and zero host printers; software checks only",
+    "receipt_root": "build/platform-followup/",
+    "portable_pdf": "14/14 focused in20.48s with PATH empty; full163 now running",
+    "band_verification": "both23PDF font corpora retain4259tokens; LPproduct unchanged; tracepagecounts may vary"
   }
 }

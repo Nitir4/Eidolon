@@ -20,9 +20,35 @@ import tempfile
 import urllib.request
 from windows_installer import build_installer, verify_installer
 from linux_runtime import stage_wayland_plugins
-from runtime_notices import copy_qt_notices
+from runtime_notices import copy_qt_notices, copy_distribution_qt_notices
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def source_provenance(root=ROOT):
+    """Identify local source without presenting uncommitted work as a HEAD release."""
+    head = subprocess.run(['git', '-C', str(root), 'rev-parse', 'HEAD'],
+                          capture_output=True, text=True)
+    if head.returncode:
+        return {'base_commit': None, 'dirty': None, 'repository_tree_sha256': None}
+    status = subprocess.check_output(['git', '-C', str(root), 'status', '--porcelain',
+                                      '--untracked-files=all'], text=True)
+    paths = subprocess.check_output(['git', '-C', str(root), 'ls-files', '-z',
+                                     '--cached', '--others', '--exclude-standard'])
+    tree = hashlib.sha256()
+    for relative in sorted(set(paths.split(b'\0')) - {b''}):
+        path = root / os.fsdecode(relative)
+        if path.is_symlink():
+            content = b'symlink\0' + os.fsencode(os.readlink(path))
+        elif path.is_file():
+            content = path.read_bytes()
+        else:
+            continue  # Deleted tracked files have no working-tree payload.
+        tree.update(relative + b'\0' + hashlib.sha256(content).digest())
+    return {'base_commit': head.stdout.strip(), 'dirty': bool(status),
+            'repository_tree_sha256': tree.hexdigest(),
+            'snapshot_kind': 'working tree observed during packaging, not build input attestation',
+            'identity': 'local working tree' if status else 'clean repository checkout'}
 
 
 def run(args, **kwargs):
@@ -72,6 +98,8 @@ def notices(stage, qt_root):
     version = subprocess.check_output([str(sdk_tool(qt_root, 'qmake')),
                                        '-query', 'QT_VERSION'], text=True).strip()
     copy_qt_notices(stage, version)
+    if sys.platform.startswith('linux'):
+        copy_distribution_qt_notices(stage, qt_root, version)
     for name in ('Licenses', 'LICENSES'):
         source = qt_root / name
         if source.is_dir():
@@ -89,7 +117,11 @@ def manifest(stage, qt_root, version, target):
     data = {'application': 'ToraClone', 'version': version, 'qt_version': qt_version,
             'qt_legal_bundle': 'licenses/Qt-' + qt_version
                                if (stage / 'licenses' / ('Qt-' + qt_version) / 'SOURCES.json').is_file() else None,
-            'platform': target, 'stage': 'Native LP input, All-slack, M-method, Two-phase, Bounded, Dual, Graphical, Final solution, Sensitivity; Transportation input, EditGrid, North-west/Least-cost/Vogel, multipliers, manual-loop feedback, final summary and printing',
+            'qt_distribution_notices': 'licenses/Qt-distribution'
+                                       if (stage / 'licenses/Qt-distribution/PROVENANCE.json').is_file() else None,
+            'platform': target,
+            'stage': 'Native full application: Linear Equations and Matrix Inversion; Linear Programming and Cj/RHS/Dual Revised extensions; Transportation; Integer Programming; Networks; Project Planning; Queuing; Zero-Sum Games; Assignment extension. Local validation does not establish exhaustive original parity or cross-platform release readiness.',
+            'source': source_provenance(),
             'files': {str(p.relative_to(stage)).replace('\\', '/'): digest(p)
                       for p in sorted(stage.rglob('*')) if p.is_file()}}
     (stage / 'package-manifest.json').write_text(json.dumps(data, indent=2) + '\n')
@@ -105,6 +137,18 @@ def smoke_env():
         env.pop(key, None)
     env['QT_QPA_PLATFORM'] = 'offscreen'
     return env
+
+
+def smoke_application(executable, env, cwd):
+    # Each family builds its input widgets lazily. Check those factories using
+    # the deployed runtime, beyond simply constructing the MAIN window.
+    for screen in (None, 'lp/input-mode', 'transportation/input-mode',
+                   'assignment/input', 'games/input', 'equations/input',
+                   'integer/input', 'networks/input', 'planning/input', 'queuing/input'):
+        arguments = [executable, '--smoke-test']
+        if screen:
+            arguments += ['--screen', screen]
+        run(arguments, env=env, timeout=45, cwd=cwd)
 
 
 def windows_package(build, stage, qt_root, config, output, version):
@@ -131,7 +175,7 @@ def windows_package(build, stage, qt_root, config, output, version):
     data = manifest(stage, qt_root, version, 'windows-x86_64')
     env = smoke_env()
     env['PATH'] = os.pathsep.join([str(stage), str(Path(os.environ['SystemRoot']) / 'System32')])
-    run([executable, '--smoke-test'], env=env, timeout=30, cwd=stage)
+    smoke_application(executable, env, stage)
     name = f'TORA-Clone-{version}-windows-x86_64'
     archive = Path(shutil.make_archive(str(output / name), 'zip', root_dir=stage))
     installer = build_installer(stage, output, version)
@@ -158,7 +202,7 @@ def macos_package(build, stage, qt_root, config, output, version):
             run(['lipo', binary, '-verify_arch', 'arm64', 'x86_64'])
     notices(stage, qt_root)
     data = manifest(stage, qt_root, version, 'macos-universal')
-    run([executable, '--smoke-test'], env=smoke_env(), timeout=30)
+    smoke_application(executable, smoke_env(), stage)
     (stage / 'Applications').symlink_to('/Applications', target_is_directory=True)
     artifact = output / f'TORA-Clone-{version}-macos-universal.dmg'
     run(['hdiutil', 'create', '-volname', 'TORA Clone', '-srcfolder', stage,
@@ -176,12 +220,19 @@ def linux_package(build, stage, qt_root, config, output, version, tool_dir):
                                            '-query', 'QT_INSTALL_PLUGINS'], text=True).strip())
     platforms, integrations = stage_wayland_plugins(plugins, appdir)
     env = os.environ.copy()
+    # The installed executable no longer has its build RPATH. Let deployment
+    # inspect the selected SDK even when Qt is absent from the system loader.
+    libraries = subprocess.check_output([str(sdk_tool(qt_root, 'qmake')),
+                                         '-query', 'QT_INSTALL_LIBS'], text=True).strip()
+    env['LD_LIBRARY_PATH'] = libraries + (
+        os.pathsep + env['LD_LIBRARY_PATH'] if env.get('LD_LIBRARY_PATH') else '')
     env.update({'APPIMAGE_EXTRACT_AND_RUN': '1', 'QMAKE': str(sdk_tool(qt_root, 'qmake')),
                 'OUTPUT': str(output / f'TORA-Clone-{version}-linux-x86_64.AppImage'),
                 'EXTRA_PLATFORM_PLUGINS': platforms,
                 # linuxdeploy's bundled strip predates modern RELR sections.
                 # Preserve symbols instead of modifying incompatible files.
-                'NO_STRIP': '1', 'ARCH': 'x86_64', 'VERSION': version})
+                'NO_STRIP': '1', 'ARCH': 'x86_64', 'VERSION': version,
+                'LDAI_RUNTIME_FILE': str(tool_dir / 'runtime-x86_64')})
     notices(appdir, qt_root)
     dependencies = [argument for plugin in integrations
                     for argument in ['--deploy-deps-only', plugin]]
@@ -197,7 +248,7 @@ def linux_package(build, stage, qt_root, config, output, version, tool_dir):
         raise RuntimeError(f'AppImage tool did not create {artifact}')
     env = smoke_env()
     env['APPIMAGE_EXTRACT_AND_RUN'] = '1'
-    run([artifact, '--smoke-test'], env=env, timeout=45, cwd=stage)
+    smoke_application(artifact, env, stage)
     return artifact, data
 
 

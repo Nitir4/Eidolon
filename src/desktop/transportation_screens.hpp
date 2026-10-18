@@ -15,7 +15,7 @@ public:
     explicit TransportationController(QObject* parent);
     void load(transportation::Problem problem);
     void loadExample();
-    void beginNew();
+    void beginNew(core::NumberFormat format = {});
     bool initialize(const QString& title, int sources, int destinations, QString& error);
     bool editCell(int row, int column, const QString& value, QString& error);
     bool setTitle(const QString& title, QString& error);
@@ -84,6 +84,7 @@ private:
     bool dirty_ = false, readOnly_ = false, pendingCommitValid_ = true;
     transportation::StartMethod method_ = transportation::StartMethod::NorthWest;
     transportation::Problem emptyProblem_;
+    core::NumberFormat newFormat_;
     std::vector<transportation::Tableau> trace_;
 };
 

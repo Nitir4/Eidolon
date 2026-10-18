@@ -1,0 +1,150 @@
+[
+  {
+    "case": "asymmetric",
+    "title": "Class game asymmetric",
+    "payoffs": [
+      [
+        3,
+        0
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "format": [
+      5,
+      2,
+      1
+    ],
+    "file_sha256": "687e665f225412bf0b5fd00cbab3fa98d9acdc447db35548d60ec3bdf8787348",
+    "expected": {
+      "value": "1.50",
+      "row_strategy": [
+        "0.25",
+        "0.75"
+      ],
+      "column_strategy": [
+        "0.50",
+        "0.50"
+      ],
+      "formulation": {
+        "objective": [
+          "1.00",
+          "0.00",
+          "0.00"
+        ],
+        "rows": [
+          [
+            "1.00",
+            "-3.00",
+            "-1.00",
+            "<=",
+            "0.00"
+          ],
+          [
+            "1.00",
+            "0.00",
+            "-2.00",
+            "<=",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "1.00",
+            "1.00",
+            "=",
+            "1.00"
+          ]
+        ],
+        "unrestricted": [
+          "y",
+          "n",
+          "n"
+        ]
+      }
+    },
+    "provenance": {
+      "input_evidence": "ev_51b8e2c94e3087e02ff50aa7a650d9de596c94686fbbdbf9347a0f4ffeeb4e77",
+      "result_evidence": "ev_46ffe6486760464b9c7f7f08a21d10019685149060476c4662a4dcc28a81d0dc",
+      "child_exit": 0,
+      "source": "reference/tora-captures/games/asymmetric/tora-saved.txt",
+      "result": "reference/tora-captures/application-inventory/actions-game-asymmetric-result/result.png",
+      "review": "Value, both probability rows and row-player LP numeric fields visually reviewed. Original\u2264glyph normalized to ASCII<=."
+    }
+  },
+  {
+    "case": "pure",
+    "title": "Class game pure",
+    "payoffs": [
+      [
+        4,
+        3
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "format": [
+      5,
+      2,
+      1
+    ],
+    "file_sha256": "6d6cd53b396b0e7d9bf5632a71899f0e77a91f5022e7caca329e5a8e4218e9a6",
+    "expected": {
+      "value": "3.00",
+      "row_strategy": [
+        "1.00",
+        "0.00"
+      ],
+      "column_strategy": [
+        "0.00",
+        "1.00"
+      ],
+      "formulation": {
+        "objective": [
+          "1.00",
+          "0.00",
+          "0.00"
+        ],
+        "rows": [
+          [
+            "1.00",
+            "-4.00",
+            "-2.00",
+            "<=",
+            "0.00"
+          ],
+          [
+            "1.00",
+            "-3.00",
+            "-1.00",
+            "<=",
+            "0.00"
+          ],
+          [
+            "0.00",
+            "1.00",
+            "1.00",
+            "=",
+            "1.00"
+          ]
+        ],
+        "unrestricted": [
+          "y",
+          "n",
+          "n"
+        ]
+      }
+    },
+    "provenance": {
+      "input_evidence": "ev_042d927c3c01be61401e7c9a69f3514a737612987a38ee6b1085f93f59b17626",
+      "result_evidence": "ev_042d927c3c01be61401e7c9a69f3514a737612987a38ee6b1085f93f59b17626",
+      "child_exit": 0,
+      "source": "reference/tora-captures/games/pure/tora-saved.txt",
+      "result": "reference/tora-captures/games/pure/result.png",
+      "review": "Value, both probability rows and row-player LP numeric fields visually reviewed. Original\u2264glyph normalized to ASCII<=."
+    }
+  }
+]

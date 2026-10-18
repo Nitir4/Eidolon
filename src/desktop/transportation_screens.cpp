@@ -28,6 +28,7 @@
 #include <QSignalBlocker>
 #include <QTimer>
 #include <QComboBox>
+#include <QRadioButton>
 #include <QVBoxLayout>
 #include <algorithm>
 #include <exception>
@@ -103,11 +104,13 @@ void openProblem(ApplicationShell& shell)
 {
     if (transportationController(shell).requestOpen()) shell.navigate(id("input"));
 }
-void newProblem(ApplicationShell& shell)
+void newProblem(ApplicationShell& shell,core::NumberFormat format = {})
 {
     auto& c = transportationController(shell);
+    try {(void)core::NumberFormatter(format);}
+    catch(const std::exception& e){c.dialogs().showError(QStringLiteral("Number Format"),QString::fromUtf8(e.what()));return;}
     if (!c.leaveInput()) return;
-    c.beginNew(); shell.navigate(id("input"));
+    c.beginNew(format); shell.navigate(id("input"));
 }
 void solveProblem(ApplicationShell& shell, transportation::StartMethod method = transportation::StartMethod::NorthWest)
 {
@@ -221,7 +224,20 @@ QWidget* inputMode(ApplicationShell& shell)
     auto* description = new QLabel(QStringLiteral("Create or edit a Transportation problem, or load the example.\nNorth-west / Least-cost / Vogel starts · automatic iterations"));
     description->setAlignment(Qt::AlignCenter);
     choices->addWidget(description);
-    button(QStringLiteral("Enter New Problem"), QStringLiteral("transport-new"), *choices, [&shell] { newProblem(shell); });
+    auto* decimal=new QRadioButton(QStringLiteral("Decimal notation"));decimal->setObjectName(QStringLiteral("transport-decimal"));decimal->setChecked(true);
+    auto* scientific=new QRadioButton(QStringLiteral("Scientific notation"));scientific->setObjectName(QStringLiteral("transport-scientific"));
+    choices->addWidget(decimal);choices->addWidget(scientific);
+    auto* formatFields=new QFormLayout;
+    auto* n=new QLineEdit(QStringLiteral("5"));n->setObjectName(QStringLiteral("transport-format-n"));n->setValidator(new QIntValidator(0,core::NumberFormatter::MaximumDigits,n));
+    auto* d=new QLineEdit(QStringLiteral("2"));d->setObjectName(QStringLiteral("transport-format-d"));d->setValidator(new QIntValidator(0,core::NumberFormatter::MaximumDigits,d));
+    n->setToolTip(QStringLiteral("Decimal field width, or scientific mantissa decimal places."));
+    d->setToolTip(QStringLiteral("Decimal places, or scientific exponent width."));
+    formatFields->addRow(QStringLiteral("N:"),n);formatFields->addRow(QStringLiteral("D:"),d);choices->addLayout(formatFields);
+    button(QStringLiteral("Enter New Problem"), QStringLiteral("transport-new"), *choices, [&shell,n,d,scientific] {
+        bool validN=false,validD=false;const auto nn=n->text().toInt(&validN),dd=d->text().toInt(&validD);
+        if(!validN || !validD){transportationController(shell).dialogs().showError(QStringLiteral("Number Format"),QStringLiteral("Enter whole numbers for N and D."));return;}
+        newProblem(shell,{scientific->isChecked()?core::Notation::Scientific:core::Notation::Decimal,nn,dd});
+    });
     button(QStringLiteral("Enter/Edit Existing Problem"), QStringLiteral("transport-open"), *choices, [&shell] { openProblem(shell); });
     button(QStringLiteral("Load Example"), QStringLiteral("transport-example"), *choices, [&shell] {
         if (!transportationController(shell).leaveInput()) return;

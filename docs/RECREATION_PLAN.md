@@ -1,4 +1,71 @@
-# Whole-application recreation plan
+# Current full-application plan — 18 October 2026
+
+The latest user request restores the entire original TORA application. Earlier
+optional/deferred designations below are superseded. Implementation mode persists.
+All original MAIN families and authorized class extensions now have native source
+workflows and independently tested backends. See [current coverage](FULL_APPLICATION.md)
+and [fresh-context handover](../agent_handover.md) for implemented behavior, exact
+verification checkpoints and remaining parity/release limits.
+
+The user resumed implementation from the handover on18October2026. REA captured
+nonzero equation/inverse outputs and established the original Queue effective 500
+population cap. Native guided pending branches and equation inverse summaries have
+focused regression coverage. Queue comparison and compact layout, final Release/package checks, and reviewed
+68-page report are locally verified. Broader original parity and external platform/
+hardware gates remain; see the continuation evidence ledger and current STATUS. GitHub Actions remain disabled pending specific explicit approval.
+
+---
+
+# Preserved earlier planning history (superseded scope)
+
+# LPP project completion scope — updated 16 October 2026
+
+The user's revised scope supersedes the earlier whole-application checklist.
+Implementation mode remains selected. Required modules are Linear Programming,
+Transportation, Assignment and Zero-Sum Games. Linear Equations is optional.
+Integer Programming, Network Models, Project Planning and Queuing are deferred.
+
+Transportation settings and Assignment, Games and Cj/B calculation backends
+are locally verified. With Dual Revised, current integrated checks pass
+121/121 desktop and 51/51 Qt-free; native LP four-scale Release checks pass 4/4.
+Cj/B applies changes, diagnoses the retained basis and solves the changed model
+afresh. Games pure/mixed equilibria match two original examples/52fields.
+Next complete remaining backend methods before native integration.
+Games Graphical envelope backend now matches three original examples/30fields;
+the observed original3x2Graphical entry is disabled. Its explicit column-player
+backend mode is a mathematical extension, not an observed original screen.
+Dual Revised now has a separate standard-form backend and general LP/basis
+adapter, with true RHS warm reoptimization after an explicit baseline bootstrap.
+Two new REA original examples match 16 summary fields. The observed TORA LP
+hierarchy does not supply that method; it remains a class extension. Existing sensitivity output does not
+by itself implement applying changed coefficients and reoptimizing.
+
+For each class case, prepare a mathematical model and two worked examples in
+a LaTeX report. Verify outcomes using the actual original TORA where supported.
+Assignment can be checked as unit-supply/unit-demand Transportation or LP;
+Cj/B cases can be checked by solving their modified LPs. These are equivalent-
+model verification, not claims that TORA has the new class-extension screens.
+Record real evidence and limits, including infeasible/unbounded outcomes.
+Cj/B and Dual Revised native drafts/results/traces/application/save flow/selected-step
+printing are locally verified, including actual Wayland100%/200%. The report and
+Assignment/Games native integration remain unfinished. Dependent
+equality rank reduction and broader numerical profiles remain outside the verified
+Dual Revised backend contract.
+
+REA efficiency: reuse the live provider session; start from known strings and
+xrefs, inspect function ranges, and decompile focused callers. Reuse authenticated
+fixtures; avoid broad recapture and repeated full binary analysis. Save retained
+analysis results for continuation. Raw original/decompiler material stays private.
+
+Only local checks are authorized now. GitHub Actions remain disabled and require
+specific explicit approval, including indirect triggers. Current installed Linux
+printing release is dc853b4; newer settings/backends are locally verified source,
+not installed packages. Temporary REA swap was disabled and removed after the
+owned analysis closed; reuse retained evidence before another native import.
+
+The inventory below is historical and records the earlier broader scope.
+
+# Historical whole-application recreation plan
 
 The user selected implementation mode and authorized continuous recreation on
 12 October 2026, using REA and the installed TORA reference. This is an

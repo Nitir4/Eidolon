@@ -1,0 +1,392 @@
+[
+  {
+    "case": "scientific-default",
+    "title": "Scientific normal profile",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "format": [
+      5,
+      2,
+      2
+    ],
+    "file_sha256": "9252490429f7e9cb820cb07aac87c1509864909d769282ba1893c4b0870aa46c",
+    "expected_initial": {
+      "label": "Iter1",
+      "objective": "2.30000e+02",
+      "u": [
+        "u1=0.00000e+00",
+        "u2=1.00000e+00"
+      ],
+      "v": [
+        "v1=2.00000e+00",
+        "v2=3.00000e+00",
+        "v3=7.00000e+00"
+      ],
+      "costs": [
+        [
+          "2.00000e+00",
+          "3.00000e+00",
+          "1.00000e+00"
+        ],
+        [
+          "5.00000e+00",
+          "4.00000e+00",
+          "8.00000e+00"
+        ]
+      ],
+      "shipments": [
+        [
+          "10",
+          "10",
+          ""
+        ],
+        [
+          "",
+          "15",
+          "15"
+        ]
+      ],
+      "reduced_costs": [
+        [
+          "0.00000e+00",
+          "0.00000e+00",
+          "6.00000e+00"
+        ],
+        [
+          "-2.00000e+00",
+          "0.00000e+00",
+          "0.00000e+00"
+        ]
+      ],
+      "supply": [
+        "20",
+        "30"
+      ],
+      "demand": [
+        "10",
+        "25",
+        "15"
+      ]
+    },
+    "expected_final": {
+      "iteration": "1",
+      "objective": "1.50000e+02",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "5",
+          "2.00000e+00",
+          "1.00000e+01"
+        ],
+        [
+          "S1:",
+          "D3:",
+          "15",
+          "1.00000e+00",
+          "1.50000e+01"
+        ],
+        [
+          "S2:",
+          "D1:",
+          "5",
+          "5.00000e+00",
+          "2.50000e+01"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "25",
+          "4.00000e+00",
+          "1.00000e+02"
+        ]
+      ]
+    },
+    "provenance": {
+      "source": "reference/tora-captures/application-inventory/actions-transport-settings-scientific-normal/tora-saved.txt",
+      "evidence_id": "ev_976226e88b72bbdf7917c8773bf047b30615286340fab4152a9cb47730525578",
+      "review": "Initial and final strings independently transcribed from reviewed original UI; source file authenticated."
+    }
+  },
+  {
+    "case": "decimal6-3",
+    "title": "Settings decimal6-3",
+    "problem": {
+      "costs": [
+        [
+          0.125,
+          0.25,
+          0.5
+        ],
+        [
+          0.75,
+          0.375,
+          0.625
+        ]
+      ],
+      "supply": [
+        0.375,
+        0.625
+      ],
+      "demand": [
+        0.25,
+        0.25,
+        0.5
+      ]
+    },
+    "format": [
+      6,
+      3,
+      1
+    ],
+    "file_sha256": "ab713d18d9961afd1766ae818d2fb3514628a6050c7867889a5b2b1fd2e84009",
+    "expected_initial": {
+      "label": "Iter1",
+      "objective": "0.422",
+      "u": [
+        "u1=0.000",
+        "u2=0.125"
+      ],
+      "v": [
+        "v1=0.125",
+        "v2=0.250",
+        "v3=0.500"
+      ],
+      "costs": [
+        [
+          "0.125",
+          "0.250",
+          "0.500"
+        ],
+        [
+          "0.750",
+          "0.375",
+          "0.625"
+        ]
+      ],
+      "shipments": [
+        [
+          "0.25",
+          "0.125",
+          ""
+        ],
+        [
+          "",
+          "0.125",
+          "0.5"
+        ]
+      ],
+      "reduced_costs": [
+        [
+          "0.000",
+          "0.000",
+          "0.000"
+        ],
+        [
+          "-0.500",
+          "0.000",
+          "0.000"
+        ]
+      ],
+      "supply": [
+        "0.375",
+        "0.625"
+      ],
+      "demand": [
+        "0.25",
+        "0.25",
+        "0.5"
+      ]
+    },
+    "expected_final": {
+      "iteration": "1",
+      "objective": "0.422",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "0",
+          "0.125",
+          "0.031"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "0",
+          "0.250",
+          "0.031"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "0",
+          "0.375",
+          "0.047"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "0",
+          "0.625",
+          "0.313"
+        ]
+      ]
+    },
+    "provenance": {
+      "source": "reference/tora-captures/application-inventory/actions-transport-settings-decimal6-3/tora-saved.txt",
+      "evidence_id": "ev_7e173ede36f567c7566079eff5eb1cbc2391748a906b64addc739c5f0b303845",
+      "review": "Initial and final strings independently transcribed from reviewed original UI; source file authenticated."
+    }
+  },
+  {
+    "case": "scientific2-3",
+    "title": "Settings scientific2-3",
+    "problem": {
+      "costs": [
+        [
+          0.125,
+          0.25,
+          0.5
+        ],
+        [
+          0.75,
+          0.375,
+          0.625
+        ]
+      ],
+      "supply": [
+        0.375,
+        0.625
+      ],
+      "demand": [
+        0.25,
+        0.25,
+        0.5
+      ]
+    },
+    "format": [
+      2,
+      3,
+      2
+    ],
+    "file_sha256": "33979daf67e2aa60b17516dbc697dae216a7e6febe3bc48d9081d64b9e1d2e9a",
+    "expected_initial": {
+      "label": "Iter1",
+      "objective": "4.22e-001",
+      "u": [
+        "u1=0.00e+000",
+        "u2=1.25e-001"
+      ],
+      "v": [
+        "v1=1.25e-001",
+        "v2=2.50e-001",
+        "v3=5.00e-001"
+      ],
+      "costs": [
+        [
+          "1.25e-001",
+          "2.50e-001",
+          "5.00e-001"
+        ],
+        [
+          "7.50e-001",
+          "3.75e-001",
+          "6.25e-001"
+        ]
+      ],
+      "shipments": [
+        [
+          "0.25",
+          "0.125",
+          ""
+        ],
+        [
+          "",
+          "0.125",
+          "0.5"
+        ]
+      ],
+      "reduced_costs": [
+        [
+          "0.00e+000",
+          "0.00e+000",
+          "0.00e+000"
+        ],
+        [
+          "-5.00e-001",
+          "0.00e+000",
+          "0.00e+000"
+        ]
+      ],
+      "supply": [
+        "0.375",
+        "0.625"
+      ],
+      "demand": [
+        "0.25",
+        "0.25",
+        "0.5"
+      ]
+    },
+    "expected_final": {
+      "iteration": "1",
+      "objective": "4.22e-001",
+      "rows": [
+        [
+          "S1:",
+          "D1:",
+          "0",
+          "1.25e-001",
+          "3.13e-002"
+        ],
+        [
+          "S1:",
+          "D2:",
+          "0",
+          "2.50e-001",
+          "3.13e-002"
+        ],
+        [
+          "S2:",
+          "D2:",
+          "0",
+          "3.75e-001",
+          "4.69e-002"
+        ],
+        [
+          "S2:",
+          "D3:",
+          "0",
+          "6.25e-001",
+          "3.13e-001"
+        ]
+      ]
+    },
+    "provenance": {
+      "source": "reference/tora-captures/application-inventory/actions-transport-settings-scientific2-3/tora-saved.txt",
+      "evidence_id": "ev_d14db451e318b3f6e6dad503bc5dc4a0ba3328ac9af3faa436c32ad0a1d9c8af",
+      "review": "Initial and final strings independently transcribed from reviewed original UI; source file authenticated."
+    }
+  }
+]

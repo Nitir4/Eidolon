@@ -1,4 +1,4 @@
-add_library(tora_compat STATIC lp_codec.cpp lp_file_store.cpp)
+add_library(tora_compat STATIC lp_codec.cpp lp_file_store.cpp integer_document.cpp)
 add_library(tora::compat ALIAS tora_compat)
 tora_target_defaults(tora_compat)
 target_compile_features(tora_compat PUBLIC cxx_std_17)

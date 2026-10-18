@@ -112,7 +112,7 @@ private slots:
         QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
         QCOMPARE(shell.menuBar()->actions().front()->text(), QStringLiteral("SolveModify"));
         const auto* menu = shell.menuBar()->actions().front()->menu();
-        QCOMPARE(labels(*menu), (QStringList{QStringLiteral("Solve Problem"), QStringLiteral("View/Modify Input Data"), QStringLiteral("MAIN Menu"), QStringLiteral("Exit TORA")}));
+        QCOMPARE(labels(*menu), (QStringList{QStringLiteral("Solve Problem"), QStringLiteral("Class extensions"), QStringLiteral("View/Modify Input Data"), QStringLiteral("MAIN Menu"), QStringLiteral("Exit TORA")}));
         const auto* solve = menu->actions()[0]->menu();
         QCOMPARE(labels(*solve), (QStringList{QStringLiteral("Graphical"), QStringLiteral("Algebraic")}));
         const auto* algebraic = solve->actions()[1]->menu();
