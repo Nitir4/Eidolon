@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Eidolon
+Comment=Operations research learning and problem solving
+Exec=Eidolon
+Icon=eidolon
+Terminal=false
+Categories=Education;Math;
+Keywords=Operations Research;Optimization;

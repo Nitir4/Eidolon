@@ -19,6 +19,10 @@ The licensing/component overview is
 https://doc.qt.io/qt-6.10/licenses-used-in-qt.html.
 Locally built packages with other SDK versions preserve supplied SDK license
 files and do not mislabel their attributions as 6.10.3.
+When the Linux SDK is the system `/usr` installation, available distribution
+license directories for Qt base, Wayland and SVG are retained under
+`licenses/Qt-distribution/`. Its `PROVENANCE.json` identifies the installed
+locations and hashes. These texts are not a complete upstream attribution bundle.
 
 Linux deployment also copies available distribution copyright documents to
 `usr/share/doc/`. Additional system libraries and Windows compiler/graphics

@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=TORA Clone
-Comment=Linear programming teaching application
-Exec=ToraClone
-Icon=tora-clone
-Terminal=false
-Categories=Education;Science;Math;

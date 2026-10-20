@@ -4,13 +4,13 @@ Unicode true
 ManifestDPIAware true
 RequestExecutionLevel user
 SetCompressor /SOLID lzma
-Name "TORA Clone"
+Name "Eidolon"
 OutFile "@OUTPUT@"
-InstallDir "$LOCALAPPDATA\Programs\TORA Clone"
-InstallDirRegKey HKCU "Software\TORA Clone\Installer" "InstallLocation"
+InstallDir "$LOCALAPPDATA\Programs\Eidolon"
+InstallDirRegKey HKCU "Software\Eidolon\Installer" "InstallLocation"
 VIProductVersion "@VERSION@.0"
-VIAddVersionKey "ProductName" "TORA Clone"
-VIAddVersionKey "FileDescription" "TORA Clone per-user setup"
+VIAddVersionKey "ProductName" "Eidolon"
+VIAddVersionKey "FileDescription" "Eidolon per-user setup"
 VIAddVersionKey "FileVersion" "@VERSION@"
 !include "MUI2.nsh"
 !include "x64.nsh"
@@ -24,7 +24,7 @@ VIAddVersionKey "FileVersion" "@VERSION@"
 
 Function .onInit
   ${IfNot} ${RunningX64}
-    MessageBox MB_OK|MB_ICONSTOP "TORA Clone requires 64-bit Windows." /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "Eidolon requires 64-bit Windows." /SD IDOK
     SetErrorLevel 1
     Abort
   ${EndIf}
@@ -37,17 +37,17 @@ Section "Install"
 @INSTALL_FILES@
   SetOutPath "$INSTDIR"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
-  CreateDirectory "$SMPROGRAMS\TORA Clone"
-  CreateShortcut "$SMPROGRAMS\TORA Clone\TORA Clone.lnk" "$INSTDIR\ToraClone.exe"
-  CreateShortcut "$SMPROGRAMS\TORA Clone\Uninstall TORA Clone.lnk" "$INSTDIR\Uninstall.exe"
-  WriteRegStr HKCU "Software\TORA Clone\Installer" "InstallLocation" "$INSTDIR"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "DisplayName" "TORA Clone"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "DisplayVersion" "@VERSION@"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "InstallLocation" "$INSTDIR"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "UninstallString" '$\"$INSTDIR\Uninstall.exe$\"'
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "QuietUninstallString" '$\"$INSTDIR\Uninstall.exe$\" /S'
-  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "NoModify" 1
-  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone" "NoRepair" 1
+  CreateDirectory "$SMPROGRAMS\Eidolon"
+  CreateShortcut "$SMPROGRAMS\Eidolon\Eidolon.lnk" "$INSTDIR\Eidolon.exe"
+  CreateShortcut "$SMPROGRAMS\Eidolon\Uninstall Eidolon.lnk" "$INSTDIR\Uninstall.exe"
+  WriteRegStr HKCU "Software\Eidolon\Installer" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon" "DisplayName" "Eidolon"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon" "DisplayVersion" "@VERSION@"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon" "UninstallString" '$\"$INSTDIR\Uninstall.exe$\"'
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon" "QuietUninstallString" '$\"$INSTDIR\Uninstall.exe$\" /S'
+  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon" "NoModify" 1
+  WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon" "NoRepair" 1
 SectionEnd
 
 Section "Uninstall"
@@ -72,10 +72,10 @@ uninstall_self_failed:
   Quit
 uninstall_self_removed:
   RMDir "$INSTDIR"
-  Delete "$SMPROGRAMS\TORA Clone\TORA Clone.lnk"
-  Delete "$SMPROGRAMS\TORA Clone\Uninstall TORA Clone.lnk"
-  RMDir "$SMPROGRAMS\TORA Clone"
-  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone"
-  DeleteRegKey HKCU "Software\TORA Clone\Installer"
-  DeleteRegKey /ifempty HKCU "Software\TORA Clone"
+  Delete "$SMPROGRAMS\Eidolon\Eidolon.lnk"
+  Delete "$SMPROGRAMS\Eidolon\Uninstall Eidolon.lnk"
+  RMDir "$SMPROGRAMS\Eidolon"
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon"
+  DeleteRegKey HKCU "Software\Eidolon\Installer"
+  DeleteRegKey /ifempty HKCU "Software\Eidolon"
 SectionEnd
