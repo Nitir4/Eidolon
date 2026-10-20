@@ -14,8 +14,8 @@ cmake --build --preset dev
 ctest --preset dev
 ```
 
-The desktop executable is `build/dev/src/desktop/ToraClone` on Linux,
-`ToraClone.exe` on Windows, and a `ToraClone.app` bundle on macOS.
+The desktop executable is `build/dev/src/desktop/Eidolon` on Linux,
+`Eidolon.exe` on Windows, and a `Eidolon.app` bundle on macOS.
 `--smoke-test` starts the native Widgets event loop and exits.
 The Foundation 5 shell launches maximized on its first interactive run;
 normal window geometry is then remembered. `--no-settings` bypasses preferences
@@ -132,7 +132,7 @@ Graphical expected values are independent capture transcriptions in `tests/fixtu
 
 Graphical native tests use the same pre-QApplication Windows FreeType font-directory bootstrap as the established shell/input/simplex tests. An explicit Latin/digit glyph check rejects unreadable offscreen evidence. Normal product rendering still uses the native OS font backend; no font file is bundled or added to the application.
 
-Final graphical packages are under `dist/phase2-graphical/final/`, with downloaded reports/previews under `build/phase2-graphical/ci-final/`. The Linux AppImage can be launched directly after setting its executable bit; the development command remains `build/dev/src/desktop/ToraClone`. At fractional scale, PNG raster dimensions may round by one physical pixel; requested logical dimensions are asserted exactly.
+Final graphical packages are under `dist/phase2-graphical/final/`, with downloaded reports/previews under `build/phase2-graphical/ci-final/`. The Linux AppImage can be launched directly after setting its executable bit; the development command remains `build/dev/src/desktop/Eidolon`. At fractional scale, PNG raster dimensions may round by one physical pixel; requested logical dimensions are asserted exactly.
 
 
 ## Printer and live display tests
@@ -153,7 +153,7 @@ separate and remains recorded in OPEN_QUESTIONS.md.
 ## Windows installer verification
 
 The Windows job installs pinned NSIS 3.13.0 and wraps the existing deployed
-payload. Setup defaults to `%LOCALAPPDATA%\Programs\TORA Clone`, requires no
+payload. Setup defaults to `%LOCALAPPDATA%\Programs\Eidolon`, requires no
 administrator access, and creates current-user Start menu/uninstall entries.
 It does not take over `.txt` file associations. This is an unsigned development
 installer. User preferences and unrelated files are preserved on removal.
@@ -171,7 +171,7 @@ Primary behavior reference: [NSIS scripting manual](https://nsis.sourceforge.io/
 
 
 Final installer source `9ac8204` passed 72/72 tests on each OS (216 total) in
-[run 38059265577](https://github.com/Nitir4/TORA-Clone/actions/runs/38059265577).
+[run 38059265577](https://github.com/Nitir4/Eidolon/actions/runs/38059265577).
 The Windows setup installed and reinstalled into a Unicode path with spaces,
 verified 32 manifested payload files, started without SDK paths, and removed
 its files/entries while preserving student files. Downloaded package hashes
@@ -199,7 +199,7 @@ and `icu`. Packaging fails if the Wayland platform or xdg-shell client integrati
 is missing. CI verifies the deployed AppImage using both Weston and Xvfb:
 
 ```sh
-python tools/verify_linux_desktop.py dist/TORA-Clone-0.1.0-linux-x86_64.AppImage \
+python tools/verify_linux_desktop.py dist/Eidolon-0.1.0-linux-x86_64.AppImage \
   --output build/desktop-runtime
 ```
 
@@ -216,7 +216,7 @@ package and `docs/RELEASE_READINESS.md` for remaining release resources.
 
 
 Latest source `19463eb` passed 74/74 tests on each OS (222 total) in
-[run 38062462111](https://github.com/Nitir4/TORA-Clone/actions/runs/38062462111). Six downloaded archives, all LP/PDF/display reports,
+[run 38062462111](https://github.com/Nitir4/Eidolon/actions/runs/38062462111). Six downloaded archives, all LP/PDF/display reports,
 package hashes, 130 matching Qt legal documents and Windows installer checks
 were independently verified. The final Linux AppImage passed both CI desktop
 protocol backends and actual laptop Wayland startup; all 281 extracted payload
