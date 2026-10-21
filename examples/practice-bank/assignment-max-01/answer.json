@@ -1,0 +1,66 @@
+{
+  "id": "assignment-max-01",
+  "family": "assignment",
+  "workflows": [
+    "Assignment / max"
+  ],
+  "model": {
+    "format": "ToraCloneAssignment",
+    "version": 1,
+    "title": "assignment-max-01",
+    "sense": "max",
+    "workers": [
+      "W1",
+      "W2",
+      "W3"
+    ],
+    "jobs": [
+      "J1",
+      "J2",
+      "J3"
+    ],
+    "numberFormat": [
+      0,
+      5,
+      4
+    ],
+    "costs": [
+      [
+        9,
+        2,
+        7
+      ],
+      [
+        6,
+        4,
+        3
+      ],
+      [
+        5,
+        8,
+        1
+      ]
+    ]
+  },
+  "expected": {
+    "objective": 21,
+    "one_pairing_zero_based": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "notes": "Original equivalent: Transportation with unit supply/demand; negate profits for max. Rectangular cases need a zero-cost dummy row/column.",
+  "original_comparison": "pending",
+  "grid": "assignment-max-01/grid.tsv",
+  "input": "assignment-max-01/input.assignment.json"
+}

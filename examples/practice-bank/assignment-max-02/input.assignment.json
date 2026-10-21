@@ -1,0 +1,38 @@
+{
+  "format": "ToraCloneAssignment",
+  "version": 1,
+  "title": "assignment-max-02",
+  "sense": "max",
+  "workers": [
+    "W1",
+    "W2",
+    "W3"
+  ],
+  "jobs": [
+    "J1",
+    "J2",
+    "J3"
+  ],
+  "numberFormat": [
+    0,
+    5,
+    4
+  ],
+  "costs": [
+    [
+      4,
+      8,
+      6
+    ],
+    [
+      7,
+      3,
+      5
+    ],
+    [
+      9,
+      2,
+      1
+    ]
+  ]
+}
