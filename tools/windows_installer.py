@@ -12,7 +12,7 @@ import time
 from contextlib import contextmanager
 
 ROOT = Path(__file__).resolve().parents[1]
-UNINSTALL_KEY = r'Software\Microsoft\Windows\CurrentVersion\Uninstall\TORAClone'
+UNINSTALL_KEY = r'Software\Microsoft\Windows\CurrentVersion\Uninstall\Eidolon'
 
 
 def nsis_literal(value):
@@ -65,7 +65,7 @@ def compiler_path():
 
 def build_installer(stage, output, version):
     compiler = compiler_path()
-    artifact = output / f'TORA-Clone-{version}-windows-x86_64-setup.exe'
+    artifact = output / f'Eidolon-{version}-windows-x86_64-setup.exe'
     install, remove = payload_commands(stage)
     template = (ROOT / 'packaging/windows/installer.nsi.in').read_text()
     replacements = {'@OUTPUT@': nsis_literal(str(artifact)), '@VERSION@': nsis_literal(version),
@@ -110,7 +110,7 @@ def uninstall_with_lock_probe(uninstaller, target):
     with _prevent_uninstaller_delete(uninstaller):
         process = subprocess.Popen([str(uninstaller), '/S'])
         deadline = time.monotonic() + 30
-        while (target / 'ToraClone.exe').exists():
+        while (target / 'Eidolon.exe').exists():
             code = process.poll()
             if code not in (None, 0):
                 raise RuntimeError(f'Uninstaller bootstrap failed: {code}')
@@ -135,9 +135,9 @@ def verify_installer(installer, manifest, environment, report):
     key = registered()
     if key is not None:
         key.Close()
-        raise RuntimeError('Refusing to change an existing TORA Clone installation during packaging verification')
-    shortcuts = Path(os.environ['APPDATA']) / 'Microsoft/Windows/Start Menu/Programs/TORA Clone'
-    shortcut_names = ['TORA Clone.lnk', 'Uninstall TORA Clone.lnk']
+        raise RuntimeError('Refusing to change an existing Eidolon installation during packaging verification')
+    shortcuts = Path(os.environ['APPDATA']) / 'Microsoft/Windows/Start Menu/Programs/Eidolon'
+    shortcut_names = ['Eidolon.lnk', 'Uninstall Eidolon.lnk']
     if any((shortcuts / name).exists() for name in shortcut_names):
         raise RuntimeError('Refusing to replace existing shortcuts during packaging verification')
     with tempfile.TemporaryDirectory(prefix='tora-installer-check-') as temporary:
@@ -162,7 +162,7 @@ def verify_installer(installer, manifest, environment, report):
                 raise RuntimeError(f'Missing Start menu shortcut: {name}')
         env = environment.copy()
         env['PATH'] = os.pathsep.join([str(target), str(Path(os.environ['SystemRoot']) / 'System32')])
-        subprocess.run([str(target / 'ToraClone.exe'), '--smoke-test'], env=env,
+        subprocess.run([str(target / 'Eidolon.exe'), '--smoke-test'], env=env,
                        check=True, cwd=target, timeout=30)
         uninstall_with_lock_probe(target / 'Uninstall.exe', target)
         deadline = time.monotonic() + 30
