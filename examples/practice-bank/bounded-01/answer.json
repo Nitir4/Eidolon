@@ -1,0 +1,63 @@
+{
+  "id": "bounded-01",
+  "family": "lp",
+  "workflows": [
+    "LP / Bounded variables"
+  ],
+  "model": {
+    "title": "bounded-01",
+    "sense": "max",
+    "objective": [
+      3,
+      2
+    ],
+    "constraints": [
+      [
+        [
+          1,
+          1
+        ],
+        "<=",
+        4
+      ],
+      [
+        [
+          1,
+          0
+        ],
+        "<=",
+        2
+      ],
+      [
+        [
+          0,
+          1
+        ],
+        "<=",
+        3
+      ]
+    ],
+    "upper": [
+      2,
+      2.5
+    ]
+  },
+  "expected": {
+    "status": "optimal",
+    "objective": 10.0,
+    "objective_exact": "10",
+    "one_solution": [
+      2.0,
+      2.0
+    ],
+    "one_solution_exact": [
+      "2",
+      "2"
+    ],
+    "check": "Objective and feasibility are authoritative; tied solutions may differ."
+  },
+  "notes": "",
+  "original_comparison": "pending",
+  "grid": "bounded-01/grid.tsv",
+  "input": "bounded-01/input.txt"
+}
