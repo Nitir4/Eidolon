@@ -1,0 +1,35 @@
+{
+  "format": "ToraCloneAssignment",
+  "version": 1,
+  "title": "assignment-rectangle-05",
+  "sense": "min",
+  "workers": [
+    "W1",
+    "W2"
+  ],
+  "jobs": [
+    "J1",
+    "J2",
+    "J3",
+    "J4"
+  ],
+  "numberFormat": [
+    0,
+    5,
+    4
+  ],
+  "costs": [
+    [
+      8,
+      2,
+      7,
+      5
+    ],
+    [
+      4,
+      6,
+      1,
+      3
+    ]
+  ]
+}

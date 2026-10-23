@@ -1,0 +1,59 @@
+{
+  "id": "assignment-rectangle-05",
+  "family": "assignment",
+  "workflows": [
+    "Assignment / Rectangular"
+  ],
+  "model": {
+    "format": "ToraCloneAssignment",
+    "version": 1,
+    "title": "assignment-rectangle-05",
+    "sense": "min",
+    "workers": [
+      "W1",
+      "W2"
+    ],
+    "jobs": [
+      "J1",
+      "J2",
+      "J3",
+      "J4"
+    ],
+    "numberFormat": [
+      0,
+      5,
+      4
+    ],
+    "costs": [
+      [
+        8,
+        2,
+        7,
+        5
+      ],
+      [
+        4,
+        6,
+        1,
+        3
+      ]
+    ]
+  },
+  "expected": {
+    "objective": 3,
+    "one_pairing_zero_based": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  "notes": "",
+  "original_comparison": "pending",
+  "grid": "assignment-rectangle-05/grid.tsv",
+  "input": "assignment-rectangle-05/input.assignment.json"
+}
