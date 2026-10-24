@@ -1,0 +1,112 @@
+{
+  "id": "change-rhs-01",
+  "family": "lp",
+  "workflows": [
+    "LP / Change RHS",
+    "LP / Dual Revised (RHS)"
+  ],
+  "model": {
+    "baseline": {
+      "title": "lp-01",
+      "sense": "max",
+      "objective": [
+        3,
+        2
+      ],
+      "constraints": [
+        [
+          [
+            1,
+            1
+          ],
+          "<=",
+          4
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          2
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          "<=",
+          3
+        ]
+      ]
+    },
+    "changed": {
+      "title": "lp-01",
+      "sense": "max",
+      "objective": [
+        3,
+        2
+      ],
+      "constraints": [
+        [
+          [
+            1,
+            1
+          ],
+          "<=",
+          6
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          2
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          "<=",
+          3
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "before": {
+      "status": "optimal",
+      "objective": 10.0,
+      "objective_exact": "10",
+      "one_solution": [
+        2.0,
+        2.0
+      ],
+      "one_solution_exact": [
+        "2",
+        "2"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    },
+    "after": {
+      "status": "optimal",
+      "objective": 12.0,
+      "objective_exact": "12",
+      "one_solution": [
+        2.0,
+        3.0
+      ],
+      "one_solution_exact": [
+        "2",
+        "3"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    }
+  },
+  "notes": "Open baseline input, then Class extensions. Enter changed objective or RHS from answer.json. Compare before/after. Original comparison requires manually changing and re-solving a copy.",
+  "original_comparison": "pending",
+  "grid": "change-rhs-01/grid.tsv",
+  "input": "change-rhs-01/input.txt"
+}
