@@ -1,0 +1,111 @@
+{
+  "id": "change-cj-05",
+  "family": "lp",
+  "workflows": [
+    "LP / Change Cj"
+  ],
+  "model": {
+    "baseline": {
+      "title": "lp-05",
+      "sense": "max",
+      "objective": [
+        7,
+        5
+      ],
+      "constraints": [
+        [
+          [
+            2,
+            3
+          ],
+          "<=",
+          18
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          "<=",
+          15
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          4
+        ]
+      ]
+    },
+    "changed": {
+      "title": "lp-05",
+      "sense": "max",
+      "objective": [
+        10,
+        4
+      ],
+      "constraints": [
+        [
+          [
+            2,
+            3
+          ],
+          "<=",
+          18
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          "<=",
+          15
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          4
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "before": {
+      "status": "optimal",
+      "objective": 44.142857142857146,
+      "objective_exact": "309/7",
+      "one_solution": [
+        3.857142857142857,
+        3.4285714285714284
+      ],
+      "one_solution_exact": [
+        "27/7",
+        "24/7"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    },
+    "after": {
+      "status": "optimal",
+      "objective": 52.285714285714285,
+      "objective_exact": "366/7",
+      "one_solution": [
+        3.857142857142857,
+        3.4285714285714284
+      ],
+      "one_solution_exact": [
+        "27/7",
+        "24/7"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    }
+  },
+  "notes": "Open baseline input, then Class extensions. Enter changed objective or RHS from answer.json. Compare before/after. Original comparison requires manually changing and re-solving a copy.",
+  "original_comparison": "pending",
+  "grid": "change-cj-05/grid.tsv",
+  "input": "change-cj-05/input.txt"
+}
