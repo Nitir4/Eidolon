@@ -1,0 +1,111 @@
+{
+  "id": "change-cj-04",
+  "family": "lp",
+  "workflows": [
+    "LP / Change Cj"
+  ],
+  "model": {
+    "baseline": {
+      "title": "lp-04",
+      "sense": "max",
+      "objective": [
+        4,
+        7
+      ],
+      "constraints": [
+        [
+          [
+            1,
+            2
+          ],
+          "<=",
+          10
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          "<=",
+          12
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          "<=",
+          4
+        ]
+      ]
+    },
+    "changed": {
+      "title": "lp-04",
+      "sense": "max",
+      "objective": [
+        7,
+        6
+      ],
+      "constraints": [
+        [
+          [
+            1,
+            2
+          ],
+          "<=",
+          10
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          "<=",
+          12
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          "<=",
+          4
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "before": {
+      "status": "optimal",
+      "objective": 36.4,
+      "objective_exact": "182/5",
+      "one_solution": [
+        2.8,
+        3.6
+      ],
+      "one_solution_exact": [
+        "14/5",
+        "18/5"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    },
+    "after": {
+      "status": "optimal",
+      "objective": 41.2,
+      "objective_exact": "206/5",
+      "one_solution": [
+        2.8,
+        3.6
+      ],
+      "one_solution_exact": [
+        "14/5",
+        "18/5"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    }
+  },
+  "notes": "Open baseline input, then Class extensions. Enter changed objective or RHS from answer.json. Compare before/after. Original comparison requires manually changing and re-solving a copy.",
+  "original_comparison": "pending",
+  "grid": "change-cj-04/grid.tsv",
+  "input": "change-cj-04/input.txt"
+}
