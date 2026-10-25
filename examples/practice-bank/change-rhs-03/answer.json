@@ -1,0 +1,112 @@
+{
+  "id": "change-rhs-03",
+  "family": "lp",
+  "workflows": [
+    "LP / Change RHS",
+    "LP / Dual Revised (RHS)"
+  ],
+  "model": {
+    "baseline": {
+      "title": "lp-03",
+      "sense": "max",
+      "objective": [
+        2,
+        3
+      ],
+      "constraints": [
+        [
+          [
+            2,
+            1
+          ],
+          "<=",
+          8
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          "<=",
+          8
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          3
+        ]
+      ]
+    },
+    "changed": {
+      "title": "lp-03",
+      "sense": "max",
+      "objective": [
+        2,
+        3
+      ],
+      "constraints": [
+        [
+          [
+            2,
+            1
+          ],
+          "<=",
+          10
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          "<=",
+          8
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          3
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "before": {
+      "status": "optimal",
+      "objective": 13.333333333333334,
+      "objective_exact": "40/3",
+      "one_solution": [
+        2.6666666666666665,
+        2.6666666666666665
+      ],
+      "one_solution_exact": [
+        "8/3",
+        "8/3"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    },
+    "after": {
+      "status": "optimal",
+      "objective": 13.5,
+      "objective_exact": "27/2",
+      "one_solution": [
+        3.0,
+        2.5
+      ],
+      "one_solution_exact": [
+        "3",
+        "5/2"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    }
+  },
+  "notes": "Open baseline input, then Class extensions. Enter changed objective or RHS from answer.json. Compare before/after. Original comparison requires manually changing and re-solving a copy.",
+  "original_comparison": "pending",
+  "grid": "change-rhs-03/grid.tsv",
+  "input": "change-rhs-03/input.txt"
+}
