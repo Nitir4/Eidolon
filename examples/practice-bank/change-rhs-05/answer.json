@@ -1,0 +1,112 @@
+{
+  "id": "change-rhs-05",
+  "family": "lp",
+  "workflows": [
+    "LP / Change RHS",
+    "LP / Dual Revised (RHS)"
+  ],
+  "model": {
+    "baseline": {
+      "title": "lp-05",
+      "sense": "max",
+      "objective": [
+        7,
+        5
+      ],
+      "constraints": [
+        [
+          [
+            2,
+            3
+          ],
+          "<=",
+          18
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          "<=",
+          15
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          4
+        ]
+      ]
+    },
+    "changed": {
+      "title": "lp-05",
+      "sense": "max",
+      "objective": [
+        7,
+        5
+      ],
+      "constraints": [
+        [
+          [
+            2,
+            3
+          ],
+          "<=",
+          20
+        ],
+        [
+          [
+            3,
+            1
+          ],
+          "<=",
+          15
+        ],
+        [
+          [
+            1,
+            0
+          ],
+          "<=",
+          4
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "before": {
+      "status": "optimal",
+      "objective": 44.142857142857146,
+      "objective_exact": "309/7",
+      "one_solution": [
+        3.857142857142857,
+        3.4285714285714284
+      ],
+      "one_solution_exact": [
+        "27/7",
+        "24/7"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    },
+    "after": {
+      "status": "optimal",
+      "objective": 46.42857142857143,
+      "objective_exact": "325/7",
+      "one_solution": [
+        3.5714285714285716,
+        4.285714285714286
+      ],
+      "one_solution_exact": [
+        "25/7",
+        "30/7"
+      ],
+      "check": "Objective and feasibility are authoritative; tied solutions may differ."
+    }
+  },
+  "notes": "Open baseline input, then Class extensions. Enter changed objective or RHS from answer.json. Compare before/after. Original comparison requires manually changing and re-solving a copy.",
+  "original_comparison": "pending",
+  "grid": "change-rhs-05/grid.tsv",
+  "input": "change-rhs-05/input.txt"
+}
