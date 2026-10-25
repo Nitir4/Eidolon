@@ -1,0 +1,69 @@
+{
+  "id": "cover-02",
+  "family": "lp",
+  "workflows": [
+    "LP / Big-M",
+    "LP / Two-phase",
+    "LP / Dual simplex"
+  ],
+  "model": {
+    "title": "cover-02",
+    "sense": "min",
+    "objective": [
+      3,
+      5
+    ],
+    "constraints": [
+      [
+        [
+          1,
+          2
+        ],
+        ">=",
+        6
+      ],
+      [
+        [
+          3,
+          1
+        ],
+        ">=",
+        8
+      ],
+      [
+        [
+          1,
+          0
+        ],
+        "<=",
+        8
+      ],
+      [
+        [
+          0,
+          1
+        ],
+        "<=",
+        8
+      ]
+    ]
+  },
+  "expected": {
+    "status": "optimal",
+    "objective": 16.0,
+    "objective_exact": "16",
+    "one_solution": [
+      2.0,
+      2.0
+    ],
+    "one_solution_exact": [
+      "2",
+      "2"
+    ],
+    "check": "Objective and feasibility are authoritative; tied solutions may differ."
+  },
+  "notes": "For Big-M use M=1000. Dual simplex applies directly to this nonnegative-cost minimization.",
+  "original_comparison": "pending",
+  "grid": "cover-02/grid.tsv",
+  "input": "cover-02/input.txt"
+}
