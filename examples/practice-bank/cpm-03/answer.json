@@ -1,0 +1,62 @@
+{
+  "id": "cpm-03",
+  "family": "planning",
+  "workflows": [
+    "Planning / CPM",
+    "Planning / Schedule bar chart"
+  ],
+  "model": {
+    "method": "CPM",
+    "activities": [
+      [
+        1,
+        2,
+        "A",
+        4
+      ],
+      [
+        1,
+        3,
+        "B",
+        3
+      ],
+      [
+        2,
+        4,
+        "C",
+        2
+      ],
+      [
+        3,
+        4,
+        "D",
+        5
+      ],
+      [
+        4,
+        5,
+        "E",
+        1
+      ]
+    ]
+  },
+  "expected": {
+    "project_duration": 9,
+    "total_float": [
+      2,
+      0,
+      2,
+      0,
+      0
+    ],
+    "critical_activities": [
+      "B",
+      "D",
+      "E"
+    ]
+  },
+  "notes": "CPM TSV: from, to, symbol, duration. PERT TSV: from, to, symbol, optimistic, most likely, pessimistic; start at the first estimate cell for the last three fields.",
+  "original_comparison": "pending",
+  "grid": "cpm-03/grid.tsv",
+  "input": "cpm-03/input.txt"
+}
