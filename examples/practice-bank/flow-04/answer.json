@@ -1,0 +1,47 @@
+{
+  "id": "flow-04",
+  "family": "flow",
+  "workflows": [
+    "Networks / Maximal flow"
+  ],
+  "model": {
+    "nodes": 4,
+    "edges_zero_based": [
+      [
+        0,
+        1,
+        10
+      ],
+      [
+        0,
+        2,
+        7
+      ],
+      [
+        1,
+        2,
+        6
+      ],
+      [
+        1,
+        3,
+        9
+      ],
+      [
+        2,
+        3,
+        8
+      ]
+    ],
+    "source": 0,
+    "sink": 3
+  },
+  "expected": {
+    "max_flow": 17,
+    "min_cut": 17
+  },
+  "notes": "Source A, sink D. Expected value independently enumerates all four source/sink cuts.",
+  "original_comparison": "pending",
+  "grid": "flow-04/grid.tsv",
+  "input": "flow-04/input.txt"
+}
