@@ -1,0 +1,40 @@
+{
+  "id": "game-02",
+  "family": "game",
+  "workflows": [
+    "Games / LP-based",
+    "Games / Graphical"
+  ],
+  "model": {
+    "payoffs": [
+      [
+        4,
+        1
+      ],
+      [
+        0,
+        3
+      ]
+    ]
+  },
+  "expected": {
+    "value": 2.0,
+    "row_probabilities": [
+      0.5,
+      0.5
+    ],
+    "column_probabilities": [
+      0.3333333333333333,
+      0.6666666666666666
+    ],
+    "exact": {
+      "value": "2",
+      "p": "1/2",
+      "q": "1/3"
+    }
+  },
+  "notes": "Payoffs are to the maximizing row player. Graphical route requires two rows.",
+  "original_comparison": "pending",
+  "grid": "game-02/grid.tsv",
+  "input": "game-02/input.txt"
+}
