@@ -1,0 +1,211 @@
+workflow,example,clone_status,clone_value,original_status,original_value,feasible,notes
+LP / Graphical,lp-01,,,,,,Pending comparison
+LP / Graphical,lp-02,,,,,,Pending comparison
+LP / Graphical,lp-03,,,,,,Pending comparison
+LP / Graphical,lp-04,,,,,,Pending comparison
+LP / Graphical,lp-05,,,,,,Pending comparison
+LP / All-slack,lp-01,,,,,,Pending comparison
+LP / All-slack,lp-02,,,,,,Pending comparison
+LP / All-slack,lp-03,,,,,,Pending comparison
+LP / All-slack,lp-04,,,,,,Pending comparison
+LP / All-slack,lp-05,,,,,,Pending comparison
+LP / Final solution,lp-01,,,,,,Pending comparison
+LP / Final solution,lp-02,,,,,,Pending comparison
+LP / Final solution,lp-03,,,,,,Pending comparison
+LP / Final solution,lp-04,,,,,,Pending comparison
+LP / Final solution,lp-05,,,,,,Pending comparison
+LP / Sensitivity,lp-01,,,,,,Pending comparison
+LP / Sensitivity,lp-02,,,,,,Pending comparison
+LP / Sensitivity,lp-03,,,,,,Pending comparison
+LP / Sensitivity,lp-04,,,,,,Pending comparison
+LP / Sensitivity,lp-05,,,,,,Pending comparison
+LP / Bounded variables,bounded-01,,,,,,Pending comparison
+LP / Bounded variables,bounded-02,,,,,,Pending comparison
+LP / Bounded variables,bounded-03,,,,,,Pending comparison
+LP / Bounded variables,bounded-04,,,,,,Pending comparison
+LP / Bounded variables,bounded-05,,,,,,Pending comparison
+LP / Big-M,cover-01,,,,,,Pending comparison
+LP / Big-M,cover-02,,,,,,Pending comparison
+LP / Big-M,cover-03,,,,,,Pending comparison
+LP / Big-M,cover-04,,,,,,Pending comparison
+LP / Big-M,cover-05,,,,,,Pending comparison
+LP / Two-phase,cover-01,,,,,,Pending comparison
+LP / Two-phase,cover-02,,,,,,Pending comparison
+LP / Two-phase,cover-03,,,,,,Pending comparison
+LP / Two-phase,cover-04,,,,,,Pending comparison
+LP / Two-phase,cover-05,,,,,,Pending comparison
+LP / Dual simplex,cover-01,,,,,,Pending comparison
+LP / Dual simplex,cover-02,,,,,,Pending comparison
+LP / Dual simplex,cover-03,,,,,,Pending comparison
+LP / Dual simplex,cover-04,,,,,,Pending comparison
+LP / Dual simplex,cover-05,,,,,,Pending comparison
+LP / Change Cj,change-cj-01,,,,,,Pending comparison
+LP / Change Cj,change-cj-02,,,,,,Pending comparison
+LP / Change Cj,change-cj-03,,,,,,Pending comparison
+LP / Change Cj,change-cj-04,,,,,,Pending comparison
+LP / Change Cj,change-cj-05,,,,,,Pending comparison
+LP / Change RHS,change-rhs-01,,,,,,Pending comparison
+LP / Change RHS,change-rhs-02,,,,,,Pending comparison
+LP / Change RHS,change-rhs-03,,,,,,Pending comparison
+LP / Change RHS,change-rhs-04,,,,,,Pending comparison
+LP / Change RHS,change-rhs-05,,,,,,Pending comparison
+LP / Dual Revised (RHS),change-rhs-01,,,,,,Pending comparison
+LP / Dual Revised (RHS),change-rhs-02,,,,,,Pending comparison
+LP / Dual Revised (RHS),change-rhs-03,,,,,,Pending comparison
+LP / Dual Revised (RHS),change-rhs-04,,,,,,Pending comparison
+LP / Dual Revised (RHS),change-rhs-05,,,,,,Pending comparison
+Integer / Pure automated,integer-pure-01,,,,,,Pending comparison
+Integer / Pure automated,integer-pure-02,,,,,,Pending comparison
+Integer / Pure automated,integer-pure-03,,,,,,Pending comparison
+Integer / Pure automated,integer-pure-04,,,,,,Pending comparison
+Integer / Pure automated,integer-pure-05,,,,,,Pending comparison
+Integer / Guided branch-and-bound,integer-pure-01,,,,,,Pending comparison
+Integer / Guided branch-and-bound,integer-pure-02,,,,,,Pending comparison
+Integer / Guided branch-and-bound,integer-pure-03,,,,,,Pending comparison
+Integer / Guided branch-and-bound,integer-pure-04,,,,,,Pending comparison
+Integer / Guided branch-and-bound,integer-pure-05,,,,,,Pending comparison
+Integer / Mixed,integer-mixed-01,,,,,,Pending comparison
+Integer / Mixed,integer-mixed-02,,,,,,Pending comparison
+Integer / Mixed,integer-mixed-03,,,,,,Pending comparison
+Integer / Mixed,integer-mixed-04,,,,,,Pending comparison
+Integer / Mixed,integer-mixed-05,,,,,,Pending comparison
+Equations / Solve linear equations,equations-01,,,,,,Pending comparison
+Equations / Solve linear equations,equations-02,,,,,,Pending comparison
+Equations / Solve linear equations,equations-03,,,,,,Pending comparison
+Equations / Solve linear equations,equations-04,,,,,,Pending comparison
+Equations / Solve linear equations,equations-05,,,,,,Pending comparison
+Equations / Matrix inverse,inverse-01,,,,,,Pending comparison
+Equations / Matrix inverse,inverse-02,,,,,,Pending comparison
+Equations / Matrix inverse,inverse-03,,,,,,Pending comparison
+Equations / Matrix inverse,inverse-04,,,,,,Pending comparison
+Equations / Matrix inverse,inverse-05,,,,,,Pending comparison
+Transportation / North-west,transport-01,,,,,,Pending comparison
+Transportation / North-west,transport-02,,,,,,Pending comparison
+Transportation / North-west,transport-03,,,,,,Pending comparison
+Transportation / North-west,transport-04,,,,,,Pending comparison
+Transportation / North-west,transport-05,,,,,,Pending comparison
+Transportation / Least cost,transport-01,,,,,,Pending comparison
+Transportation / Least cost,transport-02,,,,,,Pending comparison
+Transportation / Least cost,transport-03,,,,,,Pending comparison
+Transportation / Least cost,transport-04,,,,,,Pending comparison
+Transportation / Least cost,transport-05,,,,,,Pending comparison
+Transportation / Vogel,transport-01,,,,,,Pending comparison
+Transportation / Vogel,transport-02,,,,,,Pending comparison
+Transportation / Vogel,transport-03,,,,,,Pending comparison
+Transportation / Vogel,transport-04,,,,,,Pending comparison
+Transportation / Vogel,transport-05,,,,,,Pending comparison
+Transportation / MODI improvement,transport-01,,,,,,Pending comparison
+Transportation / MODI improvement,transport-02,,,,,,Pending comparison
+Transportation / MODI improvement,transport-03,,,,,,Pending comparison
+Transportation / MODI improvement,transport-04,,,,,,Pending comparison
+Transportation / MODI improvement,transport-05,,,,,,Pending comparison
+Transportation / Final solution,transport-01,,,,,,Pending comparison
+Transportation / Final solution,transport-02,,,,,,Pending comparison
+Transportation / Final solution,transport-03,,,,,,Pending comparison
+Transportation / Final solution,transport-04,,,,,,Pending comparison
+Transportation / Final solution,transport-05,,,,,,Pending comparison
+Assignment / min,assignment-min-01,,,,,,Pending comparison
+Assignment / min,assignment-min-02,,,,,,Pending comparison
+Assignment / min,assignment-min-03,,,,,,Pending comparison
+Assignment / min,assignment-min-04,,,,,,Pending comparison
+Assignment / min,assignment-min-05,,,,,,Pending comparison
+Assignment / Rectangular,assignment-min-03,,,,,,Pending comparison
+Assignment / Rectangular,assignment-min-04,,,,,,Pending comparison
+Assignment / Rectangular,assignment-max-03,,,,,,Pending comparison
+Assignment / Rectangular,assignment-max-04,,,,,,Pending comparison
+Assignment / Rectangular,assignment-rectangle-05,,,,,,Pending comparison
+Assignment / max,assignment-max-01,,,,,,Pending comparison
+Assignment / max,assignment-max-02,,,,,,Pending comparison
+Assignment / max,assignment-max-03,,,,,,Pending comparison
+Assignment / max,assignment-max-04,,,,,,Pending comparison
+Assignment / max,assignment-max-05,,,,,,Pending comparison
+Networks / Minimum spanning tree,mst-01,,,,,,Pending comparison
+Networks / Minimum spanning tree,mst-02,,,,,,Pending comparison
+Networks / Minimum spanning tree,mst-03,,,,,,Pending comparison
+Networks / Minimum spanning tree,mst-04,,,,,,Pending comparison
+Networks / Minimum spanning tree,mst-05,,,,,,Pending comparison
+Networks / Shortest route,route-01,,,,,,Pending comparison
+Networks / Shortest route,route-02,,,,,,Pending comparison
+Networks / Shortest route,route-03,,,,,,Pending comparison
+Networks / Shortest route,route-04,,,,,,Pending comparison
+Networks / Shortest route,route-05,,,,,,Pending comparison
+Networks / Dijkstra,route-01,,,,,,Pending comparison
+Networks / Dijkstra,route-02,,,,,,Pending comparison
+Networks / Dijkstra,route-03,,,,,,Pending comparison
+Networks / Dijkstra,route-04,,,,,,Pending comparison
+Networks / Dijkstra,route-05,,,,,,Pending comparison
+Networks / Floyd,route-01,,,,,,Pending comparison
+Networks / Floyd,route-02,,,,,,Pending comparison
+Networks / Floyd,route-03,,,,,,Pending comparison
+Networks / Floyd,route-04,,,,,,Pending comparison
+Networks / Floyd,route-05,,,,,,Pending comparison
+Networks / Bellman-Ford extension,route-01,,,,,,Pending comparison
+Networks / Bellman-Ford extension,route-02,,,,,,Pending comparison
+Networks / Bellman-Ford extension,route-03,,,,,,Pending comparison
+Networks / Bellman-Ford extension,route-04,,,,,,Pending comparison
+Networks / Bellman-Ford extension,route-05,,,,,,Pending comparison
+Networks / Maximal flow,flow-01,,,,,,Pending comparison
+Networks / Maximal flow,flow-02,,,,,,Pending comparison
+Networks / Maximal flow,flow-03,,,,,,Pending comparison
+Networks / Maximal flow,flow-04,,,,,,Pending comparison
+Networks / Maximal flow,flow-05,,,,,,Pending comparison
+Planning / CPM,cpm-01,,,,,,Pending comparison
+Planning / CPM,cpm-02,,,,,,Pending comparison
+Planning / CPM,cpm-03,,,,,,Pending comparison
+Planning / CPM,cpm-04,,,,,,Pending comparison
+Planning / CPM,cpm-05,,,,,,Pending comparison
+Planning / Schedule bar chart,cpm-01,,,,,,Pending comparison
+Planning / Schedule bar chart,cpm-02,,,,,,Pending comparison
+Planning / Schedule bar chart,cpm-03,,,,,,Pending comparison
+Planning / Schedule bar chart,cpm-04,,,,,,Pending comparison
+Planning / Schedule bar chart,cpm-05,,,,,,Pending comparison
+Planning / PERT,pert-01,,,,,,Pending comparison
+Planning / PERT,pert-02,,,,,,Pending comparison
+Planning / PERT,pert-03,,,,,,Pending comparison
+Planning / PERT,pert-04,,,,,,Pending comparison
+Planning / PERT,pert-05,,,,,,Pending comparison
+Queuing / M/M/1,queue-mm1-01,,,,,,Pending comparison
+Queuing / M/M/1,queue-mm1-02,,,,,,Pending comparison
+Queuing / M/M/1,queue-mm1-03,,,,,,Pending comparison
+Queuing / M/M/1,queue-mm1-04,,,,,,Pending comparison
+Queuing / M/M/1,queue-mm1-05,,,,,,Pending comparison
+Queuing / M/M/c,queue-mmc-01,,,,,,Pending comparison
+Queuing / M/M/c,queue-mmc-02,,,,,,Pending comparison
+Queuing / M/M/c,queue-mmc-03,,,,,,Pending comparison
+Queuing / M/M/c,queue-mmc-04,,,,,,Pending comparison
+Queuing / M/M/c,queue-mmc-05,,,,,,Pending comparison
+Queuing / Finite capacity K,queue-finite-k-01,,,,,,Pending comparison
+Queuing / Finite capacity K,queue-finite-k-02,,,,,,Pending comparison
+Queuing / Finite capacity K,queue-finite-k-03,,,,,,Pending comparison
+Queuing / Finite capacity K,queue-finite-k-04,,,,,,Pending comparison
+Queuing / Finite capacity K,queue-finite-k-05,,,,,,Pending comparison
+Queuing / Finite source N,queue-finite-n-01,,,,,,Pending comparison
+Queuing / Finite source N,queue-finite-n-02,,,,,,Pending comparison
+Queuing / Finite source N,queue-finite-n-03,,,,,,Pending comparison
+Queuing / Finite source N,queue-finite-n-04,,,,,,Pending comparison
+Queuing / Finite source N,queue-finite-n-05,,,,,,Pending comparison
+Queuing / Finite K and N,queue-finite-kn-01,,,,,,Pending comparison
+Queuing / Finite K and N,queue-finite-kn-02,,,,,,Pending comparison
+Queuing / Finite K and N,queue-finite-kn-03,,,,,,Pending comparison
+Queuing / Finite K and N,queue-finite-kn-04,,,,,,Pending comparison
+Queuing / Finite K and N,queue-finite-kn-05,,,,,,Pending comparison
+Queuing / Pure birth,queue-pure-birth-01,,,,,,Pending comparison
+Queuing / Pure birth,queue-pure-birth-02,,,,,,Pending comparison
+Queuing / Pure birth,queue-pure-birth-03,,,,,,Pending comparison
+Queuing / Pure birth,queue-pure-birth-04,,,,,,Pending comparison
+Queuing / Pure birth,queue-pure-birth-05,,,,,,Pending comparison
+Queuing / Pure death,queue-pure-death-01,,,,,,Pending comparison
+Queuing / Pure death,queue-pure-death-02,,,,,,Pending comparison
+Queuing / Pure death,queue-pure-death-03,,,,,,Pending comparison
+Queuing / Pure death,queue-pure-death-04,,,,,,Pending comparison
+Queuing / Pure death,queue-pure-death-05,,,,,,Pending comparison
+Games / LP-based,game-01,,,,,,Pending comparison
+Games / LP-based,game-02,,,,,,Pending comparison
+Games / LP-based,game-03,,,,,,Pending comparison
+Games / LP-based,game-04,,,,,,Pending comparison
+Games / LP-based,game-05,,,,,,Pending comparison
+Games / Graphical,game-01,,,,,,Pending comparison
+Games / Graphical,game-02,,,,,,Pending comparison
+Games / Graphical,game-03,,,,,,Pending comparison
+Games / Graphical,game-04,,,,,,Pending comparison
+Games / Graphical,game-05,,,,,,Pending comparison
