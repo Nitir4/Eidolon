@@ -1,0 +1,63 @@
+{
+  "id": "integer-mixed-05",
+  "family": "integer",
+  "workflows": [
+    "Integer / Mixed"
+  ],
+  "model": {
+    "title": "integer-mixed-05",
+    "sense": "max",
+    "objective": [
+      7,
+      5
+    ],
+    "constraints": [
+      [
+        [
+          2,
+          3
+        ],
+        "<=",
+        18
+      ],
+      [
+        [
+          3,
+          1
+        ],
+        "<=",
+        15
+      ],
+      [
+        [
+          1,
+          0
+        ],
+        "<=",
+        4
+      ]
+    ],
+    "integral": [
+      "y",
+      "n"
+    ]
+  },
+  "expected": {
+    "status": "optimal",
+    "objective": 43.0,
+    "objective_exact": "43",
+    "one_solution": [
+      4.0,
+      3.0
+    ],
+    "one_solution_exact": [
+      "4",
+      "3"
+    ],
+    "check": "Objective and feasibility are authoritative; tied solutions may differ."
+  },
+  "notes": "Integer enumeration bounds 0..30 cover these small bounded feasible regions.",
+  "original_comparison": "pending",
+  "grid": "integer-mixed-05/grid.tsv",
+  "input": "integer-mixed-05/input.txt"
+}
