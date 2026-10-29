@@ -1,0 +1,64 @@
+{
+  "id": "integer-pure-02",
+  "family": "integer",
+  "workflows": [
+    "Integer / Pure automated",
+    "Integer / Guided branch-and-bound"
+  ],
+  "model": {
+    "title": "integer-pure-02",
+    "sense": "max",
+    "objective": [
+      5,
+      4
+    ],
+    "constraints": [
+      [
+        [
+          6,
+          4
+        ],
+        "<=",
+        24
+      ],
+      [
+        [
+          1,
+          2
+        ],
+        "<=",
+        6
+      ],
+      [
+        [
+          -1,
+          1
+        ],
+        "<=",
+        1
+      ]
+    ],
+    "integral": [
+      "y",
+      "y"
+    ]
+  },
+  "expected": {
+    "status": "optimal",
+    "objective": 20.0,
+    "objective_exact": "20",
+    "one_solution": [
+      4.0,
+      0.0
+    ],
+    "one_solution_exact": [
+      "4",
+      "0"
+    ],
+    "check": "Objective and feasibility are authoritative; tied solutions may differ."
+  },
+  "notes": "Integer enumeration bounds 0..30 cover these small bounded feasible regions.",
+  "original_comparison": "pending",
+  "grid": "integer-pure-02/grid.tsv",
+  "input": "integer-pure-02/input.txt"
+}
