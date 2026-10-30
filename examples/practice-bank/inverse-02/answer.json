@@ -1,0 +1,43 @@
+{
+  "id": "inverse-02",
+  "family": "matrix",
+  "workflows": [
+    "Equations / Matrix inverse"
+  ],
+  "model": {
+    "A": [
+      [
+        3,
+        2
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "b": [
+      7,
+      9
+    ]
+  },
+  "expected": {
+    "solution": [
+      1,
+      2
+    ],
+    "inverse_exact": [
+      [
+        "2/5",
+        "-1/5"
+      ],
+      [
+        "-1/10",
+        "3/10"
+      ]
+    ]
+  },
+  "notes": "",
+  "original_comparison": "pending",
+  "grid": "inverse-02/grid.tsv",
+  "input": "inverse-02/input.txt"
+}

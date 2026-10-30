@@ -1,0 +1,59 @@
+{
+  "id": "inverse-03",
+  "family": "matrix",
+  "workflows": [
+    "Equations / Matrix inverse"
+  ],
+  "model": {
+    "A": [
+      [
+        1,
+        2,
+        1
+      ],
+      [
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        1,
+        1
+      ]
+    ],
+    "b": [
+      8,
+      11,
+      7
+    ]
+  },
+  "expected": {
+    "solution": [
+      1,
+      2,
+      3
+    ],
+    "inverse_exact": [
+      [
+        "-1/4",
+        "-1/8",
+        "5/8"
+      ],
+      [
+        "3/4",
+        "-1/8",
+        "-3/8"
+      ],
+      [
+        "-1/4",
+        "3/8",
+        "1/8"
+      ]
+    ]
+  },
+  "notes": "",
+  "original_comparison": "pending",
+  "grid": "inverse-03/grid.tsv",
+  "input": "inverse-03/input.txt"
+}
