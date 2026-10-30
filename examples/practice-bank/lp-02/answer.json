@@ -1,0 +1,62 @@
+{
+  "id": "lp-02",
+  "family": "lp",
+  "workflows": [
+    "LP / Graphical",
+    "LP / All-slack",
+    "LP / Final solution",
+    "LP / Sensitivity"
+  ],
+  "model": {
+    "title": "lp-02",
+    "sense": "max",
+    "objective": [
+      5,
+      4
+    ],
+    "constraints": [
+      [
+        [
+          6,
+          4
+        ],
+        "<=",
+        24
+      ],
+      [
+        [
+          1,
+          2
+        ],
+        "<=",
+        6
+      ],
+      [
+        [
+          -1,
+          1
+        ],
+        "<=",
+        1
+      ]
+    ]
+  },
+  "expected": {
+    "status": "optimal",
+    "objective": 21.0,
+    "objective_exact": "21",
+    "one_solution": [
+      3.0,
+      1.5
+    ],
+    "one_solution_exact": [
+      "3",
+      "3/2"
+    ],
+    "check": "Objective and feasibility are authoritative; tied solutions may differ."
+  },
+  "notes": "LP TSV contains grid columns x1, x2, relation, RHS; paste names/objective and constraint rows separately to avoid protected blank cells. Bounds remain as shown.",
+  "original_comparison": "pending",
+  "grid": "lp-02/grid.tsv",
+  "input": "lp-02/input.txt"
+}
