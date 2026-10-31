@@ -1,0 +1,5 @@
+Node Name	A	B	C	D
+A		4	2	infinity
+B	4		6	3
+C	2	6		1
+D	infinity	3	1	

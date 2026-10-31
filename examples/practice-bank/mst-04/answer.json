@@ -1,0 +1,46 @@
+{
+  "id": "mst-04",
+  "family": "mst",
+  "workflows": [
+    "Networks / Minimum spanning tree"
+  ],
+  "model": {
+    "nodes": 4,
+    "edges_zero_based": [
+      [
+        0,
+        1,
+        6
+      ],
+      [
+        0,
+        2,
+        3
+      ],
+      [
+        1,
+        2,
+        2
+      ],
+      [
+        1,
+        3,
+        5
+      ],
+      [
+        2,
+        3,
+        4
+      ]
+    ],
+    "source": 0,
+    "sink": 3
+  },
+  "expected": {
+    "total_weight": 9
+  },
+  "notes": "Route files use marker 0: select Shortest Route before opening. Source A, destination D. Positive undirected costs are valid for all listed methods.",
+  "original_comparison": "pending",
+  "grid": "mst-04/grid.tsv",
+  "input": "mst-04/input.txt"
+}
