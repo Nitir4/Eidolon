@@ -1,0 +1,33 @@
+{
+  "id": "queue-finite-kn-02",
+  "family": "queue",
+  "workflows": [
+    "Queuing / Finite K and N"
+  ],
+  "model": {
+    "arrival": 1.0,
+    "service": 4.0,
+    "servers": 2,
+    "K": 6,
+    "N": 7
+  },
+  "expected": {
+    "P0": 0.18230777790141314,
+    "L": 1.7276065427840213,
+    "Lq": 0.4112607099143207,
+    "W": 0.32810650887573967,
+    "Wq": 0.07810650887573964,
+    "lambda_effective": 5.2653833314788026,
+    "exact": {
+      "P0": "8192/44935",
+      "L": "15526/8987",
+      "Lq": "336/817",
+      "W": "1109/3380",
+      "Wq": "66/845"
+    }
+  },
+  "notes": "Finite source lambda is per idle source. W/Wq use accepted throughput. Common time units throughout.",
+  "original_comparison": "pending",
+  "grid": "queue-finite-kn-02/grid.tsv",
+  "input": "queue-finite-kn-02/input.txt"
+}
