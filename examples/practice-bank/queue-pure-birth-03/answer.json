@@ -1,0 +1,22 @@
+{
+  "id": "queue-pure-birth-03",
+  "family": "queue",
+  "workflows": [
+    "Queuing / Pure birth"
+  ],
+  "model": {
+    "rate": 3,
+    "time": 1,
+    "initial_population": 0
+  },
+  "expected": {
+    "time": 1,
+    "rate": 3,
+    "P_no_events": 0.049787068367863944,
+    "mean": 3
+  },
+  "notes": "Transient constant-rate unit-time profile. Pure death uses N=500 to match the captured original effective population; record probability of no deaths at state 500. Pure birth records state 0.",
+  "original_comparison": "pending",
+  "grid": "queue-pure-birth-03/grid.tsv",
+  "input": "queue-pure-birth-03/input.txt"
+}
