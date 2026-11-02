@@ -1,0 +1,33 @@
+{
+  "id": "queue-mm1-03",
+  "family": "queue",
+  "workflows": [
+    "Queuing / M/M/1"
+  ],
+  "model": {
+    "arrival": 1.5,
+    "service": 5.0,
+    "servers": 1,
+    "K": null,
+    "N": null
+  },
+  "expected": {
+    "P0": 0.7,
+    "L": 0.42857142857142855,
+    "Lq": 0.12857142857142856,
+    "W": 0.2857142857142857,
+    "Wq": 0.08571428571428572,
+    "lambda_effective": 1.5,
+    "exact": {
+      "P0": "7/10",
+      "L": "3/7",
+      "Lq": "9/70",
+      "W": "2/7",
+      "Wq": "3/35"
+    }
+  },
+  "notes": "Finite source lambda is per idle source. W/Wq use accepted throughput. Common time units throughout.",
+  "original_comparison": "pending",
+  "grid": "queue-mm1-03/grid.tsv",
+  "input": "queue-mm1-03/input.txt"
+}
