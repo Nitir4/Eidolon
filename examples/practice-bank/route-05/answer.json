@@ -1,0 +1,49 @@
+{
+  "id": "route-05",
+  "family": "route",
+  "workflows": [
+    "Networks / Shortest route",
+    "Networks / Dijkstra",
+    "Networks / Floyd",
+    "Networks / Bellman-Ford extension"
+  ],
+  "model": {
+    "nodes": 4,
+    "edges_zero_based": [
+      [
+        0,
+        1,
+        3
+      ],
+      [
+        0,
+        2,
+        4
+      ],
+      [
+        1,
+        2,
+        5
+      ],
+      [
+        1,
+        3,
+        1
+      ],
+      [
+        2,
+        3,
+        2
+      ]
+    ],
+    "source": 0,
+    "sink": 3
+  },
+  "expected": {
+    "distance": 4
+  },
+  "notes": "Route files use marker 0: select Shortest Route before opening. Source A, destination D. Positive undirected costs are valid for all listed methods.",
+  "original_comparison": "pending",
+  "grid": "route-05/grid.tsv",
+  "input": "route-05/input.txt"
+}
