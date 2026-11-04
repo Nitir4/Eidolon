@@ -1,0 +1,53 @@
+{
+  "id": "transport-01",
+  "family": "transportation",
+  "workflows": [
+    "Transportation / North-west",
+    "Transportation / Least cost",
+    "Transportation / Vogel",
+    "Transportation / MODI improvement",
+    "Transportation / Final solution"
+  ],
+  "model": {
+    "costs": [
+      [
+        2,
+        3,
+        1
+      ],
+      [
+        5,
+        4,
+        8
+      ]
+    ],
+    "supply": [
+      3,
+      4
+    ],
+    "demand": [
+      2,
+      2,
+      3
+    ]
+  },
+  "expected": {
+    "optimal_cost": 21,
+    "one_optimal_flow": [
+      [
+        0,
+        0,
+        3
+      ],
+      [
+        2,
+        2,
+        0
+      ]
+    ]
+  },
+  "notes": "Final optimum key. Initial heuristic costs can differ. Compare each initial allocation separately, then improve to the stated optimum. Paste numeric costs starting at the first cost cell, or open input.txt.",
+  "original_comparison": "pending",
+  "grid": "transport-01/grid.tsv",
+  "input": "transport-01/input.txt"
+}
