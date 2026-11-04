@@ -1,0 +1,6 @@
+add_library(or_assignment STATIC assignment.cpp)
+add_library(tora::assignment ALIAS or_assignment)
+tora_target_defaults(or_assignment)
+target_compile_features(or_assignment PUBLIC cxx_std_17)
+target_include_directories(or_assignment PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_link_libraries(or_assignment PUBLIC tora::core)
