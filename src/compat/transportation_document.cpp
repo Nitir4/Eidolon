@@ -23,6 +23,11 @@ std::size_t size(const std::string& value) {
         throw std::invalid_argument("Invalid Transportation problem size (native limit: 100).");
     return result;
 }
+int digits(const std::string& value) {
+    int result=0;const auto parsed=std::from_chars(value.data(),value.data()+value.size(),result);
+    if(parsed.ec!=std::errc{} || parsed.ptr!=value.data()+value.size())throw std::invalid_argument("Invalid Transportation number format.");
+    return result;
+}
 std::string unquote(const std::string& value) {
     if (value.size() < 2 || value.front() != '"' || value.back() != '"')
         throw std::invalid_argument("Expected a quoted Transportation text record.");
@@ -76,11 +81,13 @@ TransportationDocument TransportationDocument::decode(std::string_view bytes) {
         records.emplace_back(line); bytes.remove_prefix(end + 2);
     }
     if (records.size() < 7 || records[0] != "4000") throw std::invalid_argument("Select a TORA Transportation file (4000).");
-    if (records[1] != "5" || records[2] != "2" || records[3] != "1")
-        throw std::invalid_argument("Transportation opens the captured default format N=5, D=2, decimal notation.");
+    if(records[3]!="1" && records[3]!="2")throw std::invalid_argument("Invalid Transportation notation (expected decimal or scientific).");
+    const core::NumberFormat format{records[3]=="2"?core::Notation::Scientific:core::Notation::Decimal,digits(records[1]),digits(records[2])};
+    (void)core::NumberFormatter(format);
     const auto m = size(records[5]), n = size(records[6]);
     if (records.size() != 7 + (m + 2) * (n + 2)) throw std::invalid_argument("Transportation file has an incorrect grid record count.");
     TransportationDocument doc; doc.problem_ = transportation::Problem::blank(m, n);
+    doc.problem_.format=format;doc.formatNRecord_=records[1];doc.formatDRecord_=records[2];doc.notationRecord_=records[3];
     doc.sourceCountRecord_ = records[5]; doc.destinationCountRecord_ = records[6];
     doc.problem_.title = unquote(records[4]);
     for (std::size_t k = 7; k < records.size(); ++k) doc.cells_.push_back(unquote(records[k]));
@@ -98,6 +105,9 @@ TransportationDocument TransportationDocument::decode(std::string_view bytes) {
 TransportationDocument TransportationDocument::create(transportation::Problem problem) {
     transportation::validate(problem);
     TransportationDocument doc; doc.problem_ = std::move(problem);
+    (void)core::NumberFormatter(doc.problem_.format);
+    doc.formatNRecord_=std::to_string(doc.problem_.format.n);doc.formatDRecord_=std::to_string(doc.problem_.format.d);
+    doc.notationRecord_=doc.problem_.format.notation==core::Notation::Scientific?"2":"1";
     const auto m = doc.problem_.supply.size(), n = doc.problem_.demand.size();
     doc.sourceCountRecord_ = std::to_string(m); doc.destinationCountRecord_ = std::to_string(n);
     doc.cells_.resize((m + 2) * (n + 2)); doc.cells_[0] = "S/D Name";
@@ -112,11 +122,11 @@ TransportationDocument TransportationDocument::create(transportation::Problem pr
     }
     (void)doc.encode(); return doc;
 }
-TransportationDocument TransportationDocument::blank(std::size_t m, std::size_t n, std::string title) {
-    auto p = transportation::Problem::blank(m, n); p.title = std::move(title);
+TransportationDocument TransportationDocument::blank(std::size_t m, std::size_t n, std::string title, core::NumberFormat format) {
+    auto p = transportation::Problem::blank(m, n); p.title = std::move(title);p.format=format;
     auto doc = create(std::move(p));
     for (std::size_t i = 1; i <= m; ++i) {
-        for (std::size_t j = 1; j <= n; ++j) doc.cells_[doc.index(i, j)] = "0.00";
+        for (std::size_t j = 1; j <= n; ++j) doc.cells_[doc.index(i, j)] = core::NumberFormatter(format).format(0);
         doc.cells_[doc.index(i, n + 1)].clear();
     }
     for (std::size_t j = 1; j <= n; ++j) doc.cells_[doc.index(m + 1, j)].clear();
@@ -142,7 +152,7 @@ void TransportationDocument::setCell(std::size_t row, std::size_t col, std::stri
     if (cost || supply || demand) {
         double parsed = number(value);
         if ((supply || demand) && parsed < 0) throw std::invalid_argument("Transportation quantities must be nonnegative.");
-        if (cost) value = core::NumberFormatter({core::Notation::Decimal, 5, 2}).format(parsed);
+        if (cost) value = core::NumberFormatter(problem_.format).format(parsed);
         else if (!value.empty()) value = lexical(std::round(parsed));
         parsed = number(value);
         if (cost) next.problem_.costs[row - 1][col - 1] = parsed;
@@ -166,7 +176,7 @@ void TransportationDocument::replaceGrid(std::size_t m, std::size_t n, std::vect
     // Validate the complete candidate before replacing any state.
     const auto sources = m == problem_.supply.size() ? sourceCountRecord_ : std::to_string(m);
     const auto destinations = n == problem_.demand.size() ? destinationCountRecord_ : std::to_string(n);
-    std::string bytes = "4000\r\n5\r\n2\r\n1\r\n" + quote(problem_.title) + "\r\n" + sources + "\r\n" + destinations + "\r\n";
+    std::string bytes = prefix() + sources + "\r\n" + destinations + "\r\n";
     for (const auto& value : cells) {
         bytes += quote(value) + "\r\n";
         if (bytes.size() > MaximumBytes) throw std::invalid_argument("Transportation file exceeds the native 4 MiB limit.");
@@ -184,7 +194,7 @@ void TransportationDocument::insert(Axis axis, std::size_t position) {
     for (std::size_t row = 0; row < mm + 2; ++row) for (std::size_t col = 0; col < nn + 2; ++col) {
         auto& value = cells[row * (nn + 2) + col];
         if ((source && row == at) || (!source && col == at)) {
-            if (row >= 1 && row <= mm && col >= 1 && col <= nn) value = "0.00";
+            if (row >= 1 && row <= mm && col >= 1 && col <= nn) value = core::NumberFormatter(problem_.format).format(0);
         } else value = cell(row - (source && row > at ? 1 : 0), col - (!source && col > at ? 1 : 0));
     }
     replaceGrid(mm, nn, std::move(cells));
@@ -208,8 +218,11 @@ void TransportationDocument::paste(Axis axis, std::size_t position, const std::v
         cells[index(axis == Axis::Source ? position + 1 : i, axis == Axis::Source ? i : position + 1)] = values[i];
     replaceGrid(problem_.supply.size(), problem_.demand.size(), std::move(cells));
 }
+std::string TransportationDocument::prefix() const {
+    return "4000\r\n" + formatNRecord_ + "\r\n" + formatDRecord_ + "\r\n" + notationRecord_ + "\r\n" + quote(problem_.title) + "\r\n";
+}
 std::string TransportationDocument::encode() const {
-    std::string bytes = "4000\r\n5\r\n2\r\n1\r\n" + quote(problem_.title) + "\r\n"
+    std::string bytes = prefix()
         + sourceCountRecord_ + "\r\n" + destinationCountRecord_ + "\r\n";
     for (const auto& value : cells_) {
         bytes += quote(value) + "\r\n";

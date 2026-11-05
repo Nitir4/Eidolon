@@ -3,7 +3,7 @@
 #include <string_view>
 
 namespace tora::compat {
-// Default 4000 profile. Retain untouched lexemes; UI costs use D=2 and
+// 4000 decimal/scientific profile. Retain untouched lexemes; UI costs use the selected format and
 // quantities commit to whole numbers with observed half-away rounding.
 // An incomplete/unbalanced draft is valid input; solving has stricter checks.
 class TransportationDocument final {
@@ -11,7 +11,7 @@ public:
     enum class Axis { Source, Destination };
     static TransportationDocument decode(std::string_view bytes);
     static TransportationDocument create(transportation::Problem problem);
-    static TransportationDocument blank(std::size_t sources, std::size_t destinations, std::string title = {});
+    static TransportationDocument blank(std::size_t sources, std::size_t destinations, std::string title = {}, core::NumberFormat format = {});
     const transportation::Problem& problem() const { return problem_; }
     const std::string& cell(std::size_t row, std::size_t column) const;
     void setCell(std::size_t row, std::size_t column, std::string value);
@@ -26,8 +26,10 @@ private:
     TransportationDocument() = default;
     std::size_t index(std::size_t row, std::size_t column) const;
     void replaceGrid(std::size_t sources, std::size_t destinations, std::vector<std::string> cells);
+    std::string prefix() const;
     transportation::Problem problem_;
     std::string sourceCountRecord_, destinationCountRecord_;
+    std::string formatNRecord_="5", formatDRecord_="2", notationRecord_="1";
     std::vector<std::string> cells_;
 };
 }
