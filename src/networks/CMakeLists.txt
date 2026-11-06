@@ -1,0 +1,6 @@
+add_library(or_networks STATIC networks.cpp)
+add_library(tora::networks ALIAS or_networks)
+tora_target_defaults(or_networks)
+target_compile_features(or_networks PUBLIC cxx_std_17)
+target_include_directories(or_networks PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_link_libraries(or_networks PUBLIC tora::core)
