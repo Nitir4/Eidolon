@@ -95,6 +95,7 @@ Problem Problem::blank(std::size_t m,std::size_t n) {
     p.sourceNames.resize(m);p.destinationNames.resize(n);return p;
 }
 void validate(const Problem& p) {
+    (void)core::NumberFormatter(p.format);
     const auto m=p.supply.size(),n=p.demand.size();dimensions(m,n);
     if(p.costs.size()!=m || p.sourceNames.size()!=m || p.destinationNames.size()!=n)
         throw std::invalid_argument("Transportation model dimensions are inconsistent.");
@@ -251,7 +252,7 @@ Tableau initializeMultipliers(const Problem& p,const Tableau& t,MultiplierAnchor
     return result;
 }
 Display display(const Problem& p,const Tableau& t,std::size_t iteration,bool shortMultipliers) {
-    const core::NumberFormatter formatter({core::Notation::Decimal,5,2});
+    const core::NumberFormatter formatter(p.format);
     const auto multiplier=[&](double value) {return shortMultipliers?quantity(value):formatter.format(value);};
     Display result;result.label="Iter"+std::to_string(iteration);result.objective=formatter.format(t.objective);
     for(std::size_t i=0;i<p.supply.size();++i) {

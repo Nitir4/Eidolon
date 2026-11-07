@@ -4,6 +4,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <tora/core/number_formatter.hpp>
 
 namespace tora::transportation {
 struct Problem {
@@ -11,6 +12,7 @@ struct Problem {
     std::vector<std::vector<double>> costs;
     std::vector<double> supply, demand;
     std::vector<std::string> sourceNames, destinationNames;
+    core::NumberFormat format;
     static Problem blank(std::size_t sources, std::size_t destinations);
 };
 // General model validation is distinct from the captured numerical profile.
