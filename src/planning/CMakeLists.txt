@@ -1,0 +1,5 @@
+add_library(or_planning STATIC planning.cpp)
+add_library(tora::planning ALIAS or_planning)
+tora_target_defaults(or_planning)
+target_compile_features(or_planning PUBLIC cxx_std_17)
+target_include_directories(or_planning PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
