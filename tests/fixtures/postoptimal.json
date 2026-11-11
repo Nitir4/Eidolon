@@ -1,0 +1,426 @@
+[
+  {
+    "case": "cj-retained",
+    "baseline": {
+      "title": "Class changes baseline",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["3", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "4"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "changed": {
+      "title": "Class changes cj-retained",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["2.5", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "4"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "expected": {
+      "before": {
+        "objective": "10.00",
+        "values": ["2.00", "2.00"]
+      },
+      "after": {
+        "objective": "9.00",
+        "values": ["2.00", "2.00"]
+      },
+      "retained": {
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "objective": "9.00",
+        "values": ["2.00", "2.00"]
+      }
+    },
+    "provenance": {
+      "evidence_id": "ev_6b92232514494a554c2ce1bf329e85d61dbae2204d8453093ea4d3c45a2966d4",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/cj-retained",
+      "file_sha256": "12126660eaa60d240ca8598050dbc7787d9c8d6723a82a551139ecb91267f2b8",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "baseline_provenance": {
+      "evidence_id": "ev_8d977d4a5b8a1e56f1aeb65cb1d47565e48c7e99233d3c373b07dc4698f90b14",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/baseline",
+      "file_sha256": "d01da3a9b7ba95b1e1809defbdb21b9dca28e4195b3265e344de141bbefb7707",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "retained_expectation_source": "Independent basis algebra; original TORA has no changed-model analysis screen."
+  },
+  {
+    "case": "cj-changed",
+    "baseline": {
+      "title": "Class changes baseline",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["3", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "4"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "changed": {
+      "title": "Class changes cj-changed",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["1", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "4"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "expected": {
+      "before": {
+        "objective": "10.00",
+        "values": ["2.00", "2.00"]
+      },
+      "after": {
+        "objective": "7.00",
+        "values": ["1.00", "3.00"]
+      },
+      "retained": {
+        "primal_feasible": true,
+        "dual_feasible": false,
+        "objective": "6.00",
+        "values": ["2.00", "2.00"]
+      }
+    },
+    "provenance": {
+      "evidence_id": "ev_86eb6d65e576c8f4d213fade5f362210f9a4deb431f6f8fa660db4464eb1a8d4",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/cj-changed",
+      "file_sha256": "ba0c20ab241443d151cb23e50d46020faac24b3a19eb2767e07f33c7eb8d47ce",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "baseline_provenance": {
+      "evidence_id": "ev_8d977d4a5b8a1e56f1aeb65cb1d47565e48c7e99233d3c373b07dc4698f90b14",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/baseline",
+      "file_sha256": "d01da3a9b7ba95b1e1809defbdb21b9dca28e4195b3265e344de141bbefb7707",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "retained_expectation_source": "Independent basis algebra; original TORA has no changed-model analysis screen."
+  },
+  {
+    "case": "rhs-retained",
+    "baseline": {
+      "title": "Class changes baseline",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["3", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "4"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "changed": {
+      "title": "Class changes rhs-retained",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["3", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "4.5"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "expected": {
+      "before": {
+        "objective": "10.00",
+        "values": ["2.00", "2.00"]
+      },
+      "after": {
+        "objective": "11.00",
+        "values": ["2.00", "2.50"]
+      },
+      "retained": {
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "objective": "11.00",
+        "values": ["2.00", "2.50"]
+      }
+    },
+    "provenance": {
+      "evidence_id": "ev_60b2c3d0eed35b6c530f873b309a4ef60c6cd9976597d3afa3aeb71bd8ac30f5",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/rhs-retained",
+      "file_sha256": "a716be71c1806225520225136eda996e9aee351b57dc435970a12dadc42c48c8",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "baseline_provenance": {
+      "evidence_id": "ev_8d977d4a5b8a1e56f1aeb65cb1d47565e48c7e99233d3c373b07dc4698f90b14",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/baseline",
+      "file_sha256": "d01da3a9b7ba95b1e1809defbdb21b9dca28e4195b3265e344de141bbefb7707",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "retained_expectation_source": "Independent basis algebra; original TORA has no changed-model analysis screen."
+  },
+  {
+    "case": "rhs-changed",
+    "baseline": {
+      "title": "Class changes baseline",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["3", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "4"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "changed": {
+      "title": "Class changes rhs-changed",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": ["3", "2"],
+      "constraints": [
+        {
+          "coefficients": ["1", "1"],
+          "relation": "<=",
+          "rhs": "6"
+        },
+        {
+          "coefficients": ["1", "0"],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": ["0", "1"],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "expected": {
+      "before": {
+        "objective": "10.00",
+        "values": ["2.00", "2.00"]
+      },
+      "after": {
+        "objective": "12.00",
+        "values": ["2.00", "3.00"]
+      },
+      "retained": {
+        "primal_feasible": false,
+        "dual_feasible": true,
+        "objective": "14.00",
+        "values": ["2.00", "4.00"]
+      }
+    },
+    "provenance": {
+      "evidence_id": "ev_5281bcce8f7692ff883e4aa05c3c792931a2e7b6c8453f2147fe4869eb4201a2",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/rhs-changed",
+      "file_sha256": "5c61ec470dbe25bd166947653fec943a2c0ba150237afe334bbacab94e6295f7",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "baseline_provenance": {
+      "evidence_id": "ev_8d977d4a5b8a1e56f1aeb65cb1d47565e48c7e99233d3c373b07dc4698f90b14",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/postoptimal/baseline",
+      "file_sha256": "d01da3a9b7ba95b1e1809defbdb21b9dca28e4195b3265e344de141bbefb7707",
+      "review": "Original objective, variable values and baseline sensitivity intervals visually reviewed."
+    },
+    "retained_expectation_source": "Independent basis algebra; original TORA has no changed-model analysis screen."
+  }
+]
