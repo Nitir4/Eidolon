@@ -19,6 +19,8 @@ tora::transportation::Problem problem(const QJsonObject& record) {
     const auto supply=input["supply"].toArray(),demand=input["demand"].toArray();
     auto p=tora::transportation::Problem::blank(static_cast<std::size_t>(supply.size()),static_cast<std::size_t>(demand.size()));
     p.title=record["title"].toString().toStdString();
+    const auto format=record["format"].toArray();
+    if(!format.isEmpty())p.format={format[2].toInt()==2?tora::core::Notation::Scientific:tora::core::Notation::Decimal,format[0].toInt(),format[1].toInt()};
     for(int i=0;i<supply.size();++i) {
         p.supply[static_cast<std::size_t>(i)]=supply[i].toDouble();
         for(int j=0;j<demand.size();++j)p.costs[static_cast<std::size_t>(i)][static_cast<std::size_t>(j)]=input["costs"].toArray()[i].toArray()[j].toDouble();

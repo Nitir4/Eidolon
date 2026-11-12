@@ -189,7 +189,7 @@ private slots:
         editor = grid->findChild<QLineEdit*>(); QVERIFY(editor); editor->setText(QStringLiteral("nan"));
         QVERIFY(!c.requestSave()); QCOMPARE(c.problem().costs[0][0], 9.88);
     }
-    void keyboardCommitKeepsNextEditor() {
+    void keyboardCommitMovesWithoutEditing() {
         ApplicationShell shell; shell.registerModule(transportationModule());
         auto& c = transportationController(shell); c.loadExample();
         c.dialogs().showError = [](const QString&, const QString&) {};
@@ -198,14 +198,17 @@ private slots:
         grid->setCurrentCell(2,2); grid->editItem(grid->item(2,2)); QTest::qWait(10);
         auto* editor = qobject_cast<QLineEdit*>(QApplication::focusWidget()); QVERIFY(editor);
         editor->setText(QStringLiteral("7.125")); QTest::keyClick(editor, Qt::Key_Return); QTest::qWait(20);
-        QCOMPARE(c.problem().costs[0][0], 7.13); QCOMPARE(grid->currentColumn(), 3);
-        editor = qobject_cast<QLineEdit*>(QApplication::focusWidget()); QVERIFY(editor);
-        editor->setText(QStringLiteral("8.25")); QTest::keyClick(editor, Qt::Key_Tab); QTest::qWait(20);
-        QCOMPARE(c.problem().costs[0][1], 8.25); QCOMPARE(grid->currentColumn(), 4);
-        editor = qobject_cast<QLineEdit*>(QApplication::focusWidget()); QVERIFY(editor);
-        editor->setText(QStringLiteral("nan")); QTest::keyClick(editor, Qt::Key_Return); QTest::qWait(20);
-        QCOMPARE(c.problem().costs[0][2], 1.0); QCOMPARE(grid->currentColumn(), 4);
-        QVERIFY(qobject_cast<QLineEdit*>(QApplication::focusWidget()));
+        QCOMPARE(c.problem().costs[0][0], 7.13); QCOMPARE(grid->currentRow(), 3); QCOMPARE(grid->currentColumn(), 2);
+        QVERIFY(!qobject_cast<QLineEdit*>(QApplication::focusWidget()));
+        QTest::keyClick(grid,Qt::Key_8); QTest::qWait(1);
+        editor = qobject_cast<QLineEdit*>(QApplication::focusWidget()); QVERIFY(editor); QTest::keyClicks(editor,".25");
+        QTest::keyClick(editor, Qt::Key_Tab); QTest::qWait(20);
+        QCOMPARE(c.problem().costs[1][0], 8.25); QCOMPARE(grid->currentRow(), 3); QCOMPARE(grid->currentColumn(), 3);
+        QTest::keyClick(grid,Qt::Key_N); QTest::qWait(1);
+        editor = qobject_cast<QLineEdit*>(QApplication::focusWidget()); QVERIFY(editor); QTest::keyClicks(editor,"an");
+        QTest::keyClick(editor, Qt::Key_Return); QTest::qWait(20);
+        QCOMPARE(c.problem().costs[1][1], 4.0); QCOMPARE(grid->currentRow(), 3); QCOMPARE(grid->currentColumn(), 3);
+        QVERIFY(qobject_cast<QLineEdit*>(QApplication::focusWidget())); QTest::keyClick(editor, Qt::Key_Escape);
     }
     void newProblemRouteAndPreview() {
         ApplicationShell shell; shell.registerModule(transportationModule());

@@ -981,5 +981,275 @@
         ]
       }
     ]
+  },
+  {
+    "title": "Scientific normal profile",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "format": [
+      5,
+      2,
+      2
+    ],
+    "file_sha256": "9252490429f7e9cb820cb07aac87c1509864909d769282ba1893c4b0870aa46c",
+    "case": "settings-final-scientific",
+    "method": "final",
+    "shown": 0,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_fa7f2f0cc6a9f5d13b0e82653652f6874109c7e046178c2a9f18c47e7e5a2ba2",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-settings-scientific-final-print",
+      "review": "Original scientific input, summary and all trace pages visually reviewed. Expected text and spatial rows extracted from original printer output, independently of clone."
+    },
+    "jobs": [
+      {
+        "role": "input",
+        "original_ps_sha256": "404f1f27d992f834c71ff1bf73438329d97227ff1e0795e7aba723403afdf86e",
+        "original_pdf_sha256": "1b7dfe02fad80a6d470c09eea4869f6541a5aaf4939c641bd7badc5cd6f6cd82",
+        "pages": [
+          "TRANSPORTATION MODEL -- ORIGINAL DATA Title: Scientific normal profile d1 d2 d3 Supply Name s1 2.00000e+00 3.00000e+00 1.00000e+00 2.00000e+01 s2 5.00000e+00 4.00000e+00 8.00000e+00 3.00000e+01 Demand 1.00000e+01 2.50000e+01 1.50000e+01"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL -- ORIGINAL DATA",
+            "Title: Scientific normal profile",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00000e+00 3.00000e+00 1.00000e+00 2.00000e+01",
+            "s2 5.00000e+00 4.00000e+00 8.00000e+00 3.00000e+01",
+            "Demand 1.00000e+01 2.50000e+01 1.50000e+01"
+          ]
+        ]
+      },
+      {
+        "role": "summary",
+        "original_ps_sha256": "c5f2cdbe32113e4985e2cb98baf13816731dd971a39eaff21d42105adf2801b7",
+        "original_pdf_sha256": "aa85676b5bc9996e31f3be1dc2776a6a730ca8865e661bf64138a17449221078",
+        "pages": [
+          "TRANSPORTATION MODEL OUTPUT SUMMARY Title: Scientific normal profile Final Iteration No.: 1 Objective Value (minimum cost) =1.50000e+02 From To Amt Shipped Obj Coeff Obj Contrib S1: D1: 5 2.00000e+00 1.00000e+01 S1: D3: 15 1.00000e+00 1.50000e+01 S2: D1: 5 5.00000e+00 2.50000e+01 S2: D2: 25 4.00000e+00 1.00000e+02"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL OUTPUT SUMMARY",
+            "Title: Scientific normal profile",
+            "Final Iteration No.: 1",
+            "Objective Value (minimum cost) =1.50000e+02",
+            "From To Amt Shipped Obj Coeff Obj Contrib",
+            "S1: D1: 5 2.00000e+00 1.00000e+01",
+            "S1: D3: 15 1.00000e+00 1.50000e+01",
+            "S2: D1: 5 5.00000e+00 2.50000e+01",
+            "S2: D2: 25 4.00000e+00 1.00000e+02"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Scientific normal profile",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "format": [
+      5,
+      2,
+      2
+    ],
+    "file_sha256": "9252490429f7e9cb820cb07aac87c1509864909d769282ba1893c4b0870aa46c",
+    "case": "settings-initial-scientific",
+    "method": "northwest",
+    "shown": 1,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_b0bcefc5073854ead3bce747bafc0e0ceca6685cef76330cf3e3d7724bd71a08",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-settings-scientific-northwest-print",
+      "review": "Original scientific input, summary and all trace pages visually reviewed. Expected text and spatial rows extracted from original printer output, independently of clone."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "32984e541cff869896c723982b58ec2bcce1a7f5313c1d3c4174ac141a83be3c",
+        "original_pdf_sha256": "e0f3f84170d200ef7b5053d6531d78e19ac746339c1b0d4a5657d170a01041be",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Scientific normal profile d1 d2 d3 Supply Name s1 2.00000e+00 3.00000e+00 1.00000e+00 2.00000e+01 s2 5.00000e+00 4.00000e+00 8.00000e+00 3.00000e+01 Demand 1.00000e+01 2.50000e+01 1.50000e+01",
+          "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method) Title: Scientific normal profile Iteration 1: ObjVal 2.30000e+02 D1 D2 D3 Supply Name v1=2.00000e+00 v2=3.00000e+00 v3=7.00000e+00 2.00000e+00 3.00000e+00 1.00000e+00 S1 u1=0.00000e+00 10 10 20 0.00000e+00 0.00000e+00 6.00000e+00 5.00000e+00 4.00000e+00 8.00000e+00 S2 u2=1.00000e+00 15 15 30 -2.00000e+00 0.00000e+00 0.00000e+00 Demand 10 25 15"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Scientific normal profile",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00000e+00 3.00000e+00 1.00000e+00 2.00000e+01",
+            "s2 5.00000e+00 4.00000e+00 8.00000e+00 3.00000e+01",
+            "Demand 1.00000e+01 2.50000e+01 1.50000e+01"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method)",
+            "Title: Scientific normal profile",
+            "Iteration 1: ObjVal 2.30000e+02",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00000e+00 v2=3.00000e+00 v3=7.00000e+00",
+            "2.00000e+00 3.00000e+00 1.00000e+00",
+            "S1 u1=0.00000e+00 10 10 20",
+            "0.00000e+00 0.00000e+00 6.00000e+00",
+            "5.00000e+00 4.00000e+00 8.00000e+00",
+            "S2 u2=1.00000e+00 15 15 30",
+            "-2.00000e+00 0.00000e+00 0.00000e+00",
+            "Demand 10 25 15"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Scientific normal profile",
+    "problem": {
+      "costs": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          4,
+          8
+        ]
+      ],
+      "supply": [
+        20,
+        30
+      ],
+      "demand": [
+        10,
+        25,
+        15
+      ]
+    },
+    "format": [
+      5,
+      2,
+      2
+    ],
+    "file_sha256": "9252490429f7e9cb820cb07aac87c1509864909d769282ba1893c4b0870aa46c",
+    "case": "settings-all-scientific",
+    "method": "northwest",
+    "shown": 3,
+    "anchor": null,
+    "provenance": {
+      "evidence_id": "ev_22cf1e1a741d3a2b393617334abbb1231c3294f71a4d4a50624000e589319e9b",
+      "child_exit": 0,
+      "capture": "reference/tora-captures/transportation/printing/actions-settings-scientific-all-print",
+      "review": "Original scientific input, summary and all trace pages visually reviewed. Expected text and spatial rows extracted from original printer output, independently of clone."
+    },
+    "jobs": [
+      {
+        "role": "trace",
+        "original_ps_sha256": "179e345103ceb92c31236f012b5b31c0b9ad219e9f63d88347c7c3e83fe186b4",
+        "original_pdf_sha256": "2da8c7d688de600c948653685b76936cea037004fa7f64ab02c18fa5a0d6b193",
+        "pages": [
+          "TRANSPORTATION MODEL-- ORIGINAL DATA Title: Scientific normal profile d1 d2 d3 Supply Name s1 2.00000e+00 3.00000e+00 1.00000e+00 2.00000e+01 s2 5.00000e+00 4.00000e+00 8.00000e+00 3.00000e+01 Demand 1.00000e+01 2.50000e+01 1.50000e+01",
+          "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method) Title: Scientific normal profile Iteration 1: ObjVal 2.30000e+02 D1 D2 D3 Supply Name v1=2.00000e+00 v2=3.00000e+00 v3=7.00000e+00 2.00000e+00 3.00000e+00 1.00000e+00 S1 u1=0.00000e+00 10 10 20 0.00000e+00 0.00000e+00 6.00000e+00 5.00000e+00 4.00000e+00 8.00000e+00 S2 u2=1.00000e+00 15 15 30 -2.00000e+00 0.00000e+00 0.00000e+00 Demand 10 25 15",
+          "Iteration 2: ObjVal 1.70000e+02 D1 D2 D3 Supply Name v1=2.00000e+00 v2=-3.00000e+00 v3=1.00000e+00 2.00000e+00 3.00000e+00 1.00000e+00 S1 u1=0.00000e+00 10 10 20 0.00000e+00 -6.00000e+00 0.00000e+00 5.00000e+00 4.00000e+00 8.00000e+00 S2 u2=7.00000e+00 25 5 30 4.00000e+00 0.00000e+00 0.00000e+00 Demand 10 25 15",
+          "Iteration 3: ObjVal 1.50000e+02 D1 D2 D3 Supply Name v1=2.00000e+00 v2=1.00000e+00 v3=1.00000e+00 2.00000e+00 3.00000e+00 1.00000e+00 S1 u1=0.00000e+00 5 15 20 0.00000e+00 -2.00000e+00 0.00000e+00 5.00000e+00 4.00000e+00 8.00000e+00 S2 u2=3.00000e+00 5 25 30 0.00000e+00 0.00000e+00 -4.00000e+00 Demand 10 25 15"
+        ],
+        "rows": [
+          [
+            "TRANSPORTATION MODEL-- ORIGINAL DATA",
+            "Title: Scientific normal profile",
+            "d1 d2 d3 Supply",
+            "Name",
+            "s1 2.00000e+00 3.00000e+00 1.00000e+00 2.00000e+01",
+            "s2 5.00000e+00 4.00000e+00 8.00000e+00 3.00000e+01",
+            "Demand 1.00000e+01 2.50000e+01 1.50000e+01"
+          ],
+          [
+            "TRANSPORTATION MODEL -- TABLEAUS (North-West Corner Method)",
+            "Title: Scientific normal profile",
+            "Iteration 1: ObjVal 2.30000e+02",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00000e+00 v2=3.00000e+00 v3=7.00000e+00",
+            "2.00000e+00 3.00000e+00 1.00000e+00",
+            "S1 u1=0.00000e+00 10 10 20",
+            "0.00000e+00 0.00000e+00 6.00000e+00",
+            "5.00000e+00 4.00000e+00 8.00000e+00",
+            "S2 u2=1.00000e+00 15 15 30",
+            "-2.00000e+00 0.00000e+00 0.00000e+00",
+            "Demand 10 25 15"
+          ],
+          [
+            "Iteration 2: ObjVal 1.70000e+02",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00000e+00 v2=-3.00000e+00 v3=1.00000e+00",
+            "2.00000e+00 3.00000e+00 1.00000e+00",
+            "S1 u1=0.00000e+00 10 10 20",
+            "0.00000e+00 -6.00000e+00 0.00000e+00",
+            "5.00000e+00 4.00000e+00 8.00000e+00",
+            "S2 u2=7.00000e+00 25 5 30",
+            "4.00000e+00 0.00000e+00 0.00000e+00",
+            "Demand 10 25 15"
+          ],
+          [
+            "Iteration 3: ObjVal 1.50000e+02",
+            "D1 D2 D3 Supply",
+            "Name",
+            "v1=2.00000e+00 v2=1.00000e+00 v3=1.00000e+00",
+            "2.00000e+00 3.00000e+00 1.00000e+00",
+            "S1 u1=0.00000e+00 5 15 20",
+            "0.00000e+00 -2.00000e+00 0.00000e+00",
+            "5.00000e+00 4.00000e+00 8.00000e+00",
+            "S2 u2=3.00000e+00 5 25 30",
+            "0.00000e+00 0.00000e+00 -4.00000e+00",
+            "Demand 10 25 15"
+          ]
+        ]
+      }
+    ]
   }
 ]
