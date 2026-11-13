@@ -1,4 +1,5 @@
 #include "application_shell.hpp"
+#include "keyboard_navigation.hpp"
 #include "screen_widgets.hpp"
 #include "ui_font.hpp"
 #include "ui_colors.hpp"
@@ -113,9 +114,10 @@ ApplicationShell::ApplicationShell(QSettings* settings, QWidget* parent)
     // Internal Qt menus (including the menubar's overflow menu) can be created
     // after page polishing and inherit the application font directly.
     QApplication::setFont(readableUiFont(QApplication::font()));
+    installEnterActivation(*this);
     setObjectName(QStringLiteral("application-shell"));
     setFont(readableUiFont(QApplication::font()));
-    setWindowTitle(QStringLiteral("TORA Clone"));
+    setWindowTitle(QStringLiteral("Eidolon"));
     // Decorations are logical-pixel strokes; control sizes remain native font
     // metrics/layout hints. Scope palette overrides to this window so desktop
     // themes cannot override paired foreground/background contrast roles.
@@ -214,6 +216,7 @@ bool ApplicationShell::navigate(const QString& screenId)
         scroll->setWidgetResizable(true);
         blueCanvas(*scroll);
         auto* content = descriptor->create(*this);
+        installSpreadsheetNavigation(*content);
         content->setObjectName(QStringLiteral("screen-content"));
         blueCanvas(*content);
         if (content->layout()) content->layout()->setSizeConstraint(QLayout::SetMinimumSize);
@@ -346,7 +349,7 @@ ModuleDescriptor shellModule()
         panel->setMinimumHeight(shell.fontMetrics().height() * 12);
         panel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         auto* inner = new QVBoxLayout(panel);
-        auto* title = new QLabel(QStringLiteral("TORA Clone"));
+        auto* title = new QLabel(QStringLiteral("Eidolon"));
         title->setObjectName(QStringLiteral("welcome-title"));
         QFont font = shell.font();
         font.setPointSizeF(font.pointSizeF() > 0 ? font.pointSizeF() * 4 : 48);
@@ -375,7 +378,7 @@ ModuleDescriptor shellModule()
                 [&shell, entry] { shell.navigate(entry); });
         }
         menu->addSeparator();
-        menu->addAction(QStringLiteral("EXIT TORA"), &shell, &QWidget::close);
+        menu->addAction(QStringLiteral("EXIT EIDOLON"), &shell, &QWidget::close);
     };
     module.screens.append({QStringLiteral("main"), {}, [](ApplicationShell& shell) {
         auto* page = new QWidget;
@@ -403,7 +406,7 @@ ModuleDescriptor shellModule()
         auto* separator = new QFrame;
         separator->setFrameShape(QFrame::HLine);
         inner->addWidget(separator);
-        button(QStringLiteral("EXIT TORA"), QStringLiteral("main-exit"), *inner, [&shell] { shell.close(); });
+        button(QStringLiteral("EXIT EIDOLON"), QStringLiteral("main-exit"), *inner, [&shell] { shell.close(); });
         centerPanel(*layout, panel);
         return page;
     }, mainMenus});
