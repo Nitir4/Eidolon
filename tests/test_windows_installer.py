@@ -14,7 +14,7 @@ class InstallerSafety(unittest.TestCase):
     def test_uninstall_probe_releases_lock_before_waiting_for_completion(self):
         with tempfile.TemporaryDirectory() as name:
             target=Path(name);uninstaller=target/'Uninstall.exe';uninstaller.write_bytes(b'MZ')
-            app=target/'ToraClone.exe';app.write_bytes(b'MZ');state={'locked':False}
+            app=target/'Eidolon.exe';app.write_bytes(b'MZ');state={'locked':False}
             @contextmanager
             def lock(path):
                 self.assertEqual(path,uninstaller);state['locked']=True
@@ -40,11 +40,11 @@ class InstallerSafety(unittest.TestCase):
         with tempfile.TemporaryDirectory() as name:
             stage = Path(name)
             (stage / 'platforms').mkdir()
-            (stage / 'ToraClone.exe').write_bytes(b'MZ')
+            (stage / 'Eidolon.exe').write_bytes(b'MZ')
             (stage / 'platforms/qwindows.dll').write_bytes(b'plugin')
             (stage / 'student runtime.dll').write_bytes(b'runtime')
             install, remove = payload_commands(stage)
-            self.assertIn('ToraClone.exe', install)
+            self.assertIn('Eidolon.exe', install)
             self.assertIn('File "/oname=student runtime.dll" ', install)
             self.assertIn('qwindows.dll', remove)
             self.assertNotIn('RMDir /r', remove)
@@ -63,7 +63,7 @@ class InstallerSafety(unittest.TestCase):
     def test_refuses_symlink_payloads(self):
         with tempfile.TemporaryDirectory() as name:
             stage = Path(name)
-            (stage / 'ToraClone.exe').write_bytes(b'MZ')
+            (stage / 'Eidolon.exe').write_bytes(b'MZ')
             with patch.object(Path, 'is_symlink', return_value=True):
                 with self.assertRaises(ValueError):
                     payload_commands(stage)
