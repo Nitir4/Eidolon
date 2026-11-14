@@ -57,7 +57,7 @@ private slots:
         auto* main = shell.menuBar()->actions().front()->menu();
         QCOMPARE(labels(*main), (QStringList{QStringLiteral("Linear Equations"), QStringLiteral("Linear Programming"),
             QStringLiteral("Transportation model"), QStringLiteral("Integer programming"), QStringLiteral("Network models"),
-            QStringLiteral("Project Planning"), QStringLiteral("Queuing analysis"), QStringLiteral("Zero-Sum Games"), QStringLiteral("EXIT TORA")}));
+            QStringLiteral("Project Planning"), QStringLiteral("Queuing analysis"), QStringLiteral("Zero-Sum Games"), QStringLiteral("EXIT EIDOLON")}));
         for (int i = 0; i < 8; ++i) QCOMPARE(main->actions()[i]->isEnabled(), i == 1);
         QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>(QStringLiteral("main-lp")), Qt::LeftButton);
         QCOMPARE(shell.currentScreen(), QStringLiteral("lp/input-mode"));
@@ -79,7 +79,7 @@ private slots:
         QVERIFY(shell.currentContent()->findChild<QLineEdit*>(QStringLiteral("variable-count"))->isEnabled());
         auto* file = shell.menuBar()->actions()[0]->menu();
         const auto nativeMenuCount = shell.menuBar()->findChildren<QMenu*>(QString(), Qt::FindDirectChildrenOnly).size();
-        QCOMPARE(labels(*file), (QStringList{QStringLiteral("Save"), QStringLiteral("Save As"), QStringLiteral("Main Menu"), QStringLiteral("Exit TORA")}));
+        QCOMPARE(labels(*file), (QStringList{QStringLiteral("Save"), QStringLiteral("Save As"), QStringLiteral("Main Menu"), QStringLiteral("Exit Eidolon")}));
         QVERIFY(!file->actions()[0]->isEnabled());
         auto* edit = shell.menuBar()->actions()[1]->menu();
         QCOMPARE(labels(*edit), (QStringList{QStringLiteral("Undo Last Insert, Paste, Or Delete"), QStringLiteral("Copy Column or Row"),
@@ -112,7 +112,7 @@ private slots:
         QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
         QCOMPARE(shell.menuBar()->actions().front()->text(), QStringLiteral("SolveModify"));
         const auto* menu = shell.menuBar()->actions().front()->menu();
-        QCOMPARE(labels(*menu), (QStringList{QStringLiteral("Solve Problem"), QStringLiteral("View/Modify Input Data"), QStringLiteral("MAIN Menu"), QStringLiteral("Exit TORA")}));
+        QCOMPARE(labels(*menu), (QStringList{QStringLiteral("Solve Problem"), QStringLiteral("Class extensions"), QStringLiteral("View/Modify Input Data"), QStringLiteral("MAIN Menu"), QStringLiteral("Exit Eidolon")}));
         const auto* solve = menu->actions()[0]->menu();
         QCOMPARE(labels(*solve), (QStringList{QStringLiteral("Graphical"), QStringLiteral("Algebraic")}));
         const auto* algebraic = solve->actions()[1]->menu();

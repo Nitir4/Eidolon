@@ -1,0 +1,160 @@
+[
+  {
+    "case": "rhs-max",
+    "changed": {
+      "title": "Class changes rhs-max",
+      "sense": "max",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "3",
+        "2"
+      ],
+      "constraints": [
+        {
+          "coefficients": [
+            "1",
+            "1"
+          ],
+          "relation": "<=",
+          "rhs": "6"
+        },
+        {
+          "coefficients": [
+            "1",
+            "0"
+          ],
+          "relation": "<=",
+          "rhs": "2"
+        },
+        {
+          "coefficients": [
+            "0",
+            "1"
+          ],
+          "relation": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "baseline_rhs": [
+      "4",
+      "2",
+      "3"
+    ],
+    "expected": {
+      "objective": "12.00",
+      "values": [
+        "2.00",
+        "3.00"
+      ],
+      "contributions": [
+        "6.00",
+        "6.00"
+      ],
+      "gaps": [
+        "1.00",
+        "0.00",
+        "0.00"
+      ]
+    },
+    "provenance": {
+      "source": "Original TORA final summary, REA capture-process, screenshot directly reviewed 2026-10-16",
+      "evidence_id": "ev_a58891b8e2a07b510ccad38ff6b7c8084e3af6ef90a2036b733a0a657b47462a",
+      "file_sha256": "b459c276218d64c9bf5e067d92551018341cc6326bcba6e479cad5bd30b42867",
+      "summary_sha256": "12c80ea612fc1aef8d02ba5f55051a4a5f472836438d3706cbe5473133a36531",
+      "limitation": "Equivalent LP outcomes only; revised dual is a class extension. Baseline RHS specified separately; changed file saved by original."
+    }
+  },
+  {
+    "case": "rhs-min",
+    "changed": {
+      "title": "Class changes rhs-min",
+      "sense": "min",
+      "variables": [
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        },
+        {
+          "name": "",
+          "lower": "0",
+          "upper": "inf",
+          "unrestricted": false
+        }
+      ],
+      "objective": [
+        "2",
+        "3"
+      ],
+      "constraints": [
+        {
+          "coefficients": [
+            "1",
+            "1"
+          ],
+          "relation": ">=",
+          "rhs": "7"
+        },
+        {
+          "coefficients": [
+            "1",
+            "2"
+          ],
+          "relation": ">=",
+          "rhs": "6"
+        },
+        {
+          "coefficients": [
+            "2",
+            "1"
+          ],
+          "relation": ">=",
+          "rhs": "5"
+        }
+      ]
+    },
+    "baseline_rhs": [
+      "4",
+      "6",
+      "5"
+    ],
+    "expected": {
+      "objective": "14.00",
+      "values": [
+        "7.00",
+        "0.00"
+      ],
+      "contributions": [
+        "14.00",
+        "0.00"
+      ],
+      "gaps": [
+        "0.00",
+        "1.00",
+        "9.00"
+      ]
+    },
+    "provenance": {
+      "source": "Original TORA final summary, REA capture-process, screenshot directly reviewed 2026-10-16",
+      "evidence_id": "ev_2796dda8dc246f91df3033e2e07fe18cd3830f1c5eccbedb2c2d3e99830c41e4",
+      "file_sha256": "9334264127454fc8847e62a3c8eb0e9af648de3d09592bda57890443b13262c9",
+      "summary_sha256": "828c0f8344c77e2f0c3229d0a21fac16c854b3bf91f53f02d1abd5f5be85db84",
+      "limitation": "Equivalent LP outcomes only; revised dual is a class extension. Baseline RHS specified separately; changed file saved by original."
+    }
+  }
+]
