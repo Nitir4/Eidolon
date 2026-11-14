@@ -5,6 +5,16 @@ on:
     branches: [main, future-scope]
   pull_request:
   workflow_dispatch:
+    inputs:
+      platforms:
+        description: Native platforms to validate
+        type: choice
+        options: [all, windows-and-macos]
+        default: all
+      playtest:
+        description: Build friends' ZIPs and run their integrity/startup scripts
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -21,15 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-        include:
-          - os: windows-latest
-            qt_arch: win64_msvc2022_64
-          - os: ubuntu-latest
-            qt_arch: linux_gcc_64
-            qt_archives: qtbase icu qtwayland qtsvg
-          - os: macos-latest
-            qt_arch: clang_64
+        os: ${{ github.event_name == 'workflow_dispatch' && inputs.platforms == 'windows-and-macos' && fromJSON('["windows-latest","macos-latest"]') || fromJSON('["windows-latest","ubuntu-latest","macos-latest"]') }}
     defaults:
       run:
         shell: bash
@@ -52,8 +54,8 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.10.3'
-          arch: ${{ matrix.qt_arch }}
-          archives: ${{ matrix.qt_archives || 'qtbase' }}
+          arch: ${{ runner.os == 'Windows' && 'win64_msvc2022_64' || runner.os == 'macOS' && 'clang_64' || 'linux_gcc_64' }}
+          archives: ${{ runner.os == 'Linux' && 'qtbase icu qtwayland qtsvg' || 'qtbase' }}
           cache: true
           setup-python: false
       - name: Configure
@@ -79,11 +81,33 @@ jobs:
       - name: Verify Linux desktop protocol startup
         if: runner.os == 'Linux'
         run: |
-          python tools/verify_linux_desktop.py dist/TORA-Clone-0.1.0-linux-x86_64.AppImage --output build/ci/desktop-runtime
+          python tools/verify_linux_desktop.py dist/Eidolon-0.1.0-linux-x86_64.AppImage --output build/ci/desktop-runtime
+      - name: Create friends' playtest bundle
+        if: inputs.playtest && runner.os != 'Linux'
+        run: python tools/package_playtest.py --native-dir dist --output-dir dist/playtest
+      - name: Verify Windows friends' checks
+        if: inputs.playtest && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Expand-Archive -LiteralPath dist/playtest/windows.zip -DestinationPath build/friends
+          & build/friends/scripts/run-checks.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify macOS friends' checks
+        if: inputs.playtest && runner.os == 'macOS'
+        run: |
+          ditto -x -k dist/playtest/macos.zip build/friends
+          sh build/friends/scripts/run-checks.sh
+      - name: Upload friends' checks
+        if: always() && inputs.playtest && runner.os != 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Friends-checks-${{ matrix.os }}
+          path: build/friends/results/
+          if-no-files-found: warn
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TORA-Clone-${{ matrix.os }}
+          name: Eidolon-${{ matrix.os }}
           path: dist/*
           if-no-files-found: error
       - name: Upload test results
