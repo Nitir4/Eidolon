@@ -18,7 +18,7 @@ using namespace tora::desktop;
 class DesktopFinal:public QObject {
  Q_OBJECT
 private slots:
- void initTestCase(){for(auto ch:QStringLiteral("TORA Clone 0123456789"))QVERIFY(QFontMetrics(QApplication::font()).inFont(ch));}
+ void initTestCase(){for(auto ch:QStringLiteral("Eidolon 0123456789"))QVERIFY(QFontMetrics(QApplication::font()).inFont(ch));}
  void lifecycleLayoutAndPrint(){
   ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
   auto* action=shell.findChild<QAction*>(QStringLiteral("solve-final"));QVERIFY(action && !action->isEnabled());

@@ -21,7 +21,7 @@ class DesktopGraphical:public QObject {
 private slots:
     void initTestCase(){
         const QFontMetrics metrics(QApplication::font());
-        for(const QChar ch:QStringLiteral("TORA Clone 0123456789"))QVERIFY2(metrics.inFont(ch),"The synthetic GUI backend must have a font that renders the application's labels");
+        for(const QChar ch:QStringLiteral("Eidolon 0123456789"))QVERIFY2(metrics.inFont(ch),"The synthetic GUI backend must have a font that renders the application's labels");
     }
     void unsupportedDimensionsAndBounds(){
         for(int kind=0;kind<5;++kind){

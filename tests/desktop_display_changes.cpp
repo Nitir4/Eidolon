@@ -40,7 +40,7 @@ class DisplayChanges final : public QObject {
     void checkView(ApplicationShell& shell, const QString& stage, int dpi) {
         for(auto* button:shell.currentContent()->findChildren<QPushButton*>())
             QVERIFY(button->size().expandedTo(button->minimumSizeHint())==button->size());
-        for(auto ch:QStringLiteral("TORA Clone 0123456789"))QVERIFY(QFontMetrics(shell.font()).inFont(ch));
+        for(auto ch:QStringLiteral("Eidolon 0123456789"))QVERIFY(QFontMetrics(shell.font()).inFont(ch));
         const auto bitmap=shell.grab();
         QCOMPARE(bitmap.devicePixelRatio(),shell.devicePixelRatioF());
         QCOMPARE(bitmap.width(),qRound(shell.width()*shell.devicePixelRatioF()));

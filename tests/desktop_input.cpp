@@ -147,11 +147,10 @@ private slots:
         QVERIFY(c.editing());QVERIFY(!shell.menuBar()->actions()[0]->menu()->actions()[0]->isEnabled());
         QTest::keyClick(editor,Qt::Key_Return);QApplication::processEvents();
         QCOMPARE(c.document()->problem.variables[0].name,std::string("decision"));
-        QCOMPARE(view->currentIndex(),c.grid()->index(0,2));
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);
-        QTest::keyClick(editor,Qt::Key_Tab);QApplication::processEvents();
         QCOMPARE(view->currentIndex(),c.grid()->index(1,1));
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);editor->selectAll();QTest::keyClicks(editor,"1.2345678901234567");
+        QVERIFY(!qobject_cast<QLineEdit*>(QApplication::focusWidget()));
+        QTest::keyClick(view,Qt::Key_1);QApplication::processEvents();
+        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);QTest::keyClicks(editor,".2345678901234567");
         QTest::keyClick(editor,Qt::Key_Tab);QApplication::processEvents();QCOMPARE(c.document()->problem.objective[0],1.23);
         view->setFocus();QApplication::processEvents();
         c.selectColumn(1);QVERIFY(c.copySelection());c.selectColumn(2);QVERIFY(c.pasteSelection());
@@ -173,17 +172,14 @@ private slots:
         auto* editor=begin(2,1);QVERIFY(editor);editor->selectAll();QTest::keyClicks(editor,"7.25");
         QTest::keyClick(editor,Qt::Key_Down);QApplication::processEvents();
         QCOMPARE(view->currentIndex(),c.grid()->index(3,1));QCOMPARE(c.document()->problem.constraints[0].coefficients[0],7.25);
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);editor->selectAll();
-        QTest::keyClick(editor,Qt::Key_Right);QApplication::processEvents();QCOMPARE(view->currentIndex(),c.grid()->index(3,2));
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);editor->selectAll();
-        QTest::keyClick(editor,Qt::Key_Left);QApplication::processEvents();QCOMPARE(view->currentIndex(),c.grid()->index(3,1));
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);
-        QTest::keyClick(editor,Qt::Key_Up);QApplication::processEvents();QCOMPARE(view->currentIndex(),c.grid()->index(2,1));
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Escape);
+        QVERIFY(!qobject_cast<QLineEdit*>(QApplication::focusWidget()));
+        QTest::keyClick(view,Qt::Key_Right);QCOMPARE(view->currentIndex(),c.grid()->index(3,2));
+        QTest::keyClick(view,Qt::Key_Left);QCOMPARE(view->currentIndex(),c.grid()->index(3,1));
+        QTest::keyClick(view,Qt::Key_Up);QCOMPARE(view->currentIndex(),c.grid()->index(2,1));
         editor=begin(2,4);QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Up);QApplication::processEvents();
         // Objective/name RHS cells are read-only; stay in the current editable cell.
         QCOMPARE(view->currentIndex(),c.grid()->index(2,4));
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Escape);
+        QVERIFY(!qobject_cast<QLineEdit*>(QApplication::focusWidget()));
         editor=begin(1,1);QVERIFY(editor);editor->setText(QStringLiteral("1234"));editor->setCursorPosition(2);
         QTest::keyClick(editor,Qt::Key_Left);QCOMPARE(editor->cursorPosition(),1);QCOMPARE(view->currentIndex(),c.grid()->index(1,1));
         QTest::keyClick(editor,Qt::Key_Escape);view->setFocus();view->setCurrentIndex(c.grid()->index(1,1));
@@ -193,8 +189,8 @@ private slots:
         QTest::keyClick(editor,Qt::Key_Down);QCOMPARE(view->currentIndex(),c.grid()->index(6,1));
         QCOMPARE(c.grid()->index(6,1).data().toString(),original);QTest::keyClick(editor,Qt::Key_Escape);
         editor=begin(1,2);QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Return,Qt::ShiftModifier);QApplication::processEvents();
-        QCOMPARE(view->currentIndex(),c.grid()->index(1,1));
-        editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor);QTest::keyClick(editor,Qt::Key_Escape);
+        QCOMPARE(view->currentIndex(),c.grid()->index(0,2));
+        QVERIFY(!qobject_cast<QLineEdit*>(QApplication::focusWidget()));
         QVERIFY(shell.navigate(QStringLiteral("main")));
     }
     void selectedInputRowsStayReadable() {

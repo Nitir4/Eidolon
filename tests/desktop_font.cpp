@@ -46,7 +46,7 @@ int main(int argc, char** argv)
         std::cerr << "Malformed theme font was not recovered\n";
         return 1;
     }
-    for (const QChar character : QStringLiteral("TORA Clone")) {
+    for (const QChar character : QStringLiteral("Eidolon")) {
         if (!metrics.inFont(character)) {
             std::cerr << "Fallback font cannot render label character U+"
                       << std::hex << static_cast<unsigned int>(character.unicode()) << '\n';
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     }
     QWidget window;
     window.setFont(recovered);
-    QLabel label(QStringLiteral("TORA Clone"), &window);
+    QLabel label(QStringLiteral("Eidolon"), &window);
     QApplication::setFont(malformed);
     window.ensurePolished();
     application.processEvents();
