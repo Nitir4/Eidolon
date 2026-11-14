@@ -1,4 +1,27 @@
-# Native TORA clone
+# Eidolon
+
+A native operations research workbench for learning, solving and inspecting each
+step. Named for an *eidolon*: a likeness given a separate existence. This project
+reimplements TORA's familiar workflows with independent C++/Qt internals.
+
+Repository: [Nitir4/Eidolon](https://github.com/Nitir4/Eidolon).
+On this laptop, launch `eidolon` or choose **Eidolon** in wofi. The former
+`tora-clone` command and old installed releases have been removed. Saved-file
+identifiers and window preferences are preserved. Earlier delivery notes below
+use the former name.
+
+> Current scope: the full original application, including Linear Equations,
+> LP, Transportation, Integer Programming, Networks, CPM/PERT, Queuing and Games,
+> plus Assignment and the authorized LP class extensions. Local implementation
+> and Release checks pass for the documented profiles; cross-platform and
+> hardware acceptance remain. See [full application coverage](docs/FULL_APPLICATION.md).
+> Eidolon is the new name of this project, formerly TORA Clone. Existing problem files remain compatible.
+
+
+Local LP extensions: open an LP, choose **SOLVE Menu → Class extensions**, then
+**Change Cj / RHS** or **Dual Revised (RHS)**. Analyze keeps input unchanged;
+**Use changed model** applies changes for normal Save As. Results include a
+selected trace and printing. See [native workflow and limits](docs/tora-analysis/LP_CHANGES_NATIVE.md).
 
 Phase 0 is approved. Foundation 1 supplies the C++17/CMake skeleton, native
 Qt 6 Widgets bootstrap, smoke tests and three-OS packaging pipeline.
@@ -36,7 +59,7 @@ Python PDF reader when running tests; see the build instructions):
 cmake --preset dev
 cmake --build --preset dev
 ctest --preset dev
-build/dev/src/desktop/ToraClone
+build/dev/src/desktop/Eidolon
 ```
 
 Set `CMAKE_PREFIX_PATH` to your Qt SDK if needed. The `headless` preset builds
@@ -59,8 +82,8 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
-Transportation is an authorized extension with North-west, Least-cost and Vogel starts on `future-scope`. The working source also adds editable input and file writing; the published Vogel binaries retain their earlier read-only input. Other OR modules remain outside this project. Review layouts with, for
-example, `ToraClone --no-settings --screen lp/output-format` (also
+Transportation is an authorized extension with North-west, Least-cost and Vogel starts on `future-scope`. The working source also adds editable input and file writing; the published Vogel binaries retain their earlier read-only input. The remaining original OR modules are being integrated under the full-application scope. Review layouts with, for
+example, `Eidolon --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal
 resizable window. Automated screen captures contain only the clone's original
@@ -97,7 +120,7 @@ recorded as untested.
 
 
 The earlier release-readiness delivery at source `19463eb` passes 74/74 tests per OS (222 total)
-in [CI run 38062462111](https://github.com/Nitir4/TORA-Clone/actions/runs/38062462111). Downloaded packages, including the verified Windows
+in [CI run 38062462111](https://github.com/Nitir4/Eidolon/actions/runs/38062462111). Downloaded packages, including the verified Windows
 installer, are under `dist/release-readiness/final/` in this workspace. The
 Linux AppImage supports Wayland and X11 and starts on this laptop's Wayland
 desktop with SDK paths removed. Matching Qt legal documents are included.
@@ -107,7 +130,7 @@ acceptance and trusted production signing remain resource-dependent.
 
 
 The keyboard/readability repair at source `c4cf3ad` passes 74/74 tests on each
-OS in [CI run 38211734612](https://github.com/Nitir4/TORA-Clone/actions/runs/38211734612).
+OS in [CI run 38211734612](https://github.com/Nitir4/Eidolon/actions/runs/38211734612).
 Screen text uses a 12pt minimum and a light, high-contrast palette. Arrow keys
 continue editing in adjacent editable grid cells; Left/Right preserve normal
 caret movement within text. New packages are in `dist/readability/final/`.
@@ -128,7 +151,7 @@ unsupported fractional/format inputs produce explicit errors. See the
 
 The earlier North-west preview delivery at source `7e35986` passes **80/80
 tests on each OS (240 overall)** in
-[CI run 38243044784](https://github.com/Nitir4/TORA-Clone/actions/runs/38243044784).
+[CI run 38243044784](https://github.com/Nitir4/Eidolon/actions/runs/38243044784).
 Independent downloaded-report checks confirm 1,261 Transportation fields across
 17 cases/38 tableaus, alongside the existing 31,654 LP fields per OS. All three
 native packages and the Windows installer passed their deployment checks;
@@ -143,7 +166,7 @@ application executable and need not be restarted to see this preview.
 On `future-scope`, Transportation also offers **Least-cost start**, with the
 same read-only input and automatic MODI iteration view. Source `77e78cb` passes
 **81/81 tests per OS (243 overall)** in
-[CI run 38249608884](https://github.com/Nitir4/TORA-Clone/actions/runs/38249608884).
+[CI run 38249608884](https://github.com/Nitir4/Eidolon/actions/runs/38249608884).
 Its 17 cases/20 tableaus/644 exact fields match TORA; existing LP and North-west
 comparisons also pass. Both starts show the observed initial-optimal notice.
 Downloaded packages and reports passed independent integrity/comparison checks;
@@ -162,7 +185,7 @@ all additional feature commits remain on `future-scope`.
 
 Vogel start is delivered on `future-scope`. Its 18 captured problems contain
 19 tableaus and 625 displayed fields, all matching TORA exactly. The final
-[three-OS CI](https://github.com/Nitir4/TORA-Clone/actions/runs/38265173986) passes
+[three-OS CI](https://github.com/Nitir4/Eidolon/actions/runs/38265173986) passes
 82 tests per OS (246 overall), with 71 Transportation checks at each scale and
 36 resolution renders per OS. Windows, macOS and Linux renders were reviewed;
 the Windows offscreen font omission is fixed and covered by a glyph regression.
@@ -178,17 +201,36 @@ The current working source adds **Transportation model → Enter New Problem**. 
 
 Typed Transportation supplies/demands commit to whole numbers, matching the captured input workflow; untouched imported fractions retain their original text. Canceling the unsaved-data prompt blocks direct solver menu actions before a trace is computed.
 
-The input-editing [final three-OS gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38286295916) passes 88 tests per OS (264 overall), three authentic input hashes per OS and native input checks at four scales. The source `edc34b0` AppImage is installed and verified on Wayland. Structural EditGrid operations, manual loops, multiplier choices, final summary, Transportation printing and other OR modules remain separate cycles.
+The input-editing [final three-OS gate](https://github.com/Nitir4/Eidolon/actions/runs/38286295916) passes 88 tests per OS (264 overall), three authentic input hashes per OS and native input checks at four scales. The source `edc34b0` AppImage is installed and verified on Wayland. Structural EditGrid operations, manual loops, multiplier choices, final summary, Transportation printing and other OR modules remain separate cycles.
 
 
-Transportation **EditGrid** is now installed: click a source/destination heading, then choose Copy, Paste, Delete or Insert. Single click inserts after; double click inserts before. Ctrl+U restores the last structural edit. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38292868212) passes89tests on eachOS. See [EditGrid contract](docs/tora-analysis/TRANSPORTATION_EDITGRID.md) for observed rules, original defects corrected and remaining scope. Multiplier/manual loops, final summary, printing/settings and six other modules remain underway.
+Transportation **EditGrid** is now installed: click a source/destination heading, then choose Copy, Paste, Delete or Insert. Single click inserts after; double click inserts before. Ctrl+U restores the last structural edit. [The verified gate](https://github.com/Nitir4/Eidolon/actions/runs/38292868212) passes89tests on eachOS. See [EditGrid contract](docs/tora-analysis/TRANSPORTATION_EDITGRID.md) for observed rules, original defects corrected and remaining scope. Multiplier/manual loops, final summary, printing/settings and six other modules remain underway.
 
 
-Transportation **Initialize u or v** is now installed. Select any source or destination zero anchor before advancing the first tableau. The anchor persists through later iterations; already-optimal starts still permit selection. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38348718758) passes 91 tests on each OS. See [the multiplier contract](docs/tora-analysis/TRANSPORTATION_MULTIPLIERS.md) for observed formatting and control behavior. Manual-loop feedback and the remaining application modules are next.
+Transportation **Initialize u or v** is now installed. Select any source or destination zero anchor before advancing the first tableau. The anchor persists through later iterations; already-optimal starts still permit selection. [The verified gate](https://github.com/Nitir4/Eidolon/actions/runs/38348718758) passes 91 tests on each OS. See [the multiplier contract](docs/tora-analysis/TRANSPORTATION_MULTIPLIERS.md) for observed formatting and control behavior. Manual-loop feedback and the remaining application modules are next.
 
 
-Transportation manual-loop feedback is installed. Click shipment cells to check the computed loop: entering, chosen leaving and other loop cells receive feedback in any order; incorrect cells remain unchanged. Next/All work with partial or no selection. [The final gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38353276843) passes92tests perOS. See [the observed contract](docs/tora-analysis/TRANSPORTATION_MANUAL.md). Final summary, printing/settings and other OR modules remain underway.
+Transportation manual-loop feedback is installed. Click shipment cells to check the computed loop: entering, chosen leaving and other loop cells receive feedback in any order; incorrect cells remain unchanged. Next/All work with partial or no selection. [The final gate](https://github.com/Nitir4/Eidolon/actions/runs/38353276843) passes92tests perOS. See [the observed contract](docs/tora-analysis/TRANSPORTATION_MANUAL.md). Final summary, printing/settings and other OR modules remain underway.
 
-Transportation final summary is installed. Choose Final solution from SOLVE Menu to see the terminal basic shipments, costs and contributions; prior iteration history remains available. [The verified gate](https://github.com/Nitir4/TORA-Clone/actions/runs/38447468335) passes 98 tests per OS. See [the observed contract](docs/tora-analysis/TRANSPORTATION_FINAL.md) for fractional display and alias policies. Transportation printing/settings and six other OR modules remain in progress.
+Transportation final summary is installed. Choose Final solution from SOLVE Menu to see the terminal basic shipments, costs and contributions; prior iteration history remains available. [The verified gate](https://github.com/Nitir4/Eidolon/actions/runs/38447468335) passes 98 tests per OS. See [the observed contract](docs/tora-analysis/TRANSPORTATION_FINAL.md) for fractional display and alias policies. Transportation printing/settings and six other OR modules remain in progress.
 
 Transportation printing is installed on Linux: Write to Printer submits input plus shown tableaus, or separate input/final-summary jobs. The [printer contract](docs/tora-analysis/TRANSPORTATION_PRINTING.md) records11observed workflows. Printing checks passed all3OS in the pre-policy run; full Windows release validation remains incomplete after a graphical-test timeout, and no Windows printing package was produced. Repository Actions are disabled and require specific approval to run or re-enable. Transportation format settings are the current local investigation.
+
+## Friends’ playtest deliveries
+
+The [playtest guide](playtest/testing.md) explains installation, keyboard and
+resize checks, PDF export, and comparison against an independently installed TORA.
+Native Windows and macOS builds can be wrapped with
+`python tools/package_playtest.py --native-dir dist --output-dir dist/playtest`.
+Each delivery includes launch/check scripts, 126 problems covering 42 workflows,
+independent answer keys, and a blank comparison sheet. The generated
+`windows.zip` and `macos.zip` stay outside source control. Native builds require
+specific approval for the manual GitHub Actions execution; they are not started
+by this documentation.
+
+## Keyboard entry and practice problems
+
+[Keyboard and layout guide](docs/KEYBOARD_AND_LAYOUT.md) covers Enter/Tab navigation,
+F2 editing and rectangular clipboard entry. The [practice bank](examples/practice-bank/README.md)
+contains at least five examples for each of 42 workflows, with importable inputs,
+independent answer keys and a comparison sheet for the upcoming original TORA session.

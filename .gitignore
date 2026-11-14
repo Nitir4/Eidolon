@@ -8,6 +8,9 @@
 /.packaging-tools/
 /build/
 /dist/
+/windows.zip
+/macos.zip
+/aqtinstall.log
 /.agents/
 /.codex/
 /.aws/

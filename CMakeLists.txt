@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(ToraClone VERSION 0.1.0 LANGUAGES CXX)
+project(Eidolon VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -25,8 +25,15 @@ function(tora_target_defaults target)
 endfunction()
 
 add_subdirectory(src/core)
+add_subdirectory(src/equations)
+add_subdirectory(src/queuing)
 add_subdirectory(src/lp)
 add_subdirectory(src/transportation)
+add_subdirectory(src/assignment)
+add_subdirectory(src/games)
+add_subdirectory(src/integer)
+add_subdirectory(src/networks)
+add_subdirectory(src/planning)
 add_subdirectory(src/compat)
 
 if(TORA_BUILD_DESKTOP)
