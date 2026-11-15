@@ -1,5 +1,6 @@
 #include <tora/compat/lp_file.hpp>
 #include <charconv>
+#include <tora/core/number_parser.hpp>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -81,7 +82,7 @@ double number(const std::string& s,std::size_t record,bool upper=false,bool free
     if (freeLower && token=="-infinity") return -std::numeric_limits<double>::infinity();
     if (!token.empty() && token.front()=='+') token.remove_prefix(1);
     double value=0;
-    const auto parsed=std::from_chars(token.data(),token.data()+token.size(),value,std::chars_format::general);
+    const auto parsed=core::parseDouble(token.data(),token.data()+token.size(),value);
     if (token.empty() || parsed.ec != std::errc{} || parsed.ptr != token.data()+token.size() || !std::isfinite(value))
         throw FileError(FileErrorCode::Number,"Expected a finite numeric cell",record);
     return value;

@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.24)
 
+if(CMAKE_HOST_APPLE)
+    # Floating-point std::to_chars is supplied by libc++ starting in macOS 13.3.
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "13.3" CACHE STRING "Minimum macOS version")
+    if(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "13.3")
+        message(FATAL_ERROR "Eidolon requires macOS 13.3 or newer (floating-point std::to_chars)")
+    endif()
+endif()
+
 project(Eidolon VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)

@@ -1,12 +1,13 @@
 #include "equations_document.hpp"
 #include <charconv>
+#include <tora/core/number_parser.hpp>
 #include <cmath>
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
 namespace tora::desktop {
 namespace {
-double number(const std::string& s) {double v=0;auto p=std::from_chars(s.data(),s.data()+s.size(),v);if(s.empty()||p.ec!=std::errc{}||p.ptr!=s.data()+s.size()||!std::isfinite(v))throw std::invalid_argument("Enter a finite augmented number.");return v;}
+double number(const std::string& s) {double v=0;auto p=core::parseDouble(s.data(),s.data()+s.size(),v);if(s.empty()||p.ec!=std::errc{}||p.ptr!=s.data()+s.size()||!std::isfinite(v))throw std::invalid_argument("Enter a finite augmented number.");return v;}
 std::string line(std::istream& in){std::string s;if(!std::getline(in,s))throw std::invalid_argument("Truncated Equations file.");if(!s.empty()&&s.back()=='\r')s.pop_back();return s;}
 int integer(std::istream& in){const auto s=line(in);int v=0;auto p=std::from_chars(s.data(),s.data()+s.size(),v);if(p.ec!=std::errc{}||p.ptr!=s.data()+s.size())throw std::invalid_argument("Invalid Equations integer.");return v;}
 std::string quoted(std::istream& in){const auto s=line(in);if(s.size()<2||s.front()!='"'||s.back()!='"')throw std::invalid_argument("Invalid quoted Equations field.");std::string v;for(std::size_t i=1;i+1<s.size();++i){if(s[i]=='"'){if(i+2>=s.size()||s[i+1]!='"')throw std::invalid_argument("Invalid embedded Equations quote.");++i;}v+=s[i];}return v;}

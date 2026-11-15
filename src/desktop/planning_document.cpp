@@ -1,6 +1,7 @@
 #include "planning_document.hpp"
 #include <algorithm>
 #include <charconv>
+#include <tora/core/number_parser.hpp>
 #include <cmath>
 #include <iomanip>
 #include <sstream>
@@ -12,7 +13,7 @@ void field(const std::string& s){if(s.find_first_of("\r\n\0",0,3)!=std::string::
 std::string quote(const std::string& s){field(s);std::string r="\"";for(char c:s){r+=c;if(c=='\"')r+=c;}return r+'\"';}
 std::string unquote(const std::string& s){if(s.size()<2||s.front()!='\"'||s.back()!='\"')throw std::invalid_argument("Expected a quoted planning field.");std::string r;for(std::size_t i=1;i+1<s.size();++i){if(s[i]=='\"'){if(i+2>=s.size()||s[i+1]!='\"')throw std::invalid_argument("Invalid planning field quoting.");++i;}r+=s[i];}field(r);return r;}
 int integer(const std::string& s){int v=0;auto result=std::from_chars(s.data(),s.data()+s.size(),v);if(s.empty()||result.ec!=std::errc{}||result.ptr!=s.data()+s.size())throw std::invalid_argument("Invalid planning integer.");return v;}
-double number(const std::string& s){double v=0;auto result=std::from_chars(s.data(),s.data()+s.size(),v);if(s.empty()||result.ec!=std::errc{}||result.ptr!=s.data()+s.size()||!std::isfinite(v))throw std::invalid_argument("Planning durations must be finite numbers.");return v;}
+double number(const std::string& s){double v=0;auto result=core::parseDouble(s.data(),s.data()+s.size(),v);if(s.empty()||result.ec!=std::errc{}||result.ptr!=s.data()+s.size()||!std::isfinite(v))throw std::invalid_argument("Planning durations must be finite numbers.");return v;}
 std::string numeric(double v){std::ostringstream s;s<<std::setprecision(17)<<v;return s.str();}
 bool same(const planning::Problem& a,const planning::Problem& b){if(a.method!=b.method||a.activities.size()!=b.activities.size())return false;for(std::size_t i=0;i<a.activities.size();++i){const auto& x=a.activities[i];const auto& y=b.activities[i];if(x.from!=y.from||x.to!=y.to||x.symbol!=y.symbol||x.duration!=y.duration||x.optimistic!=y.optimistic||x.mostLikely!=y.mostLikely||x.pessimistic!=y.pessimistic)return false;}return true;}
 }

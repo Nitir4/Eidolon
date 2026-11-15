@@ -1,5 +1,6 @@
 #include "games_document.hpp"
 #include <charconv>
+#include <tora/core/number_parser.hpp>
 #include <cmath>
 #include <iomanip>
 #include <sstream>
@@ -10,7 +11,7 @@ double number(std::string_view s) {
  while(!s.empty()&&(s.front()==' '||s.front()=='\t'))s.remove_prefix(1);
  while(!s.empty()&&(s.back()==' '||s.back()=='\t'))s.remove_suffix(1);
  if(!s.empty()&&s.front()=='+')s.remove_prefix(1);
- double v=0;auto p=std::from_chars(s.data(),s.data()+s.size(),v);
+ double v=0;auto p=core::parseDouble(s.data(),s.data()+s.size(),v);
  if(s.empty()||p.ec!=std::errc{}||p.ptr!=s.data()+s.size()||!std::isfinite(v))throw std::invalid_argument("Enter a finite payoff number.");
  return v;
 }

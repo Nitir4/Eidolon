@@ -1,12 +1,13 @@
 #include "networks_document.hpp"
 #include <charconv>
+#include <tora/core/number_parser.hpp>
 #include <cmath>
 #include <sstream>
 #include <stdexcept>
 namespace tora::desktop {
 namespace {
 void text(const std::string& s){if(s.find_first_of("\r\n\0",0,3)!=std::string::npos)throw std::invalid_argument("Network text must occupy one line.");}
-std::optional<double> number(std::string_view s){while(!s.empty()&&(s.front()==' '||s.front()=='\t'))s.remove_prefix(1);while(!s.empty()&&(s.back()==' '||s.back()=='\t'))s.remove_suffix(1);if(s=="infinity"||s.empty())return {};if(s.front()=='+')s.remove_prefix(1);double v=0;const auto p=std::from_chars(s.data(),s.data()+s.size(),v);if(s.empty()||p.ec!=std::errc{}||p.ptr!=s.data()+s.size()||!std::isfinite(v))throw std::invalid_argument("Enter a finite edge value or infinity for an absent edge.");return v;}
+std::optional<double> number(std::string_view s){while(!s.empty()&&(s.front()==' '||s.front()=='\t'))s.remove_prefix(1);while(!s.empty()&&(s.back()==' '||s.back()=='\t'))s.remove_suffix(1);if(s=="infinity"||s.empty())return {};if(s.front()=='+')s.remove_prefix(1);double v=0;const auto p=core::parseDouble(s.data(),s.data()+s.size(),v);if(s.empty()||p.ec!=std::errc{}||p.ptr!=s.data()+s.size()||!std::isfinite(v))throw std::invalid_argument("Enter a finite edge value or infinity for an absent edge.");return v;}
 std::string line(std::istream& in){std::string s;if(!std::getline(in,s))throw std::invalid_argument("Truncated Network file.");if(!s.empty()&&s.back()=='\r')s.pop_back();return s;}
 int integer(std::istream& in){auto s=line(in);int v=0;auto p=std::from_chars(s.data(),s.data()+s.size(),v);if(p.ec!=std::errc{}||p.ptr!=s.data()+s.size())throw std::invalid_argument("Invalid Network integer.");return v;}
 std::string quoted(std::istream& in){auto s=line(in);if(s.size()<2||s.front()!='"'||s.back()!='"')throw std::invalid_argument("Expected a quoted Network field.");std::string out;for(std::size_t i=1;i+1<s.size();++i){if(s[i]=='"'){if(i+2>=s.size()||s[i+1]!='"')throw std::invalid_argument("Invalid embedded Network quote.");++i;}out+=s[i];}text(out);return out;}

@@ -1,6 +1,7 @@
 #include <tora/compat/transportation_document.hpp>
 #include <tora/core/number_formatter.hpp>
 #include <charconv>
+#include <tora/core/number_parser.hpp>
 #include <cmath>
 #include <stdexcept>
 #include <utility>
@@ -52,7 +53,7 @@ double number(std::string_view value) {
     if (value.empty()) return 0; // Blank new quantities retain their spelling.
     if (value.front() == '+') value.remove_prefix(1);
     double result = 0;
-    const auto parsed = std::from_chars(value.data(), value.data() + value.size(), result);
+    const auto parsed = core::parseDouble(value.data(), value.data() + value.size(), result);
     if (value.empty() || parsed.ec != std::errc{} || parsed.ptr != value.data() + value.size() || !std::isfinite(result))
         throw std::invalid_argument("Expected a finite Transportation numeric cell.");
     return result;

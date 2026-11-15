@@ -1,5 +1,6 @@
 #include "queuing_document.hpp"
 #include <charconv>
+#include <tora/core/number_parser.hpp>
 #include <cmath>
 #include <iomanip>
 #include <sstream>
@@ -10,7 +11,7 @@ std::string line(std::istream& in){std::string s;if(!std::getline(in,s))throw st
 int integer(const std::string& s){int v=0;auto p=std::from_chars(s.data(),s.data()+s.size(),v);if(p.ec!=std::errc{}||p.ptr!=s.data()+s.size())throw std::invalid_argument("Expected a whole number.");return v;}
 std::string quoted(std::istream& in){const auto s=line(in);if(s.size()<2||s.front()!='"'||s.back()!='"')throw std::invalid_argument("Invalid quoted Queuing field.");std::string v;for(std::size_t i=1;i+1<s.size();++i){if(s[i]=='"'){if(i+2>=s.size()||s[i+1]!='"')throw std::invalid_argument("Invalid embedded Queuing quote.");++i;}v+=s[i];}return v;}
 std::string quote(std::string_view s){std::string v="\"";for(char c:s){v+=c;if(c=='"')v+=c;}return v+'"';}
-double rate(const std::string& s){double v=0;auto p=std::from_chars(s.data(),s.data()+s.size(),v);if(s.empty()||p.ec!=std::errc{}||p.ptr!=s.data()+s.size()||!std::isfinite(v)||v<0)throw std::invalid_argument("Enter a finite nonnegative rate.");return v;}
+double rate(const std::string& s){double v=0;auto p=core::parseDouble(s.data(),s.data()+s.size(),v);if(s.empty()||p.ec!=std::errc{}||p.ptr!=s.data()+s.size()||!std::isfinite(v)||v<0)throw std::invalid_argument("Enter a finite nonnegative rate.");return v;}
 std::optional<std::size_t> limit(const std::string& s){if(s=="infinity")return {};int n=integer(s);if(n<1||n>100000)throw std::invalid_argument("Limits must be 1..100000 or infinity.");return static_cast<std::size_t>(n);}
 void validTitle(const std::string& s){if(s.find_first_of("\r\n\0",0,3)!=std::string::npos)throw std::invalid_argument("Queuing title must occupy one line.");}
 }
