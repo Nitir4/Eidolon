@@ -96,7 +96,7 @@ preservation of unrelated files. macOS signing/notarization and a production
 release license review remain later release work. The portable folder remains
 available; a single-file portable application is not supplied.
 
-The CI SDK's supported floors are Windows 10 1809, macOS 13 and Linux with
+The application's supported floors are Windows 10 1809, macOS 13.3 and Linux with
 glibc 2.39. The AppImage does not bundle glibc; older Linux distributions need
 a build against an older baseline. These are SDK/package compatibility limits,
 not proof of testing on every OS version. See Qt's
@@ -224,3 +224,47 @@ hashes match. Windows setup verifies 163 installed files. Latest packages are
 under `dist/release-readiness/final/`, with private audits in
 `build/release-readiness/`. These unsigned builds retain the hardware/signing
 and owner production-release decisions documented in `RELEASE_READINESS.md`.
+
+## Local Windows/macOS cross builds
+
+A Linux cross build does not execute macOS or establish native GUI acceptance.
+The portable packager records this limit in its manifest. It builds no installer
+or DMG; friends receive the Windows portable folder or a universal Mac APP.
+The repository stays private and no GitHub Actions run is needed.
+
+The supplied toolchains use Ubuntu24.04 MinGW GCC13 or LLVM/Clang/LLD18.
+Install matching Qt6.10.3 host tools and the official target Qt SDK: Windows
+`mingw_64` or macOS `macos`. Apple targets also require an extracted Apple SDK
+(the local build used15.5). Keep those SDKs outside source control and deliveries.
+Clang expects `lipo` in PATH; on Linux provide a tool-directory symlink to
+`llvm-lipo-18`. Set `QT_HOST_PATH` to the matching Linux Qt SDK. For example,
+substitute actual SDK paths for these shell variables:
+
+```sh
+cmake -S . -B build/windows-cross -G Ninja \
+  -DCMAKE_TOOLCHAIN_FILE=packaging/toolchains/windows-mingw.cmake \
+  -DCMAKE_PREFIX_PATH="$qt_windows" -DQT_HOST_PATH="$qt_host" \
+  -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+cmake --build build/windows-cross --parallel 2
+python3 tools/package_cross_desktop.py --platform windows \
+  --build-dir build/windows-cross --sdk "$qt_windows" --output-dir dist/windows-cross
+python3 tools/package_playtest.py --platform windows \
+  --native-dir dist/windows-cross --output-dir dist/playtest
+
+cmake -S . -B build/macos-cross -G Ninja \
+  -DCMAKE_TOOLCHAIN_FILE=packaging/toolchains/macos-llvm.cmake \
+  -DCMAKE_OSX_SYSROOT="$macos_sdk" -DCMAKE_PREFIX_PATH="$qt_mac" \
+  -DQT_HOST_PATH="$qt_host" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+cmake --build build/macos-cross --parallel 2
+python3 tools/package_cross_desktop.py --platform macos \
+  --build-dir build/macos-cross --sdk "$qt_mac" --output-dir dist/macos-cross
+python3 tools/package_playtest.py --platform macos \
+  --native-dir dist/macos-cross --output-dir dist/playtest
+```
+
+Stop if any command fails. Windows staging resolves all non-system DLL imports
+and uses the matching compiler runtime. Mac staging verifies arm64+x86_64 for
+every shipped Mach-O, resolves Qt frameworks and checks the app-relative rpath.
+The generated `dist/playtest/windows.zip` and `macos.zip` include testing.md,
+launch/check scripts, answer keys and blank comparison sheets. Native testers
+must still exercise launching, keyboard entry, resizing, file access and PDF.
