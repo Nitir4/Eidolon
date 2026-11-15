@@ -3,15 +3,17 @@
 Thanks for testing. Extract the whole ZIP into a normal writable folder first.
 Keep the files together; do not run the application from inside the ZIP viewer.
 The version and source commit are in `release-info.json`.
+Read `build-validation.md` for the actual checks and remaining platform limits.
 
 ## 1. Start here
 
 **Windows x64:** double-click `Start-Eidolon.cmd`, or open `app/Eidolon.exe`.
-The portable copy needs no administrator account. An optional installer is in
-`app/setup/`; use the portable copy for the initial comparison session.
+The portable copy needs no administrator account. Native CI builds may also
+include an optional installer in `app/setup/`; local cross-builds use the portable copy.
 
-**macOS, Intel or Apple Silicon:** double-click `Start-Eidolon.command`, open
-`app/Eidolon.dmg`, and drag Eidolon into Applications. Launch the installed copy.
+**macOS 13.3+, Intel or Apple Silicon:** double-click `Start-Eidolon.command`.
+This ZIP either contains `app/Eidolon.app` directly (copy it to Applications), or
+`app/Eidolon.dmg` (open it and drag Eidolon into Applications). Launch that copy.
 This playtest build is not notarized. If macOS blocks it, inspect the download
 and use Apple's **System Settings > Privacy & Security > Open Anyway** procedure
 for this app. Do not disable Gatekeeper globally. If a `.command` file opens as
@@ -34,8 +36,10 @@ should open and immediately close. The scripts also create your editable
 
 The automatic checks establish integrity and startup only. They do not operate
 TORA, enter every problem, certify a printed answer, or mark manual checks passed.
-On macOS the check mounts only this bundle's DMG read-only and detaches its own
-temporary mount afterward. Your installed app and problem files are untouched.
+On macOS the check uses the bundled app directly, or mounts this bundle's DMG
+read-only and detaches its own temporary mount afterward. Your installed app
+and problem files are untouched. Check `release-info.json` for the build route
+and actual validation: a Linux cross-build has not been executed on macOS.
 
 ## 3. Compare all 42 workflows
 

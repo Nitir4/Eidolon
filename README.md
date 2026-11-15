@@ -224,9 +224,9 @@ Native Windows and macOS builds can be wrapped with
 `python tools/package_playtest.py --native-dir dist --output-dir dist/playtest`.
 Each delivery includes launch/check scripts, 126 problems covering 42 workflows,
 independent answer keys, and a blank comparison sheet. The generated
-`windows.zip` and `macos.zip` stay outside source control. Native builds require
-specific approval for the manual GitHub Actions execution; they are not started
-by this documentation.
+`windows.zip` and `macos.zip` stay outside source control. Local cross builds are documented in [build instructions](docs/BUILD.md);
+their target OS checks remain for playtesters. See [actual build validation](playtest/build-validation.md).
+Native GitHub Actions builds require separate specific approval.
 
 ## Keyboard entry and practice problems
 

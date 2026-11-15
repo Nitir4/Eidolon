@@ -16,17 +16,22 @@ fi
     sw_vers
     uname -m
 } > "$results/environment.txt"
-mountpoint=$(mktemp -d "${TMPDIR:-/tmp}/eidolon-playtest.XXXXXX")
+mountpoint=''
 mounted=0
 cleanup() {
     if [ "$mounted" -eq 1 ]; then hdiutil detach "$mountpoint" > "$results/detach.txt" 2>&1 || true; fi
-    rmdir "$mountpoint" 2>/dev/null || true
+    if [ -n "$mountpoint" ]; then rmdir "$mountpoint" 2>/dev/null || true; fi
 }
 trap cleanup EXIT
 trap 'exit 130' HUP INT TERM
-hdiutil attach -readonly -nobrowse -mountpoint "$mountpoint" "$root/app/Eidolon.dmg" > "$results/mount.txt"
-mounted=1
-app="$mountpoint/Eidolon.app/Contents/MacOS/Eidolon"
+if [ -d "$root/app/Eidolon.app" ]; then
+    app="$root/app/Eidolon.app/Contents/MacOS/Eidolon"
+else
+    mountpoint=$(mktemp -d "${TMPDIR:-/tmp}/eidolon-playtest.XXXXXX")
+    hdiutil attach -readonly -nobrowse -mountpoint "$mountpoint" "$root/app/Eidolon.dmg" > "$results/mount.txt"
+    mounted=1
+    app="$mountpoint/Eidolon.app/Contents/MacOS/Eidolon"
+fi
 [ -x "$app" ] || { echo 'Eidolon executable missing from mounted image.' >&2; exit 1; }
 printf 'screen,exit_code\n' > "$results/startup-checks.csv"
 index=0

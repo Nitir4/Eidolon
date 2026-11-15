@@ -1,25 +1,30 @@
-# Active task — friends’ playtest delivery and source publication
+# Active delivery — private local cross builds, 21 October2026
 
-20 October 2026, implementation mode. User requests windows.zip and macos.zip
-with native Eidolon builds, launch/check scripts and testing.md, plus publication
-of all source work. Generated ZIPs are ignored and must not enter source commits.
-User explicitly chose pushing all now with new commit dates spread from
-14 October through 15 November 2026, each below 500 added plus deleted lines.
-Future timestamps do not schedule publication; preserve existing history.
+Implementation mode; user requests Windows/macOS playtest ZIPs plus all source
+published with new commits below500 lines and deliberate14Oct–15Nov dates.
+108 initial commits published on future-scope at236d278; largest480 lines.
+User has no Actions credits and selected keeping the repo PRIVATE with local
+builds. No Actions execution or public visibility change is authorized.
 
-Delivery tooling and guides are prepared: 126 problems, 42 workflows, 210 case
-runs, 503 scalar comparison rows, 21 TORA-equivalent inputs. The local isolated
-Qt6.10.3 Release gate passed 179/179 in37.34s; five delivery tests pass separately.
-Native Windows/macOS binaries and friend scripts have not yet been validated
-for this source snapshot. Unit fixture payloads are not delivery packages.
+Real Windows x64 and Mac arm64+x86_64 app builds completed locally with
+Qt6.10.3; local cross packager stages14 PE and12 Mach-O dependency records.
+Apple libc++ lacks floating from_chars; shared C-locale parser fallback added
+with native-parser comparison coverage. macOS minimum13.3 for to_chars.
+Universal static archives need llvm-libtool-darwin, not ar over fat .o files.
+Reusable MinGW/LLVM18 toolchains and packaging commands are in docs/BUILD.md.
 
-Actions remain disabled. Source push is authorized only while disabled; enabling
-and ONE manual Build, test and package run still require specific approval.
-Proposed inputs: platforms=windows-and-macos, playtest=true; two45minute jobs.
-Pin the final source SHA in the external execution plan before asking approval,
-then disable Actions after that execution. Do not reuse the October18 approval.
-Keep the old tora-clone installed command removed; launch eidolon only.
-Evidence: build/playtest-20261020/ and external docs/Eidolon/.
+Linux full180/180 passed53.62s, delivery unit tests6/6. Windows11 packaged
+entry startups and numerical golden comparisons pass under Wine11.20. Initial
+Wine harness86/190 passed (includes Python checks); GUI tests had missing test
+runtime then Wine fail-fast/timeouts, and repetitive retries were stopped.
+This is not native Windows GUI acceptance. Mac has no runtime execution here.
+All limits are recorded in playtest/build-validation.md and copied into ZIPs.
+
+Remaining in this delivery: publish focused portability/package source commits
+with Actions disabled, regenerate manifests with clean published source SHA,
+assemble/audit dist/playtest/windows.zip and macos.zip, update external docs.
+Packages must stay ignored and must not contain TORA binaries/private evidence
+or Apple SDK files. Launch eidolon only; do not restore old tora-clone alias.
 
 ---
 

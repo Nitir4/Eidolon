@@ -63,6 +63,27 @@ class PlaytestDelivery(unittest.TestCase):
                 extract_windows(archive, root/'payload')
             self.assertFalse((root/'outside.txt').exists())
 
+    def test_direct_mac_app_preserves_executable_permission(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            native = root/'native'
+            native.mkdir()
+            artifact = native/'Eidolon-test-macos-universal.zip'
+            with zipfile.ZipFile(artifact, 'w') as handle:
+                executable = zipfile.ZipInfo('Eidolon.app/Contents/MacOS/Eidolon')
+                executable.create_system = 3
+                executable.external_attr = 0o100755 << 16
+                handle.writestr(executable, b'temporary unit fixture')
+            artifact.with_suffix('.zip.manifest.json').write_text(json.dumps({
+                'application':'Eidolon', 'version':'test',
+                'build_validation':'cross-built; no native execution'}))
+            archive = build(native, root/'output', 'macos')
+            with zipfile.ZipFile(archive) as handle:
+                member = handle.getinfo('app/Eidolon.app/Contents/MacOS/Eidolon')
+                self.assertTrue(member.external_attr >> 16 & 0o111)
+                release = json.loads(handle.read('release-info.json'))
+                self.assertIn('no native execution', release['build_validation'])
+
     def test_archive_contents_and_mac_script_permissions(self):
         # These are tiny fake native payloads used only inside a temporary unit
         # fixture, never delivery artifacts or a claim of native-platform testing.

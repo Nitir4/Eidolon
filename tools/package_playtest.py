@@ -20,15 +20,24 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def extract_windows(archive, destination):
+def extract_payload(archive, destination):
     with zipfile.ZipFile(archive) as source:
         for entry in source.infolist():
             relative = Path(entry.filename)
             if relative.is_absolute() or '..' in relative.parts or '\\' in entry.filename:
                 raise ValueError('Unsafe native payload member: ' + entry.filename)
             if (entry.external_attr >> 16) & 0o170000 == 0o120000:
-                raise ValueError('Windows payload contains a symlink')
+                raise ValueError('Portable payload must contain materialized files, not symlinks')
         source.extractall(destination)
+        for entry in source.infolist():
+            if not entry.is_dir():
+                mode = (entry.external_attr >> 16) & 0o777
+                if mode:
+                    (destination/entry.filename).chmod(mode)
+
+
+def extract_windows(archive, destination):
+    extract_payload(archive, destination)
     if not (destination/'Eidolon.exe').is_file():
         raise ValueError('Windows payload is missing Eidolon.exe')
 
@@ -49,19 +58,27 @@ def build(native_dir, output_dir, target):
         if target == 'windows':
             native = single(native_dir, 'Eidolon-*-windows-x86_64.zip')
             extract_windows(native, app)
-            installer = single(native_dir, 'Eidolon-*-windows-x86_64-setup.exe')
-            (app/'setup').mkdir()
-            shutil.copy2(installer, app/'setup/Eidolon-Setup.exe')
+            if list(native_dir.glob('Eidolon-*-windows-x86_64-setup.exe')):
+                installer = single(native_dir, 'Eidolon-*-windows-x86_64-setup.exe')
+                (app/'setup').mkdir()
+                shutil.copy2(installer, app/'setup/Eidolon-Setup.exe')
             platform_files = ['Start-Eidolon.cmd', 'Run-Checks.cmd', 'scripts/run-checks.ps1']
         else:
-            native = single(native_dir, 'Eidolon-*-macos-universal.dmg')
-            shutil.copy2(native, app/'Eidolon.dmg')
+            images = list(native_dir.glob('Eidolon-*-macos-universal.dmg'))
+            if images:
+                native = single(native_dir, 'Eidolon-*-macos-universal.dmg')
+                shutil.copy2(native, app/'Eidolon.dmg')
+            else:
+                native = single(native_dir, 'Eidolon-*-macos-universal.zip')
+                extract_payload(native, app)
+                if not (app/'Eidolon.app/Contents/MacOS/Eidolon').is_file():
+                    raise ValueError('Mac portable payload is missing Eidolon.app')
             platform_files = ['Start-Eidolon.command', 'Run-Checks.command', 'scripts/run-checks.sh']
         native_manifest = native.with_suffix(native.suffix+'.manifest.json')
         metadata = json.loads(native_manifest.read_text())
         if metadata['application'] != 'Eidolon':
             raise ValueError('Native distribution has the wrong application identity')
-        for relative in platform_files + ['testing.md', 'edge-cases.md', 'scripts/compare-results.py']:
+        for relative in platform_files + ['testing.md', 'edge-cases.md', 'build-validation.md', 'scripts/compare-results.py']:
             destination = stage/relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT/'playtest'/relative, destination)
@@ -73,7 +90,8 @@ def build(native_dir, output_dir, target):
         release = dict(application='Eidolon', platform=target, version=metadata['version'],
                        source_commit=revision, created_utc=datetime.now(timezone.utc).isoformat(),
                        native_artifact=native.name, native_sha256=digest(native),
-                       coverage=coverage, tests='See native CI evidence; tester startup scripts do not certify numerical correctness.',
+                       coverage=coverage, build_validation=metadata.get('build_validation', 'See native CI evidence'),
+                       tests='Read build_validation; tester startup scripts do not certify numerical correctness.',
                        signing='Unsigned/unnotarized playtest distribution; no signing identity is configured.')
         (stage/'release-info.json').write_text(json.dumps(release, indent=2)+'\n')
         shutil.copy2(native_manifest, stage/'native-package-manifest.json')
