@@ -39,8 +39,7 @@ class DesktopKeyboard final : public QObject {
 private slots:
     void controlsActivateOnEnter() {
         ApplicationShell shell; QVERIFY(shell.registerModule(lpModule())); shell.show();
-        auto* enter=shell.currentContent()->findChild<QPushButton*>("welcome-enter"); QVERIFY(enter);
-        enter->setFocus(); QTest::keyClick(enter,Qt::Key_Return); QCOMPARE(shell.currentScreen(),QString("main"));
+        QCOMPARE(shell.currentScreen(),QString("main"));
         auto* lp=shell.currentContent()->findChild<QPushButton*>("main-lp"); QVERIFY(lp);
         lp->setFocus(); QTest::keyClick(lp,Qt::Key_Enter); QCOMPARE(shell.currentScreen(),QString("lp/input-mode"));
         QWidget window; QVBoxLayout layout(&window); auto* check=new QCheckBox("Test"); layout.addWidget(check);

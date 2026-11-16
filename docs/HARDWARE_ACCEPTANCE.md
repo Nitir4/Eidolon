@@ -68,6 +68,6 @@ QT_QPA_PLATFORM=wayland build/dev/tests/desktop_native_acceptance \
 Use a fresh output directory. This manual tool opens only its own window,
 cancels the real dialog, and chooses its private PDF path. It refuses a physical
 print job. It does not change monitor settings or terminate existing TORA
-processes. It is intentionally outside offscreen CTest. Inspect all six images
+processes. It is intentionally outside offscreen CTest. Inspect all five images
 and `verification.json`; this SDK source check is separate from deployed-package
 startup. See `RELEASE_READINESS.md` for evidence and limits.

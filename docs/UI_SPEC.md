@@ -29,7 +29,10 @@ QGraphicsView plots. No browser, HTML UI or QtWebEngine is permitted.
 
 ## Screen navigation
 
-`Welcome → MAIN → Linear Programming → input mode → input grid → SOLVE/MODIFY`.
+`MAIN → Linear Programming → input mode → input grid → SOLVE/MODIFY`.
+The shared Windows, Linux and macOS shell opens directly at MAIN; the Welcome
+screen and its Click Here step have been removed.
+
 Solve Problem has Graphical and Algebraic; Algebraic has Final solution and
 Iterations. Iterations has All-slack starting solution, M-method, Two-phase
 method, Bounded simplex, Dual simplex, in that order. M prompts for its finite
@@ -126,7 +129,7 @@ visual comparisons begin only after Gate 0 and the relevant module gates.
 This subsection records the original Foundation 5 preview. The Phase 2 input
 implementation below supersedes its disabled editor/file controls.
 
-The shell now supplies seven native screen frameworks: welcome, MAIN,
+The original shell supplied seven native screen frameworks: welcome, MAIN,
 `lp/input-mode`, `lp/input`, `lp/solve-menu`, `lp/output-format`, `lp/m-value`.
 The first launch maximizes normally, filling the available window with the blue
 canvas. Resizing changes the canvas and placement; centered panels retain

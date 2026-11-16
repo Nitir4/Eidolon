@@ -79,8 +79,6 @@ int main(int argc, char** argv) {
             captures.append(QJsonObject{{QStringLiteral("view"),name},{QStringLiteral("width"),shell.width()},
                                       {QStringLiteral("height"),shell.height()},{QStringLiteral("dpr"),shell.devicePixelRatioF()}});
         };
-        capture(QStringLiteral("welcome"),QStringLiteral("welcome"));
-        require(shell.navigate(QStringLiteral("main")),"Main menu navigation failed");
         capture(QStringLiteral("main"),QStringLiteral("main"));
         auto& input=inputController(shell);
         input.dialogs().askSave=[] {return SaveChoice::No;};

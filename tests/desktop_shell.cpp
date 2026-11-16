@@ -32,7 +32,7 @@ QStringList labels(const QMenu& menu)
 }
 QStringList routes()
 {
-    return {QStringLiteral("welcome"), QStringLiteral("main"), QStringLiteral("lp/input-mode"),
+    return {QStringLiteral("main"), QStringLiteral("lp/input-mode"),
             QStringLiteral("lp/input"), QStringLiteral("lp/solve-menu"),
             QStringLiteral("lp/output-format"), QStringLiteral("lp/m-value")};
 }
@@ -47,19 +47,19 @@ private slots:
         QVERIFY(shell.registerModule(lpModule()));
         shell.show();
         QTest::qWait(1);
-        QCOMPARE(shell.currentScreen(), QStringLiteral("welcome"));
-        QSignalSpy changed(&shell, &ApplicationShell::screenChanged);
-        auto* enter = shell.currentContent()->findChild<QPushButton*>(QStringLiteral("welcome-enter"));
-        QVERIFY(enter);
-        enter->setFocus();
-        QTest::keyClick(enter, Qt::Key_Space);
         QCOMPARE(shell.currentScreen(), QStringLiteral("main"));
+        QVERIFY(!shell.navigate(QStringLiteral("welcome")));
+        QVERIFY(!shell.findChild<QPushButton*>(QStringLiteral("welcome-enter")));
+        QSignalSpy changed(&shell, &ApplicationShell::screenChanged);
         auto* main = shell.menuBar()->actions().front()->menu();
         QCOMPARE(labels(*main), (QStringList{QStringLiteral("Linear Equations"), QStringLiteral("Linear Programming"),
             QStringLiteral("Transportation model"), QStringLiteral("Integer programming"), QStringLiteral("Network models"),
             QStringLiteral("Project Planning"), QStringLiteral("Queuing analysis"), QStringLiteral("Zero-Sum Games"), QStringLiteral("EXIT EIDOLON")}));
         for (int i = 0; i < 8; ++i) QCOMPARE(main->actions()[i]->isEnabled(), i == 1);
-        QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>(QStringLiteral("main-lp")), Qt::LeftButton);
+        auto* lpButton = shell.findChild<QPushButton*>(QStringLiteral("main-lp"));
+        QVERIFY(lpButton);
+        QVERIFY(lpButton->isEnabled());
+        QTest::mouseClick(lpButton, Qt::LeftButton);
         QCOMPARE(shell.currentScreen(), QStringLiteral("lp/input-mode"));
         auto* page = shell.currentContent();
         QVERIFY(page->findChild<QRadioButton*>(QStringLiteral("input-new"))->isChecked());
@@ -92,7 +92,7 @@ private slots:
         QCOMPARE(shell.currentScreen(), QStringLiteral("lp/input"));
         shell.currentContent()->findChild<QPushButton*>(QStringLiteral("return-main"))->click();
         QCOMPARE(shell.currentScreen(), QStringLiteral("main"));
-        QVERIFY(changed.count() >= 6);
+        QVERIFY(changed.count() >= 5);
         QVERIFY(!shell.navigate(QStringLiteral("unknown-screen")));
         QCOMPARE(shell.currentScreen(), QStringLiteral("main"));
         // Repeated navigation must not retain old menus or reset page choices.

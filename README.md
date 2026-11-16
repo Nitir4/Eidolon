@@ -66,9 +66,9 @@ Set `CMAKE_PREFIX_PATH` to your Qt SDK if needed. The `headless` preset builds
 without Qt; `ci` builds Release artifacts. The [workflow](.github/workflows/build.yml)
 builds, tests, packages and checks deployed startup on all three OSes.
 
-The normal launch starts at Welcome. Choose **Click Here → Linear Programming
-→ Go to Input Screen**, enter the title/counts and press Return or Tab in the
-constraint count to initialize the editable grid. Choose Select Existing File
+The normal launch starts at MAIN on Windows, Linux and macOS. Choose **Linear
+Programming → Go to Input Screen**, enter the title/counts and press Return or
+Tab in the constraint count to initialize the editable grid. Choose Select Existing File
 to open a TORA .txt file, including a read-only copy. Save/Save As and EditGrid
 are enabled when applicable; SOLVE Menu validates the input and offers Save?.
 Choose Solve Problem → Algebraic → Iterations → All-slack starting solution or
@@ -84,7 +84,7 @@ select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
 Transportation is an authorized extension with North-west, Least-cost and Vogel starts on `future-scope`. The working source also adds editable input and file writing; the published Vogel binaries retain their earlier read-only input. The remaining original OR modules are being integrated under the full-application scope. Review layouts with, for
 example, `Eidolon --no-settings --screen lp/output-format` (also
-`lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`, `welcome`).
+`lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`).
 `--no-settings` bypasses saved geometry; first launch maximizes the normal
 resizable window. Automated screen captures contain only the clone's original
 UI, under `build/phase2-input/ui-captures/` for the input module, the earlier

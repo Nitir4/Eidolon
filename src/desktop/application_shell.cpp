@@ -130,8 +130,7 @@ ApplicationShell::ApplicationShell(QSettings* settings, QWidget* parent)
         "QPushButton:focus, QToolButton:focus { border: 1px solid #000080; }"
         "QPushButton:hover, QToolButton:hover { background: white; }"
         "QPushButton:disabled, QToolButton:disabled { color: #666666; }"
-        "QLineEdit { background: white; color: #172b4d; border: 1px solid #879bb5; padding: 0.2em; selection-background-color: #225ea8; selection-color: white; }"
-        "QFrame#welcome-panel { border: 1px solid #879bb5; }"));
+        "QLineEdit { background: white; color: #172b4d; border: 1px solid #879bb5; padding: 0.2em; selection-background-color: #225ea8; selection-color: white; }"));
     setCentralWidget(stack_);
     // Keep menus inside the window on all OSes, matching the observed layout.
     menuBar()->setNativeMenuBar(false);
@@ -139,7 +138,7 @@ ApplicationShell::ApplicationShell(QSettings* settings, QWidget* parent)
         "QMenuBar::item:selected, QMenu::item:selected { background: #000080; color: white; }"
         "QMenu::item:disabled { color: #666666; }"));
     registerModule(shellModule());
-    navigate(QStringLiteral("welcome"));
+    navigate(QStringLiteral("main"));
     const QFontMetrics metrics(font());
     QRect initial(QPoint(), QSize(metrics.horizontalAdvance(QStringLiteral("M")) * 72, metrics.height() * 30));
     if (settings_) initial = settings_->value(QStringLiteral("window/normalGeometry"), initial).toRect();
@@ -171,6 +170,7 @@ bool ApplicationShell::registerModule(ModuleDescriptor module)
         if (stack_->widget(i)->objectName() == QStringLiteral("main")) {
             auto* old = stack_->widget(i);
             stack_->removeWidget(old);
+            old->setParent(nullptr);
             old->deleteLater();
             break;
         }
@@ -269,15 +269,6 @@ void ApplicationShell::refreshMetrics()
         auto* page = stack_->widget(i);
         for (auto* widget : page->findChildren<QWidget*>()) {
             if (widget->property("toraRecoveredFont").toBool()) widget->setFont(readableUiFont(font()));
-            if (widget->objectName() == QStringLiteral("welcome-title")) {
-                QFont titleFont = readableUiFont(font());
-                if (titleFont.pointSizeF() > 0) titleFont.setPointSizeF(titleFont.pointSizeF() * 4);
-                else titleFont.setPixelSize(titleFont.pixelSize() * 4);
-                titleFont.setBold(true);
-                widget->setFont(titleFont);
-            }
-            if (widget->objectName() == QStringLiteral("welcome-panel"))
-                widget->setMinimumHeight(fontMetrics().height() * 12);
             if (widget->layout()) widget->layout()->invalidate();
             widget->updateGeometry();
             widget->update();
@@ -339,34 +330,7 @@ void ApplicationShell::closeEvent(QCloseEvent* event)
 
 ModuleDescriptor shellModule()
 {
-    ModuleDescriptor module{QStringLiteral("shell"), {}, QStringLiteral("welcome"), {}, {}};
-    module.screens.append({QStringLiteral("welcome"), {}, [](ApplicationShell& shell) {
-        auto* page = new QWidget;
-        auto* layout = new QVBoxLayout(page);
-        auto* panel = new QFrame;
-        panel->setObjectName(QStringLiteral("welcome-panel"));
-        panel->setFrameShape(QFrame::Box);
-        panel->setMinimumHeight(shell.fontMetrics().height() * 12);
-        panel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        auto* inner = new QVBoxLayout(panel);
-        auto* title = new QLabel(QStringLiteral("Eidolon"));
-        title->setObjectName(QStringLiteral("welcome-title"));
-        QFont font = shell.font();
-        font.setPointSizeF(font.pointSizeF() > 0 ? font.pointSizeF() * 4 : 48);
-        font.setBold(true);
-        title->setFont(font);
-        title->setAlignment(Qt::AlignCenter);
-        title->setStyleSheet(QStringLiteral("color: #174b83;"));
-        inner->addWidget(title);
-        auto* description = new QLabel(QStringLiteral("Operations Research\nLinear Programming"));
-        description->setAlignment(Qt::AlignCenter);
-        description->setStyleSheet(QStringLiteral("background: #dce8f7; color: #172b4d;"));
-        inner->addWidget(description);
-        button(QStringLiteral("Click Here"), QStringLiteral("welcome-enter"), *inner,
-            [&shell] { shell.navigate(QStringLiteral("main")); });
-        centerPanel(*layout, panel);
-        return page;
-    }, {}});
+    ModuleDescriptor module{QStringLiteral("shell"), {}, QStringLiteral("main"), {}, {}};
     const auto mainMenus = [](ApplicationShell& shell, QMenuBar& bar) {
         auto* menu = bar.addMenu(QStringLiteral("MainMenu"));
         const QStringList labels = mainLabels(shell);
