@@ -6,6 +6,7 @@
 
 #include <QApplication>
 #include <QCloseEvent>
+#include <QDialog>
 #include <QEvent>
 #include <QFontMetrics>
 #include <QFrame>
@@ -45,6 +46,22 @@ QString entryFor(const ApplicationShell& shell, const QString& label)
 {
     for (const auto& module : shell.modules()) if (module.displayName == label) return module.entryScreen;
     return {};
+}
+
+QPalette popupPalette()
+{
+    QPalette palette(QColor(239, 239, 239));
+    palette.setColor(QPalette::Window, QColor(colors::surface));
+    palette.setColor(QPalette::WindowText, QColor(Qt::black));
+    palette.setColor(QPalette::Base, QColor(colors::surface));
+    palette.setColor(QPalette::Text, QColor(Qt::black));
+    palette.setColor(QPalette::ButtonText, QColor(Qt::black));
+    palette.setColor(QPalette::Highlight, QColor(colors::selection));
+    palette.setColor(QPalette::HighlightedText, QColor(colors::selectedText));
+    palette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(100, 100, 100));
+    palette.setColor(QPalette::Disabled, QPalette::Text, QColor(100, 100, 100));
+    palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(100, 100, 100));
+    return palette;
 }
 }
 
@@ -130,13 +147,14 @@ ApplicationShell::ApplicationShell(QSettings* settings, QWidget* parent)
         "QPushButton:focus, QToolButton:focus { border: 1px solid #000080; }"
         "QPushButton:hover, QToolButton:hover { background: white; }"
         "QPushButton:disabled, QToolButton:disabled { color: #666666; }"
-        "QLineEdit { background: white; color: #172b4d; border: 1px solid #879bb5; padding: 0.2em; selection-background-color: #225ea8; selection-color: white; }"));
+        "QLineEdit { background: white; color: #172b4d; border: 1px solid #879bb5; padding: 0.2em; selection-background-color: #225ea8; selection-color: white; }"
+        "QMenuBar, QMenu { background: white; color: black; }"
+        "QMenuBar::item:selected, QMenu::item:selected { background: #000080; color: white; }"
+        "QMenu::item:disabled { color: #666666; }"));
     setCentralWidget(stack_);
     // Keep menus inside the window on all OSes, matching the observed layout.
     menuBar()->setNativeMenuBar(false);
-    menuBar()->setStyleSheet(QStringLiteral("QMenuBar, QMenu { background: white; color: black; }"
-        "QMenuBar::item:selected, QMenu::item:selected { background: #000080; color: white; }"
-        "QMenu::item:disabled { color: #666666; }"));
+    qApp->installEventFilter(this);
     registerModule(shellModule());
     navigate(QStringLiteral("main"));
     const QFontMetrics metrics(font());
@@ -259,6 +277,24 @@ bool ApplicationShell::event(QEvent* event)
     if (stack_ && (event->type() == QEvent::FontChange || event->type() == QEvent::DevicePixelRatioChange))
         refreshMetrics();
     return result;
+}
+
+bool ApplicationShell::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::Show) {
+        auto* popup = qobject_cast<QWidget*>(watched);
+        // Follow ownership across the separate windows used by popups.
+        auto* owner = popup ? popup->parentWidget() : nullptr;
+        while (owner && owner != this) owner = owner->parentWidget();
+        if (owner == this
+            && (popup->windowType() == Qt::Popup || qobject_cast<QDialog*>(popup))) {
+            // Popups can be created after page polishing and use theme fonts
+            // and palettes independently of the page that opened them.
+            popup->setPalette(popupPalette());
+            polishUsableFonts(*popup);
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
 }
 
 void ApplicationShell::refreshMetrics()

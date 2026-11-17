@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QMenu>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QScrollArea>
@@ -187,6 +188,82 @@ private slots:
             }
         }
         QApplication::setFont(original);
+    }
+
+    void latePopupsRemainReadable()
+    {
+        struct RestorePalette {
+            QPalette palette = QApplication::palette();
+            ~RestorePalette() { QApplication::setPalette(palette); }
+        } restore;
+        QPalette dark(QColor(32, 32, 32));
+        dark.setColor(QPalette::WindowText, Qt::white);
+        dark.setColor(QPalette::Text, Qt::white);
+        QApplication::setPalette(dark);
+        ApplicationShell shell;
+        QVERIFY(shell.registerModule(lpModule()));
+        shell.show();
+        QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
+
+        auto* solve = shell.currentContent()->findChild<QToolButton*>(QStringLiteral("solve-problem"));
+        QVERIFY(solve);
+        auto* menu = solve->menu();
+        QVERIFY(menu);
+        auto* nested = menu->actions()[1]->menu();
+        QVERIFY(nested);
+        QMenu lateMenu(&shell);
+        lateMenu.addAction(QStringLiteral("Late popup 123"));
+        QLabel latePopup(QStringLiteral("Popup text 123"), &shell, Qt::Popup);
+        QMessageBox notice(QMessageBox::Information, QStringLiteral("Result"),
+                           QStringLiteral("Optimal solution 123"), QMessageBox::Ok, &shell);
+        QFont broken(QStringLiteral("invalid theme font"), 12);
+        broken.setStyleHint(static_cast<QFont::StyleHint>(255));
+        broken.setUnderline(true);
+        int popupIndex = 0;
+        for (QWidget* popup : {static_cast<QWidget*>(menu), static_cast<QWidget*>(nested),
+                              static_cast<QWidget*>(&lateMenu), static_cast<QWidget*>(&latePopup),
+                              static_cast<QWidget*>(&notice)}) {
+            popup->setFont(broken);
+            popup->show();
+            QApplication::processEvents();
+            QVERIFY(popup->isVisible());
+            auto widgets = popup->findChildren<QWidget*>();
+            widgets.prepend(popup);
+            for (auto* widget : widgets) {
+                const QFontMetrics metrics(widget->font());
+                QVERIFY2(!widget->font().underline(), qPrintable(QStringLiteral("Popup %1: %2 %3")
+                    .arg(popupIndex).arg(QString::fromLatin1(widget->metaObject()->className()), widget->font().toString())));
+                QVERIFY(metrics.height() > 0 && metrics.height() < 200);
+                for (const QChar character : QStringLiteral("Optimal solution 123"))
+                    QVERIFY(metrics.inFont(character));
+            }
+            for (const auto group : {QPalette::Active, QPalette::Inactive, QPalette::Disabled}) {
+                const auto palette = popup->palette();
+                QVERIFY(palette.color(group, QPalette::WindowText) != palette.color(group, QPalette::Window));
+                QVERIFY(palette.color(group, QPalette::Text) != palette.color(group, QPalette::Base));
+                QVERIFY(palette.color(group, QPalette::HighlightedText) != palette.color(group, QPalette::Highlight));
+                QVERIFY(palette.color(group, QPalette::Window).lightness() > 200);
+            }
+            if (auto* popupMenu = qobject_cast<QMenu*>(popup)) {
+                QCOMPARE(popupMenu->palette().color(QPalette::Window), QColor(Qt::white));
+                QCOMPARE(popupMenu->palette().color(QPalette::WindowText), QColor(Qt::black));
+                for (auto* action : popupMenu->actions()) {
+                    if (action->isEnabled() && !action->isSeparator()) {
+                        popupMenu->setActiveAction(action);
+                        break;
+                    }
+                }
+            }
+            const auto captureRoot = qEnvironmentVariable("TORA_UI_CAPTURES");
+            if (!captureRoot.isEmpty()) {
+                const auto directory = captureRoot + QStringLiteral("/popups");
+                QVERIFY(QDir().mkpath(directory));
+                QVERIFY(popup->grab().save(directory + QStringLiteral("/popup-%1-scale-%2.png")
+                    .arg(popupIndex).arg(shell.devicePixelRatioF())));
+            }
+            ++popupIndex;
+            popup->hide();
+        }
     }
 
     void geometryAndPreferences()

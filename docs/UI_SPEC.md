@@ -33,6 +33,10 @@ QGraphicsView plots. No browser, HTML UI or QtWebEngine is permitted.
 The shared Windows, Linux and macOS shell opens directly at MAIN; the Welcome
 screen and its Click Here step have been removed.
 
+Menus, nested submenus and dialogs receive readable fonts and a light palette
+when shown, including popups created after page initialization. Menu colors
+are scoped to the shell so button popups share the menubar's text contrast.
+
 Solve Problem has Graphical and Algebraic; Algebraic has Final solution and
 Iterations. Iterations has All-slack starting solution, M-method, Two-phase
 method, Bounded simplex, Dual simplex, in that order. M prompts for its finite
