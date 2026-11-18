@@ -4,6 +4,8 @@
 #include "ui_colors.hpp"
 
 #include <QApplication>
+#include <QAbstractItemView>
+#include <QComboBox>
 #include <QEvent>
 #include <QDir>
 #include <QFontMetrics>
@@ -263,6 +265,80 @@ private slots:
             }
             ++popupIndex;
             popup->hide();
+        }
+    }
+
+    void comboPopupRemainsReadable()
+    {
+        ApplicationShell shell;
+        shell.show();
+        QComboBox combo(&shell);
+        combo.addItems({QStringLiteral("Text Files (*.txt)"), QStringLiteral("All Files (*)")});
+        QPalette dark(QColor(32, 32, 32));
+        dark.setColor(QPalette::Text, Qt::white);
+        combo.setPalette(dark);
+        QFont tiny = combo.font();
+        tiny.setPointSize(7);
+        combo.setFont(tiny);
+        combo.show();
+        combo.showPopup();
+        QApplication::processEvents();
+        auto* view = combo.view();
+        QVERIFY(view->isVisible());
+        QVERIFY(view->font().pointSizeF() >= 12);
+        QVERIFY(QFontMetrics(view->font()).inFont(QLatin1Char('A')));
+        const auto palette = view->palette();
+        QVERIFY(palette.color(QPalette::Text) != palette.color(QPalette::Base));
+        QVERIFY(palette.color(QPalette::Base).lightness() > 200);
+        QTest::keyClick(view, Qt::Key_Down);
+        QTest::keyClick(view, Qt::Key_Return);
+        QCOMPARE(combo.currentIndex(), 1);
+        QVERIFY(!view->isVisible());
+    }
+
+    void smallWindowsWithLargeFonts_data()
+    {
+        QTest::addColumn<int>("points");
+        QTest::newRow("normal-font") << 12;
+        QTest::newRow("large-font") << 24;
+    }
+
+    void smallWindowsWithLargeFonts()
+    {
+        QFETCH(int, points);
+        struct RestoreFont {
+            QFont font = QApplication::font();
+            ~RestoreFont() { QApplication::setFont(font); }
+        } restore;
+        auto font = restore.font;
+        font.setPointSize(points);
+        QApplication::setFont(font);
+        ApplicationShell shell;
+        QVERIFY(shell.registerModule(lpModule()));
+        shell.resize(640, 360);
+        shell.show();
+        for (const auto& route : routes()) {
+            QVERIFY(shell.navigate(route));
+            QApplication::processEvents();
+            auto* page = shell.currentContent();
+            auto* area = qobject_cast<QScrollArea*>(page->parentWidget()->parentWidget());
+            QVERIFY(area);
+            const auto captureRoot = qEnvironmentVariable("TORA_UI_CAPTURES");
+            if (!captureRoot.isEmpty()) {
+                const auto directory = captureRoot + QStringLiteral("/small-windows");
+                QVERIFY(QDir().mkpath(directory));
+                auto name = route;
+                name.replace(QLatin1Char('/'), QLatin1Char('-'));
+                QVERIFY(shell.grab().save(directory + QStringLiteral("/%1-%2pt-scale-%3.png")
+                    .arg(name).arg(points).arg(shell.devicePixelRatioF())));
+            }
+            for (auto* control : page->findChildren<QPushButton*>()) {
+                QVERIFY(control->size().expandedTo(control->minimumSizeHint()) == control->size());
+                area->ensureWidgetVisible(control);
+                QApplication::processEvents();
+                const QRect bounds(control->mapTo(area->viewport(), QPoint()), control->size());
+                QVERIFY2(area->viewport()->rect().contains(bounds), qPrintable(route + QLatin1Char('/') + control->objectName()));
+            }
         }
     }
 

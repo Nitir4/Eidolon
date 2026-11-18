@@ -14,6 +14,8 @@
 #include <QAbstractItemModelTester>
 #include <QDir>
 #include <QMenu>
+#include <QMessageBox>
+#include <QLabel>
 #include <QHeaderView>
 #include <QTimer>
 #include <QFileDialog>
@@ -342,6 +344,39 @@ private slots:
             picker->reject();
         });
         QVERIFY(!c.requestOpen());QVERIFY(readable);
+    }
+    void realValidationDialogsPreserveInput() {
+        ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
+        QVERIFY(shell.navigate(QStringLiteral("lp/input")));
+        auto& c=inputController(shell);QVERIFY(c.initialize(QStringLiteral("Preserved model"),2,3));
+        const auto before=tora::compat::ToraLpCodec::encode(*c.document());
+        for(int variables:{0,-1,101}) {
+            bool seen=false,readable=false,captured=true;
+            QTimer::singleShot(0,&shell,[&] {
+                auto* box=qobject_cast<QMessageBox*>(QApplication::activeModalWidget());
+                if(!box)return;
+                seen=true;readable=!box->text().isEmpty() && box->font().pointSizeF()>=12;
+                for(auto* label:box->findChildren<QLabel*>()) {
+                    const QFontMetrics metrics(label->font());
+                    readable=readable && metrics.height()>0 && metrics.height()<200 && metrics.inFont(QLatin1Char('A'));
+                }
+                const auto palette=box->palette();
+                readable=readable && palette.color(QPalette::WindowText)!=palette.color(QPalette::Window);
+                const auto root=qEnvironmentVariable("TORA_UI_CAPTURES");
+                if(!root.isEmpty()) {
+                    const auto directory=root+QStringLiteral("/validation");
+                    captured=QDir().mkpath(directory) && box->grab().save(directory
+                        +QStringLiteral("/invalid-size-%1-scale-%2.png").arg(variables).arg(shell.devicePixelRatioF()));
+                }
+                box->accept();
+            });
+            QVERIFY(!c.initialize(QStringLiteral("Invalid replacement"),variables,3));
+            QVERIFY(seen);QVERIFY(readable);QVERIFY(captured);
+            QCOMPARE(tora::compat::ToraLpCodec::encode(*c.document()),before);
+        }
+        QVERIFY(c.initialize(QStringLiteral("Corrected model"),2,3));
+        QCOMPARE(c.document()->problem.title,std::string("Corrected model"));
+        QCOMPARE(c.grid()->rowCount(),8);
     }
     void unchangedCountReturnAndTabReinitialize() {
         ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
