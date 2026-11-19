@@ -27,11 +27,17 @@ SensitivityReport sensitivity(const FinalSolutionSession& session) {
     for(std::size_t j=0;j<n;++j) {
         SensitivityRange change;const auto found=basic(j);
         const auto row=found==table.basis().end()?std::size_t(0):static_cast<std::size_t>(found-table.basis().begin())+1;
-        const Scalar direction=table.columns()[j].front()=='U'?-1:1;
+        // Both upper-bound complements and negative free columns reverse dc.
+        const Scalar direction=table.columns()[j].front()=='U'
+            || (p.variables[j].unrestricted && table.columns()[j].back()=='-')?-1:1;
         for(std::size_t k=0;k<table.columns().size();++k) {
             if(table.objectiveBlocked(k) || basic(k)!=table.basis().end())continue;
             const Scalar slope=row?direction*table.values()(row,k):(j==k?-direction:0);
             nonnegative(change,optimalitySign*table.values()(0,k),optimalitySign*slope);
+            // A nonbasic free variable can move in either direction, so its
+            // reduced cost must stay zero, not just keep one inequality sign.
+            if(k<n && p.variables[k].unrestricted)
+                nonnegative(change,-optimalitySign*table.values()(0,k),-optimalitySign*slope);
         }
         result.variables.push_back({p.objective[j],shifted(change,p.objective[j]),table.values()(0,j)});
     }
@@ -49,12 +55,16 @@ SensitivityReport sensitivity(const FinalSolutionSession& session) {
         return change;
     };
     for(std::size_t k=0;k<p.constraints.size();++k) {
+        const auto& automatic=solver.problem();
+        Scalar normalizedRhs=automatic.constraints[k].rhs;
+        for(std::size_t j=0;j<n;++j)if(!automatic.variables[j].unrestricted)
+            normalizedRhs-=automatic.constraints[k].coefficients[j]*automatic.variables[j].lowerBound;
+        const Scalar sign=normalizedRhs<0?-1:1;
         const auto identityColumn=initial.basis()[k];std::vector<Scalar> slopes;
-        for(std::size_t i=1;i<table.values().rows();++i)slopes.push_back(table.values()(i,identityColumn));
-        // TORA anchors the normalized RHS delta at the entered RHS, even
-        // when normalization negated it. Original negative-RHS captures
-        // establish this legacy summary convention (e.g. -8..infinity).
-        result.constraints.push_back({p.constraints[k].rhs,shifted(feasible(slopes),p.constraints[k].rhs),table.values()(0,identityColumn)});
+        // Identity columns refer to normalized rows. Map both derivatives
+        // back to the entered RHS before constructing its interval and price.
+        for(std::size_t i=1;i<table.values().rows();++i)slopes.push_back(sign*table.values()(i,identityColumn));
+        result.constraints.push_back({p.constraints[k].rhs,shifted(feasible(slopes),p.constraints[k].rhs),sign*table.values()(0,identityColumn)});
     }
     for(std::size_t j=0;j<n;++j) {
         const auto& v=p.variables[j];if(v.unrestricted)continue;

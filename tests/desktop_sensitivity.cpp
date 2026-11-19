@@ -1,6 +1,7 @@
 #include "lp_final_controller.hpp"
 #include "lp_input_controller.hpp"
 #include "lp_screens.hpp"
+#include "sensitivity_cases.hpp"
 #include <QTest>
 #include <QApplication>
 #include <QAction>
@@ -18,6 +19,38 @@ using namespace tora::desktop;
 class DesktopSensitivity:public QObject {
  Q_OBJECT
 private slots:
+ void originalCoordinates_data(){
+  QTest::addColumn<QString>("id");QTest::addColumn<QStringList>("costRange");QTest::addColumn<QStringList>("rhsFields");QTest::addColumn<QString>("objective");
+  QTest::newRow("A")<<QStringLiteral("A")<<QStringList{}<<QStringList{"-4.00","infinity","0.00"}<<QStringLiteral("4.00");
+  QTest::newRow("B")<<QStringLiteral("B")<<QStringList{}<<QStringList{"-3.00","infinity","0.00"}<<QStringLiteral("3.00");
+  QTest::newRow("C")<<QStringLiteral("C")<<QStringList{"-2.00","2.00"}<<QStringList{}<<QStringLiteral("7.00");
+  QTest::newRow("D")<<QStringLiteral("D")<<QStringList{"-infinity","2.00"}<<QStringList{"-infinity","0.00","1.00"}<<QStringLiteral("-1.00");
+ }
+ void originalCoordinates(){
+  QFETCH(QString,id);QFETCH(QStringList,costRange);QFETCH(QStringList,rhsFields);QFETCH(QString,objective);
+  QTemporaryDir temp;auto document=tora::compat::ToraLpCodec::create(sensitivityCase(id[0].toLatin1()));
+  const auto file=temp.filePath(QStringLiteral("model.txt"));tora::compat::LpFileStore::saveAs(document,std::filesystem::path(file.toStdString()));
+  ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();auto& input=inputController(shell);
+  input.dialogs().askSave=[] {return SaveChoice::No;};QVERIFY(input.openFile(file));const auto before=tora::compat::ToraLpCodec::encode(*input.document());
+  auto& c=finalController(shell);QVERIFY(c.request());QVERIFY(c.start({}));
+  QCOMPARE(shell.currentScreen(),QStringLiteral("lp/final"));
+  QVERIFY(shell.currentContent()->findChild<QLabel*>(QStringLiteral("summary-objective"))->text().endsWith(objective));
+  auto* view=shell.currentContent()->findChild<QTableView*>(QStringLiteral("summary-grid"));QVERIFY(view);
+  const auto firstRow=[&](const QString& column){for(int row=0;row<view->model()->rowCount();++row)if(view->model()->index(row,1).data().toString()==column)return row+1;return -1;};
+  if(!costRange.isEmpty()){
+   const auto row=firstRow(QStringLiteral("Current Obj Coeff"));QVERIFY(row>0);
+   QCOMPARE(view->model()->index(row,2).data().toString(),costRange[0]);QCOMPARE(view->model()->index(row,3).data().toString(),costRange[1]);
+  }
+  if(!rhsFields.isEmpty()){
+   const auto row=firstRow(QStringLiteral("Current RHS"));QVERIFY(row>0);
+   for(int j=0;j<rhsFields.size();++j)QCOMPARE(view->model()->index(row,j+2).data().toString(),rhsFields[j]);
+  }
+  QCOMPARE(tora::compat::ToraLpCodec::encode(*input.document()),before);
+  const auto root=qEnvironmentVariable("TORA_UI_CAPTURES");if(!root.isEmpty()){
+   QVERIFY(QDir().mkpath(root));shell.resize(1100,820);QApplication::processEvents();
+   QVERIFY(shell.grab().save(root+QStringLiteral("/coordinates-%1-%2.png").arg(id,qEnvironmentVariable("QT_SCALE_FACTOR"))));
+  }
+ }
  void initTestCase(){for(auto ch:QStringLiteral("Eidolon 0123456789"))QVERIFY(QFontMetrics(QApplication::font()).inFont(ch));}
  void lifecycleLayoutAndPrint(){
   ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
@@ -38,7 +71,18 @@ private slots:
   QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>(QStringLiteral("summary-view-input")),Qt::LeftButton);QCOMPARE(shell.currentScreen(),QStringLiteral("lp/input"));
   QVERIFY(input.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/03_infeasible.txt")));QVERIFY(!c.session() && !c.canStart());
  }
- void goldens_data(){QTest::addColumn<QJsonObject>("record");QFile f(QStringLiteral(TORA_FINAL_GOLDENS));QVERIFY(f.open(QIODevice::ReadOnly));for(auto v:QJsonDocument::fromJson(f.readAll()).array()){const auto r=v.toObject();QTest::newRow(qPrintable(r["case"].toString()))<<r;}}
+ void goldens_data(){
+  QTest::addColumn<QJsonObject>("record");QFile f(QStringLiteral(TORA_FINAL_GOLDENS));QVERIFY(f.open(QIODevice::ReadOnly));
+  for(auto v:QJsonDocument::fromJson(f.readAll()).array()){
+   auto r=v.toObject();auto sections=r["sections"].toArray();
+   for(const auto& correction:r["mathematical_corrections"].toArray()){
+    const auto c=correction.toObject();const int s=c["section"].toInt(),row=c["row"].toInt();
+    auto section=sections[s].toObject();auto rows=section["rows"].toArray();auto data=rows[row].toObject();
+    data["values"]=c["values"];rows[row]=data;section["rows"]=rows;sections[s]=section;
+   }
+   r["sections"]=sections;QTest::newRow(qPrintable(r["case"].toString()))<<r;
+  }
+ }
  void goldens(){
   QFETCH(QJsonObject,record);ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();auto& input=inputController(shell);input.dialogs().askSave=[] {return SaveChoice::No;};
   const auto source=record["problem"].toObject();const auto vars=source["variables"].toArray(),cons=source["constraints"].toArray();

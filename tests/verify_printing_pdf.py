@@ -1,4 +1,4 @@
-"""Compare actual native PDF page content with observed original print pages."""
+"""Compare PDF pages with captures plus documented mathematical corrections."""
 import json
 import re
 import sys
@@ -70,6 +70,7 @@ def trace_content(text):
 
 def main():
     records=json.loads(Path(sys.argv[1]).read_text())
+    sensitivity={r["case"]:r for r in json.loads(Path(__file__).with_name("fixtures").joinpath("sensitivity.json").read_text())}
     folder=Path(sys.argv[2]);compared=0
     for record in records:
         if not record.get("print_available",True):
@@ -95,6 +96,15 @@ def main():
             if start<0:raise AssertionError(f'{record["case"]} page {index+1}: missing heading {wanted["start"]}')
             actual=text[start:]
             expected_text=normalized(" ".join(p["text"] for p in wanted_pages))
+            if record["method"]=="final" and index>0:
+                source=sensitivity.get(record["case"],{})
+                for correction in source.get("mathematical_corrections",[]):
+                    row=source["sections"][correction["section"]]["rows"][correction["row"]]
+                    captured=normalized(" ".join([row["label"]]+row["values"]))
+                    corrected=normalized(" ".join([row["label"]]+correction["values"]))
+                    if expected_text.count(captured)!=1:
+                        raise AssertionError(f'{record["case"]}: corrected sensitivity row is not unique in the PDF capture')
+                    expected_text=expected_text.replace(captured,corrected,1)
             if "plot_labels" in wanted:
                 prefix=normalized(wanted["text"])
                 if not actual.startswith(prefix):raise AssertionError(f'{record["case"]}: graph summary differs')

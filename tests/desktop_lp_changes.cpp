@@ -1,5 +1,6 @@
 #include "lp_changes_controller.hpp"
 #include "lp_input_controller.hpp"
+#include "lp_final_controller.hpp"
 #include "lp_screens.hpp"
 #include "ui_font.hpp"
 #include <QTest>
@@ -30,6 +31,35 @@ void capture(ApplicationShell& shell,const QString& name){const auto root=qEnvir
 class DesktopLpChanges:public QObject {
     Q_OBJECT
 private slots:
+    void baselineTenChangedTwelve_data(){QTest::addColumn<bool>("commitWithReturn");QTest::newRow("return")<<true;QTest::newRow("active-editor")<<false;}
+    void baselineTenChangedTwelve(){
+        QFETCH(bool,commitWithReturn);
+        QTemporaryDir temp;ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();
+        QVERIFY(load(shell,example(),temp.filePath(QStringLiteral("baseline.txt"))));
+        auto& input=inputController(shell);const auto original=tora::compat::ToraLpCodec::encode(*input.document());
+        auto& summary=finalController(shell);QVERIFY(summary.request());QVERIFY(summary.start({}));
+        QCOMPARE(*summary.session()->display().objectiveValue,std::string("10.00"));
+        auto& c=changesController(shell);QVERIFY(c.request(LpChangeMethod::Fresh));
+        auto* costs=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("changes-costs"));QVERIFY(costs);
+        QCOMPARE(costs->item(0,1)->text(),QStringLiteral("3"));
+        costs->setCurrentCell(0,2);costs->editItem(costs->item(0,2));QApplication::processEvents();
+        auto* editor=qobject_cast<QLineEdit*>(QApplication::focusWidget());QVERIFY(editor && costs->isAncestorOf(editor));
+        QTest::keyClick(editor,Qt::Key_A,Qt::ControlModifier);QTest::keyClicks(editor,"4");
+        if(commitWithReturn)QTest::keyClick(editor,Qt::Key_Return);
+        QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>(QStringLiteral("changes-analyze")),Qt::LeftButton);
+        QCOMPARE(shell.currentScreen(),QStringLiteral("lp/changes-result"));QVERIFY(c.fresh());
+        QCOMPARE(*c.baselineObjective(),10.);QCOMPARE(*c.fresh()->after.objective,12.);
+        auto* solution=shell.currentContent()->findChild<QTableWidget*>(QStringLiteral("changes-solution"));QVERIFY(solution);
+        QCOMPARE(solution->item(0,1)->text(),QStringLiteral("10.00"));QCOMPARE(solution->item(0,2)->text(),QStringLiteral("12.00"));
+        QCOMPARE(solution->item(1,1)->text(),QStringLiteral("2.00"));QCOMPARE(solution->item(1,2)->text(),QStringLiteral("2.00"));
+        QCOMPARE(solution->item(2,1)->text(),QStringLiteral("2.00"));QCOMPARE(solution->item(2,2)->text(),QStringLiteral("2.00"));
+        QCOMPARE(tora::compat::ToraLpCodec::encode(*input.document()),original);
+        capture(shell,QStringLiteral("baseline10-changed12-")+QString::fromLatin1(QTest::currentDataTag()));
+        QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>(QStringLiteral("changes-back")),Qt::LeftButton);
+        edit(costs,0,QStringLiteral("5"));
+        QTest::mouseClick(shell.currentContent()->findChild<QPushButton*>(QStringLiteral("changes-analyze")),Qt::LeftButton);
+        QCOMPARE(solution->item(0,1)->text(),QStringLiteral("10.00"));QCOMPARE(solution->item(0,2)->text(),QStringLiteral("14.00"));
+    }
     void freshDraftApplyAndSave(){
         QTemporaryDir temp;ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));
         auto* action=shell.findChild<QAction*>(QStringLiteral("solve-changes"));QVERIFY(action && !action->isEnabled());

@@ -2027,6 +2027,19 @@
           }
         ]
       }
+    ],
+    "mathematical_corrections": [
+      {
+        "section": 3,
+        "row": 0,
+        "values": [
+          "-1.00",
+          "-infinity",
+          "6.00",
+          "0.00"
+        ],
+        "reason": "At x=y=3 the inactive original row x+y>=b remains feasible for b<=6; the objective stays 9."
+      }
     ]
   },
   {
@@ -5607,6 +5620,30 @@
           }
         ]
       }
+    ],
+    "mathematical_corrections": [
+      {
+        "section": 2,
+        "row": 0,
+        "values": [
+          "-3.00",
+          "-infinity",
+          "0.00",
+          "0.00"
+        ],
+        "reason": "At (-2,3), comparison with (1,3) requires cx<=0; negative cx always prefers the smallest feasible x."
+      },
+      {
+        "section": 3,
+        "row": 1,
+        "values": [
+          "-2.00",
+          "-infinity",
+          "0.00",
+          "-3.00"
+        ],
+        "reason": "For original x>=b the retained solution is (b,3), z=-3b+6. The displayed negative x column requires b<=0; another orientation can extend optimality."
+      }
     ]
   },
   {
@@ -5796,6 +5833,19 @@
             ]
           }
         ]
+      }
+    ],
+    "mathematical_corrections": [
+      {
+        "section": 3,
+        "row": 1,
+        "values": [
+          "-1.00",
+          "-4.00",
+          "-1.00",
+          "5.00"
+        ],
+        "reason": "For original -x<=b the selected basis gives x=-b, y=4+b and z=8+5b on -4<=b<=-1. At the degenerate endpoint b=-1 another basis has a different one-sided price."
       }
     ]
   },

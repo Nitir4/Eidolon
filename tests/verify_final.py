@@ -1,8 +1,10 @@
-"""Exact final summary comparison with independently transcribed TORA output."""
+"""Compare captured summaries with explicitly documented mathematical corrections."""
 import csv,json,subprocess,sys
 from pathlib import Path
 records=json.loads(Path(sys.argv[2]).read_text());comparison=[];failures=[]
 for r in records:
+ for correction in r.get('mathematical_corrections',[]):
+  r['sections'][correction['section']]['rows'][correction['row']]['values']=correction['values']
  p=r['problem'];lines=[f"{len(p['variables'])} {len(p['constraints'])} {p['sense']}"]
  lines += [f"{v['lower']} {v['upper']} {int(v['unrestricted'])}" for v in p['variables']]
  lines += [' '.join(p['objective'])]
@@ -13,7 +15,7 @@ for r in records:
  actual=json.loads(process.stdout)
  def compare(field,expected,got):
   comparison.append([r['case'],field,str(expected),str(got),expected==got])
-  if expected!=got:failures.append(f"{r['case']} {field}: TORA {expected!r}, clone {got!r}")
+  if expected!=got:failures.append(f"{r['case']} {field}: expected {expected!r}, clone {got!r}")
  for field in ['heading','iteration','objective_label','objective_value','message']:compare(field,r[field],actual[field])
  compare('section-count',len(r['sections']),len(actual['sections']))
  for i,(expected,got) in enumerate(zip(r['sections'],actual['sections'])):

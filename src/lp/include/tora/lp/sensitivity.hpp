@@ -16,7 +16,8 @@ struct SensitivityReport {
     std::vector<SensitivityValue> variables;
     std::vector<SensitivityValue> constraints;
 };
-// One-at-a-time retained-basis intervals, expressed in the captured TORA
-// summary convention. Terminal infeasible/unbounded sessions return no rows.
+// One-at-a-time intervals in original model coordinates, retaining the final
+// basis and column orientations. Other bases may preserve an optimal point
+// outside these intervals. Infeasible/unbounded sessions return no rows.
 SensitivityReport sensitivity(const FinalSolutionSession& session);
 } // namespace tora::lp
