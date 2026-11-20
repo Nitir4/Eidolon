@@ -13,6 +13,8 @@ struct Problem {
     std::vector<double> supply, demand;
     std::vector<std::string> sourceNames, destinationNames;
     core::NumberFormat format;
+    bool maximize=false;
+    std::vector<std::size_t> dummySources,dummyDestinations;
     static Problem blank(std::size_t sources, std::size_t destinations);
 };
 // General model validation is distinct from the captured numerical profile.

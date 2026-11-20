@@ -97,6 +97,8 @@ Problem Problem::blank(std::size_t m,std::size_t n) {
 void validate(const Problem& p) {
     (void)core::NumberFormatter(p.format);
     const auto m=p.supply.size(),n=p.demand.size();dimensions(m,n);
+    for(const auto i:p.dummySources)if(i>=m)throw std::invalid_argument("Dummy source index outside model");
+    for(const auto j:p.dummyDestinations)if(j>=n)throw std::invalid_argument("Dummy destination index outside model");
     if(p.costs.size()!=m || p.sourceNames.size()!=m || p.destinationNames.size()!=n)
         throw std::invalid_argument("Transportation model dimensions are inconsistent.");
     for(const auto& row:p.costs) {
@@ -108,6 +110,13 @@ void validate(const Problem& p) {
     }
 }
 std::vector<Tableau> solve(const Problem& p,StartMethod method) {
+    if(p.maximize) {
+        auto minimized=p;minimized.maximize=false;
+        for(auto& row:minimized.costs)for(auto& cost:row)cost=-cost;
+        auto trace=solve(minimized,method);
+        for(auto& table:trace){table.objective=-table.objective;for(auto& x:table.u)x=-x;for(auto& x:table.v)x=-x;for(auto& row:table.reducedCosts)for(auto& x:row)x=-x;}
+        return trace;
+    }
     if(method!=StartMethod::NorthWest && method!=StartMethod::LeastCost && method!=StartMethod::Vogel)
         throw std::invalid_argument("Unsupported Transportation starting method.");
     validate(p);

@@ -16,7 +16,7 @@ std::string amount(double value) {
 FinalSummary finalSummary(const Problem& problem) {
     const auto trace=solveLeastCost(problem);const auto& terminal=trace.back();
     const core::NumberFormatter formatter(problem.format);
-    FinalSummary result{problem.title,std::to_string(trace.size()),formatter.format(terminal.objective),{}};
+    FinalSummary result{problem.title,std::to_string(trace.size()),formatter.format(terminal.objective),{},problem.maximize};
     for(std::size_t i=0;i<problem.supply.size();++i)for(std::size_t j=0;j<problem.demand.size();++j)
         if(const auto shipment=terminal.shipments[i][j])
             result.rows.push_back({identity("S",i,problem.sourceNames[i]),identity("D",j,problem.destinationNames[j]),

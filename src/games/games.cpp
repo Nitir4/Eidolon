@@ -19,21 +19,25 @@ void probabilities(std::vector<core::Scalar>& values,const core::Tolerance& tole
     for(auto& x:values)x/=sum;
 }
 std::optional<std::vector<core::Scalar>> supportSolution(core::Matrix system,
-    const std::vector<std::size_t>& support,std::size_t size,const core::Tolerance& tolerance) {
+    const std::vector<std::size_t>& support,std::size_t size,const core::Tolerance& tolerance,
+    std::vector<Step>& history,const std::string& player) {
     const auto n=support.size();
+    std::vector<core::Scalar> indices;for(auto i:support)indices.push_back(static_cast<core::Scalar>(i+1));
+    history.push_back({"Support equations: "+player,"Augmented sum=1 and indifference system. Row values identify the one-based strategy indices of its unknowns.",{},{},indices,{},system});
     for(std::size_t j=0;j<n;++j) {
         auto pivot=j;for(std::size_t i=j+1;i<n;++i)if(std::abs(system(i,j))>std::abs(system(pivot,j)))pivot=i;
-        if(tolerance.zero(system(pivot,j)))return {};
+        if(tolerance.zero(system(pivot,j))){history.push_back({"Singular support system: "+player,"Keep the existing LP probabilities.",{},{},{},{},system});return {};}
         if(pivot!=j)for(std::size_t k=0;k<=n;++k)std::swap(system(j,k),system(pivot,k));
         const auto divisor=system(j,j);for(std::size_t k=j;k<=n;++k)system(j,k)/=divisor;
         for(std::size_t i=0;i<n;++i)if(i!=j) {
             const auto multiplier=system(i,j);
             for(std::size_t k=j;k<=n;++k)system(i,k)-=multiplier*system(j,k);
         }
+        history.push_back({"Support Gauss-Jordan update: "+player,"Pivot column "+std::to_string(j+1)+", swap row "+std::to_string(pivot+1)+" with "+std::to_string(j+1)+", divide by "+std::to_string(divisor)+", eliminate that column from all other rows.",{},{},{},{},system});
     }
     std::vector<core::Scalar> result(size);
     for(std::size_t i=0;i<n;++i) {
-        const auto value=system(i,n);if(!std::isfinite(value) || tolerance.less(value,0))return {};
+        const auto value=system(i,n);if(!std::isfinite(value) || tolerance.less(value,0)){history.push_back({"Reject support candidate: "+player,"Nonfinite or negative probability; keep the LP probabilities.",{},{},{},{},system});return {};}
         result[support[i]]=std::max(core::Scalar(0),value);
     }
     return result;
@@ -51,8 +55,8 @@ void reconstructSupport(const core::Matrix& a,core::Scalar scale,Result& result,
     }
     // Recover probabilities from indifference and sum=1 on the selected
     // support. This removes shift-induced cancellation in the LP weights.
-    if(auto refined=supportSolution(std::move(p),rows,a.rows(),tolerance))result.rowStrategy=std::move(*refined);
-    if(auto refined=supportSolution(std::move(q),columns,a.columns(),tolerance))result.columnStrategy=std::move(*refined);
+    if(auto refined=supportSolution(std::move(p),rows,a.rows(),tolerance,result.history,"A"))result.rowStrategy=std::move(*refined);
+    if(auto refined=supportSolution(std::move(q),columns,a.columns(),tolerance,result.history,"B"))result.columnStrategy=std::move(*refined);
 }
 }
 Result solve(const core::Matrix& a,const core::Tolerance& tolerance,std::size_t limit) {
@@ -69,11 +73,14 @@ Result solve(const core::Matrix& a,const core::Tolerance& tolerance,std::size_t 
     const auto maximin=*std::max_element(rowMin.begin(),rowMin.end());
     const auto minimax=*std::min_element(columnMax.begin(),columnMax.end());
     Result result;result.rowStrategy.resize(m);result.columnStrategy.resize(n);
+    result.history.push_back({"Saddle-point test","Row minima and column maxima; compare maximin with minimax.",{},{},rowMin,columnMax});
     if(maximin==minimax) {
         for(std::size_t i=0;i<m;++i)for(std::size_t j=0;j<n;++j)
             if(rowMin[i]==maximin && columnMax[j]==minimax)result.saddlePoints.emplace_back(i,j);
         const auto first=result.saddlePoints.front();result.rowStrategy[first.first]=1;result.columnStrategy[first.second]=1;
-        result.value=maximin;result.lowerBound=maximin;result.upperBound=maximin;return result;
+        result.value=maximin;result.lowerBound=maximin;result.upperBound=maximin;
+        result.history.push_back({"Pure equilibrium","Maximin equals minimax exactly. Select the first saddle in row-major order; no simplex pivots.",{},{},result.rowStrategy,result.columnStrategy});
+        return result;
     }
     // H=A/scale+2 lies in [1,3]. Max sum(y), H*y<=1 has a natural
     // slack basis, avoiding an artificial-variable Phase 1 for this game LP.
@@ -85,6 +92,9 @@ Result solve(const core::Matrix& a,const core::Tolerance& tolerance,std::size_t 
         for(std::size_t j=0;j<n;++j)values(i+1,j)=a(i,j)/scale+2;
     }
     core::Tableau table(std::move(values),std::move(labels),std::move(basis));
+    result.scale=scale;result.shift=2;
+    result.history.push_back({"Game-to-LP formulation","H=A/scale+2; maximize sum(y), H*y<=1, y>=0. Dual: minimize sum(x), H^T*x>=1, x>=0. Recover p=x/sum(x), q=y/sum(y), v=scale*(1/sum(y)-2).",{},{},{},{}});
+    result.history.push_back({"Initial tableau — primal optimization","Slack basis is feasible because H lies in [1,3] and RHS=1. No artificial-variable phase is used.",table,{},{},{}});
     // This mathematical extension uses incremental pivots. Legacy LP trace
     // reconstruction is deliberately left unchanged in its separate module.
     const core::Tolerance pivotTolerance(tolerance.absolute()*.001,tolerance.relative()*.001);
@@ -104,14 +114,19 @@ Result solve(const core::Matrix& a,const core::Tolerance& tolerance,std::size_t 
                 (pivotTolerance.equal(ratio,best) && table.basis()[i]<table.basis()[*leaving-1])){leaving=i+1;best=ratio;}
         }
         if(!leaving)throw std::runtime_error("Positive game LP has no finite leaving step");
-        table.pivot(*leaving,*entering,pivotTolerance);
+        const auto pivot=table.pivot(*leaving,*entering,pivotTolerance);
+        result.history.push_back({"Simplex pivot","Bland entering index; minimum nonnegative ratio, ties by basic-column index.",table,pivot,{},{}});
     }
+    result.history.push_back({"LP optimal","No negative eligible reduced costs remain.",table,{},{},{}});
     for(std::size_t row=0;row<table.basis().size();++row)
         if(table.basis()[row]<n)result.columnStrategy[table.basis()[row]]=table.rhs(row+1);
     for(std::size_t i=0;i<m;++i)result.rowStrategy[i]=table.values()(0,n+i);
+    result.history.push_back({"Recover LP weights","Row weights are dual slack prices; column weights are basic y values. Normalize each vector by its sum.",{},{},result.rowStrategy,result.columnStrategy});
     probabilities(result.rowStrategy,tolerance);probabilities(result.columnStrategy,tolerance);
+    result.history.push_back({"Normalize probabilities","Divide each nonnegative weight vector by its positive total.",{},{},result.rowStrategy,result.columnStrategy});
     reconstructSupport(a,scale,result,pivotTolerance);
     probabilities(result.rowStrategy,tolerance);probabilities(result.columnStrategy,tolerance);
+    result.history.push_back({"Refine selected support","When positive supports have equal sizes, solve sum=1 and indifference equations with partial-pivot Gauss-Jordan elimination. Singular/negative candidates leave the LP probabilities unchanged.",{},{},result.rowStrategy,result.columnStrategy});
     core::Scalar lower=1,upper=-1;
     for(std::size_t j=0;j<n;++j) {
         core::Scalar payoff=0;for(std::size_t i=0;i<m;++i)payoff+=result.rowStrategy[i]*(a(i,j)/scale);
@@ -128,6 +143,7 @@ Result solve(const core::Matrix& a,const core::Tolerance& tolerance,std::size_t 
     const auto hi=std::clamp(std::max(lower,upper),core::Scalar(-1),core::Scalar(1));
     result.lowerBound=lo*scale;result.upperBound=hi*scale;result.value=((lo+hi)/2)*scale;
     result.dualityGap=std::max(core::Scalar(0),upper-lower)*scale;
+    result.history.push_back({"Certified equilibrium","Evaluate min_j p^T*A[:,j] and max_i A[i,:]*q in original payoff units. Their agreement certifies both strategies and the original game value.",{},{},result.rowStrategy,result.columnStrategy});
     return result;
 }
 lp::LpProblem rowPlayerLp(const core::Matrix& payoff) {

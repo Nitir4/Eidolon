@@ -117,7 +117,7 @@ public:
     void summary(const transportation::FinalSummary& output) {
         space(4);line(QStringLiteral("TRANSPORTATION MODEL OUTPUT SUMMARY"),Qt::AlignHCenter);rule();
         line(QStringLiteral("Title: ")+text(output.title));line(QStringLiteral("Final Iteration No.:  ")+text(output.iteration));
-        line(QStringLiteral("Objective Value (minimum cost) =")+text(output.objective));rule();
+        line((output.maximize?QStringLiteral("Objective Value (maximum profit) ="):QStringLiteral("Objective Value (minimum cost) ="))+text(output.objective));rule();
         summaryHeader();
         for(const auto& row:output.rows) {
             if(y_+line_>bottom_){newPage();summaryHeader();}

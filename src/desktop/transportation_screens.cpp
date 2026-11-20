@@ -396,7 +396,7 @@ QWidget* finalScreen(ApplicationShell& shell) {
         print->setEnabled(output!=nullptr);
         title->setText(output?QStringLiteral("Title: ")+text(output->title):QStringLiteral("Open or initialize input, then choose Final solution from the SOLVE Menu."));
         iteration->setText(output?QStringLiteral("Final Iteration No.: ")+text(output->iteration):QString());
-        objective->setText(output?QStringLiteral("Objective Value (minimum cost) =")+text(output->objective):QString());
+        objective->setText(output?(output->maximize?QStringLiteral("Objective Value (maximum profit) ="):QStringLiteral("Objective Value (minimum cost) ="))+text(output->objective):QString());
         if(!output)return;
         grid->setRowCount(static_cast<int>(output->rows.size())+1);
         const QStringList headers{QStringLiteral("From"),QStringLiteral("To"),QStringLiteral("Amt Shipped"),QStringLiteral("Obj Coeff"),QStringLiteral("Obj Contrib")};

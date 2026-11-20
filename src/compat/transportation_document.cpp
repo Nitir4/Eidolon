@@ -5,6 +5,8 @@
 #include <cmath>
 #include <stdexcept>
 #include <utility>
+#include <sstream>
+#include <algorithm>
 
 namespace tora::compat {
 namespace {
@@ -63,6 +65,13 @@ std::string lexical(double value) {
     if (result.ec != std::errc{}) throw std::invalid_argument("Cannot represent Transportation value.");
     return {buffer, result.ptr};
 }
+std::string indices(const std::vector<std::size_t>& values) {
+    std::string s=std::to_string(values.size());for(auto i:values)s+=" "+std::to_string(i+1);return s+"\r\n";
+}
+std::vector<std::size_t> indices(const std::string& text,std::size_t limit) {
+    std::istringstream in(text);std::size_t count=0;if(!(in>>count)||count>limit)throw std::invalid_argument("Invalid dummy count");
+    std::vector<std::size_t> values;for(std::size_t k=0;k<count;++k){std::size_t i=0;if(!(in>>i)||!i||i>limit||std::find(values.begin(),values.end(),i-1)!=values.end())throw std::invalid_argument("Invalid or duplicate dummy index");values.push_back(i-1);}in>>std::ws;if(!in.eof())throw std::invalid_argument("Unexpected dummy metadata");return values;
+}
 }
 std::size_t TransportationDocument::index(std::size_t row, std::size_t col) const {
     if (row >= problem_.supply.size() + 2 || col >= problem_.demand.size() + 2)
@@ -81,13 +90,17 @@ TransportationDocument TransportationDocument::decode(std::string_view bytes) {
         const auto line = bytes.substr(0, end); checkText(line);
         records.emplace_back(line); bytes.remove_prefix(end + 2);
     }
-    if (records.size() < 7 || records[0] != "4000") throw std::invalid_argument("Select a TORA Transportation file (4000).");
+    if (records.size() < 7 || (records[0] != "4000"&&records[0]!="EIDOLON TRANSPORTATION 1")) throw std::invalid_argument("Select a 4000 or EIDOLON TRANSPORTATION 1 file.");
+    const bool native=records[0]=="EIDOLON TRANSPORTATION 1";
+    bool maximize=false;std::vector<std::size_t> dummySources,dummyDestinations;
+    if(native){if(records.size()<10||(records[7]!="min"&&records[7]!="max"))throw std::invalid_argument("Invalid native Transportation header");maximize=records[7]=="max";dummySources=indices(records[8],size(records[5]));dummyDestinations=indices(records[9],size(records[6]));records.erase(records.begin()+7,records.begin()+10);}
     if(records[3]!="1" && records[3]!="2")throw std::invalid_argument("Invalid Transportation notation (expected decimal or scientific).");
     const core::NumberFormat format{records[3]=="2"?core::Notation::Scientific:core::Notation::Decimal,digits(records[1]),digits(records[2])};
     (void)core::NumberFormatter(format);
     const auto m = size(records[5]), n = size(records[6]);
     if (records.size() != 7 + (m + 2) * (n + 2)) throw std::invalid_argument("Transportation file has an incorrect grid record count.");
     TransportationDocument doc; doc.problem_ = transportation::Problem::blank(m, n);
+    doc.problem_.maximize=maximize;doc.problem_.dummySources=std::move(dummySources);doc.problem_.dummyDestinations=std::move(dummyDestinations);
     doc.problem_.format=format;doc.formatNRecord_=records[1];doc.formatDRecord_=records[2];doc.notationRecord_=records[3];
     doc.sourceCountRecord_ = records[5]; doc.destinationCountRecord_ = records[6];
     doc.problem_.title = unquote(records[4]);
@@ -182,7 +195,7 @@ void TransportationDocument::replaceGrid(std::size_t m, std::size_t n, std::vect
         bytes += quote(value) + "\r\n";
         if (bytes.size() > MaximumBytes) throw std::invalid_argument("Transportation file exceeds the native 4 MiB limit.");
     }
-    auto next = decode(bytes); *this = std::move(next);
+    auto next = decode(bytes);next.problem_.maximize=problem_.maximize;next.problem_.dummySources=problem_.dummySources;next.problem_.dummyDestinations=problem_.dummyDestinations;*this = std::move(next);
 }
 void TransportationDocument::insert(Axis axis, std::size_t position) {
     const auto m = problem_.supply.size(), n = problem_.demand.size();
@@ -198,7 +211,8 @@ void TransportationDocument::insert(Axis axis, std::size_t position) {
             if (row >= 1 && row <= mm && col >= 1 && col <= nn) value = core::NumberFormatter(problem_.format).format(0);
         } else value = cell(row - (source && row > at ? 1 : 0), col - (!source && col > at ? 1 : 0));
     }
-    replaceGrid(mm, nn, std::move(cells));
+    auto next=*this;auto& dummy=source?next.problem_.dummySources:next.problem_.dummyDestinations;for(auto& i:dummy)if(i>=position)++i;
+    next.replaceGrid(mm, nn, std::move(cells));*this=std::move(next);
 }
 void TransportationDocument::erase(Axis axis, std::size_t position) {
     const auto m = problem_.supply.size(), n = problem_.demand.size();
@@ -210,7 +224,8 @@ void TransportationDocument::erase(Axis axis, std::size_t position) {
     std::vector<std::string> cells; cells.reserve((mm + 2) * (nn + 2));
     for (std::size_t row = 0; row < mm + 2; ++row) for (std::size_t col = 0; col < nn + 2; ++col)
         cells.push_back(cell(row + (source && row >= at ? 1 : 0), col + (!source && col >= at ? 1 : 0)));
-    replaceGrid(mm, nn, std::move(cells));
+    auto next=*this;auto& dummy=source?next.problem_.dummySources:next.problem_.dummyDestinations;dummy.erase(std::remove(dummy.begin(),dummy.end(),position),dummy.end());for(auto& i:dummy)if(i>position)--i;
+    next.replaceGrid(mm, nn, std::move(cells));*this=std::move(next);
 }
 void TransportationDocument::paste(Axis axis, std::size_t position, const std::vector<std::string>& values) {
     if (values.size() != line(axis, position).size()) throw std::invalid_argument("Copied Transportation line does not fit this grid.");
@@ -225,6 +240,10 @@ std::string TransportationDocument::prefix() const {
 std::string TransportationDocument::encode() const {
     std::string bytes = prefix()
         + sourceCountRecord_ + "\r\n" + destinationCountRecord_ + "\r\n";
+    if(problem_.maximize||!problem_.dummySources.empty()||!problem_.dummyDestinations.empty()) {
+        bytes.replace(0,4,"EIDOLON TRANSPORTATION 1");
+        bytes+=(problem_.maximize?"max\r\n":"min\r\n")+indices(problem_.dummySources)+indices(problem_.dummyDestinations);
+    }
     for (const auto& value : cells_) {
         bytes += quote(value) + "\r\n";
         if (bytes.size() > MaximumBytes) throw std::invalid_argument("Transportation file exceeds the native 4 MiB limit.");
