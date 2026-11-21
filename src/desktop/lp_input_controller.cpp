@@ -1,4 +1,7 @@
 #include "lp_input_controller.hpp"
+#include "model_json.hpp"
+#include <QFile>
+#include <QSaveFile>
 #include "ui_font.hpp"
 #include "ui_colors.hpp"
 #include <QApplication>
@@ -133,7 +136,7 @@ LpInputController::LpInputController(QWidget* owner):QObject(owner),grid_(*this)
         return answer==QMessageBox::Yes?SaveChoice::Yes:(answer==QMessageBox::No?SaveChoice::No:SaveChoice::Cancel);};
     dialogs_.chooseOpen=[owner]()->std::optional<OpenSelection>{
         QFileDialog picker(owner,QStringLiteral("Open"));picker.setFileMode(QFileDialog::ExistingFile);
-        picker.setNameFilter(QStringLiteral("Text Files (*.txt);;All Files (*)"));
+        picker.setNameFilter(QStringLiteral("LP TXT (*.txt);;LP JSON (*.json);;All Files (*)"));
         picker.setOption(QFileDialog::DontUseNativeDialog);
         auto* readOnly=new QCheckBox(QStringLiteral("Open as read-only"),&picker);
         if(auto* layout=qobject_cast<QGridLayout*>(picker.layout())) layout->addWidget(readOnly,layout->rowCount(),0,1,layout->columnCount());
@@ -143,7 +146,7 @@ LpInputController::LpInputController(QWidget* owner):QObject(owner),grid_(*this)
     };
     dialogs_.chooseSave=[owner](const QString& current)->std::optional<QString>{
         QFileDialog picker(owner,QStringLiteral("Save As"),current);picker.setAcceptMode(QFileDialog::AcceptSave);
-        picker.setNameFilter(QStringLiteral("Text Files (*.txt);;All Files (*)"));picker.setDefaultSuffix(QStringLiteral("txt"));
+        picker.setNameFilter(QStringLiteral("LP TXT (*.txt);;LP JSON (*.json);;All Files (*)"));picker.setDefaultSuffix(QStringLiteral("txt"));
         polishUsableFonts(picker);
         if(picker.exec()!=QDialog::Accepted || picker.selectedFiles().isEmpty()) return {};
         return picker.selectedFiles().first();
@@ -176,7 +179,7 @@ bool LpInputController::loadDocument(tora::compat::LpDocument document) {
     catch(const std::exception& e){return fail(QStringLiteral("LP File Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::openFile(const QString& path,bool readOnly) {
-    try {auto next=LpFileStore::open(nativePath(path),readOnly);document_=std::move(next);captionPath_=path;preferredSavePath_=path;clipboard_.clear();clipboardAxis_=Axis::None;refresh();return true;}
+    try {QFile file(path);if(!file.open(QIODevice::ReadOnly)||file.size()>4*1024*1024)throw std::invalid_argument("Cannot open LP file or file exceeds 4 MiB");const auto bytes=file.readAll();auto next=bytes.trimmed().startsWith("{")?LpFileStore::imported(decodeLpJson(bytes),nativePath(path),readOnly):LpFileStore::open(nativePath(path),readOnly);document_=std::move(next);captionPath_=path;preferredSavePath_=path;clipboard_.clear();clipboardAxis_=Axis::None;refresh();return true;}
     catch(const tora::compat::FileError& e){
         if(openingFromPicker_ && e.code()==tora::compat::FileErrorCode::Marker) {
             errorTitle_=QString::fromStdString(e.title());error_=QString::fromUtf8(e.what());
@@ -188,7 +191,7 @@ bool LpInputController::openFile(const QString& path,bool readOnly) {
 }
 bool LpInputController::saveTo(const QString& path) {
     if(!document_) return false;
-    try {LpFileStore::saveAs(*document_,nativePath(path));preferredSavePath_=path;emit changed();return true;}
+    try {if(path.endsWith(".json",Qt::CaseInsensitive)){if(document_->readOnly()&&nativePath(path)==document_->sourcePath())throw std::invalid_argument("Read-only input: choose a new filename");const auto bytes=encodeLpJson(*document_);QSaveFile file(path);if(!file.open(QIODevice::WriteOnly)||file.write(bytes)!=bytes.size()||!file.commit())throw std::runtime_error("Cannot save LP JSON");document_=LpFileStore::imported(*document_,nativePath(path));}else LpFileStore::saveAs(*document_,nativePath(path));preferredSavePath_=path;emit changed();return true;}
     catch(const std::exception& e){return fail(QStringLiteral("LP File Error"),QString::fromUtf8(e.what()));}
 }
 bool LpInputController::requestOpen() {

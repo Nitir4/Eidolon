@@ -11,10 +11,15 @@ struct AssignmentData {
     assignment::Problem model;
     QString title;
     QStringList workers,jobs;
+    std::vector<std::size_t> dummyWorkers,dummyJobs;
+    QString mappingMessage;
     core::NumberFormat format;
 };
 QByteArray encodeAssignment(const AssignmentData& data);
 AssignmentData decodeAssignment(const QByteArray& bytes);
+QByteArray encodeAssignmentText(const AssignmentData& data);
+AssignmentData decodeAssignmentText(const QByteArray& bytes);
+AssignmentData decodeAssignmentLp(const QByteArray& bytes);
 class AssignmentController;
 class AssignmentGrid final:public QAbstractTableModel {
     Q_OBJECT

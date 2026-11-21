@@ -76,6 +76,7 @@ public:
 class LpFileStore {
 public:
     static LpDocument open(const std::filesystem::path& path, bool readOnly = false, QuotePolicy quotes = DefaultQuotePolicy);
+    static LpDocument imported(LpDocument document,const std::filesystem::path& path,bool readOnly=false);
     static void save(LpDocument& document);
     static void saveAs(LpDocument& document, const std::filesystem::path& path);
 };

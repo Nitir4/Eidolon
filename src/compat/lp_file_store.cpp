@@ -105,6 +105,12 @@ void LpFileStore::save(LpDocument& document) {
     if (document.path_.empty()) throw FileError(FileErrorCode::MissingFilename,"Choose a filename before saving");
     saveAs(document,document.path_);
 }
+LpDocument LpFileStore::imported(LpDocument document,const std::filesystem::path& path,bool readOnly) {
+    (void)ToraLpCodec::encode(document);
+    document.path_=path;document.readOnly_=readOnly;
+    document.savedProblem_=document.problem;document.savedFormat_=document.inputFormat;
+    return document;
+}
 
 void LpFileStore::saveAs(LpDocument& document,const std::filesystem::path& path) {
     const auto bytes=ToraLpCodec::encode(document);

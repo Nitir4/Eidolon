@@ -1,4 +1,5 @@
 #include "transportation_screens.hpp"
+#include "model_json.hpp"
 #include "ui_font.hpp"
 #include <QCheckBox>
 #include <QFile>
@@ -27,7 +28,7 @@ TransportationController::TransportationController(QObject* parent) : QObject(pa
     };
     dialogs_.chooseOpen = [owner]() -> std::optional<OpenSelection> {
         QFileDialog picker(owner, QStringLiteral("Open Transportation Problem"));
-        picker.setFileMode(QFileDialog::ExistingFile); picker.setNameFilter(QStringLiteral("Text Files (*.txt);;All Files (*)"));
+        picker.setFileMode(QFileDialog::ExistingFile); picker.setNameFilter(QStringLiteral("Transportation TXT (*.txt);;Transportation JSON (*.json);;All Files (*)"));
         picker.setOption(QFileDialog::DontUseNativeDialog);
         auto* readOnly = new QCheckBox(QStringLiteral("Open as read-only"), &picker);
         if (auto* layout = qobject_cast<QGridLayout*>(picker.layout())) layout->addWidget(readOnly, layout->rowCount(), 0, 1, layout->columnCount());
@@ -37,7 +38,7 @@ TransportationController::TransportationController(QObject* parent) : QObject(pa
     };
     dialogs_.chooseSave = [owner](const QString& current) -> std::optional<QString> {
         QFileDialog picker(owner, QStringLiteral("Save As"), current); picker.setAcceptMode(QFileDialog::AcceptSave);
-        picker.setNameFilter(QStringLiteral("Text Files (*.txt);;All Files (*)")); picker.setDefaultSuffix(QStringLiteral("txt"));
+        picker.setNameFilter(QStringLiteral("Transportation TXT (*.txt);;Transportation JSON (*.json);;All Files (*)")); picker.setDefaultSuffix(QStringLiteral("txt"));
         polishUsableFonts(picker);
         if (picker.exec() != QDialog::Accepted || picker.selectedFiles().isEmpty()) return {};
         return picker.selectedFiles().first();
@@ -177,7 +178,7 @@ bool TransportationController::openFile(const QString& filename, QString& error,
     try {
         const auto bytes = file.readAll();
         if (file.error() != QFileDevice::NoError) return reject(error, file.errorString());
-        auto next = compat::TransportationDocument::decode(std::string_view(bytes.constData(), static_cast<std::size_t>(bytes.size())));
+        auto next = bytes.trimmed().startsWith("{")?decodeTransportationJson(bytes):compat::TransportationDocument::decode(std::string_view(bytes.constData(), static_cast<std::size_t>(bytes.size())));
         document_ = std::move(next); newFormat_=document_->problem().format; resetEditState(); trace_.clear(); method_ = transportation::StartMethod::NorthWest;
         sourcePath_ = filename; preferredSavePath_ = filename; dirty_ = false; readOnly_ = readOnly; emit inputReset(); emit changed(); return true;
     } catch (const std::exception& e) { return reject(error, QString::fromUtf8(e.what())); }
@@ -192,7 +193,7 @@ bool TransportationController::saveTo(const QString& filename, QString& error) {
     if (filename.isEmpty()) return reject(error, QStringLiteral("Choose a Transportation filename."));
     if (readOnly_ && pathIdentity(filename) == pathIdentity(sourcePath_)) return reject(error, QStringLiteral("The source was opened read-only. Save to a different file."));
     try {
-        const auto bytes = document_->encode(); QSaveFile file(filename);
+        const auto bytes = filename.endsWith(".json",Qt::CaseInsensitive)?encodeTransportationJson(*document_).toStdString():document_->encode(); QSaveFile file(filename);
         if (!file.open(QIODevice::WriteOnly)) return reject(error, file.errorString());
         if (file.write(bytes.data(), static_cast<qint64>(bytes.size())) != static_cast<qint64>(bytes.size())) return reject(error, file.errorString());
         if (!file.commit()) return reject(error, file.errorString());

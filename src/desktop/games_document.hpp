@@ -7,7 +7,10 @@ class GamesDocument {
 public:
  static GamesDocument blank(int rows,int columns,std::string title={},core::NumberFormat format={});
  static GamesDocument decode(std::string_view bytes);
- std::string encode() const;
+ std::string encode(bool native=false) const;
+ const std::vector<std::string>& rowNames()const{return rowNames_;}
+ const std::vector<std::string>& columnNames()const{return columnNames_;}
+ void setNames(std::vector<std::string> rows,std::vector<std::string> columns);
  const core::Matrix& payoff() const {return payoff_;}
  const std::string& title() const {return title_;}
  core::NumberFormat format() const {return format_;}
@@ -21,5 +24,6 @@ public:
 private:
  core::Matrix payoff_;std::string title_,original_;core::NumberFormat format_;
  std::vector<std::string> cells_;
+ std::vector<std::string> rowNames_,columnNames_;
 };
 }
