@@ -1,0 +1,54 @@
+{
+  "format": "ToraCloneAssignment",
+  "version": 1,
+  "title": "26-Q1",
+  "sense": "min",
+  "numberFormat": [
+    0,
+    5,
+    2
+  ],
+  "workers": [
+    "W1",
+    "W2",
+    "W3"
+  ],
+  "jobs": [
+    "J1",
+    "J2",
+    "J3"
+  ],
+  "dummyWorkers": [],
+  "dummyJobs": [],
+  "forbidden": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      1
+    ]
+  ],
+  "costs": [
+    [
+      4,
+      0,
+      3
+    ],
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      0,
+      3,
+      2
+    ]
+  ]
+}

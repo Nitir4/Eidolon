@@ -1,0 +1,23 @@
+EIDOLON ASSIGNMENT 1
+title "26-Q2"
+sense min
+numberFormat 0 5 2
+workers 3
+"W1"
+"W2"
+"W3"
+jobs 3
+"J1"
+"J2"
+"J3"
+dummyWorkers 0
+dummyJobs 0
+forbidden 3
+1 1
+2 2
+3 3
+costs 3 3
+0 2 4
+3 0 1
+2 5 0
+end
