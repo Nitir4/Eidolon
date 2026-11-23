@@ -1,0 +1,32 @@
+{
+  "format": "ToraCloneAssignment",
+  "version": 1,
+  "title": "finite-penalty-legacy",
+  "sense": "min",
+  "numberFormat": [
+    0,
+    5,
+    2
+  ],
+  "workers": [
+    "W1",
+    "W2"
+  ],
+  "jobs": [
+    "J1",
+    "J2"
+  ],
+  "dummyWorkers": [],
+  "dummyJobs": [],
+  "forbidden": [],
+  "costs": [
+    [
+      1000,
+      1000
+    ],
+    [
+      1000,
+      1000
+    ]
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "format": "EidolonGame",
+  "version": 1,
+  "title": "Matching pennies labelled pair",
+  "numberFormat": [
+    0,
+    5,
+    2
+  ],
+  "rowNames": [
+    "Heads A",
+    "Tails A"
+  ],
+  "columnNames": [
+    "Heads B",
+    "Tails B"
+  ],
+  "payoff": [
+    [
+      1,
+      -1
+    ],
+    [
+      -1,
+      1
+    ]
+  ]
+}

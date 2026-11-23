@@ -1,0 +1,47 @@
+{
+  "format": "EidolonLP",
+  "version": 1,
+  "title": "LP JSON and TORA TXT pair",
+  "sense": "min",
+  "numberFormat": [
+    0,
+    5,
+    2
+  ],
+  "variables": [
+    {
+      "name": "free x",
+      "lower": "-infinity",
+      "upper": "infinity",
+      "unrestricted": true
+    },
+    {
+      "name": "bounded y",
+      "lower": 0,
+      "upper": 3,
+      "unrestricted": false
+    }
+  ],
+  "objective": [
+    1,
+    2
+  ],
+  "constraints": [
+    {
+      "coefficients": [
+        1,
+        1
+      ],
+      "relation": "=",
+      "rhs": -1
+    },
+    {
+      "coefficients": [
+        0,
+        1
+      ],
+      "relation": "<=",
+      "rhs": 3
+    }
+  ]
+}

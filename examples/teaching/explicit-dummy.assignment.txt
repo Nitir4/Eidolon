@@ -1,0 +1,17 @@
+EIDOLON ASSIGNMENT 1
+title "explicit-dummy"
+sense min
+numberFormat 0 5 2
+workers 2
+"W1"
+"W2"
+jobs 2
+"J1"
+"J2"
+dummyWorkers 0
+dummyJobs 1 2
+forbidden 0
+costs 2 2
+3 0
+4 0
+end

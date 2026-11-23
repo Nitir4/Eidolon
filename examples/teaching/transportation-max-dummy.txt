@@ -1,0 +1,26 @@
+EIDOLON TRANSPORTATION 1
+5
+2
+1
+"Transportation maximum profit with declared dummy"
+2
+2
+max
+0
+1 2
+"S/D Name"
+"D1"
+"Dummy D2"
+"Supply"
+"S1"
+"1"
+"0"
+"4"
+"S2"
+"4"
+"0"
+"6"
+"Demand"
+"5"
+"5"
+""

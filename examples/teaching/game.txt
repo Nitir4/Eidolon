@@ -1,0 +1,15 @@
+EIDOLON GAME 1
+5
+2
+1
+"Matching pennies labelled pair"
+2
+2
+"Heads A"
+"Tails A"
+"Heads B"
+"Tails B"
+"1"
+"-1"
+"-1"
+"1"

@@ -1,0 +1,41 @@
+{
+  "format": "EidolonTransportation",
+  "version": 1,
+  "title": "Transportation maximum profit with declared dummy",
+  "sense": "max",
+  "numberFormat": [
+    0,
+    5,
+    2
+  ],
+  "sources": [
+    "S1",
+    "S2"
+  ],
+  "destinations": [
+    "D1",
+    "Dummy D2"
+  ],
+  "supply": [
+    4,
+    6
+  ],
+  "demand": [
+    5,
+    5
+  ],
+  "costs": [
+    [
+      1,
+      0
+    ],
+    [
+      4,
+      0
+    ]
+  ],
+  "dummySources": [],
+  "dummyDestinations": [
+    2
+  ]
+}
