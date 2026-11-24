@@ -18,6 +18,13 @@ use the former name.
 > Eidolon is the new name of this project, formerly TORA Clone. Existing problem files remain compatible.
 
 
+Assignment and Games now expose **Steps / Iterations** tabs after solving, with
+recorded backend calculations, navigation, complete-history export and printing.
+LP, Transportation, Assignment and Games accept documented JSON and TXT inputs.
+Assignment supports explicit forbidden pairs, including corrected university
+cases 26/28. See [input formats and paired examples](docs/TEACHING_INPUTS.md)
+and [actual algorithms and trace rules](docs/TEACHING_IMPLEMENTATION.md).
+
 Local LP extensions: open an LP, choose **SOLVE Menu → Class extensions**, then
 **Change Cj / RHS** or **Dual Revised (RHS)**. Analyze keeps input unchanged;
 **Use changed model** applies changes for normal Save As. Results include a
