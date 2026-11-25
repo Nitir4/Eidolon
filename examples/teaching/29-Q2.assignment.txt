@@ -1,0 +1,20 @@
+EIDOLON ASSIGNMENT 1
+title "AP07-Q02 assignment LP row-major with dummies"
+sense max
+numberFormat 0 5 4
+workers 3
+"W1"
+"W2"
+"W3"
+jobs 3
+"J1"
+"J2"
+"J3"
+dummyWorkers 0
+dummyJobs 1 3
+forbidden 0
+costs 3 3
+-4 3 0
+2 -1 0
+5 0 0
+end

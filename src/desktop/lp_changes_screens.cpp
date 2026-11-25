@@ -19,6 +19,8 @@
 #include <cmath>
 #include <algorithm>
 #include <QTextOption>
+#include <QFileDialog>
+#include <QSaveFile>
 
 namespace tora::desktop {
 namespace {
@@ -71,15 +73,19 @@ QString canonicalLabel(const tora::lp::RevisedDualModel& model,std::size_t colum
     return QStringLiteral("column %1").arg(column+1);
 }
 struct TraceDisplay {QString pivot;QStringList headers;QList<QStringList> rows;};
-TraceDisplay trace(const LpChangesController& c,std::size_t selected) {
-    TraceDisplay out;if(!c.hasResult() || selected>=traceCount(c))return out;
+TraceDisplay trace(const LpChangesController& c,std::size_t selected,bool baseline=false) {
+    TraceDisplay out;if(!c.hasResult())return out;
     if(c.fresh()) {
-        const auto& step=c.fresh()->after.trace[selected];const auto& t=step.tableau;out.headers<<QStringLiteral("Basic");
+        const auto& history=baseline?c.fresh()->before.trace:c.fresh()->after.trace;
+        if(selected>=history.size())return out;
+        const auto& step=history[selected];const auto& t=step.tableau;out.headers<<QStringLiteral("Basic");
         for(const auto& col:t.columns())out.headers<<QString::fromStdString(col);
         out.headers<<QStringLiteral("RHS");
         for(std::size_t i=0;i<t.values().rows();++i){QStringList row{i?QString::fromStdString(t.basicLabel(i)):QStringLiteral("z")};for(std::size_t j=0;j<t.values().columns();++j)row<<number(t.values()(i,j),c.format());out.rows<<row;}
-        out.pivot=QStringLiteral("Changed-model solve — canonical tableau; phase %1").arg(step.phase);
+        out.pivot=(baseline?QStringLiteral("Baseline solve"):QStringLiteral("Changed-model solve"))
+            +QStringLiteral(" — canonical tableau; phase %1").arg(step.phase);
     }else {
+        if(selected>=traceCount(c))return out;
         const auto model=tora::lp::makeDualRevisedModel(*c.changedProblem());const auto& step=c.revised()->canonical.trace[selected];
         out.headers={QStringLiteral("Entry"),QStringLiteral("Variable / constraint"),QStringLiteral("Value"),QStringLiteral("Reduced cost")};
         for(std::size_t i=0;i<step.basis.size();++i)out.rows<<QStringList{QStringLiteral("Basic"),canonicalLabel(model,step.basis[i]),number(step.basicValues[i],c.format()),number(step.reducedCosts[step.basis[i]],c.format())};
@@ -150,16 +156,28 @@ QWidget* changesResultScreen(ApplicationShell& shell) {
     auto* tracePage=new QWidget;auto* traceLayout=new QVBoxLayout(tracePage);auto* selection=new QHBoxLayout;
     selection->addWidget(new QLabel(QStringLiteral("Trace step:")));auto* step=new QSpinBox;step->setObjectName(QStringLiteral("changes-trace-step"));step->setAccessibleName(QStringLiteral("Trace step"));selection->addWidget(step);selection->addStretch();traceLayout->addLayout(selection);
     auto* pivot=label(traceLayout,QStringLiteral("changes-pivot"));auto* grid=table(QStringLiteral("changes-trace"),{});traceLayout->addWidget(grid,1);tabs->addTab(tracePage,QStringLiteral("Trace"));tabs->setObjectName(QStringLiteral("changes-result-tabs"));layout->addWidget(tabs,1);
-    auto* row=new QGridLayout;auto* apply=command(row,QStringLiteral("Use changed model"),QStringLiteral("changes-apply"),0,0);auto* print=command(row,QStringLiteral("Write to Printer"),QStringLiteral("changes-print"),0,1);auto* back=command(row,QStringLiteral("Edit changes"),QStringLiteral("changes-back"),1,0);auto* input=command(row,QStringLiteral("View input"),QStringLiteral("changes-result-input"),1,1);layout->addLayout(row);
+    auto* row=new QGridLayout;
+    auto* apply=command(row,QStringLiteral("Use changed model"),QStringLiteral("changes-apply"),0,0);
+    auto* print=command(row,QStringLiteral("Print all steps"),QStringLiteral("changes-print"),0,1);
+    auto* exportAll=command(row,QStringLiteral("Export all steps (TXT)"),QStringLiteral("changes-export-all"),1,0);
+    auto* printSelected=command(row,QStringLiteral("Print selected step"),QStringLiteral("changes-print-selected"),1,1);
+    auto* back=command(row,QStringLiteral("Edit changes"),QStringLiteral("changes-back"),2,0);
+    auto* input=command(row,QStringLiteral("View input"),QStringLiteral("changes-result-input"),2,1);layout->addLayout(row);
     const auto refreshTrace=[&c,step,pivot,grid]{const auto view=trace(c,static_cast<std::size_t>(std::max(0,step->value()-1)));pivot->setText(view.pivot);grid->clear();grid->setColumnCount(static_cast<int>(view.headers.size()));grid->setHorizontalHeaderLabels(view.headers);fill(grid,view.rows);};
-    const auto refresh=[&c,heading,state,retained,solution,step,apply,print,back,refreshTrace]{heading->setText(methodName(c));state->setText(c.hasResult()?QStringLiteral("Changed model: ")+status(c):status(c));retained->setText(diagnosis(c));fill(solution,solutionRows(c));const QSignalBlocker blocked(step);const auto count=traceCount(c);step->setRange(1,static_cast<int>(std::max(std::size_t(1),count)));step->setValue(static_cast<int>(std::max(std::size_t(1),count)));step->setEnabled(count>0);apply->setEnabled(c.hasResult());print->setEnabled(c.hasResult());back->setEnabled(c.baseline()!=nullptr);refreshTrace();};
+    const auto refresh=[&c,heading,state,retained,solution,step,apply,print,printSelected,exportAll,back,refreshTrace]{heading->setText(methodName(c));state->setText(c.hasResult()?QStringLiteral("Changed model: ")+status(c):status(c));retained->setText(diagnosis(c));fill(solution,solutionRows(c));const QSignalBlocker blocked(step);const auto count=traceCount(c);step->setRange(1,static_cast<int>(std::max(std::size_t(1),count)));step->setValue(static_cast<int>(std::max(std::size_t(1),count)));step->setEnabled(count>0);apply->setEnabled(c.hasResult());print->setEnabled(c.hasResult());printSelected->setEnabled(c.hasResult());exportAll->setEnabled(c.hasResult());back->setEnabled(c.baseline()!=nullptr);refreshTrace();};
     QObject::connect(step,&QSpinBox::valueChanged,page,[refreshTrace]{refreshTrace();});QObject::connect(&c,&LpChangesController::resultChanged,page,refresh);QObject::connect(&c,&LpChangesController::baselineChanged,page,refresh);refresh();
     QObject::connect(apply,&QPushButton::clicked,page,[&c]{c.apply();});QObject::connect(back,&QPushButton::clicked,page,[&shell]{shell.navigate(QStringLiteral("lp/changes"));});QObject::connect(input,&QPushButton::clicked,page,[&shell]{shell.navigate(QStringLiteral("lp/input"));});
-    QObject::connect(print,&QPushButton::clicked,page,[&shell,&c,step]{if(requestLpPrint(&shell,[&](QPrinter& printer){return printChanges(printer,c,shell.font(),static_cast<std::size_t>(step->value()-1));})==PrintOutcome::Failed)c.notice(QStringLiteral("Printer"),QStringLiteral("Could not complete printing to the selected printer"));});return page;
+    QObject::connect(print,&QPushButton::clicked,page,[&shell,&c]{if(requestLpPrint(&shell,[&](QPrinter& printer){return printChanges(printer,c,shell.font());})==PrintOutcome::Failed)c.notice(QStringLiteral("Printer"),QStringLiteral("Could not complete printing to the selected printer"));});
+    QObject::connect(printSelected,&QPushButton::clicked,page,[&shell,&c,step]{if(requestLpPrint(&shell,[&](QPrinter& printer){return printChanges(printer,c,shell.font(),static_cast<std::size_t>(step->value()-1));})==PrintOutcome::Failed)c.notice(QStringLiteral("Printer"),QStringLiteral("Could not complete printing to the selected printer"));});
+    QObject::connect(exportAll,&QPushButton::clicked,page,[&shell,&c]{
+        const auto path=QFileDialog::getSaveFileName(&shell,QStringLiteral("Export all recorded steps"),{},QStringLiteral("Text Files (*.txt)"));
+        if(!path.isEmpty() && !exportChangesHistory(path,c))c.notice(QStringLiteral("Export history"),QStringLiteral("Could not export all recorded steps"));
+    });return page;
 }
-bool printChanges(QPrinter& printer,const LpChangesController& c,const QFont& font,std::size_t traceStep) {
-    if(!c.hasResult() || !c.baseline() || !c.changedProblem() || traceStep>=traceCount(c))return false;
-    try {
+namespace {
+QString changesReport(const LpChangesController& c,std::optional<std::size_t> selected) {
+    if(!c.hasResult() || !c.baseline() || !c.changedProblem() || traceCount(c)==0 ||
+       (selected && *selected>=traceCount(c)))return {};
         QString html=QStringLiteral("<h1>Linear Programming — Class extensions</h1>");
         const auto line=[&html](const QString& text){html+=QStringLiteral("<p>")+text.toHtmlEscaped()+QStringLiteral("</p>");};
         line(methodName(c));line(QStringLiteral("Title: ")+legacyText(c.baseline()->problem.title));line(status(c));line(diagnosis(c));
@@ -168,12 +186,37 @@ bool printChanges(QPrinter& printer,const LpChangesController& c,const QFont& fo
             for(std::size_t j=0;j<p.variables.size();++j){const auto& v=p.variables[j];line(name(p,j)+(v.unrestricted?QStringLiteral(": unrestricted"):QStringLiteral(": lower ")+QString::fromStdString(tora::core::NumberFormatter(c.format()).formatBound(v.lowerBound))+QStringLiteral(", upper ")+QString::fromStdString(tora::core::NumberFormatter(c.format()).formatBound(v.upperBound))));}};
         dataset(c.baseline()->problem,QStringLiteral("Baseline model"));dataset(*c.changedProblem(),QStringLiteral("Changed model"));html+=QStringLiteral("<h2>Solution (baseline; changed)</h2>");
         for(const auto& row:solutionRows(c))line(row.join(QStringLiteral("; ")));
-        const auto view=trace(c,traceStep);html+=QStringLiteral("<h2>Selected trace step %1</h2>").arg(traceStep+1);line(view.pivot);line(view.headers.join(QStringLiteral("; ")));
-        for(const auto& row:view.rows) {
-            if(view.headers.size()<=8){line(row.join(QStringLiteral("; ")));continue;}
-            QStringList labeled;for(int j=1;j<row.size();++j)labeled<<view.headers[j]+QStringLiteral(" = ")+row[j];
-            line(row.front()+QStringLiteral(": ")+labeled.join(QStringLiteral("; ")));
+        const auto append=[&](std::size_t index,const QString& heading,bool baseline=false){
+            const auto view=trace(c,index,baseline);html+=QStringLiteral("<h2>")+heading+QStringLiteral("</h2>");
+            line(view.pivot);line(view.headers.join(QStringLiteral("; ")));
+            for(const auto& row:view.rows) {
+                if(view.headers.size()<=8){line(row.join(QStringLiteral("; ")));continue;}
+                QStringList labeled;for(int j=1;j<row.size();++j)labeled<<view.headers[j]+QStringLiteral(" = ")+row[j];
+                line(row.front()+QStringLiteral(": ")+labeled.join(QStringLiteral("; ")));
+            }
+        };
+        if(selected)append(*selected,QStringLiteral("Selected trace step %1 of %2").arg(*selected+1).arg(traceCount(c)));
+        else {
+            html+=QStringLiteral("<h2>All recorded steps</h2>");
+            if(c.fresh()) {
+                const auto count=c.fresh()->before.trace.size();
+                for(std::size_t i=0;i<count;++i)append(i,QStringLiteral("Baseline trace step %1 of %2").arg(i+1).arg(count),true);
+            }else line(QStringLiteral("Baseline optimum reused; no baseline iteration history is stored in this result."));
+            for(std::size_t i=0;i<traceCount(c);++i)append(i,QStringLiteral("Changed trace step %1 of %2").arg(i+1).arg(traceCount(c)));
         }
+        return html;
+}
+}
+QString changesHistoryText(const LpChangesController& c) {
+    QTextDocument document;document.setHtml(changesReport(c,{}));return document.toPlainText();
+}
+bool exportChangesHistory(const QString& path,const LpChangesController& c) {
+    const auto bytes=changesHistoryText(c).toUtf8();if(bytes.isEmpty())return false;
+    QSaveFile file(path);return file.open(QIODevice::WriteOnly) && file.write(bytes)==bytes.size() && file.commit();
+}
+bool printChanges(QPrinter& printer,const LpChangesController& c,const QFont& font,std::optional<std::size_t> traceStep) {
+    try {
+        const auto html=changesReport(c,traceStep);if(html.isEmpty())return false;
         QTextDocument document;document.setDefaultFont(usableUiFont(font));
         auto option=document.defaultTextOption();option.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);document.setDefaultTextOption(option);
         document.setHtml(html);document.print(&printer);return printer.printerState()!=QPrinter::Error && printer.printerState()!=QPrinter::Aborted;

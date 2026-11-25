@@ -112,6 +112,15 @@ other operating systems require their own acceptance checks.
 
 ## Regression checks
 
+LP change-analysis output uses `changesReport` in `lp_changes_screens.cpp`.
+**Print all steps** and **Export all steps (TXT)** include the recorded baseline
+history followed by the changed-model history, independently of the selected step.
+**Print selected step** prints only that changed-model step. Revised Dual exports
+its stored states and explicitly notes that no baseline iteration history is stored.
+Exporting calls no solver or model setter. `tests/desktop_changes_export.cpp`
+checks every recorded tableau row, PDF text, ordering, selection independence,
+unequal baseline/changed history lengths, and unchanged inputs/results.
+
 - `tests/teaching_algorithms.cpp`: exhaustive permutations for 500 small
   restricted min/max models, independent dual/feasibility checks, finite-cost
   semantics, 87 game saddle certificates, and arithmetic trace transitions.

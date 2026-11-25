@@ -44,5 +44,9 @@ private:
 LpChangesController& changesController(ApplicationShell& shell);
 QWidget* changesScreen(ApplicationShell& shell);
 QWidget* changesResultScreen(ApplicationShell& shell);
-bool printChanges(QPrinter& printer,const LpChangesController& controller,const QFont& font,std::size_t traceStep=0);
+// No selected index means the complete recorded history.
+QString changesHistoryText(const LpChangesController& controller);
+bool exportChangesHistory(const QString& path,const LpChangesController& controller);
+bool printChanges(QPrinter& printer,const LpChangesController& controller,const QFont& font,
+                  std::optional<std::size_t> traceStep={});
 }

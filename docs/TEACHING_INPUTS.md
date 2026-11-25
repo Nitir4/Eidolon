@@ -167,3 +167,19 @@ The [examples/teaching directory](../examples/teaching) contains paired files:
 The original restriction matrices above came directly from the user's university
 questions. No restrictions were guessed from legacy finite penalties. Other old
 files are not silently migrated.
+
+## Original question-bank dummy mappings
+
+Eight verified native TXT alternatives are in `examples/teaching`:
+
+- `17-Q1.transportation.txt` and `17-Q2.transportation.txt`: destination 3 is dummy.
+- `18-Q1.transportation.txt` and `18-Q2.transportation.txt`: source 3 is dummy.
+- `25-Q1.assignment.txt`: W3 is dummy; `25-Q2.assignment.txt`: J3 is dummy.
+- `29-Q1.assignment.txt` and `29-Q2.assignment.txt`: J3 is dummy.
+
+The original Assignment LP files contain padded matrices without dummy flags;
+Transportation 17/18 retain DUMMY labels but lack typed dummy indices. These native
+alternatives preserve the original matrices and add the verified role metadata.
+Use LP for cases 21/22: case 21 requires forbidden-route zero-fixing constraints;
+case 22's maximum-profit LP files are not automatically converted to Transportation.
+The local original question bank and generated handoff ZIP are excluded from Git.

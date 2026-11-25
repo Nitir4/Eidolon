@@ -570,6 +570,17 @@ add_test(NAME lp.dual_revised.goldens COMMAND "${Python3_EXECUTABLE}"
 set_tests_properties(lp.dual_revised.goldens PROPERTIES TIMEOUT 30)
 
 if(TORA_BUILD_DESKTOP)
+ qt_add_executable(desktop_changes_export_test desktop_changes_export.cpp)
+ set_target_properties(desktop_changes_export_test PROPERTIES AUTOMOC ON)
+ tora_target_defaults(desktop_changes_export_test)
+ target_link_libraries(desktop_changes_export_test PRIVATE desktop_shell Qt6::Test)
+ target_compile_definitions(desktop_changes_export_test PRIVATE
+   TORA_PDF_PYTHON="${Python3_EXECUTABLE}"
+   TORA_PDF_EXTRACTOR="${CMAKE_CURRENT_SOURCE_DIR}/extract_pdf_text.py")
+ add_test(NAME desktop.lp-changes.export COMMAND desktop_changes_export_test
+   -o "${CMAKE_CURRENT_BINARY_DIR}/desktop-changes-export.xml,junitxml" -o -,txt)
+ set_tests_properties(desktop.lp-changes.export PROPERTIES TIMEOUT 240
+   ENVIRONMENT "QT_QPA_PLATFORM=offscreen:configfile=offscreen-display.json;QT_SCALE_FACTOR=1;QT_STYLE_OVERRIDE=Fusion")
  qt_add_executable(desktop_lp_changes_test desktop_lp_changes.cpp)
  set_target_properties(desktop_lp_changes_test PROPERTIES AUTOMOC ON)
  tora_target_defaults(desktop_lp_changes_test)
