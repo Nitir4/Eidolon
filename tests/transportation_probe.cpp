@@ -125,7 +125,8 @@ int main(int argc,char** argv) {
             std::cout<<"{\"title\":";quote(output.title);std::cout<<",\"iteration\":";quote(output.iteration);
             std::cout<<",\"objective\":";quote(output.objective);std::cout<<",\"rows\":";matrix(output.rows);std::cout<<'}';return 0;
         }
-        auto trace=tora::transportation::solve(problem,method);
+        auto solution=tora::transportation::solveDetailed(problem,method);
+        auto& trace=solution.tableaux;problem=std::move(solution.problem);
         if(multiplierAnchor)for(auto& tableau:trace)tableau=tora::transportation::initializeMultipliers(problem,tableau,*multiplierAnchor);
         std::cout<<'[';
         for(std::size_t k=0;k<trace.size();++k) {

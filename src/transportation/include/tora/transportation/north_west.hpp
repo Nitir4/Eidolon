@@ -35,6 +35,22 @@ struct Tableau {
     double objective=0;
     std::optional<Pivot> nextPivot;
 };
+struct AllocationStep {
+    Cell cell;
+    double amount=0, objective=0;
+    std::vector<double> remainingSupply, remainingDemand;
+    // Inactive lines have no penalty. Singleton lines have penalty zero.
+    std::vector<std::optional<double>> sourcePenalties, destinationPenalties;
+    std::string explanation;
+};
+struct Solution {
+    Problem problem; // Balanced working copy; the input is never modified.
+    std::string balancing;
+    std::vector<AllocationStep> allocations;
+    std::vector<Tableau> tableaux;
+};
+// Add a labelled zero-cost dummy source/destination when totals differ.
+Solution solveDetailed(const Problem& problem, StartMethod method);
 enum class LoopRole { None, Entering, Leaving, Other };
 // Original manual clicks provide feedback for the computed improvement loop.
 // They do not select a different pivot or change allocation state.
@@ -52,7 +68,9 @@ struct MultiplierAnchor {
 // Reinitialize a connected basic tree without altering allocations/pivots.
 // Returns a candidate; invalid anchors/bases leave the supplied tableau intact.
 Tableau initializeMultipliers(const Problem& problem, const Tableau& tableau, MultiplierAnchor anchor);
-// Automatic minimum-cost North-west start and MODI improvements, u1=0.
+// Automatic initial allocation and MODI improvements, u1=0.
+// Unbalanced inputs use a zero-cost dummy in the returned table dimensions;
+// use solveDetailed to access the corresponding balanced model.
 // Nonbinary single-precision quantities are deliberately rejected until their
 // observed long/clipped TORA display has a complete compatibility contract.
 std::vector<Tableau> solve(const Problem& problem, StartMethod method);

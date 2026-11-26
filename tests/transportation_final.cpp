@@ -25,7 +25,8 @@ int main() {
         }
         auto fractional=Problem::blank(1,1);fractional.costs={{2.25}};fractional.supply={0.75};fractional.demand={0.75};
         const auto f=finalSummary(fractional);check(f.rows[0][2]=="0" && f.rows[0][4]=="1.69" && f.objective=="1.69","Contribution was computed from displayed amount");
-        p.supply={20,30};p.demand={11,25,15};rejects([&]{finalSummary(p);});
+        p.supply={20,30};p.demand={11,25,15};
+        check(finalSummary(p).rows.back()[0].find("Dummy")!=std::string::npos,"Missing dummy source in summary");
         p.demand={10,25,15};p.costs={{1e308,1e308,1e308},{1e308,1e308,1e308}};rejects([&]{finalSummary(p);});
         std::cout<<"Final summary, zero basis, aliases, fractional display and safety checks passed\n";
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}

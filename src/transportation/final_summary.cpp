@@ -13,8 +13,9 @@ std::string amount(double value) {
     return value<1?"0":quantity(std::round(value));
 }
 }
-FinalSummary finalSummary(const Problem& problem) {
-    const auto trace=solveLeastCost(problem);const auto& terminal=trace.back();
+FinalSummary finalSummary(const Problem& input) {
+    const auto solution=solveDetailed(input,StartMethod::LeastCost);
+    const auto& problem=solution.problem;const auto& trace=solution.tableaux;const auto& terminal=trace.back();
     const core::NumberFormatter formatter(problem.format);
     FinalSummary result{problem.title,std::to_string(trace.size()),formatter.format(terminal.objective),{},problem.maximize};
     for(std::size_t i=0;i<problem.supply.size();++i)for(std::size_t j=0;j<problem.demand.size();++j)

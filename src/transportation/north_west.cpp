@@ -109,11 +109,16 @@ void validate(const Problem& p) {
         finite(value);if(value<0)throw std::invalid_argument("Supply and demand must be nonnegative.");
     }
 }
-std::vector<Tableau> solve(const Problem& p,StartMethod method) {
+static std::vector<Tableau> solveBalanced(const Problem& p,StartMethod method,
+                                        std::vector<AllocationStep>& allocations) {
     if(p.maximize) {
         auto minimized=p;minimized.maximize=false;
         for(auto& row:minimized.costs)for(auto& cost:row)cost=-cost;
-        auto trace=solve(minimized,method);
+        auto trace=solveBalanced(minimized,method,allocations);
+        for(auto& step:allocations) {
+            step.objective=-step.objective;
+            if(method==StartMethod::LeastCost)step.explanation.replace(0,std::string("Select the lowest cost active cell").size(),"Select the highest profit active cell");
+        }
         for(auto& table:trace){table.objective=-table.objective;for(auto& x:table.u)x=-x;for(auto& x:table.v)x=-x;for(auto& row:table.reducedCosts)for(auto& x:row)x=-x;}
         return trace;
     }
@@ -129,11 +134,24 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
     if(supply!=demand)throw std::invalid_argument("This Transportation preview requires equal total supply and demand.");
     const auto m=p.supply.size(),n=p.demand.size();
     auto remainingSupply=p.supply,remainingDemand=p.demand;Basis basis;
+    double allocatedObjective=0;
+    const auto record=[&](Edge edge,double amount,std::vector<std::optional<double>> rows={},
+                          std::vector<std::optional<double>> columns={}) {
+        allocatedObjective+=amount*p.costs[edge.first][edge.second];finite(allocatedObjective);
+        std::string reason=method==StartMethod::NorthWest?"Select the first remaining north-west cell.":
+            method==StartMethod::LeastCost?"Select the lowest cost active cell; ties use source then destination order.":
+            "Select the largest line penalty, then its lowest cost cell; penalty ties prefer sources in input order.";
+        reason+=" Allocate min(remaining supply, remaining demand).";
+        if(amount==0)reason+=" Retain this zero basic shipment to connect the basis without adding physical flow.";
+        allocations.push_back({{edge.first,edge.second},amount,allocatedObjective,remainingSupply,remainingDemand,
+                               std::move(rows),std::move(columns),std::move(reason)});
+    };
     if(method==StartMethod::NorthWest) {
         std::size_t i=0,j=0;
         while(i<m && j<n) {
             const double value=std::min(remainingSupply[i],remainingDemand[j]);
             basis[{i,j}]=value;remainingSupply[i]-=value;remainingDemand[j]-=value;
+            record({i,j},value);
             // Equal exhaustion moves to the next source first, preserving the
             // observed zero basic shipment in that destination.
             if(remainingSupply[i]==0 && i+1<m)++i;
@@ -148,6 +166,7 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
         std::size_t sources=m,destinations=n;
         while(sources && destinations) {
             std::optional<Edge> selected;
+            std::vector<std::optional<double>> rowPenalties(m),columnPenalties(n);
             if(method==StartMethod::LeastCost) {
                 double best=std::numeric_limits<double>::infinity();
                 for(std::size_t r=0;r<m;++r)for(std::size_t c=0;c<n;++c)
@@ -173,6 +192,7 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
                     // internal TORA penalty sentinel is not observable.
                     const double penalty=count>1?second-first:0;
                     finite(penalty);
+                    (source?rowPenalties:columnPenalties)[line]=penalty;
                     if(cell && (!selected || penalty>bestPenalty)) {selected=cell;bestPenalty=penalty;}
                 };
                 for(std::size_t r=0;r<m;++r)if(activeSources[r])consider(true,r);
@@ -182,6 +202,7 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
             const auto [r,c]=*selected;
             const double value=std::min(remainingSupply[r],remainingDemand[c]);
             basis[*selected]=value;remainingSupply[r]-=value;remainingDemand[c]-=value;
+            record(*selected,value,std::move(rowPenalties),std::move(columnPenalties));
             if(remainingSupply[r]==0 && sources>1) {activeSources[r]=false;--sources;}
             else if(remainingDemand[c]==0) {activeDestinations[c]=false;--destinations;}
             else {activeSources[r]=false;--sources;}
@@ -189,13 +210,20 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
     }
     std::vector<Tableau> history;
     std::set<std::vector<Edge>> visited;
+    bool bland=false;
     for(std::size_t iteration=0;iteration<1000;++iteration) {
         std::vector<Edge> identity;for(const auto& entry:basis)identity.push_back(entry.first);
-        if(!visited.insert(identity).second)throw std::runtime_error("Transportation pivot cycle detected; no optimal result returned.");
+        if(!visited.insert(identity).second) {
+            if(bland)throw std::runtime_error("Transportation pivot cycle detected; no optimal result returned.");
+            // Preserve captured largest-improvement pivots normally. On a
+            // repeated degenerate basis, Bland's ordered rule prevents cycling.
+            bland=true;visited.clear();visited.insert(identity);
+        }
         history.push_back(snapshot(p,basis));auto& current=history.back();
         std::optional<Edge> entering;double best=Epsilon;
         for(std::size_t r=0;r<m;++r)for(std::size_t c=0;c<n;++c)
-            if(!basis.count({r,c}) && current.reducedCosts[r][c]>best) {
+            if(!basis.count({r,c}) && current.reducedCosts[r][c]>Epsilon &&
+               (bland?!entering:current.reducedCosts[r][c]>best)) {
                 best=current.reducedCosts[r][c];entering=Edge{r,c};
             }
         if(!entering)return history;
@@ -211,6 +239,31 @@ std::vector<Tableau> solve(const Problem& p,StartMethod method) {
     }
     throw std::runtime_error("Transportation iteration safety limit reached; no optimal result returned.");
 }
+Solution solveDetailed(const Problem& input,StartMethod method) {
+    validate(input);
+    Solution result;result.problem=input;
+    auto& p=result.problem;
+    const double supply=std::accumulate(p.supply.begin(),p.supply.end(),0.0);
+    const double demand=std::accumulate(p.demand.begin(),p.demand.end(),0.0);
+    finite(supply);finite(demand);
+    if(supply>demand) {
+        dimensions(p.supply.size(),p.demand.size()+1);
+        p.dummyDestinations.push_back(p.demand.size());p.demand.push_back(supply-demand);
+        p.destinationNames.push_back("Dummy (unused supply)");
+        for(auto& row:p.costs)row.push_back(0);
+        result.balancing="Supply exceeds demand by "+quantity(supply-demand)+
+            ". Added a zero-cost dummy destination; its shipments represent unused supply.";
+    } else if(demand>supply) {
+        dimensions(p.supply.size()+1,p.demand.size());
+        p.dummySources.push_back(p.supply.size());p.supply.push_back(demand-supply);
+        p.sourceNames.push_back("Dummy (unmet demand)");p.costs.emplace_back(p.demand.size(),0);
+        result.balancing="Demand exceeds supply by "+quantity(demand-supply)+
+            ". Added a zero-cost dummy source; its shipments represent unmet demand.";
+    }
+    result.tableaux=solveBalanced(p,method,result.allocations);
+    return result;
+}
+std::vector<Tableau> solve(const Problem& p,StartMethod method) {return solveDetailed(p,method).tableaux;}
 std::vector<Tableau> solveNorthWest(const Problem& p) { return solve(p,StartMethod::NorthWest); }
 std::vector<Tableau> solveLeastCost(const Problem& p) { return solve(p,StartMethod::LeastCost); }
 std::vector<Tableau> solveVogel(const Problem& p) { return solve(p,StartMethod::Vogel); }

@@ -19,10 +19,12 @@ int main() {
         auto changed=p;changed.costs[0].pop_back();rejects([&]{validate(changed);});
         changed=p;changed.supply[0]=-1;rejects([&]{validate(changed);});
         changed=p;changed.costs[0][0]=std::numeric_limits<double>::infinity();rejects([&]{validate(changed);});
-        changed=p;changed.demand[0]=11;rejects([&]{solveNorthWest(changed);});
+        changed=p;changed.demand[0]=11;
+        if(solveNorthWest(changed).back().shipments.size()!=3)throw std::runtime_error("Unbalanced shortage was not solved");
         changed=p;changed.supply[0]=20.1;rejects([&]{solveNorthWest(changed);});
         rejects([&]{solve(p,static_cast<StartMethod>(999));});
-        changed=p;changed.demand[0]=11;rejects([&]{solveLeastCost(changed);});
+        changed=p;changed.demand[0]=11;
+        if(solveLeastCost(changed).back().shipments.size()!=3)throw std::runtime_error("Unbalanced shortage was not solved");
         changed=p;changed.supply[0]=20.1;rejects([&]{solveLeastCost(changed);});
         const auto least=solveLeastCost(p),leastAgain=solveLeastCost(p);
         if(least.size()!=1 || leastAgain.size()!=1 || least.front().objective!=150 || p.supply!=std::vector<double>{20,30})
@@ -31,7 +33,8 @@ int main() {
         if(zeros.size()!=1 || zeros[0].objective!=0)throw std::runtime_error("Zero-quantity Least-cost model failed");
         auto single=Problem::blank(1,1);single.costs={{-2}};single.supply={4};single.demand={4};
         if(solveLeastCost(single).back().objective!=-8)throw std::runtime_error("Single-cell Least-cost model failed");
-        changed=p;changed.demand[0]=11;rejects([&]{solveVogel(changed);});
+        changed=p;changed.demand[0]=11;
+        if(solveVogel(changed).back().shipments.size()!=3)throw std::runtime_error("Unbalanced shortage was not solved");
         changed=p;changed.supply[0]=20.1;rejects([&]{solveVogel(changed);});
         const auto vogel=solveVogel(p),vogelAgain=solveVogel(p);
         if(vogel.size()!=1 || vogelAgain.size()!=1 || vogel.front().objective!=150 || p.supply!=std::vector<double>{20,30})
