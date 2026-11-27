@@ -55,6 +55,9 @@ public:
     bool loaded() const { return document_.has_value(); }
     const transportation::Problem& problem() const { return document_ ? document_->problem() : emptyProblem_; }
     const std::vector<transportation::Tableau>& trace() const { return trace_; }
+    const transportation::Problem& solutionProblem() const { return trace_.empty()?problem():solutionProblem_; }
+    const std::vector<transportation::AllocationStep>& allocations() const { return allocations_; }
+    const std::string& balancing() const { return balancing_; }
 signals:
     void changed();
     void inputReset();
@@ -70,6 +73,9 @@ private:
     void resetMultipliers();
     transportation::MultiplierAnchor multiplierAnchor_;
     std::optional<transportation::FinalSummary> final_;
+    transportation::Problem solutionProblem_;
+    std::vector<transportation::AllocationStep> allocations_;
+    std::string balancing_;
     bool multipliersRefreshed_=false, multipliersLocked_=false;
     enum class GridOperation { Insert, Delete, Paste };
     bool changeSelection(QString& error, GridOperation operation);

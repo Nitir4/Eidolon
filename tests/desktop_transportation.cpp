@@ -18,11 +18,53 @@
 #include <QScreen>
 #include <QResizeEvent>
 #include <QComboBox>
+#include <QTabWidget>
+#include <QPrinter>
+#include "transportation_printing.hpp"
 
 using namespace tora::desktop;
 class DesktopTransportation: public QObject {
     Q_OBJECT
 private slots:
+    void unbalancedAllocationSteps() {
+        ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);
+        auto p=tora::transportation::Problem::blank(2,3);p.costs={{2,3,1},{5,4,8}};p.supply={20,30};p.demand={10,25,10};
+        for(auto method:{tora::transportation::StartMethod::NorthWest,tora::transportation::StartMethod::LeastCost,tora::transportation::StartMethod::Vogel}) {
+            c.load(p);const auto original=c.document()->encode();QString error;QVERIFY2(c.solve(error,method),qPrintable(error));
+            QCOMPARE(c.problem().demand.size(),std::size_t(3));QCOMPARE(c.solutionProblem().demand.size(),std::size_t(4));
+            QCOMPARE(c.solutionProblem().dummyDestinations,std::vector<std::size_t>{3});
+            QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.resize(1366,768);shell.show();QTest::qWait(20);
+            auto* page=shell.currentContent();auto* tabs=page->findChild<QTabWidget*>("transport-phases");QVERIFY(tabs);
+            auto* balancing=page->findChild<QLabel*>("transport-balancing");QVERIFY(balancing->text().contains("unused supply"));
+            auto* modi=page->findChild<QTableWidget*>("transport-tableau");QCOMPARE(modi->columnCount(),8);
+            tabs->setCurrentIndex(1);
+            auto* next=page->findChild<QPushButton*>("transport-allocation-next");auto* previous=page->findChild<QPushButton*>("transport-allocation-previous");
+            auto* all=page->findChild<QPushButton*>("transport-allocation-all");QVERIFY(next);QVERIFY(previous);QVERIFY(all);
+            QVERIFY(!previous->isEnabled());next->click();QVERIFY(previous->isEnabled());previous->click();QVERIFY(!previous->isEnabled());all->click();QVERIFY(!next->isEnabled());
+            auto* allocations=page->findChild<QTableWidget*>("transport-allocation-grid");QCOMPARE(allocations->columnCount(),7);
+            auto* explanation=page->findChild<QLabel*>("transport-allocation-explanation");QVERIFY(explanation->text().contains("Initial basis complete"));
+            QCOMPARE(c.document()->encode(),original);QVERIFY(!c.dirty());
+            const auto captures=qEnvironmentVariable("TORA_UI_CAPTURES");
+            QTest::qWait(20);
+            QVERIFY(explanation->height()>=explanation->heightForWidth(explanation->width()));
+            if(!captures.isEmpty()){QVERIFY(QDir().mkpath(captures));QVERIFY(shell.grab().save(captures+QStringLiteral("/transport-allocations-%1.png").arg(int(method))));}
+            tabs->setCurrentIndex(0);
+            QTemporaryDir dir;QPrinter printer;printer.setOutputFormat(QPrinter::PdfFormat);printer.setOutputFileName(dir.filePath("unbalanced.pdf"));
+            QVERIFY(printTransportationTrace(printer,c,c.trace().size()));QVERIFY(QFileInfo(printer.outputFileName()).size()>0);
+            QVERIFY(c.initializeMultiplier({tora::transportation::MultiplierAxis::Destination,3},error));
+            QVERIFY(c.computeFinal(error));QCOMPARE(c.finalOutput()->objective,std::string("130.00"));
+        }
+        p.supply={20,25};p.demand={10,25,15};p.maximize=true;c.load(p);QString error;QVERIFY(c.solve(error));
+        QCOMPARE(c.solutionProblem().dummySources,std::vector<std::size_t>{2});
+        QVERIFY(shell.navigate(QStringLiteral("transportation/vogel")));auto* page=shell.currentContent();
+        QVERIFY(page->findChild<QLabel*>("transport-balancing")->text().contains("unmet demand"));
+        auto* tabs=page->findChild<QTabWidget*>("transport-phases");tabs->setCurrentIndex(1);
+        page->findChild<QPushButton*>("transport-allocation-all")->click();
+        auto* allocations=page->findChild<QTableWidget*>("transport-allocation-grid");QCOMPARE(allocations->rowCount(),6);
+        // A new solve restarts the cached allocation page and keeps input unchanged.
+        QVERIFY(c.solve(error,tora::transportation::StartMethod::Vogel));
+        QVERIFY(page->findChild<QLabel*>("transport-allocation-explanation")->text().startsWith("Allocation 1 of"));
+    }
     void manualLoopFeedback() {
         ApplicationShell shell;shell.registerModule(transportationModule());auto& c=transportationController(shell);
         c.loadExample();QString error;QVERIFY(c.solve(error));QVERIFY(shell.navigate(QStringLiteral("transportation/northwest")));shell.show();QTest::qWait(20);

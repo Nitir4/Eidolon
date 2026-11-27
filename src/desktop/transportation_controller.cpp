@@ -49,7 +49,7 @@ bool TransportationController::reject(QString& error, const QString& message) {
 }
 void TransportationController::modified(bool resetInput) {
     final_.reset();emit finalChanged();
-    dirty_ = true; trace_.clear(); method_ = transportation::StartMethod::NorthWest;
+    dirty_ = true; trace_.clear(); allocations_.clear(); balancing_.clear(); method_ = transportation::StartMethod::NorthWest;
     resetMultipliers();
     if (resetInput) emit inputReset();
     emit changed();
@@ -68,7 +68,7 @@ bool TransportationController::initializeMultiplier(transportation::MultiplierAn
     if(!canInitializeMultiplier())return reject(error,QStringLiteral("Initialize a multiplier before advancing the first tableau."));
     try {
         auto candidate=trace_;
-        for(auto& tableau:candidate)tableau=transportation::initializeMultipliers(problem(),tableau,anchor);
+        for(auto& tableau:candidate)tableau=transportation::initializeMultipliers(solutionProblem(),tableau,anchor);
         trace_=std::move(candidate);multiplierAnchor_=anchor;multipliersRefreshed_=true;
         emit multipliersChanged();return true;
     } catch(const std::exception& e) {return reject(error,QString::fromUtf8(e.what()));}
@@ -133,7 +133,7 @@ bool TransportationController::undo(QString& error) {
 }
 void TransportationController::load(transportation::Problem problem) {
     auto next = compat::TransportationDocument::create(std::move(problem));
-    document_ = std::move(next); newFormat_=document_->problem().format; resetEditState(); trace_.clear(); method_ = transportation::StartMethod::NorthWest;
+    document_ = std::move(next); newFormat_=document_->problem().format; resetEditState(); trace_.clear(); allocations_.clear(); balancing_.clear(); method_ = transportation::StartMethod::NorthWest;
     dirty_ = false; readOnly_ = false; sourcePath_.clear(); preferredSavePath_.clear(); emit inputReset(); emit changed();
 }
 void TransportationController::loadExample() {
@@ -142,7 +142,7 @@ void TransportationController::loadExample() {
 }
 void TransportationController::beginNew(core::NumberFormat format) {
     (void)core::NumberFormatter(format);newFormat_=format;
-    document_.reset(); resetEditState(); trace_.clear(); dirty_ = false; readOnly_ = false;
+    document_.reset(); resetEditState(); trace_.clear(); allocations_.clear(); balancing_.clear(); dirty_ = false; readOnly_ = false;
     sourcePath_.clear(); preferredSavePath_.clear(); method_ = transportation::StartMethod::NorthWest; emit inputReset(); emit changed();
 }
 bool TransportationController::initialize(const QString& title, int sources, int destinations, QString& error) {
@@ -179,7 +179,7 @@ bool TransportationController::openFile(const QString& filename, QString& error,
         const auto bytes = file.readAll();
         if (file.error() != QFileDevice::NoError) return reject(error, file.errorString());
         auto next = bytes.trimmed().startsWith("{")?decodeTransportationJson(bytes):compat::TransportationDocument::decode(std::string_view(bytes.constData(), static_cast<std::size_t>(bytes.size())));
-        document_ = std::move(next); newFormat_=document_->problem().format; resetEditState(); trace_.clear(); method_ = transportation::StartMethod::NorthWest;
+        document_ = std::move(next); newFormat_=document_->problem().format; resetEditState(); trace_.clear(); allocations_.clear(); balancing_.clear(); method_ = transportation::StartMethod::NorthWest;
         sourcePath_ = filename; preferredSavePath_ = filename; dirty_ = false; readOnly_ = readOnly; emit inputReset(); emit changed(); return true;
     } catch (const std::exception& e) { return reject(error, QString::fromUtf8(e.what())); }
 }
@@ -223,10 +223,12 @@ bool TransportationController::solve(QString& error, transportation::StartMethod
     if (!commitInput()) return reject(error, QStringLiteral("Correct the active Transportation input before solving."));
     if (!document_) return reject(error, QStringLiteral("Open or initialize a Transportation problem first."));
     try {
-        const auto& p = problem(); auto result = transportation::solve(p, method);
+        auto solution = transportation::solveDetailed(problem(), method);
+        const auto& p = solution.problem; auto& result = solution.tableaux;
         const auto cellsPerTable = (3*p.supply.size()+4)*(p.demand.size()+4);
         if (result.size() > 250000/cellsPerTable) return reject(error, QStringLiteral("This Transportation preview limits the displayed trace to 250,000 cells. The problem requires a larger trace."));
-        trace_ = std::move(result); method_ = method; resetMultipliers(); emit changed(); return true;
+        solutionProblem_ = std::move(solution.problem); allocations_ = std::move(solution.allocations);
+        balancing_ = std::move(solution.balancing); trace_ = std::move(result); method_ = method; resetMultipliers(); emit changed(); return true;
     } catch (const std::exception& e) { return reject(error, QString::fromUtf8(e.what())); }
 }
 TransportationController& transportationController(ApplicationShell& shell) {

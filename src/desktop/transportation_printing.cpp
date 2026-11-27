@@ -151,10 +151,11 @@ bool printTransportationTrace(QPrinter& printer,const TransportationController& 
     if(!c.loaded() || shown==0 || shown>c.trace().size())return false;
     try {
         Page page(printer);page.original(c.problem(),false);
+        if(!c.balancing().empty())page.line(text(c.balancing()));
         for(std::size_t k=0;k<shown;++k) {
             page.newPage();
             if(k==0){page.line(methodHeading(c.method()),Qt::AlignHCenter);page.space();page.line(QStringLiteral("Title: ")+text(c.problem().title));page.rule();page.space(2);}
-            page.tableau(c.problem(),transportation::display(c.problem(),c.trace()[k],k+1,k==0 && c.multipliersRefreshed()),k+1);
+            page.tableau(c.solutionProblem(),transportation::display(c.solutionProblem(),c.trace()[k],k+1,k==0 && c.multipliersRefreshed()),k+1);
         }
         return page.finish();
     }catch(const std::exception&){return false;}

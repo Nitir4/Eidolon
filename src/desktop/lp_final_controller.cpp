@@ -81,7 +81,11 @@ QWidget* finalScreen(ApplicationShell& shell) {
     auto& c=finalController(shell);auto* page=new QWidget;auto* layout=new QVBoxLayout(page);
     auto* heading=new QLabel(QStringLiteral("LINEAR PROGRAMMING OUTPUT SUMMARY"));heading->setAlignment(Qt::AlignCenter);auto bold=heading->font();bold.setBold(true);heading->setFont(bold);layout->addWidget(heading);
     const auto label=[layout](const QString& id){auto* l=new QLabel;l->setObjectName(id);l->setWordWrap(true);layout->addWidget(l);return l;};
-    auto* title=label(QStringLiteral("summary-title"));auto* iteration=label(QStringLiteral("summary-iteration"));auto* objective=label(QStringLiteral("summary-objective"));auto* message=label(QStringLiteral("summary-message"));
+    auto* title=label(QStringLiteral("summary-title"));
+    auto* metadata=new QHBoxLayout;layout->addLayout(metadata);
+    auto* iteration=new QLabel;iteration->setObjectName(QStringLiteral("summary-iteration"));metadata->addWidget(iteration);
+    auto* objective=new QLabel;objective->setObjectName(QStringLiteral("summary-objective"));objective->setWordWrap(true);metadata->addWidget(objective,1);
+    auto* message=label(QStringLiteral("summary-message"));
     auto* sensitivityNote=label(QStringLiteral("summary-sensitivity-note"));
     sensitivityNote->setText(QStringLiteral("Sensitivity intervals retain the final basis and variable orientation. Other bases may keep the same point optimal outside these intervals."));
     const auto button=[page](const QString& text,const QString& id,QHBoxLayout* row){auto* b=new QPushButton(text,page);b->setObjectName(id);row->addWidget(b);return b;};

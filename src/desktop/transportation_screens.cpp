@@ -25,6 +25,7 @@
 #include <QResizeEvent>
 #include <QStyle>
 #include <QTableWidget>
+#include <QTabWidget>
 #include <QStyledItemDelegate>
 #include <QSignalBlocker>
 #include <QTimer>
@@ -417,6 +418,73 @@ QWidget* iterations(ApplicationShell& shell)
     heading->setWordWrap(true); layout->addWidget(heading);
     auto* title = new QLabel;
     title->setWordWrap(true); layout->addWidget(title);
+    auto* balance = new QLabel(text(controller.balancing()));
+    balance->setObjectName(QStringLiteral("transport-balancing"));balance->setWordWrap(true);layout->addWidget(balance);
+    auto* tabs=new QTabWidget;tabs->setObjectName(QStringLiteral("transport-phases"));layout->addWidget(tabs,1);
+    auto* modi=new QWidget;auto* modiLayout=new QVBoxLayout(modi);tabs->addTab(modi,QStringLiteral("MODI iterations"));
+    auto* construction=new QWidget;auto* constructionLayout=new QVBoxLayout(construction);
+    tabs->addTab(construction,QStringLiteral("Initial allocation steps"));
+    auto* allocationControls=new QHBoxLayout;
+    auto* previousAllocation=new QPushButton(QStringLiteral("Previous allocation"));previousAllocation->setObjectName(QStringLiteral("transport-allocation-previous"));
+    auto* nextAllocation=new QPushButton(QStringLiteral("Next allocation"));nextAllocation->setObjectName(QStringLiteral("transport-allocation-next"));
+    auto* allAllocations=new QPushButton(QStringLiteral("All allocations"));allAllocations->setObjectName(QStringLiteral("transport-allocation-all"));
+    for(auto* b:{previousAllocation,nextAllocation,allAllocations})allocationControls->addWidget(b);
+    allocationControls->addStretch();constructionLayout->addLayout(allocationControls);
+    auto* allocationExplanation=new QLabel;allocationExplanation->setObjectName(QStringLiteral("transport-allocation-explanation"));
+    allocationExplanation->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);allocationExplanation->setWordWrap(true);
+    allocationExplanation->setAlignment(Qt::AlignLeft|Qt::AlignTop);constructionLayout->addWidget(allocationExplanation);
+    auto* allocationGrid=table(construction,"transport-allocation-grid");constructionLayout->addWidget(allocationGrid,1);
+    auto allocationShown=std::make_shared<std::size_t>(1);
+    const auto renderAllocation=[&controller,allocationGrid,allocationExplanation,allocationShown,previousAllocation,nextAllocation,allAllocations,balance] {
+        balance->setText(text(controller.balancing()));balance->setVisible(!controller.balancing().empty());
+        const auto& p=controller.solutionProblem();const auto& steps=controller.allocations();
+        const auto count=std::min(*allocationShown,steps.size());
+        const int m=static_cast<int>(p.supply.size()),n=static_cast<int>(p.demand.size());
+        allocationGrid->clear();allocationGrid->setRowCount(m+3);allocationGrid->setColumnCount(n+3);
+        previousAllocation->setEnabled(count>1);nextAllocation->setEnabled(count<steps.size());allAllocations->setEnabled(count<steps.size());
+        if(!count){allocationExplanation->clear();return;}
+        const auto& step=steps[count-1];
+        QString details=QStringLiteral("Allocation %1 of %2: S%3 → D%4; min(%5, %6) = %7. Unit cost/profit = %8; partial objective = %9.\n%10")
+            .arg(count).arg(steps.size()).arg(step.cell.source+1).arg(step.cell.destination+1)
+            .arg(text(transportation::quantity(step.remainingSupply[step.cell.source]+step.amount)),
+                 text(transportation::quantity(step.remainingDemand[step.cell.destination]+step.amount)),
+                 text(transportation::quantity(step.amount)),text(transportation::quantity(p.costs[step.cell.source][step.cell.destination])),
+                 text(transportation::quantity(step.objective)),text(step.explanation));
+        if(p.maximize && controller.method()==transportation::StartMethod::Vogel)
+            details+=QStringLiteral(" Penalties use negated profits to select the greatest opportunity loss.");
+        if(count==steps.size())details+=QStringLiteral(" Initial basis complete; continue in MODI iterations.");
+        allocationExplanation->setText(details);
+        put(*allocationGrid,0,0,QStringLiteral("Basic shipments"),true);
+        put(*allocationGrid,0,n+1,QStringLiteral("Remaining supply"),true);
+        put(*allocationGrid,0,n+2,QStringLiteral("Row penalty"),true);
+        for(int j=0;j<n;++j)put(*allocationGrid,0,j+1,QStringLiteral("D%1 %2").arg(j+1).arg(text(p.destinationNames[std::size_t(j)])),true);
+        for(int i=0;i<m;++i) {
+            put(*allocationGrid,i+1,0,QStringLiteral("S%1 %2").arg(i+1).arg(text(p.sourceNames[std::size_t(i)])),true);
+            put(*allocationGrid,i+1,n+1,text(transportation::quantity(step.remainingSupply[std::size_t(i)])));
+            if(!step.sourcePenalties.empty() && step.sourcePenalties[std::size_t(i)])
+                put(*allocationGrid,i+1,n+2,text(transportation::quantity(*step.sourcePenalties[std::size_t(i)])));
+        }
+        put(*allocationGrid,m+1,0,QStringLiteral("Remaining demand"),true);
+        put(*allocationGrid,m+2,0,QStringLiteral("Column penalty"),true);
+        for(int j=0;j<n;++j) {
+            put(*allocationGrid,m+1,j+1,text(transportation::quantity(step.remainingDemand[std::size_t(j)])));
+            if(!step.destinationPenalties.empty() && step.destinationPenalties[std::size_t(j)])
+                put(*allocationGrid,m+2,j+1,text(transportation::quantity(*step.destinationPenalties[std::size_t(j)])));
+        }
+        for(std::size_t k=0;k<count;++k) {
+            const auto& allocation=steps[k];
+            auto* item=put(*allocationGrid,int(allocation.cell.source)+1,int(allocation.cell.destination)+1,
+                allocation.amount==0?QStringLiteral("0 (basic)"):text(transportation::quantity(allocation.amount)));
+            item->setToolTip(QStringLiteral("Unit cost/profit: ")+text(transportation::quantity(p.costs[allocation.cell.source][allocation.cell.destination])));
+            if(k+1==count)item->setBackground(QColor(colors::entering));
+        }
+        allocationGrid->fitColumns(1,n);
+    };
+    QObject::connect(previousAllocation,&QPushButton::clicked,page,[allocationShown,renderAllocation]{if(*allocationShown>1)--*allocationShown;renderAllocation();});
+    QObject::connect(nextAllocation,&QPushButton::clicked,page,[&controller,allocationShown,renderAllocation]{if(*allocationShown<controller.allocations().size())++*allocationShown;renderAllocation();});
+    QObject::connect(allAllocations,&QPushButton::clicked,page,[&controller,allocationShown,renderAllocation]{*allocationShown=controller.allocations().size();renderAllocation();});
+    QObject::connect(&controller,&TransportationController::changed,page,[allocationShown,renderAllocation]{*allocationShown=1;renderAllocation();});
+    renderAllocation();
     auto* controls = new QHBoxLayout;
     auto* next = new QPushButton(QStringLiteral("Next Iteration"));
     next->setObjectName(QStringLiteral("transport-next")); controls->addWidget(next);
@@ -426,10 +494,13 @@ QWidget* iterations(ApplicationShell& shell)
     controls->addStretch();
     controls->addWidget(new QLabel(QStringLiteral("Initialize u or v:")));
     auto* anchor=new QComboBox;anchor->setObjectName(QStringLiteral("transport-multiplier-anchor"));controls->addWidget(anchor);
-    layout->addLayout(controls);
-    auto* grid = table(page, "transport-tableau"); layout->addWidget(grid, 1);
+    modiLayout->addLayout(controls);
+    auto* grid = table(page, "transport-tableau"); modiLayout->addWidget(grid, 1);
     auto* hint=new QLabel(QStringLiteral("Click shipment cells to check the improvement loop. Next or All can be used without selecting cells."));
-    hint->setWordWrap(true);layout->insertWidget(3,hint);
+    hint->setWordWrap(true);modiLayout->insertWidget(1,hint);
+    auto* iterationExplanation=new QLabel;iterationExplanation->setObjectName(QStringLiteral("transport-iteration-explanation"));
+    iterationExplanation->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);iterationExplanation->setWordWrap(true);
+    iterationExplanation->setAlignment(Qt::AlignLeft|Qt::AlignTop);modiLayout->insertWidget(2,iterationExplanation);
     auto shown = std::make_shared<std::size_t>(1);
     auto attempt=std::make_shared<std::set<std::pair<std::size_t,std::size_t>>>();
     const auto mark=[](QTableWidgetItem* item,transportation::LoopRole role) {
@@ -437,7 +508,7 @@ QWidget* iterations(ApplicationShell& shell)
         else if(role==transportation::LoopRole::Leaving)item->setBackground(QColor(colors::leaving));
         else if(role==transportation::LoopRole::Other)item->setBackground(QColor(colors::header));
     };
-    const auto render = [&controller, grid, next, all, shown, title, heading, anchor, attempt, mark, print] {
+    const auto render = [&controller, grid, next, all, shown, title, heading, anchor, attempt, mark, print, iterationExplanation] {
         heading->setText(controller.method()==transportation::StartMethod::Vogel?
                          QStringLiteral("TRANSPORTATION TABLEAU - (Vogel's Method)"):
                          controller.method()==transportation::StartMethod::LeastCost?
@@ -445,8 +516,8 @@ QWidget* iterations(ApplicationShell& shell)
                          QStringLiteral("TRANSPORTATION TABLEAU - (North-West Corner Method)"));
         grid->clearSpans(); grid->clear();
         const auto& history=controller.trace();
-        const auto& p=controller.problem();
-        title->setText(QStringLiteral("Title: %1 — (minimum cost)").arg(text(p.title)));
+        const auto& p=controller.solutionProblem();
+        title->setText(QStringLiteral("Title: %1 — (%2)").arg(text(p.title),p.maximize?QStringLiteral("maximum profit"):QStringLiteral("minimum cost")));
         const int m=static_cast<int>(p.supply.size()), n=static_cast<int>(p.demand.size()), height=3*m+4;
         {
             const QSignalBlocker blocker(anchor);anchor->clear();
@@ -457,13 +528,35 @@ QWidget* iterations(ApplicationShell& shell)
             anchor->setEnabled(controller.canInitializeMultiplier());
         }
         const auto count=std::min(*shown,history.size());
+        QString explanation;
+        if(count) {
+            const auto& current=history[count-1];std::size_t basic=0,positive=0;
+            for(const auto& row:current.shipments)for(const auto& value:row)if(value){++basic;if(*value>0)++positive;}
+            explanation=QStringLiteral("%1 basis: %2 positive shipments, %3 basic cells (m+n−1 = %4).")
+                .arg(positive<basic?QStringLiteral("Degenerate"):QStringLiteral("Nondegenerate")).arg(positive).arg(basic).arg(m+n-1);
+            if(positive<basic)explanation+=QStringLiteral(" Zero basic cells keep the basis connected and carry no physical flow.");
+            if(current.nextPivot) {
+                const auto& pivot=*current.nextPivot;const auto theta=*current.shipments[pivot.leaving.source][pivot.leaving.destination];
+                explanation+=QStringLiteral(" Next pivot: S%1D%2 enters, S%3D%4 leaves; θ = %5%6.")
+                    .arg(pivot.entering.source+1).arg(pivot.entering.destination+1).arg(pivot.leaving.source+1).arg(pivot.leaving.destination+1)
+                    .arg(text(transportation::quantity(theta)),theta==0?QStringLiteral(" (degenerate pivot)"):QString());
+                explanation+=QStringLiteral(" Loop:");
+                for(std::size_t k=0;k<pivot.loop.size();++k)explanation+=QStringLiteral(" %1S%2D%3")
+                    .arg(k%2?QStringLiteral("−"):QStringLiteral("+")).arg(pivot.loop[k].source+1).arg(pivot.loop[k].destination+1);
+            } else explanation+=QStringLiteral(" Optimal: no improving nonbasic reduced cost remains.");
+        }
+        iterationExplanation->setText(explanation);
         print->setEnabled(count>0);
         grid->setRowCount(static_cast<int>(count)*height); grid->setColumnCount(n+4);
         next->setEnabled(count<history.size()); all->setEnabled(count<history.size());
         for (std::size_t k=0; k<count; ++k) {
             const int base=static_cast<int>(k)*height;
             const auto d=transportation::display(p,history[k],k+1,k==0 && controller.multipliersRefreshed());
-            put(*grid, base, 0, QStringLiteral("Iter %1").arg(k+1), true);
+            std::size_t positive=0,basic=0;
+            for(const auto& row:history[k].shipments)for(const auto& value:row)if(value){++basic;if(*value>0)++positive;}
+            auto* iterationItem=put(*grid, base, 0, QStringLiteral("Iter %1").arg(k+1), true);
+            iterationItem->setToolTip(QStringLiteral("%1 basic cells; %2 positive shipments. %3")
+                .arg(basic).arg(positive).arg(positive<basic?QStringLiteral("Degenerate basis: zero basic cells maintain m+n−1 independent cells."):QStringLiteral("Nondegenerate basis.")));
             put(*grid, base, 1, QStringLiteral("ObjVal ="), true);
             put(*grid, base, 2, text(d.objective), true);
             put(*grid, base+1, 1, QStringLiteral("Name"), true);
@@ -500,7 +593,7 @@ QWidget* iterations(ApplicationShell& shell)
     QObject::connect(&controller, &TransportationController::changed, page, [shown,attempt,render] { *shown=1;attempt->clear();render(); });
     QObject::connect(&controller, &TransportationController::multipliersChanged, page, render);
     QObject::connect(anchor,qOverload<int>(&QComboBox::activated),page,[&controller,render](int index) {
-        const auto m=static_cast<int>(controller.problem().supply.size());QString error;
+        const auto m=static_cast<int>(controller.solutionProblem().supply.size());QString error;
         const transportation::MultiplierAnchor selected{index<m?transportation::MultiplierAxis::Source:transportation::MultiplierAxis::Destination,
             static_cast<std::size_t>(index<m?index:index-m)};
         if(!controller.initializeMultiplier(selected,error)) {
@@ -509,7 +602,7 @@ QWidget* iterations(ApplicationShell& shell)
     });
     QObject::connect(grid,&QTableWidget::cellClicked,page,[&controller,grid,shown,attempt,mark](int row,int col) {
         const auto count=std::min(*shown,controller.trace().size());if(!count)return;
-        const auto& p=controller.problem();const int m=static_cast<int>(p.supply.size()),n=static_cast<int>(p.demand.size());
+        const auto& p=controller.solutionProblem();const int m=static_cast<int>(p.supply.size()),n=static_cast<int>(p.demand.size());
         const int local=row-static_cast<int>(count-1)*(3*m+4);
         if(local<4 || (local-4)%3 || (local-4)/3>=m || col<3 || col>=n+3)return;
         const auto source=static_cast<std::size_t>((local-4)/3),destination=static_cast<std::size_t>(col-3);

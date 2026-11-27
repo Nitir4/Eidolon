@@ -217,7 +217,13 @@ bool exportChangesHistory(const QString& path,const LpChangesController& c) {
 bool printChanges(QPrinter& printer,const LpChangesController& c,const QFont& font,std::optional<std::size_t> traceStep) {
     try {
         const auto html=changesReport(c,traceStep);if(html.isEmpty())return false;
-        QTextDocument document;document.setDefaultFont(usableUiFont(font));
+        QTextDocument document;
+        // A screen monospace font may lack a bold face; Qt simulates it with
+        // overlapping text paint operations, duplicating extracted headings.
+        const auto screenFont=usableUiFont(font);
+        QFont printFont(QStringLiteral("sans-serif"),12);
+        if(screenFont.pointSizeF()>0)printFont.setPointSizeF(screenFont.pointSizeF());
+        document.setDefaultFont(printFont);
         auto option=document.defaultTextOption();option.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);document.setDefaultTextOption(option);
         document.setHtml(html);document.print(&printer);return printer.printerState()!=QPrinter::Error && printer.printerState()!=QPrinter::Aborted;
     }catch(const std::exception&){return false;}
