@@ -89,6 +89,8 @@ These iteration methods support Next/All Iterations and native printing.
 For two variables with default nonnegative bounds, choose **Solve Problem → Graphical**,
 select the output format, then click each constraint and the objective or
 **Click here to graph LP in one stroke**. The graph and result panel expand with the native window.
+Transportation supports North-west Corner, Least Cost and Vogel starts on `future-scope`. Unequal totals are balanced automatically with a labelled zero-cost dummy source (unmet demand) or destination (unused supply), while the entered input stays intact. Each method's iteration screen includes an **Initial allocation steps** tab with Previous/Next/All controls, allocation arithmetic, remaining quantities and Vogel penalties; **MODI iterations** shows basic zeros, degeneracy, pivot amounts and signed improvement loops. The installed original TORA Windows 1.00 was observed to support all three starts and both dummy-balancing directions. See [current transportation behavior](docs/tora-analysis/TRANSPORTATION_BALANCING.md).
+
 Transportation is an authorized extension with North-west, Least-cost and Vogel starts on `future-scope`. The working source also adds editable input and file writing; the published Vogel binaries retain their earlier read-only input. The remaining original OR modules are being integrated under the full-application scope. Review layouts with, for
 example, `Eidolon --no-settings --screen lp/output-format` (also
 `lp/m-value`, `lp/input-mode`, `lp/input`, `lp/solve-menu`, `main`).

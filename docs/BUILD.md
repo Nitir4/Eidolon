@@ -107,6 +107,13 @@ reject modern RELR sections. This increases artifact size and preserves
 startup correctness. See the maintainer's [NO_STRIP documentation](https://github.com/linuxdeploy/linuxdeploy/issues/72).
 Changed upstream tool assets require a reviewed checksum pin update.
 
+Linux packaging supplies `packaging/linux-apprun.sh` as AppRun. It executes the
+real `usr/bin/Eidolon` path so Qt locates the adjacent `qt.conf`, including with
+distribution Qt 6.12. A root-level executable symlink failed platform-plugin
+initialization in the local package test; the explicit entry wrapper passed
+all module startup checks and actual Wayland/X11 checks. Both AppImage APPDIR
+and direct AppDir execution are supported. See [Qt configuration paths](https://doc.qt.io/qt-6/qt-conf.html).
+
 Qt's [deployment documentation](https://doc.qt.io/qt-6.10/cmake-deployment.html)
 and [macOS universal build guidance](https://doc.qt.io/qt-6.10/macos.html) support
 the packaging configuration. Foundation 5 tests simulate three resolutions

@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "All modules implemented; corrected native-platform feedback passes local gates; followup native run awaits user answer",
+  "active_step": "Final source integration and three-platform package delivery",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Use the prepared practice bank for the requested normal/edge-case comparison session; original comparisons pending. Windows/macOS follow-up choice remains pending and its old six-file candidate needs refresh for UX changes.",
+  "next_step": "Complete fresh Release/cross builds and package checks, then push and merge into main with Actions disabled.",
   "foundation_order": [
     1,
     5,
@@ -1101,5 +1101,44 @@
     "desktop_entry_unchanged": true,
     "running_user_instance_untouched": true,
     "wofi_config_and_history_unchanged": true
+  },
+  "transportation_balancing_20261029": {
+    "status": "implemented and locally verified",
+    "methods": [
+      "North-west Corner",
+      "Least Cost",
+      "Vogel"
+    ],
+    "features": [
+      "automatic zero-cost dummy balancing",
+      "initial allocation step navigation inside iterations",
+      "Vogel penalties and residuals",
+      "visible degeneracy and MODI pivot explanations"
+    ],
+    "local_tests": "188/188 CTest; 600 exhaustive small-model method comparisons; four UI scales",
+    "original_check": "TORA Windows 1.00 normal UI confirms both automatic dummy directions and all three methods",
+    "limits": "Existing single-precision quantity, dimension, pivot and displayed-cell safeguards retained; no native Windows/macOS package update",
+    "actions": "disabled; no workflows run",
+    "documentation": "docs/tora-analysis/TRANSPORTATION_BALANCING.md",
+    "linux_installation": {
+      "status": "packaged, installed and checked on this host",
+      "appimage": "/home/nitir505/.local/share/eidolon/releases/20261029-2873e704320a/Eidolon-0.1.0-linux-x86_64.AppImage",
+      "sha256": "2873e704320a8b7b559fffcb9086e091145e88571e881551fdc5f1c289c18a4d",
+      "qt": "6.12.0 system SDK",
+      "configuration": "Debug (same application code as tested native build)",
+      "backends": [
+        "Wayland",
+        "X11"
+      ],
+      "previous_release_preserved": true,
+      "evidence": "build/transportation-linux-20261029/installation.json"
+    }
+  },
+  "final_delivery_20261111": {
+    "status": "in progress",
+    "native_debug_tests": "188/188 passed in 20.10 seconds on current host",
+    "actions": "repository Actions verified disabled; no workflow requested",
+    "git_dates": "New commits intentionally dated 26 November 2026 onward, after the existing 25 November branch tip, per user request",
+    "record": "docs/FINAL_DELIVERY.md"
   }
 }

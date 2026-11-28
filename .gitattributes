@@ -1,2 +1,5 @@
 # Preserve upstream legal documents exactly; provenance hashes cover raw bytes.
 packaging/licenses/** -text
+
+# Native teaching TXT readers require CRLF record framing on every platform.
+examples/teaching/*.txt text eol=crlf

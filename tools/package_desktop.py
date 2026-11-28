@@ -216,6 +216,11 @@ def linux_package(build, stage, qt_root, config, output, version, tool_dir):
     appdir = stage / 'AppDir'
     run(['cmake', '--install', build, '--config', config, '--prefix', appdir / 'usr'])
     executable = appdir / 'usr/bin/Eidolon'
+    # A root-level executable symlink can bypass the adjacent Qt configuration
+    # with distribution Qt builds. Keep argv[0] at the actual usr/bin entry.
+    apprun = appdir / 'AppRun'
+    shutil.copy2(ROOT / 'packaging/linux-apprun.sh', apprun)
+    apprun.chmod(0o755)
     plugins = Path(subprocess.check_output([str(sdk_tool(qt_root, 'qmake')),
                                            '-query', 'QT_INSTALL_PLUGINS'], text=True).strip())
     platforms, integrations = stage_wayland_plugins(plugins, appdir)
