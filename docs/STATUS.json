@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Final source integration and three-platform package delivery",
+  "active_step": "Three package-only ZIPs delivered; final source prepared for main integration",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Complete fresh Release/cross builds and package checks, then push and merge into main with Actions disabled.",
+  "next_step": "Test the unsigned Windows/macOS packages on target machines; broader Linux and hardware acceptance remain unverified.",
   "foundation_order": [
     1,
     5,
@@ -1135,10 +1135,22 @@
     }
   },
   "final_delivery_20261111": {
-    "status": "in progress",
+    "status": "packages built and locally checked",
     "native_debug_tests": "188/188 passed in 20.10 seconds on current host",
-    "actions": "repository Actions verified disabled; no workflow requested",
+    "actions": "Repository Actions remain disabled; no workflows run",
     "git_dates": "New commits intentionally dated 26 November 2026 onward, after the existing 25 November branch tip, per user request",
-    "record": "docs/FINAL_DELIVERY.md"
+    "record": "docs/FINAL_DELIVERY.md",
+    "source_commit": "a9de9b7afa74c416753f6a79a18d914dae3f16c9",
+    "linux_release_tests": "188/188 passed in 22.10 seconds",
+    "windows": "Release cross-build; 10 packaged Wine screen starts and 6 numerical regressions passed; extra Qt GUI Wine checks stalled; native acceptance pending",
+    "macos": "Universal Release cross-build; both architectures/dependencies verified; native execution pending",
+    "linux": "Release AppImage; Wayland/X11 startup; 281 payload hashes; 92 ELF records, maximum GLIBC 2.38",
+    "packages": [
+      "Eidolon-Windows-x64.zip",
+      "Eidolon-macOS-Universal.zip",
+      "Eidolon-Linux-x86_64.zip"
+    ],
+    "delivery_directory": "dist/final-delivery-20261111",
+    "easy_access": "/home/nitir505/easy access/Eidolon packages"
   }
 }
