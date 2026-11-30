@@ -408,6 +408,16 @@ ModuleDescriptor shellModule()
         inner->addWidget(separator);
         button(QStringLiteral("EXIT EIDOLON"), QStringLiteral("main-exit"), *inner, [&shell] { shell.close(); });
         centerPanel(*layout, panel);
+        auto* repository = new QLabel(QStringLiteral(
+            "<a href=\"https://github.com/Nitir4/Eidolon\" "
+            "style=\"color: #667085; text-decoration: none;\">GitHub &#8599;</a>"));
+        repository->setObjectName(QStringLiteral("main-github-link"));
+        repository->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
+        repository->setOpenExternalLinks(true);
+        repository->setFocusPolicy(Qt::StrongFocus);
+        repository->setAccessibleName(QStringLiteral("Open Eidolon repository on GitHub"));
+        repository->setToolTip(QStringLiteral("https://github.com/Nitir4/Eidolon"));
+        layout->addWidget(repository, 0, Qt::AlignRight);
         return page;
     }, mainMenus});
     return module;

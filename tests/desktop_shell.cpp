@@ -8,6 +8,7 @@
 #include <QComboBox>
 #include <QEvent>
 #include <QDir>
+#include <QDesktopServices>
 #include <QFontMetrics>
 #include <QLabel>
 #include <QLineEdit>
@@ -43,6 +44,9 @@ QStringList routes()
 
 class ShellTest final : public QObject {
     Q_OBJECT
+    QUrl openedRepository;
+public:
+    Q_INVOKABLE void recordRepositoryUrl(const QUrl& url) { openedRepository = url; }
 private slots:
     void navigationAndDefaults()
     {
@@ -53,6 +57,13 @@ private slots:
         QCOMPARE(shell.currentScreen(), QStringLiteral("main"));
         QVERIFY(!shell.navigate(QStringLiteral("welcome")));
         QVERIFY(!shell.findChild<QPushButton*>(QStringLiteral("welcome-enter")));
+        auto* repository = shell.currentContent()->findChild<QLabel*>(QStringLiteral("main-github-link"));
+        QVERIFY(repository);
+        QVERIFY(repository->isVisible());
+        QDesktopServices::setUrlHandler(QStringLiteral("https"), this, "recordRepositoryUrl");
+        QTest::mouseClick(repository, Qt::LeftButton);
+        QDesktopServices::unsetUrlHandler(QStringLiteral("https"));
+        QCOMPARE(openedRepository, QUrl(QStringLiteral("https://github.com/Nitir4/Eidolon")));
         QSignalSpy changed(&shell, &ApplicationShell::screenChanged);
         auto* main = shell.menuBar()->actions().front()->menu();
         QCOMPARE(labels(*main), (QStringList{QStringLiteral("Linear Equations"), QStringLiteral("Linear Programming"),
@@ -64,6 +75,7 @@ private slots:
         QVERIFY(lpButton->isEnabled());
         QTest::mouseClick(lpButton, Qt::LeftButton);
         QCOMPARE(shell.currentScreen(), QStringLiteral("lp/input-mode"));
+        QVERIFY(!repository->isVisible());
         auto* page = shell.currentContent();
         QVERIFY(page->findChild<QRadioButton*>(QStringLiteral("input-new"))->isChecked());
         QVERIFY(page->findChild<QRadioButton*>(QStringLiteral("input-format-decimal"))->isChecked());
