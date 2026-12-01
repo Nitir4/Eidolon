@@ -5,7 +5,7 @@
     "approval": "User: yes please go ahead",
     "recorded_limits": "docs/OPEN_QUESTIONS.md"
   },
-  "active_step": "Three package-only ZIPs delivered; final source prepared for main integration",
+  "active_step": "Main-screen GitHub link and refreshed three-platform packages delivered",
   "foundation1": {
     "status": "approved",
     "gate": "Complete; user authorized Foundation 5 after verified Foundation 1 completion",
@@ -19,7 +19,7 @@
     "qt_ci_version": "6.10.3",
     "font_repair": "Malformed qt6ct fonts fall back to a DPI-aware readable font; valid settings preserved; theme reapplication regression covered"
   },
-  "next_step": "Test the unsigned Windows/macOS packages on target machines; broader Linux and hardware acceptance remain unverified.",
+  "next_step": "Test unsigned Windows/macOS packages on target machines; broader Linux, physical printer and mixed-DPI acceptance remain unverified.",
   "foundation_order": [
     1,
     5,
@@ -1152,5 +1152,23 @@
     ],
     "delivery_directory": "dist/final-delivery-20261111",
     "easy_access": "/home/nitir505/easy access/Eidolon packages"
+  },
+  "final_delivery_20261113": {
+    "status": "built and locally verified",
+    "feature": "Muted GitHub link in the main screen lower-right corner; opens repository externally; hidden inside modules",
+    "source_commit": "059af221ab26466854d7bd861f48473036606feb",
+    "git_dates": "Source commit 30 November 2026; documentation commit 1 December, intentionally after previous branch tip per owner request. Actual builds 13 November.",
+    "native_development_tests": "188/188 in 31.99 seconds",
+    "isolated_linux_release_tests": "188/188 in 23.78 seconds",
+    "shell_regression": "URL-handler interception and hide-on-navigation; four scales passed; screenshots reviewed",
+    "windows": "x64 Release cross-build; 14 executable/library dependency records verified; target-machine execution pending",
+    "macos": "universal Release cross-build; arm64/x86_64 binaries and 12 dependency records verified; execution pending",
+    "linux": "10 packaged screen starts; actual Wayland/X11; 281 payload hashes; 92 ELF checks with maximum GLIBC 2.38; installed launcher startup passed",
+    "package_directory": "dist/final-delivery-20261113",
+    "easy_access": "/home/nitir505/easy access/Eidolon packages",
+    "previous_packages": "preserved in previous-20261111",
+    "release": "https://github.com/Nitir4/Eidolon/releases/tag/v0.1.0-test.20261113",
+    "actions": "Repository Actions remain disabled; no workflow executed",
+    "record": "docs/FINAL_DELIVERY.md"
   }
 }
