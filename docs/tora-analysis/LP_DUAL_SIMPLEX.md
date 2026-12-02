@@ -7,9 +7,10 @@ TORA presents Dual simplex as an iterative algebraic choice. The observed precon
 ## Direct observation
 
 TORA exposes `Dual simplex` under `Solve Problem → Algebraic → Iterations`.
-Selecting it on a model with an equality displays a modal titled `Dual
-Simplex Error` with the exact message `Equations must be converted into
-inequalities before applying Dual Simplex`. Evidence for this condition is
+Selecting it on a model with an equality and a dual-feasible objective (and no
+bounds or unrestricted variables) displays a modal titled `Dual SImplex Error`
+(capital I, as shown by TORA) with the exact message `Equations must be
+converted to inequalities before applying Dual Simplex`. Evidence for this condition is
 `reference/tora-captures/methods/lp/dual_simplex/equation-requirement-warning.png`.
 
 On the all-`<=` `01_normal` fixture, TORA warns `Dual Simplex not applicable
@@ -65,7 +66,13 @@ saved files, every scroll frame and glyph-derived tables are private under
 `reference/tora-captures/probes/phase2-dual/`. No solver output supplies the
 expected values.
 
-Setup first rejects equalities. A nonzero lower bound, finite upper bound or
+Setup order (corrected 23 Nov 2026 from original runs on the 76-question
+corpus and on `06_equality`): bounds or unrestricted variables first, then
+objective dual feasibility, then equations. Equations are rejected only when
+the first two tests pass; `06_equality` (maximize 3x1+2x2) redirects to
+Two-phase with the Cancel-to-M choice, and so do LP06-Q02, TP07, AP02 and AP07.
+The earlier statement that setup first rejects equalities came from a capture
+without a visible dialog. A nonzero lower bound, finite upper bound or
 unrestricted variable shows `Dual simplex not applicable because a var has
 upper/lower bound or is unrestricted. Two-phase method will be used; else
 click CANCEL to use M-method`. OK enters Two-phase; the focused Cancel case

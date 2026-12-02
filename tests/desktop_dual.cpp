@@ -32,9 +32,11 @@ private slots:
         auto& c=simplexController(shell);QString title,body,warning;bool accept=true;int one=0,two=0;
         c.notice=[&](const QString& t,const QString& b){title=t;body=b;};
         c.singleWarning=[&](const QString& b){warning=b;++one;};c.redirect=[&](const QString& b){warning=b;++two;return accept;};
-        QVERIFY(in.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/06_equality.txt")));
-        QVERIFY(!c.requestDual());QCOMPARE(title,QStringLiteral("Dual Simplex Error"));
-        QCOMPARE(body,QStringLiteral("Equations must be converted into inequalities before applying Dual Simplex"));QVERIFY(!c.canStart() && !c.session());QCOMPARE(one+two,0);
+        // TORA rejects equations only after the bound and objective-sign tests: 08_two_phase is a
+        // nonnegative-cost minimization with an equation (original capture equation-requirement-warning.png).
+        QVERIFY(in.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/08_two_phase.txt")));
+        QVERIFY(!c.requestDual());QCOMPARE(title,QStringLiteral("Dual SImplex Error"));
+        QCOMPARE(body,QStringLiteral("Equations must be converted to inequalities before applying Dual Simplex"));QVERIFY(!c.canStart() && !c.session());QCOMPARE(one+two,0);
         QVERIFY(in.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/10_dual.txt")));
         QVERIFY(shell.navigate(QStringLiteral("lp/solve-menu")));action=shell.findChild<QAction*>(QStringLiteral("solve-dual"));QVERIFY(action && action->isEnabled());action->trigger();
         QCOMPARE(shell.currentScreen(),QStringLiteral("lp/output-format"));QVERIFY(c.start({}));QCOMPARE(c.session()->method(),tora::lp::PrimalMethod::Dual);
@@ -44,6 +46,32 @@ private slots:
         QVERIFY(in.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/03_infeasible.txt")));QVERIFY(c.requestDual());QCOMPARE(two,1);
         QCOMPARE(warning,QStringLiteral("Dual simplex not applicable directly. Two-phase method will be used; else click CANCEL to use M-method"));QVERIFY(c.start({}));QCOMPARE(c.session()->method(),tora::lp::PrimalMethod::TwoPhase);
         accept=false;QVERIFY(c.requestDual());QCOMPARE(shell.currentScreen(),QStringLiteral("lp/m-value"));QVERIFY(c.canEnterM());QVERIFY(!c.canStart());QVERIFY(c.setPenalty(QStringLiteral("100")));QVERIFY(c.start({}));QCOMPARE(c.session()->method(),tora::lp::PrimalMethod::MMethod);
+        // An equation model whose objective is not dual feasible is converted, not rejected
+        // (original TORA on 06_equality, LP06-Q02, TP07, AP02 and AP07, 23 November 2026).
+        accept=true;one=two=0;title.clear();
+        QVERIFY(in.openFile(QStringLiteral(TORA_CODEC_GOLDENS)+QStringLiteral("/06_equality.txt")));QVERIFY(c.requestDual());QCOMPARE(two,1);QVERIFY(title.isEmpty());
+        QCOMPARE(warning,QStringLiteral("Dual simplex not applicable directly. Two-phase method will be used; else click CANCEL to use M-method"));QVERIFY(c.start({}));QCOMPARE(c.session()->method(),tora::lp::PrimalMethod::TwoPhase);
+        accept=false;QVERIFY(c.requestDual());QCOMPARE(shell.currentScreen(),QStringLiteral("lp/m-value"));QVERIFY(c.setPenalty(QStringLiteral("100")));QVERIFY(c.start({}));QCOMPARE(c.session()->method(),tora::lp::PrimalMethod::MMethod);
+    }
+    void dualSetupOrderMatchesTora() {
+        using namespace tora::lp;
+        // Order observed in original TORA: (1) bound or unrestricted variable, (2) objective sign, (3) equations.
+        auto model=[](ObjectiveSense sense,std::vector<double> cost,std::vector<Relation> relations,bool freeFirst){
+            LpProblem p;p.title="order";p.sense=sense;p.objective=cost;
+            for(std::size_t j=0;j<cost.size();++j){Variable v;v.name="x"+std::to_string(j+1);v.unrestricted=freeFirst&&j==0;p.variables.push_back(v);}
+            for(auto r:relations){Constraint c;c.coefficients=std::vector<double>(cost.size(),1.0);c.relation=r;c.rhs=1;p.constraints.push_back(c);}
+            return p;};
+        // Free variable plus an equation (LP09-Q02): bounds test fires first.
+        QCOMPARE(PrimalSimplexSession::dualSetup(model(ObjectiveSense::Minimize,{1,2},{Relation::Equal,Relation::LessEqual},true)),PrimalMethod::TwoPhase);
+        // Not dual feasible plus an equation: converted to Two-phase.
+        QCOMPARE(PrimalSimplexSession::dualSetup(model(ObjectiveSense::Maximize,{2,1},{Relation::Equal,Relation::GreaterEqual},false)),PrimalMethod::TwoPhase);
+        // Not dual feasible, all <=: All-slack.
+        QCOMPARE(PrimalSimplexSession::dualSetup(model(ObjectiveSense::Maximize,{3,2},{Relation::LessEqual},false)),PrimalMethod::AllSlack);
+        // Dual feasible plus an equation: rejected.
+        bool threw=false;try{(void)PrimalSimplexSession::dualSetup(model(ObjectiveSense::Minimize,{2,1},{Relation::Equal,Relation::GreaterEqual},false));}catch(const std::invalid_argument& e){threw=true;QCOMPARE(QString::fromUtf8(e.what()),QStringLiteral("Equations must be converted to inequalities before applying Dual Simplex"));}
+        QVERIFY(threw);
+        // Dual feasible, inequalities only: applied directly.
+        QCOMPARE(PrimalSimplexSession::dualSetup(model(ObjectiveSense::Minimize,{1,2},{Relation::GreaterEqual,Relation::GreaterEqual},false)),PrimalMethod::Dual);
     }
     void manualHistoryLayoutPrintingAndLifecycle() {
         ApplicationShell shell;QVERIFY(shell.registerModule(lpModule()));shell.show();

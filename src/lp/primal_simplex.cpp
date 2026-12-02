@@ -39,15 +39,18 @@ bool PrimalSimplexSession::dualBoundsFallback(const LpProblem& p) {
     });
 }
 PrimalMethod PrimalSimplexSession::dualSetup(const LpProblem& problem) {
+    // Original TORA's order (captured 23 Nov 2026 on the 76-question corpus): bound/unrestricted
+    // variables first, then dual feasibility of the objective, and equations only last. An
+    // equation model whose objective is not dual feasible is therefore redirected, not rejected.
     const auto p=normalized(problem);
-    if(std::any_of(p.constraints.begin(),p.constraints.end(),[](const auto& r){return r.relation==Relation::Equal;}))
-        throw std::invalid_argument("Equations must be converted into inequalities before applying Dual Simplex");
     if(dualBoundsFallback(p))return PrimalMethod::TwoPhase;
     const bool eligible=std::all_of(p.objective.begin(),p.objective.end(),[&p](Scalar cost){
         return p.sense==ObjectiveSense::Minimize?cost>=0:cost<=0;
     });
-    if(eligible)return PrimalMethod::Dual;
-    return requiresArtificial(problem)?PrimalMethod::TwoPhase:PrimalMethod::AllSlack;
+    if(!eligible)return requiresArtificial(problem)?PrimalMethod::TwoPhase:PrimalMethod::AllSlack;
+    if(std::any_of(p.constraints.begin(),p.constraints.end(),[](const auto& r){return r.relation==Relation::Equal;}))
+        throw std::invalid_argument("Equations must be converted to inequalities before applying Dual Simplex");
+    return PrimalMethod::Dual;
 }
 PrimalSimplexSession::PrimalSimplexSession(LpProblem problem,PrimalMethod method,Scalar penalty):method_(method),problem_(std::move(problem)) {
     const auto p=normalized(problem_);
